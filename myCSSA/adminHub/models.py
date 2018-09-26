@@ -1,5 +1,6 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, AbstractUser
+from uuid import UUID, uuid4
 
 # Create your models here.
 # 此为myCSSA用户信息管理模型
@@ -12,42 +13,42 @@ from django.contrib.auth.models import User
 #######################################
 ## 官方教程：https://docs.djangoproject.com/en/2.1/intro/tutorial02/
 
-
+##### Part 1. 用户信息扩展数据 ######################################################
 #部门
 class CSSADept (models.Model):
     # 此行定义表主键
-    deptId = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    deptId = models.UUIDField(primary_key=True, default=uuid4, editable=False)
     deptName = models.CharField(max_length=50)
 
 
 #职位
 class CSSARole (models.Model):
-    roleId = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    roleId = models.UUIDField(primary_key=True, default=uuid4, editable=False)
     roleName = models.CharField(max_length=32)
 
 #学校专业信息
 class uniMajor (models.Model):
-    uniMajorId = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    uniMajorId = models.UUIDField(primary_key=True, default=uuid4, editable=False)
     majorName = models.CharField(max_length=100)
 
 #用户信息主体
 class UserProfile (models.Model):
-
-    identityConfirmed = models.BooleanField
+    identiyConfirmed = models.BooleanField
     isActivate = models.BooleanField
 
     usrName = models.CharField(max_length = 50)
     firstName = models.CharField(max_length = 50)
     lastName = models.CharField(max_length = 50)
-    gender = (
+    genderChoice = (
         ('M', 'Male'),
         ('F', 'Female'),
         ('O', 'Other')
     )
-    )
+
+    gender = models.CharField(choices = genderChoice, max_length=50)
     joinDate = models.DateTimeField()
-    student = models.CharField(max_length = 6, min_length = 6)
-    membershipId = models.CharField(max_length = 6, min_length = 6)
+    student = models.CharField(max_length = 6)
+    membershipId = models.CharField(max_length = 6)
 
 #用户联系方式
 class UserContact (models.Model):
@@ -64,7 +65,7 @@ class UserContact (models.Model):
     originate = models.CharField(max_length = 20) 
 
 class UserAcademic (models.Model):
-    academicRecId = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    academicRecId = models.UUIDField(primary_key=True, default=uuid4, editable=False)
     # 来自同一张表的外键变量名、配置需一致
     userProfile = models.ForeignKey(UserProfile, on_delete = models.CASCADE)
     # 不同模型中表示同一功能的变量名需一致

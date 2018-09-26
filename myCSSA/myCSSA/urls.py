@@ -16,12 +16,16 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from adminHub import views as adminHub
+from publicSite import views as site
 
 urlpatterns = [
+    # Url session for main site
+    path('index/', site.index, name="index"),
+
     path('admin/', admin.site.urls),
-    path('adminhub/home/', adminHub.home, name="home"),
-    path('adminhub/userinfo/', adminHub.userInfo, name="userInfo"),
-    path('adminhub/message/', adminHub.message, name="message"),
-    path('adminhub/notifications/', adminHub.notifications, name="notifications")
+    path('adminhub/home', adminHub.home, name="home"),
+    path('adminhub/userinfo', adminHub.userInfo, name="userInfo"),
+    path('adminhub/message', adminHub.message, name="message"),
+    path('adminhub/notifications', adminHub.notifications, name="notifications")
 
 ]
