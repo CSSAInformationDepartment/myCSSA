@@ -127,6 +127,8 @@ class UserAccComment (models.Model):
 class adminMessage (models.Model):
     
     messageId = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    repliedId = models.ForeignKey('self', on_delete=models.CASCADE, default=None)
+
     messageTitle = models.CharField(max_length = 50)
     timeOfCreate = models.DateTimeField(auto_now_add=True)
     timeOfSend = models.DateTimeField(null=True)
