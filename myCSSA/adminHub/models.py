@@ -32,7 +32,6 @@ class uniMajor (models.Model):
 
 #用户信息主体
 class UserProfile (models.Model):
-    userId = models.OneToOneField(User, on_delete=models.CASCADE, primary_key = True)
 
     identityConfirmed = models.BooleanField
     isActivate = models.BooleanField
