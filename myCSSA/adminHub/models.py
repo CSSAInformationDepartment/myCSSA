@@ -117,7 +117,7 @@ class UserAcademic (models.Model):
 class UserAccComment (models.Model):
     accCommentId = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     timeOfCreate = models.DateTimeField(auto_now_add=True)
-    user = models.ForeignKey(UserProfile, verbose_name="用户", on_delete=None)
+    userProfile = models.ForeignKey(UserProfile, verbose_name="用户", on_delete=models.CASCADE)
     comment = models.CharField(verbose_name="备注", max_length=200)
 
 
@@ -133,8 +133,8 @@ class adminMessage (models.Model):
     isRead = models.BooleanField(default=False)
     isDraft = models.BooleanField(default=True)
 
-    sender = models.ForeignKey(UserProfile, verbose_name="发件人", on_delete=None, related_name='sender')
-    receiver = models.ForeignKey(UserProfile, verbose_name="收件人", on_delete=None, related_name='receiver')
+    sender = models.ForeignKey(UserProfile, verbose_name="发件人", on_delete=models.CASCADE, related_name='sender')
+    receiver = models.ForeignKey(UserProfile, verbose_name="收件人", on_delete=models.CASCADE, related_name='receiver')
     messageHTML = models.TextField(verbose_name="正文")
     
 
@@ -151,4 +151,41 @@ class adminMessage (models.Model):
 
 
 ########### Part 3. 任务流水 ###########################################
-#class adminTask (models.Model):
+class adminTask (models.Model):
+    diffcultyChoice = (
+        ('1', '1'),
+        ('2', '2'),
+        ('3', '3'),
+        ('4', '4'),
+        ('5', '5')
+    )
+    taskId = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    timeOfCreate = models.DateTimeField(auto_now_add=True)
+    userProfile = models.ForeignKey(UserProfile, verbose_name="发起人", on_delete=models.CASCADE)
+
+    taskName = models.CharField(verbose_name="任务名", max_length=50)
+    taskDescription = models.CharField(verbose_name="任务描述", max_length=200)
+    taskStart = models.DateTimeField(verbose_name="开始时间")
+    taskEnd = models.DateTimeField(verbose_name="结束时间")
+    difficulty = models.CharField(verbose_name="难度", choices=diffcultyChoice ,max_length=50)
+    taskPoints = models.IntegerField(verbose_name="任务积分")
+
+    class Meta:
+        verbose_name = "任务"
+        verbose_name_plural = "任务"
+
+    def __str__(self):
+        return self.taskName
+
+    def get_absolute_url(self):
+        return reverse("_detail", kwargs={"pk": self.pk})
+
+
+
+class userTasks (models.Model):
+    taskRecId = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    timeOfCreate = models.DateTimeField(auto_now_add=True)
+    userProfile = models.ForeignKey(UserProfile, verbose_name="接受人", on_delete=models.CASCADE)
+    task = models.ForeignKey(adminTask, verbose_name="任务", on_delete=models.CASCADE)
+    isAccomplish = models.BooleanField(verbose_name="已完成", default=False)
+    isCertified = models.BooleanField(verbose_name="已确认"， default=False)
