@@ -188,4 +188,4 @@ class userTasks (models.Model):
     userProfile = models.ForeignKey(UserProfile, verbose_name="接受人", on_delete=models.CASCADE)
     task = models.ForeignKey(adminTask, verbose_name="任务", on_delete=models.CASCADE)
     isAccomplish = models.BooleanField(verbose_name="已完成", default=False)
-    isCertified = models.BooleanField(verbose_name="已确认"， default=False)
+    isCertified = models.BooleanField(verbose_name="已确认", default=False)
