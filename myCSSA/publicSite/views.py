@@ -4,4 +4,4 @@ from django.http import JsonResponse
 # Create your views here.
 
 def index(request):
-    return render(request, 'index.html')
+    return render(request, 'publicSite/index.html')

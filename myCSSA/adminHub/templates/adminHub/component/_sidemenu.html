@@ -1,0 +1,42 @@
+    {% load static %}
+    <div class="sidebar" data-color="purple" data-background-color="white" data-image="{% static "img/sidebar-1.jpg" %}">
+      <!--
+        Tip 1: You can change the color of the sidebar using: data-color="purple | azure | green | orange | danger"
+
+        Tip 2: you can also add an image using data-image tag
+    -->
+      <div class="logo">
+        <a href="http://hub.cssaunimelb.com" class="simple-text logo-normal">
+          myCSSA Hub
+        </a>
+      </div>
+      <div class="sidebar-wrapper">
+        <ul class="nav">
+          <li class="nav-item">
+            <a class="nav-link" href="../home/">
+              <i class="material-icons">home</i>
+              <p>首页</p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="../userinfo/">
+              <i class="material-icons">person</i>
+              <p>用户信息</p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="../message/">
+              <i class="material-icons">bubble_chart</i>
+              <p>站内信</p>
+            </a>
+          </li>
+          <li class="nav-item ">
+            <a class="nav-link" href="../notifications/">
+              <i class="material-icons">notifications</i>
+              <p>通知</p>
+            </a>
+          </li>        
+        </ul>
+      </div>
+    </div>  
+    
