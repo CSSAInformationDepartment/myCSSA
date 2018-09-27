@@ -37,17 +37,16 @@ class Event (models.Model):
         (LECTURE, "Lecture")    
     )
 
-    eventTypes = models.CharField(choices = eventTypes)
+    eventTypes = models.CharField(choices = eventTypes, max_length = 50)
 
 
 
 # UserProfile 参加 Event 的多对多 association entity
 class AttendEvent (models.Model):
 
-    attendedEventId = models.ForeignKey(Event, on_delete = models.CASCADE, primary_key = True)
-
-    # 引入UserProfile的foreign key 但是不知道行不行
-    attendedUserId = models.ForeignKey(adminModel.UserProfile, on_delete = models.DO_NOTHING, primary_key = True)
+    attendedId = models.UUIDField(primary_key = True, default = uuid.uuid4, editable = False)
+    attendedEventId = models.ForeignKey(Event, on_delete = models.CASCADE)
+    attendedUserId = models.ForeignKey(adminModel.UserProfile, on_delete = models.DO_NOTHING)
 
     # 交费及评价
     paid = models.BooleanField
@@ -61,8 +60,9 @@ class EventUndertaker (models.Model):
 
 # contacter weak entity, 但我不知道这么写是不是对的
 class TakerContacter (models.Model):
-    contacterName = models.CharField(primary_key = True, max_length = 50)
-    eventTakerId = models.ForeignKey(EventUndertaker, on_delete = models.CASCADE, primary_key = True)
+    contacterId = models.UUIDField(primary_key = True, default = uuid.uuid4, editable = False)
+    contacterName = models.CharField(max_length = 50)
+    eventTakerId = models.ForeignKey(EventUndertaker, on_delete = models.CASCADE)
     contacterContact = models.CharField(max_length = 50)
 
 
