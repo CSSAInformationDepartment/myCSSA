@@ -33,10 +33,14 @@
         <a class="nav-link" href="#">加入我们</a>
       </li>
     </ul>
-    <ul class="navbar-nav navbar-right">
-      <li class="nav-item"><a class="nav-link" href="../navbar/">abc </a></li>
-      <li class="nav-item"><a class="nav-link" href="./">abc <span class="sr-only">(current)</span></a></li>
-      <li class="nav-item"><a class="nav-link" href="../navbar-fixed-top/"> abc </a></li>
+    <ul class="navbar-nav navbar-right"> <!--Login Info-->
+      {% if user.is_authenticated %}
+        <li class="nav-item"><a class="nav-link" href="/adminhub/home/"> 欢迎你：{{ user.username }}</a></li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'adminHub:hub_logout' %}"> 注销 </a></li>
+      {% else %}
+        <li class="nav-item"><a class="nav-link" href="{% url 'adminHub:hub_login' %}"> 登录</a></li>
+        <li class="nav-item"><a class="nav-link" href=""> 注册 </a> </li>
+      {% endif %}
     </ul>    
   </div>
 </nav>

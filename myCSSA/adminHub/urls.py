@@ -8,5 +8,6 @@ urlpatterns = [
     path('userinfo/', adminHub.userInfo, name="userInfo"),
     path('message/', adminHub.message, name="message"),
     path('notifications/', adminHub.notifications, name="notifications"),
-    path('login/', adminHub.login, name="login"),
+    path('login/', adminHub.login_page, name="hub_login"),
+    path('logout/', adminHub.logout_page , name='hub_logout'),
 ]

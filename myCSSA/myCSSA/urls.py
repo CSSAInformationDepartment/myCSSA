@@ -21,10 +21,10 @@ from publicSite import views as homepage
 
 
 urlpatterns = [
-    # Url session for main site
+    # Url session for main site (全局入口)
     path('index/', homepage.index, name="Index"),
     path('adminhub/', include('adminHub.urls')),
     path('site/',include('publicSite.urls')),
     path('admin/', admin.site.urls),
-    re_path(r'^users/', include('django.contrib.auth.urls'))
+    #re_path(r'^users/', include('django.contrib.auth.urls'))
     ]
