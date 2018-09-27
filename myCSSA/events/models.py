@@ -5,7 +5,7 @@ import uuid
 from adminHub import models as adminModel
 
 # Create your models here.
-# 此为myCSSA用户信息管理模型
+# 此为myCSSA活动管理模型
 
 ############# 模型编写规则 ##############
 # 1. 使用驼峰命名法
@@ -14,44 +14,6 @@ from adminHub import models as adminModel
 # 4. 其余格式说明请见代码区 (adminHub/models.py)
 #######################################
 ## 官方教程：https://docs.djangoproject.com/en/2.1/intro/tutorial02/
-
-# Event本身
-class Event (models.Model):
-    eventID = models.UUIDField(primary_key = True, default = uuid.uuid4, editable = False)
-    eventName = models.CharField(max_length = 50)
-    eventInfo = models.CharField(max_length = 100)
-
-    eventStartTime = models.DateTimeField()
-    eventSignUpTime = models.DateTimeField()
-    eventActualStTime = models.DateTimeField()
-
-    # 活动主办方，
-    eventBy = models.CharField(max_length = 50)
-
-    # event type, 只是例子..我都不知道有什么类型的活动
-    MEETING = "meeting"
-    LECTURE = "LECTURE"
-
-    eventTypes = (
-        (MEETING, "Meeting"),
-        (LECTURE, "Lecture")    
-    )
-
-    eventTypes = models.CharField(choices = eventTypes, max_length = 50)
-
-
-
-# UserProfile 参加 Event 的多对多 association entity
-class AttendEvent (models.Model):
-
-    attendedId = models.UUIDField(primary_key = True, default = uuid.uuid4, editable = False)
-    attendedEventId = models.ForeignKey(Event, on_delete = models.CASCADE)
-    attendedUserId = models.ForeignKey(adminModel.UserProfile, on_delete = models.DO_NOTHING)
-
-    # 交费及评价
-    paid = models.BooleanField
-    comment = models.CharField(max_length = 150)
-
 
 class EventUndertaker (models.Model):
     eventTakerId = models.UUIDField(primary_key = True, default = uuid.uuid4, editable = False)
@@ -64,5 +26,37 @@ class TakerContacter (models.Model):
     contacterName = models.CharField(max_length = 50)
     eventTakerId = models.ForeignKey(EventUndertaker, on_delete = models.CASCADE)
     contacterContact = models.CharField(max_length = 50)
+
+class eventType(models.Model):
+    eventTypeId = models.UUIDField(primary_key = True, default = uuid.uuid4, editable = False)
+    typeName = models.CharField(max_length = 50)
+
+# Event本身
+class Event (models.Model):
+    eventID = models.UUIDField(primary_key = True, default = uuid.uuid4, editable = False)
+    eventName = models.CharField(max_length = 50)
+    eventInfo = models.CharField(max_length = 300)
+
+    eventStartTime = models.DateTimeField()
+    eventSignUpTime = models.DateTimeField()
+    eventActualStTime = models.DateTimeField()
+
+    # 活动主办方，
+    eventBy = models.ForeignKey(EventUndertaker,on_delete=models.PROTECT)
+
+    #活动类型
+    eventTypes = models.ForeignKey(eventType,on_delete=models.DO_NOTHING)
+
+
+# UserProfile 参加 Event 的多对多 association entity
+class AttendEvent (models.Model):
+
+    attendedId = models.UUIDField(primary_key = True, default = uuid.uuid4, editable = False)
+    attendedEventId = models.ForeignKey(Event, on_delete = models.CASCADE)
+    attendedUserId = models.ForeignKey(adminModel.UserProfile, on_delete = models.DO_NOTHING)
+
+    # 交费及评价
+    paid = models.BooleanField
+    comment = models.CharField(max_length = 150)
 
 
