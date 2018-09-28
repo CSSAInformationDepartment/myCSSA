@@ -35,26 +35,22 @@
 		<div class="container-login100" style="background-image: url('{% static "img/bg-login.jpg"%}');">
 			<div class="wrap-login100 p-t-30 p-b-50">
 				<span class="login100-form-title p-b-41">
-					myCSSA 登入
+				欢迎注册 myCSSA
 				</span>
-				<form class="login100-form validate-form p-b-33 p-t-5" action='{% url "adminHub:hub_login" %}' method="post">
-					{% csrf_token %}
-					<div class="wrap-input100 validate-input" data-validate = "Enter email">
-						<input class="input100" type="text" name="email" placeholder="E-mail Address">
-						<span class="focus-input100" data-placeholder="&#xe82a;"></span>
-					</div>
-
-					<div class="wrap-input100 validate-input" data-validate="Enter password">
-						<input class="input100" type="password" name="password" placeholder="Password">
-						<span class="focus-input100" data-placeholder="&#xe80f;"></span>
+				<div class="login100-form p-b-33 p-t-5">
+					<div class="container-login100-form-btn m-t-32">
+						<h4>如果您已是myCSSA会员</h4>
+						<a href="{% url 'adminHub:hub_login' %}" class="btn btn-block btn-lg btn-info">登录myCSSA</a>
 					</div>
 					<div class="container-login100-form-btn m-t-32">
-						<button class="login100-form-btn">
-							Login
-						</button>
+						<h4>如果您还不是myCSSA会员</h4>
+						<a href="{% url 'adminHub:hub_regform' %}" class="btn btn-block btn-lg btn-success">成为myCSSA会员</a>
 					</div>
-
-				</form>
+					<div class="container-login100-form-btn m-t-32">
+						<h4>如果您持有CSSA会员卡，但为首次使用myCSSA，请进行</h4>
+						<a href="#" class="btn btn-block btn-lg btn-warning">myCSSA账号迁移</a>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>

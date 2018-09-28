@@ -10,4 +10,6 @@ urlpatterns = [
     path('notifications/', adminHub.notifications, name="notifications"),
     path('login/', adminHub.login_page, name="hub_login"),
     path('logout/', adminHub.logout_page , name='hub_logout'),
+    path('register/', adminHub.register_guide , name='hub_reg'),
+    path('regform/', adminHub.register_form , name='hub_regform'),
 ]
