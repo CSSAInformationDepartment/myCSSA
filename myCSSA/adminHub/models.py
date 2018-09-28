@@ -50,11 +50,11 @@ class UniMajor (models.Model):
 class UserProfile (AbstractUser):
     REQUIRED_FIELDS=('identiyConfirmed','isActivate','firstNameEN','lastNameEN','studentId','membershipId','email')
 
-    usrId = models.UUIDField(primary_key=False, default=uuid.uuid4, editable=False)
     avatar = models.ImageField(verbose_name="头像", upload_to=_GetUserDir, height_field=None, width_field=None, max_length=None, null=True)
+    infocardBg = models.ImageField(verbose_name="名片背景", upload_to=_GetUserDir, height_field=None, width_field=None, max_length=None, null=True)
 
-    identiyConfirmed = models.BooleanField(default=False)
-    isActivate = models.BooleanField(default=False)
+    identiyConfirmed = models.BooleanField(verbose_name="会员身份状态",default=False)
+    isValid = models.BooleanField(verbose_name="账号有效性",default=False)
 
     firstNameEN = models.CharField(verbose_name="英文名",max_length = 50)
     lastNameEN = models.CharField(verbose_name="英文姓",max_length = 50)
