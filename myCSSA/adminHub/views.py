@@ -34,8 +34,8 @@ def login_page(request):
         if userQuery is None:
             return JsonResponse({'result':'Login Failed. Please Check your account inputs!'})
         password = request.POST['password']
-        print(email,password,username)
-        user = authenticate(request, username=username, password=password)
+        #print(email,password,username)
+        user = authenticate(request, username=userQuery.username, password=password)
         if user is not None:
             login(request, user)
             return HttpResponseRedirect('/index')

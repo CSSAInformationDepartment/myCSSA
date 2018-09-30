@@ -48,7 +48,7 @@ class UniMajor (models.Model):
 
 #用户信息主体 （继承自标准admin model，参照： https://www.zmrenwu.com/post/31/）
 class UserProfile (AbstractUser):
-    REQUIRED_FIELDS=('identiyConfirmed','isActivate','firstNameEN','lastNameEN','studentId','membershipId','email')
+    REQUIRED_FIELDS=('identiyConfirmed','firstNameEN','lastNameEN','studentId','membershipId','email')
 
     avatar = models.ImageField(verbose_name="头像", upload_to=_GetUserDir, height_field=None, width_field=None, max_length=None, null=True)
     infocardBg = models.ImageField(verbose_name="名片背景", upload_to=_GetUserDir, height_field=None, width_field=None, max_length=None, null=True)
