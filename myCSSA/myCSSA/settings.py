@@ -81,7 +81,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'OPTIONS': {
-            'read_default_file': '/Users/lelu/Gits/myCSSA/myCSSA/myCSSA/my.cnf',
+            'read_default_file': '/Users/lelu/Git/myCSSA/myCSSA/myCSSA/my.cnf',
             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"
         }
     }

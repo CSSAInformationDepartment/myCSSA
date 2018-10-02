@@ -9,4 +9,5 @@ class UserRegisterForm(forms.ModelForm):
     class Meta:
         ##Meta definition for UserRegisterform.
         model = UserProfile
-        fields = ['identiyConfirmed', 'isValid','avatar','infocardBg']
+        fields = ['firstNameEN', 'lastNameEN','firstNameCN','lastNameCN',
+        'gender', 'dateOfBirth', 'studentId', 'email']

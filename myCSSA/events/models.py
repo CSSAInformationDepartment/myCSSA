@@ -20,7 +20,7 @@ class EventUndertaker (models.Model):
     eventTakerName = models.CharField(max_length = 50)
 
 
-# contacter weak entity, 但我不知道这么写是不是对的
+# contacter weak entity
 class TakerContacter (models.Model):
     contacterId = models.UUIDField(primary_key = True, default = uuid.uuid4, editable = False)
     contacterName = models.CharField(max_length = 50)
@@ -35,9 +35,9 @@ class eventType(models.Model):
 class Event (models.Model):
     eventID = models.UUIDField(primary_key = True, default = uuid.uuid4, editable = False)
     eventName = models.CharField(max_length = 50)
-    eventInfo = models.CharField(max_length = 300)
+    eventInfo = models.CharField(max_length = 600)
 
-    eventStartTime = models.DateTimeField()
+    eventStartTime = models.DateTimeField(auto_now_add=True)
     eventSignUpTime = models.DateTimeField()
     eventActualStTime = models.DateTimeField()
 
