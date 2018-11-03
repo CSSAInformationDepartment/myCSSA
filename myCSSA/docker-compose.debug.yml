@@ -1,0 +1,10 @@
+version: '2.1'
+
+services:
+  mycssa:
+    image: mycssa
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 8000:8000

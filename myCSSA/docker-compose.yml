@@ -1,0 +1,8 @@
+version: '2.1'
+
+services:
+  mycssa:
+    image: mycssa
+    build: .
+    ports:
+      - 8000:8000

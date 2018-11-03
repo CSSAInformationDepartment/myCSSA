@@ -1,10 +1,11 @@
 from django.db import models
 from adminHub import models as adminModel
+import uuid
 # Create your models here
 # 
 
 #岗位列表
-def JobList(models.Model):
+class JobList(models.Model):
     jobId = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     dept = models.ForeignKey(adminModel.CSSADept,verbose_name="部门", on_delete=models.CASCADE)
 
@@ -14,7 +15,7 @@ def JobList(models.Model):
     dueDate = models.DateTimeField(verbose_name="截止日期")
 
 
-def Resume(models.Model):
+class Resume(models.Model):
     CVId = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     jobRelated = models.ForeignKey(JobList,verbose_name="相应职位", on_delete=models.CASCADE)
     
