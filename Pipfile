@@ -4,11 +4,6 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-django = "*"
-django-rest = "*"
-pillow = "*"
-djangorestframework = "==3.9.0"
-pymysql = "*"
 
 [dev-packages]
 

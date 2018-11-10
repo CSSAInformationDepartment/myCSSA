@@ -12,6 +12,9 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 
 import os
 
+import pymysql
+pymysql.install_as_MySQLdb()
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -82,7 +85,10 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'OPTIONS': {
-            'read_default_file': '/Users/lelu/Gits/myCSSA/myCSSA/myCSSA/my.cnf',
+            #.cnf Path on MAC
+            #'read_default_file': '/Users/lelu/Gits/myCSSA/myCSSA/myCSSA/my.cnf',
+            #.cnf Path on WIN
+            'read_default_file': 'C:\\Users\\Administrator.WIN-4IDCBBR97E5\\source\\repos\\ShepherdMOZ\\myCSSA\\myCSSA\\myCSSA\\my.cnf',
             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"
         }
     }

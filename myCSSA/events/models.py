@@ -1,7 +1,7 @@
 from django.db import models
 import uuid
 
-# import userprofile class 但是应该是有问题的
+
 from adminHub import models as adminModel
 
 # Create your models here.
@@ -12,13 +12,14 @@ from adminHub import models as adminModel
 # 2. 对象名首字母大写
 # 3. 变量名首字母小写
 # 4. 其余格式说明请见代码区 (adminHub/models.py)
+# 5. 为每个模型编写序列化类, ID类字段必须设为只读 (serlizers.py)
+
 #######################################
 ## 官方教程：https://docs.djangoproject.com/en/2.1/intro/tutorial02/
 
 class EventUndertaker (models.Model):
     eventTakerId = models.UUIDField(primary_key = True, default = uuid.uuid4, editable = False)
     eventTakerName = models.CharField(max_length = 50)
-
 
 # contacter weak entity
 class TakerContacter (models.Model):
@@ -27,7 +28,7 @@ class TakerContacter (models.Model):
     eventTakerId = models.ForeignKey(EventUndertaker, on_delete = models.CASCADE)
     contacterContact = models.CharField(max_length = 50)
 
-class eventType(models.Model):
+class EventType(models.Model):
     eventTypeId = models.UUIDField(primary_key = True, default = uuid.uuid4, editable = False)
     typeName = models.CharField(max_length = 50)
 
