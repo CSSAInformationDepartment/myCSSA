@@ -34,6 +34,9 @@
     <Compile Include="events\apps.py" />
     <Compile Include="events\migrations\__init__.py" />
     <Compile Include="events\models.py" />
+    <Compile Include="events\serializers.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="events\tests.py" />
     <Compile Include="events\views.py" />
     <Compile Include="events\__init__.py" />

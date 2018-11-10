@@ -49,7 +49,7 @@ class UniMajor (models.Model):
 #用户信息主体 （继承自标准admin model，参照： https://www.zmrenwu.com/post/31/）
 class UserProfile (AbstractUser):
     REQUIRED_FIELDS=('identiyConfirmed','firstNameEN','lastNameEN','studentId','membershipId','email')
-
+    
     avatar = models.ImageField(verbose_name="头像", upload_to=_GetUserDir, height_field=None, width_field=None, max_length=None, null=True)
     infocardBg = models.ImageField(verbose_name="名片背景", upload_to=_GetUserDir, height_field=None, width_field=None, max_length=None, null=True)
 
@@ -75,16 +75,16 @@ class UserProfile (AbstractUser):
 
     class Meta(AbstractUser.Meta):
         pass
-    
+
     def __str__(self):
         return '%s %s' % (self.firstNameEN, self.lastNameEN)
 
 #用户联系方式
 class UserContact (models.Model):
-    # 此行代表【联系方式】与【用户信息主体】为多对一关系， 
+    # 此行代表【联系方式】与【用户信息主体】为多对一关系，
     # CASCADE参数表示当【主体】信息被删除时，所有相关的【联系方式】也会被删除。
     userProfile = models.ForeignKey(UserProfile, on_delete = models.CASCADE)
-    
+
     timeOfCreate  = models.DateTimeField(auto_now_add=True)
     telNumber = models.CharField(verbose_name="联系电话",max_length = 12)
     email = models.CharField(verbose_name="电子邮箱",max_length = 30)
@@ -112,7 +112,7 @@ class UserAcademic (models.Model):
     timeOfCreate  = models.DateTimeField(auto_now_add=True)
     degree = models.CharField(verbose_name="学位", choices=degreeChoice,max_length=32, default='BA')
     uniMajor = models.ForeignKey(UniMajor,verbose_name="专业" ,on_delete=None)
-    
+
 class UserAccComment (models.Model):
     accCommentId = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     timeOfCreate = models.DateTimeField(auto_now_add=True)
@@ -124,7 +124,7 @@ class UserAccComment (models.Model):
 ########### Part 2. 站内信相关 ###########################################
 
 class adminMessage (models.Model):
-    
+
     messageId = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     repliedId = models.ForeignKey('self', on_delete=models.CASCADE, default=None)
 
@@ -137,7 +137,7 @@ class adminMessage (models.Model):
     sender = models.ForeignKey(UserProfile, verbose_name="发件人", on_delete=models.CASCADE, related_name='sender')
     receiver = models.ForeignKey(UserProfile, verbose_name="收件人", on_delete=models.CASCADE, related_name='receiver')
     messageHTML = models.TextField(verbose_name="正文")
-    
+
 
     class Meta:
         verbose_name = "信息"

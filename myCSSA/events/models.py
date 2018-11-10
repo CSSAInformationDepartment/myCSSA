@@ -42,7 +42,7 @@ class Event (models.Model):
     eventSignUpTime = models.DateTimeField()
     eventActualStTime = models.DateTimeField()
 
-    # 活动主办方，
+    # 活动主办方
     eventBy = models.ForeignKey(EventUndertaker,on_delete=models.PROTECT)
 
     #活动类型
@@ -59,5 +59,3 @@ class AttendEvent (models.Model):
     # 交费及评价
     paid = models.BooleanField
     comment = models.CharField(max_length = 150)
-
-
