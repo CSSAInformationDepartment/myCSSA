@@ -16,7 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import re_path, path, include
 #from adminHub import views as adminHub
-import adminHub, publicSite
+import adminHub, publicSite,events
 from publicSite import views as homepage
 
 
@@ -25,6 +25,7 @@ urlpatterns = [
     path('index/', homepage.index, name="Index"),
     path('adminhub/', include('adminHub.urls')),
     path('site/',include('publicSite.urls')),
+    path('events/',include('events.urls')),
     path('admin/', admin.site.urls),
     #re_path(r'^users/', include('django.contrib.auth.urls'))
     ]

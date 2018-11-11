@@ -1,34 +1,26 @@
-
 from rest_framework import serializers
-import events.models
+import events.models as EventModel
 
 class EventUndertakerSerializers(serializers.ModelSerializer):
     class Meta:
-        model = EventUndertaker #对应的模型名称
-        fields = ('eventTakerId', 'eventTakerName') #对应的数据字段
-        read_only_fields = ('eventTakerId')
+        model = EventModel.EventUndertaker #对应的模型名称
+        fields = '__all__' #对应的数据字段
+        read_only_fields = ('eventTakerId',) #只读字段就算只有一个也必须在结尾加逗号
 
 
-class EventType(serializers.ModelSerializer):
+class EventTypeSerializers(serializers.ModelSerializer):
     class Meta:
-        model = EventType
-        fields = ('eventTypeId', 'typeName')
-        read_only_fields = ('eventTypeId')
+        model = EventModel.EventType
+        fields = '__all__'
+        read_only_fields = ('eventTypeId',)
 
-class Event(serlizers.ModelSerializer):
+class EventSerializers(serializers.ModelSerializer):
     class Meta:
-        model = Event
-        fields = ('eventID', 'eventName' , 'eventInfo', 'eventStartTime',
-        'eventSignUpTime', 'eventActualStTime', 'eventBy', 'eventTypes')
-        read_only_fields = ('eventID')
+        model = EventModel.Event
+        fields = '__all__'
+        read_only_fields = ('eventID',)
 
-class AttendEvent(serlizers.ModelSerializer):
+class AttendEventSerializers(serializers.ModelSerializer):
     class Meta:
-        model = AttendEvent
-        fields = ('attendedId','attendedEventId', 'attendedUserId')
-
-
-    """docstring for AttendEvent."""
-    def __init__(self, arg):
-        super(AttendEvent, self).__init__()
-        self.arg = arg
+        model = EventModel.AttendEvent
+        fields = '__all__'

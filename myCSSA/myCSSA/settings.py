@@ -41,10 +41,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
     'publicSite',
     'adminHub',
     'events',
-    'recruit'
+    'recruit',
 ]
 
 MIDDLEWARE = [

@@ -46,7 +46,7 @@ class Event (models.Model):
     eventBy = models.ForeignKey(EventUndertaker,on_delete=models.PROTECT)
 
     #活动类型
-    eventTypes = models.ForeignKey(eventType,on_delete=models.DO_NOTHING)
+    eventTypes = models.ForeignKey(EventType,on_delete=models.DO_NOTHING)
 
 
 # UserProfile 参加 Event 的多对多 association entity
