@@ -1,5 +1,6 @@
 # myCSSA 
 This is the next-gen online services platform for Chinese Students and Scholars Association @ Unimelb
+Proundly developed and supported by the Department of Information Technology, CSSAUnimelb
 ## Prerequisites
 You MUST have these packages/tools installed on your local machine before playing with this project
 1. Docker-CE (Community Edition)
