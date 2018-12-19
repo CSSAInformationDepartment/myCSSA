@@ -21,7 +21,7 @@ docker-compose up --build
 5. Access the page at: http://localhost:8000 and HAVE FUN!
 
 
-## To Be a Contributor
+## To be a Contributor
 Welcome to join us by contacting: information@cssaunimelb.com
 
 ## Project Info
