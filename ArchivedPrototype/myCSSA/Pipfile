@@ -1,0 +1,16 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+django = "*"
+django-rest = "*"
+pillow = "*"
+djangorestframework = "==3.9.0"
+pymysql = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.7"

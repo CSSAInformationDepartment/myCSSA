@@ -1,0 +1,248 @@
+{% extends 'components/base_page.html' %}
+{% block 'pg_body' %}
+<!-- bloc-4 -->
+{% load static %}
+
+<div class="bloc dept-header l-bloc" id="bloc-4">
+	<div class="container bloc-lg">
+		<div> <h3>{{ dept.deptTitle }} </h3> </div>
+		<div class="row dept-header">
+			<div class="col-md-6">
+				<img src="{{ DepartmentMasterImg.imgUri }}" class="img-fluid mx-auto d-block lazyload" />
+			</div>
+			<div class="col-md-6 align-self-center">
+				<h2 class="mg-md">
+					部长致辞
+				</h2>
+				<h3 class="mg-md">
+					From the director<br>
+				</h3>
+				<p>
+					{{ DepartmentForeword.fieldInnerText }}
+				</p>
+			</div>
+		</div>
+	</div>
+</div>
+<!--a> href="index.html" class="btn btn-lg btn-maya-blue">加入我们</a-->
+<!-- bloc-4 END -->
+
+<!-- bloc-5 -->
+<div class="bloc l-bloc" id="bloc-5">
+	<div class="container">
+		<div class="row">
+			<div class="col-12 col-11 col-lg-8 offset-lg-2">
+				<h3 class="mg-md text-center ">
+					<i>{{ DepartmentBrief.fieldInnerText }}</i><br>
+				</h3>
+				<h4 class="mg-md text-center ">
+					<strong>（部门职责）</strong>
+				</h4>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- bloc-5 END -->
+
+<!-- bloc-6 -->
+<div class="bloc l-bloc" id="bloc-6" style='display:none;'>
+	<div class="container bloc-sm">
+		<div class="row">
+			<div class="col-md-2">
+				<h3 class="mg-md text-center ">
+					<strong>148K</strong>
+				</h3>
+				<h4 class="mg-md text-center ">
+					Product Users
+				</h4>
+			</div>
+			<div class="col-md-2">
+				<h3 class="mg-md text-center ">
+					<strong>1289</strong>
+				</h3>
+				<h4 class="mg-md text-center ">
+					Tweets
+				</h4>
+			</div>
+			<div class="col-md-2">
+				<h3 class="mg-md text-center  h3-style">
+					<strong>{{值}}</strong>
+				</h3>
+				<h4 class="mg-md text-center ">
+					成员数量
+				</h4>
+			</div>
+			<div class="col-md-2">
+				<h3 class="mg-md text-center ">
+					<strong>220K</strong>
+				</h3>
+				<h4 class="mg-md text-center ">
+					男女比例
+				</h4>
+			</div>
+			<div class="col-md-2">
+				<h3 class="mg-md text-center ">
+					<strong>20K</strong>
+				</h3>
+				<h4 class="mg-md text-center ">
+					Likes
+				</h4>
+			</div>
+			<div class="col-md-2">
+				<h3 class="mg-md text-center ">
+					<strong>999K</strong>
+				</h3>
+				<h4 class="mg-md text-center ">
+					Cups of Tea
+				</h4>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- bloc-6 END -->
+
+<!-- bloc-7 -->
+<div class="bloc l-bloc" id="bloc-7">
+	<div class="container bloc-sm">
+		<div class="row">
+			<div class="col-md-12 col-lg-6 offset-lg-3">
+				<h3 class="mg-md text-center">
+					部门成员介绍
+				</h3>
+				<p class="text-center">
+					Meet the Members
+				</p>
+			</div>
+			<div class="col-md-6">
+				<div class="row voffset memeber-display-large">
+					<div class="col order-1 align-self-center">
+						<h4 class="text-center mg-sm text-lg-left">
+							{{成员姓名}}
+						</h4>
+						<p class="text-center text-lg-left">
+							{{成员简介}}
+						</p>
+					</div>
+					<div class="col-lg-3">
+						<img src="img/lazyload-ph.png" data-src="img/placeholder-user.png" class="img-fluid rounded-circle lazyload" />
+					</div>
+				</div>
+				<div class="row voffset memeber-display-large">
+					<div class="col order-2 align-self-center">
+						<h4 class="text-center mg-sm text-lg-left">
+							{{成员姓名}}
+						</h4>
+						<p class="text-center text-lg-left">
+							{{成员简介}}
+						</p>
+					</div>
+					<div class="col-lg-3">
+						<img src="img/lazyload-ph.png" data-src="img/placeholder-user.png" class="img-fluid rounded-circle lazyload" />
+					</div>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="row">
+					<div class="col-12">
+						<div class="row voffset memeber-display-large">
+							<div class="col-lg-3">
+								<img src="img/lazyload-ph.png" data-src="img/placeholder-user.png" class="img-fluid rounded-circle lazyload" />
+							</div>
+							<div class="col align-self-center">
+								<h4 class="text-center text-lg-left mg-sm">
+									{{成员姓名}}
+								</h4>
+								<p class="text-center text-lg-left">
+									{{成员简介}}
+								</p>
+							</div>
+						</div>
+						<div class="row voffset memeber-display-large">
+							<div class="col-lg-3">
+								<img src="img/lazyload-ph.png" data-src="img/placeholder-user.png" class="img-fluid rounded-circle lazyload" />
+							</div>
+							<div class="col align-self-center">
+								<h4 class="text-center text-lg-left mg-sm">
+									John Doe
+								</h4>
+								<p class="text-center text-lg-left">
+									{{成员简介}}
+								</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- bloc-7 END -->
+
+<!-- bloc-8 -->
+<div class="bloc l-bloc" id="bloc-8">
+	<div class="container bloc-md">
+		<div class="row">
+			<div class="col-sm-10 offset-sm-1 col-md-8 offset-md-2  offset-lg-0 col-lg-12">
+				<div class="row">
+					<div class="col-lg-2 member-link-sml bloc-margin-bottom">
+						<img src="img/lazyload-ph.png" data-src="img/placeholder-user.png" class="img-fluid rounded-circle mx-auto d-block img-margin-bottom lazyload" />
+						<h4 class="mg-md text-lg-center">
+							{{成员姓名}}
+						</h4>
+						<h6 class="mg-md text-lg-center h6-heading-margin-top">
+							{{职务}}
+						</h6>
+					</div>
+					<div class="col-lg-2 member-link-sml">
+						<img src="img/lazyload-ph.png" data-src="img/placeholder-user.png" class="img-fluid rounded-circle mx-auto d-block img-style lazyload" />
+						<h4 class="mg-md text-lg-center">
+							{{成员姓名}}
+						</h4>
+						<h6 class="mg-md text-lg-center h6-2-margin-top">
+							{{职务}}
+						</h6>
+					</div>
+					<div class="col-lg-2 member-link-sml">
+						<img src="img/lazyload-ph.png" data-src="img/placeholder-user.png" class="img-fluid rounded-circle mx-auto d-block img-placeholder-us-style lazyload" />
+						<h4 class="mg-md text-lg-center">
+							{{成员姓名}}
+						</h4>
+						<h6 class="mg-md text-lg-center h6-3-margin-top">
+							{{职务}}
+						</h6>
+					</div>
+					<div class="col-lg-2 member-link-sml">
+						<img src="img/lazyload-ph.png" data-src="img/placeholder-user.png" class="img-fluid rounded-circle mx-auto d-block img-17-style lazyload" />
+						<h4 class="mg-md text-lg-center">
+							{{成员姓名}}
+						</h4>
+						<h6 class="mg-md text-lg-center h6-4-margin-top">
+							{{职务}}
+						</h6>
+					</div>
+					<div class="col-lg-2 member-link-sml">
+						<img src="img/lazyload-ph.png" data-src="img/placeholder-user.png" class="img-fluid rounded-circle mx-auto d-block img-17-style lazyload" />
+						<h4 class="mg-md text-lg-center">
+							{{成员姓名}}
+						</h4>
+						<h6 class="mg-md text-lg-center h6-5-margin-top">
+							{{职务}}
+						</h6>
+					</div>
+					<div class="col-lg-2 member-link-sml">
+						<img src="img/lazyload-ph.png" data-src="img/placeholder-user.png" class="img-fluid rounded-circle mx-auto d-block img-17-style lazyload" />
+						<h4 class="mg-md text-lg-center">
+							{{成员姓名}}
+						</h4>
+						<h6 class="mg-md text-lg-center h6-6-margin-top">
+							{{职务}}
+						</h6>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- bloc-8 END -->
+{% endblock 'pg_body' %}
+

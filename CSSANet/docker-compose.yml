@@ -1,0 +1,59 @@
+version: '3.6'
+
+services:
+  db:
+    image: postgres:10.6-alpine
+    restart: always
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      POSTGRES_PASSWORD: aiuh489ieu19vc*4
+      POSTGRES_DB: myCSSA
+    networks: 
+      - data_link
+    
+    # Django Cache Server
+  redis: 
+    restart: always
+    image: redis:latest
+    ports: 
+      - 6379:6379
+    networks: 
+      - cssa_router
+
+  nginx:
+    image: nginx:stable-alpine
+    restart: unless-stopped
+    ports:
+      - 8000:80
+    volumes:
+      - .:/code
+      -  ./config/nginx:/etc/nginx/conf.d
+    networks:
+      - cssa_router
+  
+  cssanet:
+    image: cssanet
+    command: bash -c "python3 manage.py makemigrations && python3 manage.py migrate && python3 manage.py runserver 0.0.0.0:8000"
+    #command: bash -c "python3 /code/manage.py migrate; nohup gunicorn CSSANet.wsgi -b 0.0.0.0:8000"
+    container_name: CSSAnet
+    volumes:
+      - .:/code
+    build: .
+    expose:
+      - 8000
+    depends_on:
+      - db 
+      - nginx
+    networks: 
+      - cssa_router
+      - data_link
+
+volumes:
+  postgres_data:
+
+networks: 
+  cssa_router:
+    driver: bridge
+  data_link:
+    driver: bridge

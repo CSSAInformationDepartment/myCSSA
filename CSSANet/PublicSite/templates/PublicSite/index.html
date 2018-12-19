@@ -1,0 +1,73 @@
+{% extends 'components/base_page.html' %}
+
+
+{% block 'pg_body' %}
+
+{% include 'components/index/_hero.html' %}
+
+{% load static %}
+
+<!-- bloc-2 -->
+<div class="bloc l-bloc" id="bloc-2">
+	<div class="container bloc-lg">
+		<div class="row">
+			<div class="col" style="text-align:center;">
+				<h3>我们正在对CSSA站点系统进行一次重大更新<br>
+					<small class="text-muted">网站目前处于限制开放模式，后续公测信息请留意CSSA各社交媒体平台公告</small>
+				</h3>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-4" style="text-align:center;">
+				<img src="{% static 'PublicSite/img/icon/wechat.png'%}" height="64px" width="64px" alt="..." class="mx-auto d-block" id="WeChatModal">
+				<h4>微信</h4>
+			</div>
+			<div class="col-md-4" style="text-align:center;">
+				<a href="https://www.weibo.com/cssaum">
+					<img src="{% static 'PublicSite/img/icon/weibo.png'%}" height="64px" width="64px" alt="..." class="mx-auto d-block">
+				<h4>微博</h4>
+				<a/>
+				
+			</div>
+			<div class="col-md-4" style="text-align:center;">
+				<a href="https://www.facebook.com/CSSAunimelb/">
+					<img src="{% static 'PublicSite/img/icon/Facebook.png'%}" height="64px" width="64px"  alt="..." class="mx-auto d-block">
+				<h4>Facebook</h4>
+				</a>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- bloc-2 END -->
+
+<div class="modal fade" id="WeChatQRCode" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        ...
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ScrollToTop Button -->
+<a class="bloc-button btn btn-d scrollToTop" onclick="scrollToTarget('1',this)"><span class="fa fa-chevron-up"></span></a>
+<!-- ScrollToTop Button END-->
+
+<script>
+$('#WeChatQRCode').on('shown.bs.modal', function () {
+  $('#WeChatModal').trigger('focus')
+})
+</script>
+
+{% endblock 'pg_body' %}
