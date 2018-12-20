@@ -8,7 +8,6 @@ from django.contrib.auth.decorators import login_required
 
 @login_required(login_url='/hub/login/')
 def home(request):
-
     return render(request, 'myCSSAhub/home.html')
 
 @login_required(login_url='/hub/login/')
