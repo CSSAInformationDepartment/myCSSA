@@ -17,7 +17,7 @@ env_dist = os.environ
 PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BASE_DIR = os.path.dirname(PROJECT_DIR)
 
-SITE_ID = 1
+#SITE_ID = 1
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
@@ -166,8 +166,18 @@ DATABASES = {
     }
 }
 
-# CACHE - By Redis
+CACHES = {
+ 'default': {
+  'BACKEND': 'django.core.cache.backends.dummy.DummyCache',  # 缓存后台使用的引擎
+  'TIMEOUT': 0,            # 缓存超时时间（默认300秒，None表示永不过期，0表示立即过期）
+  'OPTIONS':{
+   'MAX_ENTRIES': 300,          # 最大缓存记录的数量（默认300）
+   'CULL_FREQUENCY': 3,          # 缓存到达最大个数之后，剔除缓存个数的比例，即：1/CULL_FREQUENCY（默认3）
+  },
+ }
+}
 
+# CACHE - By Redis / Disabled in development environment
 #CACHES = {
 #    "default": {
 #        "BACKEND": "django_redis.cache.RedisCache",
@@ -182,8 +192,8 @@ DATABASES = {
 # Cache time to live is 1 minutes.
 CACHE_TTL = 1 * 1
 # Cahce ENV Setup
-SESSION_ENGINE = "django.contrib.sessions.backends.cache"
-SESSION_CACHE_ALIAS = "default"
+#SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+#SESSION_CACHE_ALIAS = "default"
 
 
 # Password validation
@@ -324,7 +334,7 @@ LOGGING = {
 
 # Enabling Debug toolbar in development mode
 if DEBUG == True:
-    INTERNAL_IPS = ('127.0.0.1', 'localhost',)
+    INTERNAL_IPS = ['cssanet','127.0.0.1', 'localhost','192.168.0.2']
     INSTALLED_APPS += ('debug_toolbar',)
     MIDDLEWARE += ('debug_toolbar.middleware.DebugToolbarMiddleware',)
     DEBUG_TOOLBAR_PANELS = [
@@ -339,5 +349,10 @@ if DEBUG == True:
 	    'debug_toolbar.panels.cache.CachePanel',
 	    'debug_toolbar.panels.signals.SignalsPanel',
 	    'debug_toolbar.panels.logging.LoggingPanel',
-	    'debug_toolbar.panels.redirects.RedirectsPanel',]
-    SHOW_TOOLBAR_CALLBACK = True
+	    'debug_toolbar.panels.redirects.RedirectsPanel',
+    ]
+
+    import socket
+    # tricks to have debug toolbar when developing with docker
+    ip = socket.gethostbyname(socket.gethostname())
+    INTERNAL_IPS += [ip[:-1] + '1']
