@@ -26,6 +26,7 @@ def notifications(request):
 
 
 
+
 ###### 账号相关 ##########
 def login_page(request):
     if request.method == 'POST':
@@ -51,6 +52,7 @@ def register_guide(request):
 def register_form(request):
 
     return render(request, 'adminHub/registrationForm_step1.html')
+
 
 @login_required(login_url='/adminhub/login/')
 def logout_page(request):
