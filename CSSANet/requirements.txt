@@ -17,3 +17,6 @@ psycopg2-binary
 Pillow
 
 gunicorn
+
+# For development mode only
+django-debug-toolbar
