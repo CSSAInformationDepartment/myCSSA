@@ -52,7 +52,7 @@ def _GetUserDir(instance, filename):
 class UserManager(BaseUserManager):
 
     use_in_migrations = True
-    
+
     def create_user(self, email, telNumber, password=None):
         user = self.model(
             email=self.normalize_email(email),
@@ -129,15 +129,15 @@ class User(AbstractUser):
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ('telNumber',)
-    
+
     class Meta:
         verbose_name = _('user')
         verbose_name_plural = _('users')
-    
+
     def __str__(self):
         return '%s' % (self.id)
 
- ### 暂时不用，这些函数不影响模型       
+ ### 暂时不用，这些函数不影响模型
  #   def get_full_name(self):
  #       '''
  #       Returns the first_name plus the last_name, with a space in between.
@@ -161,7 +161,7 @@ class User(AbstractUser):
 #用户信息主体 （继承自标准admin model，参照： https://www.zmrenwu.com/post/31/）
 class UserProfile (models.Model):
     user = models.OneToOneField(User,on_delete=models.DO_NOTHING)
-    
+
     avatar = models.ImageField(verbose_name="头像", upload_to=_GetUserDir,
     height_field=None, width_field=None, max_length=None,null=True, blank=True)
 
@@ -189,7 +189,7 @@ class UserProfile (models.Model):
     studentId = models.CharField(verbose_name="学生证号",max_length = 10)
     membershipId = models.CharField(verbose_name="会员卡号", max_length = 10,null=True, blank=True)
 
-    
+
     address = models.CharField(verbose_name="地址",max_length = 150, null=True)
     postcode = models.CharField(verbose_name="邮编",max_length = 4, null=True)
     originate = models.CharField(verbose_name="籍贯",max_length = 20, null=True)
@@ -229,4 +229,3 @@ class UserAcademic (models.Model):
     degree = models.CharField(verbose_name="学位", choices=degreeChoice,
     max_length=32, default='BA')
     uniMajor = models.ForeignKey(UniMajor,verbose_name="专业" ,on_delete=None)
-
