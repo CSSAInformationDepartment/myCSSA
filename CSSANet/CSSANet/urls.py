@@ -44,6 +44,17 @@ if settings.DEBUG:
     from django.contrib.staticfiles.urls import staticfiles_urlpatterns
     # Routers for Static Files and User Upload Media
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) 
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+    # Enable Debug Toolbar
+    import debug_toolbar
+    urlpatterns = [
+        path('__debug__/', include(debug_toolbar.urls)),
+
+        # For django versions before 2.0:
+        # url(r'^__debug__/', include(debug_toolbar.urls)),
+
+    ] + urlpatterns
+     
 
 #print (urlpatterns)
