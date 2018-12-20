@@ -6,22 +6,22 @@ from . import forms
 from django.contrib.auth.decorators import login_required
 # Create your views here.
 
-@login_required(login_url='/adminhub/login/')
+@login_required(login_url='/hub/login/')
 def home(request):
 
-    return render(request, 'adminHub/home.html')
+    return render(request, 'myCSSAhub/home.html')
 
-@login_required(login_url='/adminhub/login/')
+@login_required(login_url='/hub/login/')
 def userInfo(request):
-    return render(request, 'adminHub/userInfo.html')
+    return render(request, 'myCSSAhub/userInfo.html')
 
-@login_required(login_url='/adminhub/login/')
+@login_required(login_url='/hub/login/')
 def message(request):
-    return render(request, 'adminHub/message.html')
+    return render(request, 'myCSSAhub/message.html')
 
-@login_required(login_url='/adminhub/login/')
+@login_required(login_url='/hub/login/')
 def notifications(request):
-    return render(request, 'adminHub/notifications.html')
+    return render(request, 'myCSSAhub/notifications.html')
 
 
 
@@ -44,17 +44,17 @@ def login_page(request):
         else:
             return JsonResponse({'result':'Login Failed. Please Check your account inputs!'})
     else:
-        return render(request, 'adminHub/login.html')
+        return render(request, 'myCSSAhub/login.html')
 
 def register_guide(request):
-    return render(request, 'adminHub/register_guide.html')
+    return render(request, 'myCSSAhub/register_guide.html')
 
 def register_form(request):
 
-    return render(request, 'adminHub/registrationForm_step1.html')
+    return render(request, 'myCSSAhub/registrationForm_step1.html')
 
 
-@login_required(login_url='/adminhub/login/')
+@login_required(login_url='/hub/login/')
 def logout_page(request):
     logout(request)
     return HttpResponseRedirect('/')
