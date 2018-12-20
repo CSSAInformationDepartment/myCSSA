@@ -180,7 +180,7 @@ CACHES = {
 }
 
 # Cache time to live is 1 minutes.
-CACHE_TTL = 60 * 1
+CACHE_TTL = 1 * 1
 # Cahce ENV Setup
 SESSION_ENGINE = "django.contrib.sessions.backends.cache"
 SESSION_CACHE_ALIAS = "default"

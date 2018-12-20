@@ -54,6 +54,7 @@ def register_form(request):
     return render(request, 'adminHub/registrationForm_step1.html')
 
 
+
 @login_required(login_url='/adminhub/login/')
 def logout_page(request):
     logout(request)
