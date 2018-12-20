@@ -21,4 +21,4 @@ class ValidationForm(forms.Form):
             raise ValidationError(_('非法的邮箱名'))
         
         # Remember to always return the cleaned data.
-        return data
+        return data_email
