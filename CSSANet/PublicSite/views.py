@@ -31,17 +31,17 @@ def LoadPagetoRegister(uri,title,template):
 
 
 ################################# View Controller ########################################
-@cache_page(CACHE_TTL)
+#@cache_page(CACHE_TTL)
 def index(request):
     LoadPagetoRegister(reverse(index),'index','PublicSite/index.html')
 
     return render(request, 'PublicSite/index.html')
             
-@cache_page(CACHE_TTL)
+#@cache_page(CACHE_TTL)
 def News(request):
     return render(request, 'PublicSite/News.html')
 
-@cache_page(CACHE_TTL)
+#@cache_page(CACHE_TTL)
 def Departments(request,dept):
     ViewBag = {}
     ViewBag['MEDIA_ROOT'] = MEDIA_ROOT
