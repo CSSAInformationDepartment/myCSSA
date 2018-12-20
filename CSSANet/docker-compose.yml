@@ -13,13 +13,13 @@ services:
       - data_link
     
     # Django Cache Server
-  redis: 
-    restart: always
-    image: redis:latest
-    ports: 
-      - 6379:6379
-    networks: 
-      - cssa_router
+  #redis: 
+  #  restart: always
+  #  image: redis:latest
+  #  ports: 
+  #    - 6379:6379
+  #  networks: 
+  #    - cssa_router
 
   nginx:
     image: nginx:stable-alpine
@@ -34,8 +34,8 @@ services:
   
   cssanet:
     image: cssanet
-    command: bash -c "python3 manage.py makemigrations && python3 manage.py migrate && python3 manage.py runserver 0.0.0.0:8000"
-    #command: bash -c "python3 /code/manage.py migrate; nohup gunicorn CSSANet.wsgi -b 0.0.0.0:8000"
+    #command: bash -c "python3 manage.py makemigrations && python3 manage.py migrate && python3 manage.py runserver 0.0.0.0:8000"
+    command: bash -c "python3 manage.py makemigrations && python3 manage.py migrate && nohup gunicorn CSSANet.wsgi -b 0.0.0.0:8000"
     container_name: CSSAnet
     volumes:
       - .:/code
