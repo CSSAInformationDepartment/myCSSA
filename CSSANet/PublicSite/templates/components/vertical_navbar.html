@@ -13,10 +13,10 @@
 							<li class="nav-item">
 								<a class="nav-link" href="/">{%trans "首页" %} <span class="sr-only">(current)</span></a>
 							</li>
-							<li class="nav-item" style='display:none;'>
+							<li class="nav-item">
 								<a class="nav-link" href="event/">{%trans "活动消息 " %}</a>
 							</li>
-							<li class="nav-item" style='display:none;'>
+							<li class="nav-item">
 								<a class="nav-link" href="news/">{%trans "新闻公告" %}</a>
 							</li>
 							<li class="nav-item dropdown">
@@ -32,13 +32,13 @@
 								<a class="dropdown-item" href="/department/publicity">{%trans "人力资源部" %}</a>
 								</div>
 							</li>
-							<li class="nav-item" style='display:none;'>
+							<li class="nav-item" >
 								<a class="nav-link" href="alliance/">{%trans "合作机构 " %}</a>
 							</li>
-							<li class="nav-item" style='display:none;'>
+							<li class="nav-item">
 								<a class="nav-link" href="recruitment/">{%trans "联系我们" %}</a>
 							</li>
-							<li class="nav-item" style='display:none;'>
+							<li class="nav-item">
 								<a class="nav-link" href="#">加入我们</a>
 							</li>
 						</ul>
@@ -49,6 +49,7 @@
 						{% else %}
 							<li class="nav-item"><a class="nav-link" href="{% url 'myCSSAhub:hub_login' %}"> 登录</a></li>
 							<li class="nav-item"><a class="nav-link" href="{% url 'myCSSAhub:hub_reg' %}"> 注册 </a> </li>
+							<li class="nav-item"><a class="nav-link"> {{ user.is_authenticated }} </a> </li>
 						{% endif %}
 						</ul>    
 					</div>
