@@ -3,8 +3,8 @@
 <head>
     <meta charset="utf-8" />
     {% load static %}
-    <link rel="apple-touch-icon" sizes="76x76" href=" {% static "img/apple-icon.png" %}" >
-    <link rel="icon" type="image/png" href= "{% static "img/favicon.png" %}" >
+    <link rel="apple-touch-icon" sizes="76x76" href=" {% static '/myCSSAhub/img/apple-icon.png' %}" >
+    <link rel="icon" type="image/png" href= "{% static '/myCSSAhub/img/favicon.png' %}" >
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <title>
        myCSSA会员中心 - {% block pageTitle %} {% endblock %}
@@ -14,7 +14,7 @@
     <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:400,700|Material+Icons" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css">
     <!-- CSS Files -->
-    <link href="{% static "css/material-dashboard.css" %}" rel="stylesheet" />
+    <link href="{% static '/myCSSAhub/css/material-dashboard.css' %}" rel="stylesheet" />
 </head>
 <body>
     <div class="wrap">
@@ -30,21 +30,21 @@
     </div>
 
     <!--   Core JS Files   -->
-    <script src="{% static "js/core/jquery.min.js" %}"></script>
-    <script src="{% static "js/core/popper.min.js" %}"></script>
-    <script src="{% static "js/core/bootstrap-material-design.min.js" %}"></script>
+    <script src="{% static '/myCSSAhub/js/core/jquery.min.js' %}"></script>
+    <script src="{% static '/myCSSAhub/js/core/popper.min.js' %}"></script>
+    <script src="{% static '/myCSSAhub/js/core/bootstrap-material-design.min.js' %}"></script>
 
     <!--  Notifications Plugin, full documentation here: http://bootstrap-notify.remabledesigns.com/    -->
-    <script src="{% static "js/plugins/bootstrap-notify.js" %}"></script>
+    <script src="{% static '/myCSSAhub/js/plugins/bootstrap-notify.js' %}"></script>
 
     <!--  Charts Plugin, full documentation here: https://gionkunz.github.io/chartist-js/ -->
-    <script src="{% static "js/plugins/chartist.min.js" %}"></script>
+    <script src="{% static '/myCSSAhub/js/plugins/chartist.min.js' %}"></script>
 
     <!-- Plugin for Scrollbar documentation here: https://github.com/utatti/perfect-scrollbar -->
-    <script src="{% static "js/plugins/perfect-scrollbar.jquery.min.js" %}"></script>
+    <script src="{% static '/myCSSAhub/js/plugins/perfect-scrollbar.jquery.min.js' %}"></script>
 
     <!-- Material Dashboard Core initialisations of plugins and Bootstrap Material Design Library -->
-    <script src="{% static "js/material-dashboard.js" %}"></script>
-    <script src="{% static "js/site-ui.js" %}"></script>
+    <script src="{% static '/myCSSAhub/js/material-dashboard.js' %}"></script>
+    <script src="{% static '/myCSSAhub/js/site-ui.js' %}"></script>
 </body>
 </html>
