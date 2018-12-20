@@ -1,4 +1,4 @@
 {
     "python.linting.pylintEnabled": false,
-    "python.pythonPath": "/usr/local/bin/python3"
+    "python.pythonPath": "/Users/shenhaichen/.conda/envs/myCSSA/bin/python"
 }
