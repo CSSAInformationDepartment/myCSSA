@@ -8,7 +8,7 @@ import re
 class ValidationForm(forms.Form):
 
     email = forms.CharField()
-    telNumber = models.CharField()
+    telNumber = forms.CharField()
 
     def checkEmail(self):
         data_email = self.cleaned_data['email']

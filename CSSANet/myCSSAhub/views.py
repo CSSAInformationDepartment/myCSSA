@@ -58,12 +58,12 @@ def register_form(request):
             return self.register_form_2(request)
     else:
 
-        return render(request, 'adminHub/registrationForm_step1.html')
+        return render(request, 'myCSSAhub/registrationForm_step1.html')
 
 # 跳转至注册界面的第二步
 def register_form_2(request):
 
-    return render(request, 'adminHub/registrationForm_step2.html')
+    return render(request, 'myCSSAhub/registrationForm_step2.html')
 
 
 @login_required(login_url='/hub/login/')

@@ -21,16 +21,16 @@ services:
   #  networks: 
   #    - cssa_router
 
-  nginx:
-    image: nginx:stable-alpine
-    restart: unless-stopped
-    ports:
-      - 8000:80
-    volumes:
-      - .:/code
-      -  ./config/nginx:/etc/nginx/conf.d
-    networks:
-      - cssa_router
+  #nginx:
+  #  image: nginx:stable-alpine
+  #  restart: unless-stopped
+  #  ports:
+  #    - 8000:80
+  #  volumes:
+  #    - .:/code
+  #    -  ./config/nginx:/etc/nginx/conf.d
+  #  networks:
+  #    - cssa_router
   
   cssanet:
     image: cssanet
@@ -40,11 +40,11 @@ services:
     volumes:
       - .:/code
     build: .
-    expose:
-      - 8000
+    ports:
+      - 8000:8000
     depends_on:
       - db 
-      - nginx
+#      - nginx
     networks: 
       - cssa_router
       - data_link
