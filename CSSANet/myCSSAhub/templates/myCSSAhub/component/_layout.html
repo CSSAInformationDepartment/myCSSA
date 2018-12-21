@@ -4,13 +4,13 @@
     <title>
        myCSSAhub 会员中心 - {% block pageTitle %} {% endblock %}
     </title>
-    <base href=".hub/">
+    {% load static %}
+    <base href="{% static '/myCSSAhub/'%}"> <!--This is the root of static files for imgs-->
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <meta name="author" content="CSSA Department of Information Technology">
     <!-- Icons-->
-    {% load static %}
     <link href="{% static '/myCSSAhub/vendors/@coreui/icons/css/coreui-icons.min.css'%}" rel="stylesheet">
     <link href="{% static '/myCSSAhub/vendors/flag-icon-css/css/flag-icon.min.css'%}" rel="stylesheet">
     <link href="{% static '/myCSSAhub/vendors/font-awesome/css/font-awesome.min.css'%}" rel="stylesheet">
@@ -33,15 +33,37 @@
       gtag('config', 'UA-118965717-5');
     </script>
   </head>
-<body>
-    <div class="app header-fixed sidebar-fixed aside-menu-fixed sidebar-lg-show">
+<body class="app header-fixed sidebar-fixed aside-menu-fixed sidebar-lg-show">
+    <div>
         {% include './_navbar.html' %}
-        
-        <div class="appbody">
+        <div class="app-body">
             {% include './_sidemenu.html' %}
             <main class="main">
+              <!-- Breadcrumb-->
+              <ol class="breadcrumb">
+                <li class="breadcrumb-item">Home</li>
+                <li class="breadcrumb-item">
+                  <a href="#">Admin</a>
+                </li>
+                <li class="breadcrumb-item active">Dashboard</li>
+                <!-- Breadcrumb Menu-->
+                <li class="breadcrumb-menu d-md-down-none">
+                  <div class="btn-group" role="group" aria-label="Button group">
+                    <a class="btn" href="#">
+                      <i class="icon-speech"></i>
+                    </a>
+                    <a class="btn" href="./">
+                      <i class="icon-graph"></i>  Dashboard</a>
+                    <a class="btn" href="#">
+                      <i class="icon-settings"></i>  Settings</a>
+                  </div>
+                </li>
+              </ol>
+              <div class="container-fluid">
                 {% block pageContent%} {% endblock %}
+              </div>
             </main>
+            {% include './_aside_bar.html'%}
         </div>
 
     </div>
