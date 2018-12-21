@@ -1,6 +1,10 @@
 from django.db import models
 
 # Create your models here.
+class PublicAccessControl(models.Model):
+    id = models.AutoField(primary_key=True, editable=False)
+    uri = models.CharField(max_length=500)
+    is_accessible = models.BooleanField(default=False)
 class PageRegister(models.Model):
     id = models.AutoField(primary_key=True)
     timestamp_create=models.DateTimeField(auto_now_add=True)
