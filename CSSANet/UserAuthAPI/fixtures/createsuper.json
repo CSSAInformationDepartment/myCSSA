@@ -1,0 +1,13 @@
+[
+    { "model": "UserAuthAPI.user", 
+        "pk": "62f34ec1-34c8-4014-90ff-3a9249587784",
+        "fields": {
+            "email": "testadmin@cssa.com",
+            "telNumber": "0400123456",
+            "password": "pbkdf2_sha256$120000$PUvUoK3ik8DO$lzZlkV8oJN6crOUuGCMmqcuScdcX+CZOynXUo3nZEpE=",
+            "is_superuser": true,
+            "is_staff": true,
+            "is_active": true
+        }
+    }
+]

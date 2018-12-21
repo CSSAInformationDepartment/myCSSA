@@ -27,20 +27,22 @@ def notifications(request):
 
 ###### 账号相关 ##########
 def login_page(request):
+    loginErrorMsg = {"result": "Login Failed!"}
+    loginSuccessful = {"result": "Login Successful!"}
     if request.method == 'POST':
         email = request.POST['email']
         print(email)
         userQuery = models.User.objects.filter(email=email).first()
         if userQuery is None:
-            return JsonResponse({'result': 'Login Failed. Please Check your account inputs!'})
+            return JsonResponse(loginErrorMsg)
         password = request.POST['password']
         # print(email,password,username)
         user = authenticate(request, email=email, password=password)
         if user is not None:
             login(request, user)
-            return HttpResponseRedirect('/')
+            return JsonResponse(loginSuccessful)
         else:
-            return JsonResponse({'result': 'Login Failed. Please Check your account inputs!'})
+            return JsonResponse(loginErrorMsg)
     else:
         return render(request, 'myCSSAhub/login.html')
 

@@ -6,10 +6,15 @@
   <div class="container bloc-fill-screen">
     <div class="row">
       <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
+        <div id="login-fail-alert" class="alert alert-dismissible alert-warning fade show" role="alert" style="display:none;">
+          <button type="button" class="close" data-dismiss="alert">&times;</button>
+          <h4 class="alert-heading">登陆失败 !</h4>
+          <p class="mb-0">您提供的用户名不存在或者与密码不匹配，请检查！</p>
+        </div>
         <div class="card card-signin my-5">
           <div class="card-body">
             <h5 class="card-title text-center">登入 Sign In</h5>
-            <form class="form-signin" method='POST' action='{% url "myCSSAhub:hub_login" %}'>
+            <form id="main-login-form" class="form-signin" method='POST'>
             {% csrf_token %}
               <div class="form-label-group">
                 <input name="email" type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
@@ -26,7 +31,6 @@
                 <label class="custom-control-label" for="customCheck1">Remember Password</label>
               </div>
               <button class="btn btn-lg btn-primary btn-block text-uppercase" type="submit">Sign in</button>
-
             </form>
           </div>
         </div>
@@ -38,5 +42,35 @@
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+<script>
+$('#main-login-form').on('submit', function(event){
+    event.preventDefault();
+    function create_post() {
+      console.log("create post is working!") // sanity check
+      $.ajax({
+        url : "{% url 'myCSSAhub:hub_login' %}", // the endpoint
+        type : "POST", // http method
+        data : $('#main-login-form').serialize(),// data sent with the post request
+        // handle a successful response
+        success : function(json) {
+          if (json["result"] == "Login Successful!") {
+            window.location.href = "{% url 'myCSSAhub:home' %}"
+          } else {
+            $('#login-fail-alert').show();
+            console.log(json);
+          }
+        },
+        // handle a non-successful response
+        error : function(xhr,errmsg,err) {
+          $('#results').html("<div class='alert-box alert radius' data-alert>Oops! We have encountered an error: "+errmsg+
+          " <a href='#' class='close'>&times;</a></div>"); // add the error to the dom
+          console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
+          }
+      });
+    };
+    create_post();
+    console.log("form submitted!")  // sanity check
+});
+</script>
 
 {% endblock 'pg_body' %}
