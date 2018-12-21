@@ -42,11 +42,14 @@
 				<a href="https://www.facebook.com/CSSAunimelb/">
 					<img src="{% static 'PublicSite/img/icon/Facebook.png'%}" height="64px" width="64px"  alt="..." class="mx-auto d-block">
 				<h4>Facebook</h4>
-				<div style="padding: 5px">
-        	<iframe src ="https://www.facebook.com/CSSAunimelb/" width="370" height="300" frameborder="0">
-  					<p>Your browser does not support iframes.</p>
-					</iframe>
-				</div>	
+					<div style="padding: 5px">
+				   <div class="fb-page" data-href="https://www.facebook.com/CSSAunimelb" data-tabs="timeline" 
+					   data-width="370" data-height="300" 
+						 data-small-header="true" data-adapt-container-width="false" 
+						 data-hide-cover="false" data-show-facepile="false">
+
+				    </div>
+					</div>	
 				</a>
 			</div>
 		</div>
@@ -83,5 +86,16 @@ $('#WeChatQRCode').on('shown.bs.modal', function () {
   $('#WeChatModal').trigger('focus')
 })
 </script>
+
+<!-- facebook plugin-->
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = 'https://connect.facebook.net/zh_CN/sdk.js#xfbml=1&version=v3.2';
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+<!-- facebook plugin-->
 
 {% endblock 'pg_body' %}
