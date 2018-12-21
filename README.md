@@ -19,8 +19,10 @@ git clone https://github.com/ShepherdMOZ/myCSSA.git
 cd CSSANet
 docker-compose up --build 
 ```
-5. Access the page at: http://localhost:8000 and HAVE FUN!
-
+5. Access the page at: http://[Your Computers IP]:8000
+6. To access Admin Pages, use this account:
+  email: testadmin@cssa.com
+  password: test1234
 
 ## To be a Contributor
 Welcome to join us by contacting: information@cssaunimelb.com
