@@ -11,7 +11,7 @@ urlpatterns = [
 
 
 ################################# errors pages testing########################################
-# urlpatterns = [
+#urlpatterns += [
 #     path('400/', Views.bad_request, name='bad_request'),
 #     path('403/', Views.permission_denied, name='permission_denied'),
 #     path('404/', Views.page_not_found, name='page_not_found'),
