@@ -7,19 +7,19 @@
     <title>400-对不起！您发送了一个错误的请求</title>
 
     <style type="text/css">
-
+    {% load static %}
         .head404 {
             width: 580px;
             height: 234px;
             margin: 50px auto 0 auto;
-            background: url(../static/myCSSAhub/img/errors/400.png) no-repeat;
+            background: url({% static '/myCSSAhub/img/errors/bg404.png' %}) no-repeat;
         }
 
         .txtbg404 {
             width: 499px;
             height: 169px;
             margin: 10px auto 0 auto;
-            background: url(../static/myCSSAhub/img/errors/bg404.png) no-repeat;
+            background: url({% static '/myCSSAhub/img/errors/bg404.png' %}) no-repeat;
         }
 
         .txtbg404 .txtbox {
