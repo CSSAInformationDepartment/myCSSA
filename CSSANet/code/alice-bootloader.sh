@@ -37,12 +37,12 @@ do
     `nc -z $SERVER $PORT`
     result1=$?
     if [  "$result1" != 0 ]; then
-      >&2 echo 'Postgres is unavailable - Waiting for 5 sec to Retry'
+      >&2 echo 'Postgres is unavailable - Waiting for 3 sec to Retry'
+      sleep 3
     else
         >&2 echo "Postgres is up - Web Service Engine boot sequence initiated"
         SQLCONNECTED='TRUE'
     fi
-    sleep 5
 done
 
 python3 manage.py makemigrations || ( echo '[Bootloader] Migration Check Failure!'; exit 1);
