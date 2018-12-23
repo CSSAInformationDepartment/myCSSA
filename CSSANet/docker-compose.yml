@@ -25,8 +25,10 @@ services:
     volumes:
       - ./data:/var/lib/postgresql/data
     environment:
+      POSTGRES_USER: postgres
       POSTGRES_PASSWORD: aiuh489ieu19vc*4
       POSTGRES_DB: myCSSA
+      PGDATA: /tmp
     expose:
       - 5432
     networks: 
@@ -42,7 +44,8 @@ services:
   #    -  ./config/nginx:/etc/nginx/conf.d
   #  networks:
   #    - cssa_router
-  
+
+
 networks: 
   cssa_router:
     driver: bridge
