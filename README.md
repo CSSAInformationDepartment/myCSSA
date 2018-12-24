@@ -6,6 +6,7 @@ You MUST have these packages/tools installed on your local machine before playin
 1. Docker-CE (Community Edition)
 2. Python >= 3.6
 3. Lastest stable version of Pipenv (Optional but recommended)
+4. PostgesSQL Server == 10.6 (Optional for who wants to test code outside the Docker container)
 ## Additional Notice for Windows Users
 Currently the ALICE bootloader (alice-bootloader.sh) is added as an entry point for myCSSA container. Due to the difference in EOL between Windows and UNIX-based systems, the bootloader could be not executed properly in Windows environment. If you see the error " exec user process caused 'no such file or directory'", please use Notepad++ or something equivlent to modified the EOL of alice-bootloader.sh to UNIX style.
 ## Quick Start Guide
