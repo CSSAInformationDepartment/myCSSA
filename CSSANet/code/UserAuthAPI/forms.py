@@ -25,7 +25,7 @@ class BasicSiginInForm(forms.Form):
     email = forms.CharField()
     telNumber = forms.CharField()
     password = forms.CharField(widget= forms.PasswordInput())
-    confirmPassword = forms.PasswordInput(attrs={'class':})
+    confirmPassword = forms.PasswordInput(attrs={'class':''})
 
 
     def checkEmail(self):
@@ -63,8 +63,8 @@ class BasicSiginInForm(forms.Form):
         return data_telNumber
     
     def passwordIntegrityCheck(self):
+        return None
         
-
 
 class UserInfoForm(forms.ModelForm):
     avatar = forms.FileField()
