@@ -11,12 +11,9 @@
 
 <div class="bloc none l-bloc" id="bloc-1">
   <div class="container bloc-fill-screen">
-    <div class="row" style="padding-top: 140px;">
+    <div class="row" style="padding-top: 35%;">
       <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
-        <div id="login-fail-alert" class="alert alert-dismissible alert-warning fade show" role="alert" style="display:none;">
-          <button type="button" class="close" data-dismiss="alert">&times;</button>
-          <h4 class="alert-heading">登陆失败 !</h4>
-          <p class="mb-0">您提供的用户名不存在或者与密码不匹配，请检查！</p>
+        <div id="ErrMsgArea">
         </div>
         <div class="card card-signin my-5">
           <div class="card-body">
@@ -24,13 +21,13 @@
             <form id="main-login-form" class="form-signin" method='POST'>
             {% csrf_token %}
               <div class="form-label-group">
-                <input name="email" type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
                 <label for="inputEmail">Email</label>
+                <input name="email" type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
               </div>
 
               <div class="form-label-group">
-                <input name="password" type="password" id="inputPassword" class="form-control" placeholder="Password" required>
                 <label for="inputPassword">Password</label>
+                <input name="password" type="password" id="inputPassword" class="form-control" placeholder="Password" required>
               </div>
 
               <div class="custom-control custom-checkbox mb-3">
@@ -50,6 +47,11 @@
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
 <script>
+
+function bs_alert_popup(){
+  $('#ErrMsgArea').html('<div id="login-fail-alert" class="alert alert-dismissible alert-warning fade show" role="alert"><button type="button" class="close" data-dismiss="alert">&times;</button><h4 class="alert-heading">登陆失败 !</h4><p class="mb-0">您提供的用户名不存在或者与密码不匹配，请检查！</p></div>')
+}
+
 $('#main-login-form').on('submit', function(event){
     event.preventDefault();
     function create_post() {
@@ -63,13 +65,13 @@ $('#main-login-form').on('submit', function(event){
           if (json["result"] == "Login Successful!") {
             window.location.href = "{% url 'myCSSAhub:home' %}"
           } else {
-            $('#login-fail-alert').show();
+            bs_alert_popup();
             console.log(json);
           }
         },
         // handle a non-successful response
         error : function(xhr,errmsg,err) {
-          $('#results').html("<div class='alert-box alert radius' data-alert>Oops! We have encountered an error: "+errmsg+
+          $('#results').html('<div class="alert alert-dismissible alert-warning fade show" role="alert">Oops! We have encountered an error: '+errmsg+
           " <a href='#' class='close'>&times;</a></div>"); // add the error to the dom
           console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
           }
