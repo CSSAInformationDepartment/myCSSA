@@ -4,6 +4,7 @@ db.sqlite3
 .lock
 .DS_Store
 .vscode/
+.CSSANet/.vscode/
 .vscode/settings.json
 .idea/
 settings.json
