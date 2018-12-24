@@ -3,6 +3,7 @@
 db.sqlite3
 .lock
 .DS_Store
+.vscode/
 .vscode/settings.json
 .idea/
 settings.json
