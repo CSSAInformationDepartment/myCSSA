@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import JsonResponse, HttpResponseRedirect, HttpResponse
 from django.contrib.auth import authenticate, login, logout
 from django.views import View
+from django.views.generic.edit import CreateView, UpdateView
 
 from UserAuthAPI import models
 from . import forms
@@ -25,6 +26,9 @@ def message(request):
 @login_required(login_url='/hub/login/')
 def notifications(request):
     return render(request, 'myCSSAhub/notifications.html')
+
+def register_guide(request):
+    return render(request, 'myCSSAhub/register_guide.html')
 
 
 ###### 账号相关 ##########
@@ -58,10 +62,8 @@ class LoginPage(View):
             return JsonResponse(self.loginErrorMsg)
 
 
-def register_guide(request):
-    return render(request, 'myCSSAhub/register_guide.html')
 
-class classname(object):
+class BasicSignIn(object):
     pass
 
 def register_form(request):
