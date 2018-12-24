@@ -4,19 +4,20 @@ services:
   cssanet:
     image: cssanet
     entrypoint: /code/alice-bootloader.sh
-    #command: bash -c "python3 manage.py makemigrations && python3 manage.py migrate && python3 manage.py runserver 0.0.0.0:8000"
     #command: bash -c "python3 manage.py makemigrations && python3 manage.py migrate && nohup gunicorn CSSANet.wsgi -b 0.0.0.0:8000"
     container_name: CSSAnet
     volumes:
       - ./code:/code
       - ./shell:/shell
       - ./data:/data
+      - ./code/static:/code/static
+      - ./code/media:/code/media
     build: .
-    ports:
-      - 8000:8000
+    expose:
+      - 8000
     depends_on:
       - db 
-#      - nginx
+      - nginx
     networks: 
       - cssa_router
       - data_link
@@ -34,16 +35,18 @@ services:
     networks: 
       - data_link
 
-  #nginx:
-  #  image: nginx:stable-alpine
-  #  restart: unless-stopped
-  #  ports:
-  #    - 8000:80
-  #  volumes:
-  #    - .:/code
-  #    -  ./config/nginx:/etc/nginx/conf.d
-  #  networks:
-  #    - cssa_router
+  nginx:
+    image: nginx:stable-alpine
+    restart: unless-stopped
+    ports:
+      - 8000:80
+    volumes:
+      - .:/code
+      -  ./config/nginx:/etc/nginx/conf.d
+      - ./code/static:/static
+      - ./code/media:/media
+    networks:
+      - cssa_router
 
 volumes:
   postgres_data:

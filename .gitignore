@@ -7,7 +7,7 @@ db.sqlite3
 /.vscode/settings.json
 /CSSANet/data/*
 !/CSSANet/data/
-/CSSANet/static/*
-/CSSANet/media/*
+/CSSANet/code/static/*
+/CSSANet/code/media/*
 !.gitignore
 !.gitkeep

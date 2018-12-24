@@ -29,7 +29,7 @@ BASE_DIR = os.path.dirname(PROJECT_DIR)
 DEBUG = True
 if DEBUG == False:
     SECRET_KEY = env_dist.get('DJANGOKEYPD')
-    ALLOWED_HOSTS = ['cssanet','localhost','cssaunimelb.com']
+    ALLOWED_HOSTS = ['cssanet','localhost','cssaunimelb.com','192.168.0.2']
     CSRF_COOKIE_SECURE = True
     SESSION_COOKIE_SECURE = True
     SECURE_CONTENT_TYPE_NOSNIFF = True
