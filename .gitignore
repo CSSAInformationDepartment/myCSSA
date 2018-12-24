@@ -3,8 +3,11 @@
 db.sqlite3
 .lock
 .DS_Store
-/.vscode/settings.json
-/.vscode/settings.json
+.vscode/
+.CSSANet/.vscode/
+.vscode/settings.json
+.idea/
+settings.json
 /CSSANet/data/*
 !/CSSANet/data/
 /CSSANet/code/static/*
