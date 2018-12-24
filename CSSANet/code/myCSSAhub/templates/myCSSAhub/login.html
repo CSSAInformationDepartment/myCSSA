@@ -2,9 +2,16 @@
 {% block 'pg_body' %}
 
 {% load static %}
+<style>
+  #bloc-1 {
+    background-image: url("{% static '/myCSSAhub/img/bg-login.jpg' %}")
+  }
+
+</style>
+
 <div class="bloc none l-bloc" id="bloc-1">
   <div class="container bloc-fill-screen">
-    <div class="row">
+    <div class="row" style="padding-top: 140px;">
       <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
         <div id="login-fail-alert" class="alert alert-dismissible alert-warning fade show" role="alert" style="display:none;">
           <button type="button" class="close" data-dismiss="alert">&times;</button>
