@@ -51,4 +51,6 @@ python3 manage.py migrate || ( echo '[Bootloader] DB Migration Failure!'; exit 1
 
 >&2 echo 'Web Services is now ready to start'
 
+#exec gunicorn CSSANet.wsgi -b 0.0.0.0:8000 ;
+
 exec python3 manage.py runserver 0.0.0.0:8000 ;

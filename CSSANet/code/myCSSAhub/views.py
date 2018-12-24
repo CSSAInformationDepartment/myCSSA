@@ -1,6 +1,9 @@
 from django.shortcuts import render
 from django.http import JsonResponse, HttpResponseRedirect, HttpResponse
 from django.contrib.auth import authenticate, login, logout
+from django.views import View
+from django.views.generic.edit import CreateView, UpdateView
+
 from UserAuthAPI import models
 from . import forms
 from django.contrib.auth.decorators import login_required
@@ -24,34 +27,47 @@ def message(request):
 def notifications(request):
     return render(request, 'myCSSAhub/notifications.html')
 
+def register_guide(request):
+    return render(request, 'myCSSAhub/register_guide.html')
+
 
 ###### 账号相关 ##########
-def login_page(request):
+
+#用户登陆CBV -- 范例
+class LoginPage(View):
+    #类属性
+    model = models.User
+    template_name = 'myCSSAhub/login.html'
     loginErrorMsg = {"result": "Login Failed!"}
     loginSuccessful = {"result": "Login Successful!"}
-    if request.method == 'POST':
+
+    #请求处理函数 （get）
+    def get(self, request, *args, **kwargs):
+        return render(request, self.template_name)
+
+    #请求处理函数（post）    
+    def post(self, request, *args, **kwargs):
         email = request.POST['email']
         print(email)
-        userQuery = models.User.objects.filter(email=email).first()
+        userQuery = self.model.objects.filter(email=email).first()
         if userQuery is None:
-            return JsonResponse(loginErrorMsg)
+            return JsonResponse(self.loginErrorMsg)
         password = request.POST['password']
         # print(email,password,username)
         user = authenticate(request, email=email, password=password)
         if user is not None:
             login(request, user)
-            return JsonResponse(loginSuccessful)
+            return JsonResponse(self.loginSuccessful)
         else:
-            return JsonResponse(loginErrorMsg)
-    else:
-        return render(request, 'myCSSAhub/login.html')
+            return JsonResponse(self.loginErrorMsg)
 
 
-def register_guide(request):
-    return render(request, 'myCSSAhub/register_guide.html')
 
+class BasicSignIn(object):
+    pass
 
 def register_form(request):
+
     ########注册验证##########
     if request.method == 'POST':
         form = ValidationForm(request.POST)
