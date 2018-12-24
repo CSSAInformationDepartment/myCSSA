@@ -4,7 +4,6 @@ services:
   cssanet:
     image: cssanet
     entrypoint: /code/alice-bootloader.sh
-    #command: bash -c "python3 manage.py makemigrations && python3 manage.py migrate && nohup gunicorn CSSANet.wsgi -b 0.0.0.0:8000"
     container_name: CSSAnet
     volumes:
       - ./code:/code

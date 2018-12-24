@@ -14,14 +14,6 @@
 #                                                                             #
 ###############################################################################
 
-############################  WARNING !!! #####################################
-#                                                                             #
-#    This part of code relates to the proprietary security features of        #
-#                        myCSSA Account System                                #
-#                                                                             #
-#                                                                             #
-#                          DO NOT DISCLOSE!                                   #
-###############################################################################
 
 from rest_framework import generics,authentication,permissions, status, response
 from django.contrib.auth import get_user_model, authenticate
