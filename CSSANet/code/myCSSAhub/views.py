@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate, login, logout
 from UserAuthAPI import models
 from . import forms
 from django.contrib.auth.decorators import login_required
-from UserAuthAPI.forms import ValidationForm
+from UserAuthAPI.forms import BasicSiginInForm
 
 # Create your views here.
 
