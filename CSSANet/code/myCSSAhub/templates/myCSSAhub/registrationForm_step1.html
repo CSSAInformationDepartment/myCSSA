@@ -4,32 +4,33 @@
 {% block 'pg_body' %}
 
 {% load static %}
-
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.0-alpha14/css/tempusdominus-bootstrap-4.min.css" />
 <style>
   #bloc-1 {
     background-image: url("{% static '/myCSSAhub/img/bg_Register.jpg' %}")
 
   }
 
-  </style>
+</style>
 
 
 
-  <div class="bloc none l-bloc" id="bloc-1">
-    <div class="container bloc-fill-screen">
-      <div class="row">
-  <div id="loginbox" class="col-sm-9 col-md-7 col-lg-5 mx-auto">
-        <form  id=msform class="form-horizontal" method="post" action="">
+<div class="bloc none l-bloc" id="bloc-1">
+  <div class="container bloc-fill-screen">
+    <div class="row">
+      <div id="loginbox" class="col-sm-9 col-md-7 col-lg-5 mx-auto">
+        <form  id=msform class="form-horizontal">
           {% csrf_token %}
           <ul id="progressbar">
             <li class="active">注册</li>
-            <li>补全信息</li>
-            <li>注册成功</li>
+            <li>基本信息</li>
+            <li>背景信息</li>
+            <li>完成注册</li>
           </ul>
           <fieldset>
             <h5 class="fs-title">请注册你的myCSSA账号</h5>
             <div class="form-label-group required"  >
-              <label class="control-labe col-md-3 requiredField">E-mail<span class="asteriskField">*</span></label>
+              <label class="control-labe  col-md-6 requiredField">E-mail<span class="asteriskField">*</span></label>
               <div class="controls col-md-12">
                 <input class="input-md textinput textInput form-control" id="id_email" name="email" placeholder="邮箱" type="text"/>
               </div>
@@ -42,13 +43,13 @@
               </div>
             </div>
             <div id="password1" class="form-label-group required"  >
-             <label for="id_password1" class="control-label col-md-6 requiredField"> Password<span class="asteriskField">*</span> </label>
+              <label for="id_password1" class="control-label col-md-6 requiredField"> Password<span class="asteriskField">*</span> </label>
               <div class="controls col-md-12 ">
                 <input class="input-md textinput textInput form-control" id="id_password1" name="password" placeholder="密码" type="password" />
               </div>
             </div>
             <div id="password2" class="form-label-group required"  >
-             <label for="id_password1" class="control-label col-md-8 requiredField"> Confirm Password<span class="asteriskField">*</span> </label>
+              <label for="id_password1" class="control-label col-md-8 requiredField"> Confirm Password<span class="asteriskField">*</span> </label>
               <div class="controls col-md-12 ">
                 <input class="input-md textinput textInput form-control" id="id_confirmPassword" name="confirmPassword" placeholder="重新输入密码" type="password" />
               </div>
@@ -56,15 +57,16 @@
 
             <div class="form-label-group">
               <div class="controls col-md-offset-5 col-md-12">
-                <input type="submit" name="outcome" class="btn btn-primary btn btn-info" id="submit" value="next" />
+                <input type="button" class="nextstep btn btn-primary btn btn-info" name="next" value="next" />
               </div>
             </div>
           </fieldset>
-          <fieldset>
-            <h5 class="card-title text-center">请注册你的myCSSA账号</h5>
+
+          <fieldset id="step2">
+            <h5 class="fs-title">请填写你的信息</h5>
             <div id="gender" class="form-group required">
-              <label for="id_gender"  class="control-label col-md-3 requiredField"> Gender<span class="asteriskField">*</span> </label>
-              <div class="controls col-md-10 ">
+              <label for="id_gender"  class="control-label  col-md-6 requiredField"> Gender<span class="asteriskField">*</span> </label>
+              <div class="controls  col-md-12 ">
                 <select class="selectpicker form-control" id="id_gender" name="gender">
                   <option value="Female">
                     Female
@@ -81,141 +83,154 @@
 
             </div>
 
-            <div id="firstname" class="form-group required">
-              <label for="id_firstName" class="control-label col-md-3  requiredField"> First Name<span class="asteriskField">*</span> </label>
-              <div class="controls col-md-10 ">
+            <div id="name" class="form-group required">
+
+              <label for="id_firstName" class="control-label  col-md-6  requiredField"> First Name<span class="asteriskField">*</span> </label>
+              <div class="controls  col-md-12 ">
                 <input class="input-md  textinput textInput form-control" id="firstname"  name="firstNameEN" placeholder="名" type="text" />
               </div>
             </div>
-            <div id="firstname" class="form-group required">
-              <label for="id_lastName" class="control-label col-md-3  requiredField"> Last Name<span class="asteriskField">*</span> </label>
-              <div class="controls col-md-10 ">
+            <div id="name" class="form-group required">
+              <label for="id_lastName" class="control-label  col-md-6  requiredField"> Last Name<span class="asteriskField">*</span> </label>
+              <div class="controls  col-md-12 ">
                 <input class="input-md  textinput textInput form-control" id="lastname" name="lastNameEN" placeholder="姓" type="text" />
               </div>
             </div>
-            <div class="form-group required">
-              <label class="control-label col-md-3 requiredField"> Student ID<span class="asteriskField">*</span></label>
-              <div class="controls col-md-10">
-                <input class="input-md textinput textInput form-control" name="studentId" placeholder="请输入你的学生证号" type="text"/>
+
+        <div id="div_id_number" class="form-group required">
+          <label for="id_number" class="control-label  col-md-6  requiredField"> Date of Birth<span class="asteriskField">*</span> </label>
+          <div class="controls  col-md-12 ">
+            <div class="input-group date" id="datetimepicker1" data-target-input="nearest">
+
+              <input class="input-md textinput textInput form-control datetimepicker-input"   name="dateOfBirth" placeholder="MM/DD/YYYY" type="text" data-target="#datetimepicker1"/>
+              <div class="input-group-append" data-target="#datetimepicker1" data-toggle="datetimepicker">
+                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
               </div>
             </div>
-            <div id="div_id_number" class="form-group required">
-              <label for="id_number" class="control-label col-md-3  requiredField"> Date of Birth<span class="asteriskField">*</span> </label>
-              <div class="controls col-md-10 ">
-                <div class="input-group date" id="datetimepicker1">
-                  <input class="input-md textinput textInput form-control"   name="dateOfBirth" placeholder="MM/DD/YYYY" type="text" />
-                  <span class="input-group-addon">
-                    <span class="glyphicon glyphicon-calendar"></span>
-                  </span>
-                </div>
-              </div>
-            </div>
-            <div id="div_id_location" class="form-group required">
-              <label for="id_location" class="control-label col-md-3  requiredField"> Address<span class="asteriskField">*</span> </label>
-              <div class="controls col-md-10 ">
-                <input class="form-control input-medium bfh-countries"  name="address" placeholder="请输入你的地址" />
-              </div>
-            </div>
-            <div id="div_id_location" class="form-group required">
-              <label for="id_location" class="control-label col-md-3  requiredField"> Postcode<span class="asteriskField">*</span> </label>
-              <div class="controls col-md-10 ">
-                <input class="form-control input-medium bfh-countries"  name="postcode" placeholder="请输入你的邮编" />
-              </div>
-            </div>
-            <div id="div_id_location" class="form-group required">
-              <label for="id_location" class="control-label col-md-3  requiredField"> Place of Birth<span class="asteriskField">*</span> </label>
-              <div class="controls col-md-10 ">
-                <input class="form-control input-medium bfh-countries" data-country="US" name="originate" placeholder="请输入你的籍贯" />
-              </div>
-            </div>
+          </div>
+        </div>
+        <div id="div_id_location" class="form-group required">
+          <label for="id_location" class="control-label  col-md-6  requiredField"> Address<span class="asteriskField">*</span> </label>
+          <div class="controls  col-md-12 ">
+            <input class="form-control input-medium bfh-countries"  name="address" placeholder="请输入你的地址" />
+          </div>
+        </div>
+        <div id="div_id_location" class="form-group required">
+          <label for="id_location" class="control-label  col-md-6  requiredField"> Postcode<span class="asteriskField">*</span> </label>
+          <div class="controls  col-md-12 ">
+            <input class="form-control input-medium bfh-countries"  name="postcode" placeholder="请输入你的邮编" />
+          </div>
+        </div>
+        <div id="div_id_location" class="form-group required">
+          <label for="id_location" class="control-label  col-md-6  requiredField"> Place of Birth<span class="asteriskField">*</span> </label>
+          <div class="controls  col-md-12 ">
+            <input class="form-control input-medium bfh-countries" data-country="US" name="originate" placeholder="请输入你的籍贯" />
+          </div>
+        </div>
+        <div class="form-label-group">
+          <div class="controls col-md-offset-5 col-md-12">
+            <input type="button" class="nextstep btn btn-primary btn btn-info" name="next" value="next" />
+          </div>
+        </div>
+</fieldset>
+<fieldset>
+        <h5 class="fs-title">请填写你的信息</h5>
+        <div id="div_id_select" class="form-group required">
+          <label for="degree"  class="control-label  col-md-6  requiredField"> Degree <span class="asteriskField">*</span> </label>
+          <div class="controls  col-md-12 ">
+            <select class="selectpicker form-control" id="degree" name="degree">
+              <option value="BA">
+                Bachelor
+              </option>
+              <option value="MA">
+                Master
+              </option>
+              <option value="CR">
+                Certificate
+              </option>
+              <option value="DP">
+                Diploma
+              </option>
+              <option value="FN">
+                Foundation
+              </option>
+              <option value="JD">
+                Jurum Doctor
+              </option>
+              <option value="MD">
+                Medical Doctor
+              </option>
+              <option value="PHD">
+                Doctor of Philosophy
+              </option>
 
-            <div id="div_id_select" class="form-group required">
+            </select>
+          </div>
+        </div>
 
-              <label for="degree"  class="control-label col-md-3  requiredField"> Degree <span class="asteriskField">*</span> </label>
-              <div class="controls col-md-10 ">
-                <select class="selectpicker form-control" id="degree" name="degree">
-                  <option value="BA">
-                    Bachelor
-                  </option>
-                  <option value="MA">
-                    Master
-                  </option>
-                  <option value="CR">
-                    Certificate
-                  </option>
-                  <option value="DP">
-                    Diploma
-                  </option>
-                  <option value="FN">
-                    Foundation
-                  </option>
-                  <option value="JD">
-                    Jurum Doctor
-                  </option>
-                  <option value="MD">
-                    Medical Doctor
-                  </option>
-                  <option value="PHD">
-                    Doctor of Philosophy
-                  </option>
+        <div id="major" class="form-group required">
+          <label for="major" class="control-label  col-md-6  requiredField"> Your Major<span class="asteriskField">*</span> </label>
+          <div class="controls  col-md-12 ">
+            <input class="selectpicker form-control" id="major" name="uniMajor" placeholder="请输入你的学位" />
 
-                </select>
-              </div>
+          </div>
+        </div>
+        <div class="form-group required">
+          <label class="control-label  col-md-6 requiredField"> Membership ID<span class="asteriskField">*</span></label>
+          <div class="controls  col-md-12">
+            <input class="input-md textinput textInput form-control" name="membershipId" placeholder="请输入你的会员卡证" type="text"/>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="control-label  col-md-6">Profile Picture</label>
+          <div class="controls  col-md-12">
+            <div class="input-group js-input-file">
+              <input class="input-file" type="file" name="avatar"  id="file">
             </div>
+            <div class="label--desc">请选择并上传你的头像。</div>
+          </div>
+        </div>
 
-            <div id="major" class="form-group required">
-              <label for="major" class="control-label col-md-3  requiredField"> Your Major<span class="asteriskField">*</span> </label>
-              <div class="controls col-md-10 ">
-                <input class="selectpicker form-control" id="major" name="uniMajor" placeholder="请输入你的学位" />
-
-              </div>
-            </div>
-            <div class="form-group required">
-              <label class="control-label col-md-3 requiredField"> Membership ID<span class="asteriskField">*</span></label>
-              <div class="controls col-md-10">
-                <input class="input-md textinput textInput form-control" name="membershipId" placeholder="请输入你的会员卡证" type="text"/>
-              </div>
-            </div>
-            <div class="form-group">
-              <label class="control-label col-md-3">Profile Picture</label>
-              <div class="controls col-md-10">
-                <div class="input-group js-input-file">
-                  <input class="input-file" type="file" name="avatar"  id="file">
-                </div>
-                <div class="label--desc">请选择并上传你的头像。</div>
-              </div>
-            </div>
-
-            <div class="form-group">
-              <div class="controls col-md-offset-3 col-md-10 ">
-                <div id="div_id_terms" class="checkbox required">
-                  <label for="id_terms" class=" requiredField">
-                    <input class="input-ms checkboxinput" id="id_terms" name="terms" type="checkbox" />
-                    Agree with the terms and conditions
-                  </label>
-                </div>
-
-              </div>
+        <div class="form-group">
+          <div class="controls col-md-offset-3  col-md-12 ">
+            <div id="div_id_terms" class="checkbox required">
+              <label for="id_terms" class=" requiredField">
+                <input class="input-ms checkboxinput" id="id_terms" name="terms" type="checkbox" />
+                Agree with the terms and conditions
+              </label>
             </div>
 
-            <div class="form-group">
-              <div class="controls col-md-offset-5 col-md-10 " >
-                <input type="submit" name="outcome1" value="Submit" class="btn btn-primary btn btn-info" id="submit-id-signup" />
+          </div>
+        </div>
 
-              </div>
-            </div>
-          </fieldset>
+        <div class="form-group">
+          <div class="controls col-md-offset-5 col-md-10 " >
+            <input type="button" value="Submit" class="nextstep btn btn-primary btn btn-info" id="submit-id-signup" />
+
+          </div>
+        </div>
+      </fieldset>
 
 
 
-        </form>
+    </form>
 
 
-</div>
-</div>
   </div>
 </div>
+</div>
+</div>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.23.0/moment.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.0-alpha14/js/tempusdominus-bootstrap-4.min.js"></script>
 
+<script type="text/javascript">
+  $(function () {
+    $('#datetimepicker1').datetimepicker({
+      format: 'L'
+    });
+  });
+</script>
+<script src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.5/jquery-ui.min.js'></script>
 
 
 {% endblock 'pg_body' %}
