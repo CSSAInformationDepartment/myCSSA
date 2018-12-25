@@ -6,8 +6,9 @@ You MUST have these packages/tools installed on your local machine before playin
 1. Docker-CE (Community Edition)
 2. Python >= 3.6
 3. Lastest stable version of Pipenv (Optional but recommended)
+4. PostgesSQL Server == 10.6 (Optional for who wants to test code outside the Docker container)
 ## Additional Notice for Windows Users
-Currently the ALICE bootloader (alice-bootloader.sh) is added as an entry point for myCSSA container. However, due to the difference in EOL between Windows and UNIX-based systems, the bootloader could be not executed properly in Windows environment. If you see the error " exec user process caused 'no such file or directory'", please use Notepad++ or something equivlent to modified the EOL of alice-bootloader.sh to UNIX style.
+Currently the ALICE bootloader (alice-bootloader.sh) is added as an entry point for myCSSA container. Due to the difference in EOL between Windows and UNIX-based systems, the bootloader could be not executed properly in Windows environment. If you see the error " exec user process caused 'no such file or directory'", please use Notepad++ or something equivlent to modify the EOL of alice-bootloader.sh to UNIX style.
 ## Quick Start Guide
 1. Clone this repo to your local machine by running: 
 ```
@@ -20,7 +21,7 @@ git clone https://github.com/ShepherdMOZ/myCSSA.git
 cd CSSANet
 docker-compose up --build 
 ```
-5. Access the page at: http://[Your Computers IP]:8000
+5. Access the page at: http://localhost:8000
 6. To access Admin Pages, use this account:
  <br> email: testadmin@cssa.com
  <br> password: test1234
