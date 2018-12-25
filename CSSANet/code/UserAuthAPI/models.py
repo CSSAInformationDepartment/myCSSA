@@ -16,7 +16,7 @@
 
 
 from django.db import models
-from django.contrib.auth.models import User, AbstractUser, BaseUserManager
+from django.contrib.auth.models import AbstractUser, BaseUserManager
 import uuid
 from django.utils.translation import ugettext_lazy as _
 
@@ -110,7 +110,7 @@ class User(AbstractUser):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     username = None
     email = models.CharField(verbose_name="电子邮箱",max_length = 100,unique=True)
-    telNumber = models.CharField(verbose_name="联系电话", max_length = 16, null=True)
+    telNumber = models.CharField(verbose_name="联系电话", max_length = 16, default='0400000000')
 
     #is_staff = models.BooleanField(default=False)
     #is_active = models.BooleanField(default=False)
@@ -126,7 +126,7 @@ class User(AbstractUser):
         verbose_name_plural = _('users')
 
     def __str__(self):
-        return '%s' % (self.id)
+        return '%s' % (self.email)
 
  ### 暂时不用，这些函数不影响模型
  #   def get_full_name(self):
@@ -151,7 +151,7 @@ class User(AbstractUser):
 
 #用户信息主体 （继承自标准admin model，参照： https://www.zmrenwu.com/post/31/）
 class UserProfile (models.Model):
-    user = models.OneToOneField(User,on_delete=models.DO_NOTHING, primary_key=True, editable=False)
+    user = models.OneToOneField(User,on_delete=models.DO_NOTHING, primary_key=True)
 
     avatar = models.ImageField(verbose_name="头像", upload_to=_GetUserDir,
     height_field=None, width_field=None, max_length=None,null=True, blank=True)
