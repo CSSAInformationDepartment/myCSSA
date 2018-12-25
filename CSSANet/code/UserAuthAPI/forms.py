@@ -25,7 +25,7 @@ class BasicSiginInForm(forms.Form):
     email = forms.CharField()
     telNumber = forms.CharField()
     password = forms.CharField(widget= forms.PasswordInput())
-    confirmPassword = forms.PasswordInput(attrs={'class':''})
+    confirmPassword = forms.CharField(widget= forms.PasswordInput())
 
 
     def checkEmail(self):

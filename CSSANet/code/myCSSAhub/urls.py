@@ -1,5 +1,5 @@
 
-from django.urls import path
+from django.urls import path, re_path
 from myCSSAhub import views as Views
 
 app_name = "myCSSAhub"
@@ -11,10 +11,12 @@ urlpatterns = [
     path('login/', Views.LoginPage.as_view(), name="hub_login"),
     path('logout/', Views.logout_page , name='hub_logout'),
     path('register/', Views.register_guide , name='hub_reg'),
-    path('regform/', Views.register_form , name='hub_regform')
+    path('regform/', Views.BasicSignIn.as_view() , name='hub_regform')
 ]
 
 ## Internal AJAX path
 urlpatterns += [
-    path('ajax/getUserAvatar/', Views.GetUserAvatar, name="ajax_getUserAvatar")
+    path('ajax/getUserAvatar/', Views.GetUserAvatar, name="ajax_getUserAvatar"),
+    path('ajax/checkEmailIntegrity/', Views.CheckEmailIntegrity, name="ajax_checkEmailIntegrity"),
+    path('ajax/checkPhoneIntegrity/', Views.CheckTelIntegrity, name="ajax_checkTelIntegrity"),
 ]

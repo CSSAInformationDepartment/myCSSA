@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import JsonResponse, HttpResponseRedirect, HttpResponse
 from django.contrib.auth import authenticate, login, logout
 from django.views import View
-from django.views.generic.edit import CreateView, UpdateView
+from django.views.generic.edit import CreateView, UpdateView, FormView
 from django.contrib.auth.models import update_last_login
 
 from UserAuthAPI import models as UserModels
@@ -10,6 +10,7 @@ from django.contrib.auth.decorators import login_required
 from UserAuthAPI.forms import BasicSiginInForm
 
 from CSSANet.settings import MEDIA_ROOT, MEDIA_URL
+from Library.Mixins import AjaxableResponseMixin
 
 # Create your views here.
 def register_guide(request):
@@ -70,8 +71,15 @@ class LoginPage(View):
 
 
 
-class BasicSignIn(object):
-    pass
+class BasicSignIn(FormView):
+    template_name = 'myCSSAhub/registrationForm_step1.html'
+    form_class = BasicSiginInForm
+
+    def form_valid(self, form):
+        form.save()
+        return None
+
+        
 
 def register_form(request):
         return render(request, 'myCSSAhub/registrationForm_step1.html')
@@ -99,6 +107,35 @@ def GetUserAvatar(request):
     return JsonResponse(data)
 
 
+def CheckEmailIntegrity(request):
+    data = {}
+    if request == 'POST':
+        email = request.POST['email']
+        userQuery = UserModels.User.objects.filter(email=email).first()
+        if userQuery is None:
+            data['result']='Valid'
+        else:
+            data['result']='Invalid'
+    else:
+        data = {
+            'status': '400', 'reason': 'Bad Requests!'  
+        }
+    return JsonResponse(data)
+
+def CheckTelIntegrity(request):
+    data = {}
+    if request == 'POST':
+        telNumber = request.POST['telNumber']
+        userQuery = UserModels.User.objects.filter(telNumber=telNumber).first()
+        if userQuery is None:
+            data['result']='Valid'
+        else:
+            data['result']='Invalid'
+    else:
+        data = {
+            'status': '400', 'reason': 'Bad Requests!'  
+        }
+    return JsonResponse(data)
 
 ################################# errors pages ########################################
 def bad_request(request):
