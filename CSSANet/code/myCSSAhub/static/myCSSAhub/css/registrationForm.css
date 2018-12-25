@@ -28,9 +28,7 @@
 .form-label-group{
 	margin-top:10px;
 }
-.nextstep{
-margin-left:40%;
-}
+
 
 /*headings*/
 .fs-title {
@@ -49,7 +47,7 @@ margin-left:40%;
 	/*CSS counters to number the steps*/
 	counter-reset: step;
   text-align: center;
-  
+
 }
 #progressbar li {
 	list-style-type: none;
