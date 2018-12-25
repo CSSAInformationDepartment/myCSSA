@@ -30,7 +30,8 @@ def CheckTelNumber(value):
     elif data_telNumber[0:5] == '+861':
         if len(data_telNumber) != 14:
             raise ValidationError(_('Invalid Mobile Phone Number'))
-
+    else:
+       raise ValidationError(_('Invalid Mobile Phone Number'))
 
 class BasicSiginInForm(forms.ModelForm):
     email = forms.EmailField()
@@ -53,7 +54,6 @@ class BasicSiginInForm(forms.ModelForm):
         if commit:
             user.save()
         return user
-
 
     class Meta:
         model = models.User

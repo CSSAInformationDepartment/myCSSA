@@ -7,7 +7,7 @@ from django.contrib.auth.models import update_last_login
 
 from UserAuthAPI import models as UserModels
 from django.contrib.auth.decorators import login_required
-from UserAuthAPI.forms import BasicSiginInForm
+from UserAuthAPI.forms import BasicSiginInForm, UserInfoForm
 
 from CSSANet.settings import MEDIA_ROOT, MEDIA_URL
 from Library.Mixins import AjaxableResponseMixin
@@ -71,14 +71,20 @@ class LoginPage(View):
 
 
 
-class BasicSignIn(FormView):
+class BasicSignInView(FormView):
     template_name = 'myCSSAhub/registrationForm_step1.html'
     form_class = BasicSiginInForm
-    success_url = '/'
+    JsonData = {}
+   # success_url = '/'
 
     def form_valid(self, form):
         form.save()
-        return super().form_valid(form)
+        self.JsonData['step1'] = 'done'
+        return JsonResponse(self.JsonData)
+
+class UserProfileCreateView(FormView):
+    template_name = 'myCSSAhub/registrationForm_step1.html'
+    form_class = UserInfoForm
 
         
 
