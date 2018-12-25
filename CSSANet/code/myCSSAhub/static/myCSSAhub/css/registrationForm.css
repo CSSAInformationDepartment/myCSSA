@@ -15,7 +15,7 @@
 	padding: 20px 30px;
 	box-sizing: border-box;
 	width: 100%;
-	margin: 0 10%;
+	margin: 0;
 
 	/*stacking fieldsets above each other*/
 	position: relative;
@@ -49,7 +49,7 @@ margin-left:40%;
 	/*CSS counters to number the steps*/
 	counter-reset: step;
   text-align: center;
-  margin-left:20%;
+  
 }
 #progressbar li {
 	list-style-type: none;
