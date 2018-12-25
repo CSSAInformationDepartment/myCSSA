@@ -333,7 +333,7 @@ LOGGING = {
 }
 
 # Enabling Debug toolbar in development mode
-if DEBUG == True:
+if DEBUG == False:
     INTERNAL_IPS = ['cssanet','127.0.0.1', 'localhost','192.168.0.2']
     INSTALLED_APPS += ('debug_toolbar',)
     MIDDLEWARE += ('debug_toolbar.middleware.DebugToolbarMiddleware',)
