@@ -5,7 +5,6 @@
 #msform {
 	width: 400px;
 	margin: 50px auto;
-	text-align: center;
 	position: relative;
 }
 #msform fieldset {
@@ -32,6 +31,7 @@
 	text-transform: uppercase;
 	color: #2C3E50;
 	margin-bottom: 10px;
+  text-align: center;
 }
 
 /*progressbar*/
@@ -40,6 +40,7 @@
 	overflow: hidden;
 	/*CSS counters to number the steps*/
 	counter-reset: step;
+  text-align: center;
 }
 #progressbar li {
 	list-style-type: none;
