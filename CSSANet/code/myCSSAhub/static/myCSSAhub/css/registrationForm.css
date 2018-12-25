@@ -25,6 +25,10 @@
 	display: none;
 }
 
+#msform fieldset label{
+margin-top:10px;
+}
+
 /*headings*/
 .fs-title {
 	font-size: 15px;
@@ -33,6 +37,7 @@
 	margin-bottom: 10px;
   text-align: center;
 }
+
 
 /*progressbar*/
 #progressbar {
@@ -86,4 +91,9 @@
 #progressbar li.active:before,  #progressbar li.active:after{
 	background: #75CAEB;;
 	color: white;
+}
+
+#submit{
+ margin-left:40%;
+ margin-top:10px;
 }
