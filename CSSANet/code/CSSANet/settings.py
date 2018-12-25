@@ -110,7 +110,7 @@ REST_FRAMEWORK = {
 
 
 AUTH_USER_MODEL = 'UserAuthAPI.User'
-#AUTH_PROFILE_MODULE = "UserAuthAPI.UserProfile"
+AUTH_PROFILE_MODULE = "UserAuthAPI.UserProfile"
 
 AUTHENTICATION_BACKENDS = (
     # Needed to login by username in Django admin, regardless of `allauth`

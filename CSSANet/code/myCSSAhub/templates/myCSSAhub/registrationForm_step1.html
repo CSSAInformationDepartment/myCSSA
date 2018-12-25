@@ -19,7 +19,7 @@
   <div class="container bloc-fill-screen">
     <div class="row">
       <div id="loginbox" class="col-sm-9 col-md-7 col-lg-5 mx-auto">
-        <form  id=msform class="form-horizontal">
+        <form  id="msform" class="form-horizontal">
           {% csrf_token %}
           <ul id="progressbar">
             <li class="active">注册</li>
@@ -27,7 +27,7 @@
             <li>背景信息</li>
             <li>完成注册</li>
           </ul>
-          <fieldset>
+          <fieldset id="step1">
             <h5 class="fs-title">请注册你的myCSSA账号</h5>
             <div class="form-label-group required"  >
               <label class="control-labe  col-md-6 requiredField">E-mail<span class="asteriskField">*</span></label>
@@ -210,9 +210,6 @@
           </div>
         </div>
       </fieldset>
-
-
-
     </form>
 
 

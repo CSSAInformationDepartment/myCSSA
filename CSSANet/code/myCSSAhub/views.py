@@ -70,7 +70,6 @@ class LoginPage(View):
             return JsonResponse(self.loginErrorMsg)
 
 
-
 class BasicSignInView(FormView):
     template_name = 'myCSSAhub/registrationForm_step1.html'
     form_class = BasicSiginInForm
@@ -79,22 +78,40 @@ class BasicSignInView(FormView):
 
     def form_valid(self, form):
         form.save()
-        self.JsonData['step1'] = 'done'
+        email = form.cleaned_data['email']
+        password = form.cleaned_data['password']
+        user = authenticate(self.request, email=email, password=password)
+        if user is not None:
+            login(self.request, user)
+            update_last_login(None, user)
+            self.JsonData['step1'] = 'done'
+        else:
+            self.JsonData['error'] = 'Authentication System Error'
         return JsonResponse(self.JsonData)
 
-class UserProfileCreateView(FormView):
-    template_name = 'myCSSAhub/registrationForm_step1.html'
+class UserProfileCreateView(View):
+    model = UserModels.User
     form_class = UserInfoForm
+    JsonData={}
+    def get(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            self.JsonData['userID'] =  request.user.id
+        else:
+            self.JsonData['error'] = "Invalid Form Request"
+        return JsonResponse(self.JsonData)
 
-        
+    def post(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            form=UserInfoForm(request.POST)
+            form.user = request.user
+            form.save()
+            self.JsonData['step2'] = 'done'
+        else:
+            self.JsonData['error'] = "Invalid Form Request"
+        return JsonResponse(self.JsonData)        
 
 def register_form(request):
         return render(request, 'myCSSAhub/registrationForm_step1.html')
-
-# 跳转至注册界面的第二步
-def register_form_2(request):
-
-    return render(request, 'myCSSAhub/registrationForm_step2.html')
 
 
 

@@ -3,17 +3,11 @@ var current_fs, next_fs, previous_fs; //fieldsets
 var left, opacity, scale; //fieldset properties which we will animate
 var animating; //flag to prevent quick multi-click glitches
 
+var current_step = 1;
 
-
-$(".nextstep").click(function(){
-
-  event.preventDefault();
-	if(animating) return false;
+function LoadNextStep(current_fs,next_fs){
+	if(animating) return false;	
 	animating = true;
-
-	current_fs = $(this).closest('fieldset')
-	next_fs = current_fs.next()
-
 	//activate next step on progressbar using the index of next_fs
 	$("#progressbar li").eq($("fieldset").index(next_fs)).addClass("active");
 
@@ -43,15 +37,11 @@ $(".nextstep").click(function(){
 		//this comes from the custom easing plugin
 		easing: 'easeInOutBack'
 	});
-});
+}
 
-$(".previous").click(function(){
+function LoadPrevStep(current_fs,previous_fs){
 	if(animating) return false;
 	animating = true;
-
-	current_fs = $(this).parent();
-	previous_fs = $(this).parent().prev();
-
 	//de-activate current step on progressbar
 	$("#progressbar li").eq($("fieldset").index(current_fs)).removeClass("active");
 
@@ -78,6 +68,22 @@ $(".previous").click(function(){
 		//this comes from the custom easing plugin
 		easing: 'easeInOutBack'
 	});
+}
+
+
+$(".nextstep").click(function(){
+	current_fs = $(this).closest('fieldset')
+	next_fs = current_fs.next()
+	event.preventDefault();
+	LoadNextStep(current_fs,next_fs);
+});
+
+$(".previous").click(function(){
+
+	current_fs = $(this).closest('fieldset')
+	previous_fs = current_fs.prev();
+	event.preventDefault();
+	LoadNextStep(current_fs,previous_fs);
 });
 
 $(".submit").click(function(){
