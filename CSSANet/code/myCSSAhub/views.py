@@ -74,10 +74,11 @@ class LoginPage(View):
 class BasicSignIn(FormView):
     template_name = 'myCSSAhub/registrationForm_step1.html'
     form_class = BasicSiginInForm
+    success_url = '/'
 
     def form_valid(self, form):
         form.save()
-        return None
+        return super().form_valid(form)
 
         
 

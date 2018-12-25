@@ -112,10 +112,6 @@ class User(AbstractUser):
     email = models.CharField(verbose_name="电子邮箱",max_length = 100,unique=True)
     telNumber = models.CharField(verbose_name="联系电话", max_length = 16, default='0400000000')
 
-    #is_staff = models.BooleanField(default=False)
-    #is_active = models.BooleanField(default=False)
-    #is_superuser = models.BooleanField(default=False)
-
     objects = UserManager()
 
     USERNAME_FIELD = 'email'
