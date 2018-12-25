@@ -46,7 +46,7 @@
 	list-style-type: none;
 	color: white;
 	text-transform: uppercase;
-	font-size: 9px;
+	font-size: 12px;
 	width: 33.33%;
   border-radius: 3px;
   padding-left: 20%;
@@ -54,16 +54,17 @@
 	position: relative;
 }
 #progressbar li:before {
-	content: counter(step);
+  content: counter(step);
 	counter-increment: step;
-	width: 20px;
-	line-height: 20px;
+	width: 30px;
+	line-height: 30px;
 	display: block;
 	font-size: 10px;
 	color: #333;
 	background: white;
-	border-radius: 3px;
+	border-radius: 20px;
 	margin: 0 auto 5px auto;
+	opacity: 0.8;
 }
 /*progressbar connectors*/
 #progressbar li:after {
