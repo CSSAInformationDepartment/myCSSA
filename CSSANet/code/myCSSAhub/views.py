@@ -3,9 +3,9 @@ from django.http import JsonResponse, HttpResponseRedirect, HttpResponse
 from django.contrib.auth import authenticate, login, logout
 from django.views import View
 from django.views.generic.edit import CreateView, UpdateView
+from django.contrib.auth.models import update_last_login
 
 from UserAuthAPI import models
-from . import forms
 from django.contrib.auth.decorators import login_required
 from UserAuthAPI.forms import BasicSiginInForm
 
@@ -57,6 +57,7 @@ class LoginPage(View):
         user = authenticate(request, email=email, password=password)
         if user is not None:
             login(request, user)
+            update_last_login(None, user)
             return JsonResponse(self.loginSuccessful)
         else:
             return JsonResponse(self.loginErrorMsg)
