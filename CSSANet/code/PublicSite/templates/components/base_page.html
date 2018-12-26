@@ -38,5 +38,23 @@
 <!-- Preloader -->
 <div id="page-loading-blocs-notifaction" class="page-preloader"></div>
 <!-- Preloader END -->
+
+<script>
+// DO NOT REMOVE THIS WHEN THE PAGE HAS ANY AJAX APPLET
+  var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
+
+  function csrfSafeMethod(method) {
+      // these HTTP methods do not require CSRF protection
+      return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+  }
+  $.ajaxSetup({
+      beforeSend: function(xhr, settings) {
+          if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+              xhr.setRequestHeader("X-CSRFToken", csrftoken);
+          }
+      }
+  });
+
+</script>
 </body>
 </html>

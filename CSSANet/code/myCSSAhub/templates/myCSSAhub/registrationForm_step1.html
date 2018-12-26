@@ -458,20 +458,6 @@
 <script type="text/javascript" src="{% static 'myCSSAhub/js/Password/password-score.js' %}"></script>
 <script type="text/javascript" src="{% static 'myCSSAhub/js/Password/password-score-options.js' %}"></script>
 <script type="text/javascript">
-// DO NOT REMOVE THIS WHEN THE PAGE HAS ANY AJAX APPLET
-  var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
-
-  function csrfSafeMethod(method) {
-      // these HTTP methods do not require CSRF protection
-      return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
-  }
-  $.ajaxSetup({
-      beforeSend: function(xhr, settings) {
-          if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-              xhr.setRequestHeader("X-CSRFToken", csrftoken);
-          }
-      }
-  });
 
   //Password Strength Indicator
   $(document).ready(function() {

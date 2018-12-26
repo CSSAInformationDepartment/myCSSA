@@ -79,6 +79,23 @@
     <script src="{% static '/myCSSAhub/vendors/chart.js/js/Chart.min.js'%}"></script>
     <script src="{% static '/myCSSAhub/vendors/@coreui/coreui-plugin-chartjs-custom-tooltips/js/custom-tooltips.min.js'%}"></script>
     <script src="{% static '/myCSSAhub/js/main.js'%}"></script>
+    <script>
+    // DO NOT REMOVE THIS WHEN THE PAGE HAS ANY AJAX APPLET
+      var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
+
+      function csrfSafeMethod(method) {
+          // these HTTP methods do not require CSRF protection
+          return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+      }
+      $.ajaxSetup({
+          beforeSend: function(xhr, settings) {
+              if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                  xhr.setRequestHeader("X-CSRFToken", csrftoken);
+              }
+          }
+      });
+
+    </script>
 
 </body>
 </html>
