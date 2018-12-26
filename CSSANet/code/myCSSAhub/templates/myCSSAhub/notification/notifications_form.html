@@ -1,0 +1,52 @@
+{% extends 'myCSSAhub/component/_layout.html' %}
+{% block pageTitle %}
+站内信创建
+{% endblock %}
+{% block pageContent %}
+
+<script>
+    $(document).ready(function () {
+        $(".close").click(function () {
+            $("#myAlert").alert("close");
+        });
+        $("#myAlert").on('closed.bs.alert', function () {
+            alert('The alert message is now closed.');
+        });
+    });
+</script>
+
+<form>
+    <div class="form-group">
+        <label for="exampleFormControlInput1">收信人姓名/地址</label>
+        <input type="email" class="form-control" id="exampleFormControlInput1">
+    </div>
+    <div class="form-group">
+        <label for="exampleFormControlSelect1">信件级别</label>
+        <select class="form-control" id="exampleFormControlSelect1">
+            <option>1</option>
+            <option>2</option>
+            <option>3</option>
+            <option>4</option>
+            <option>5</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="formGroupExampleInput">标题</label>
+        <input class="form-control" type="text" placeholder="Default input">
+        <div class="form-group">
+            <label for="exampleFormControlTextarea1">内容</label>
+            <textarea class="form-control" id="exampleFormControlTextarea1" rows="7"></textarea>
+        </div>
+        <div class="form-group">
+            <label for="exampleFormControlFile1">选择附件</label>
+            <input type="file" class="form-control-file" id="exampleFormControlFile1">
+        </div>
+
+        <button type="submit" class="btn btn-primary">发送</button>
+    </div>
+</form>
+
+
+
+
+{% endblock%}

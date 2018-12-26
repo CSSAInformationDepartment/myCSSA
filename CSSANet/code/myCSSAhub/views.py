@@ -25,7 +25,11 @@ def message(request):
 
 @login_required(login_url='/hub/login/')
 def notifications_list(request):
-    return render(request, 'myCSSAhub/notifications_list.html')
+    return render(request, 'myCSSAhub/notification/notifications_list.html')
+
+@login_required(login_url='/hub/login/')
+def notifications_form(request):
+    return render(request, 'myCSSAhub/notification/notifications_form.html')
 
 def register_guide(request):
     return render(request, 'myCSSAhub/register_guide.html')
