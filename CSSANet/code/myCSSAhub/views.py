@@ -21,8 +21,8 @@ def message(request):
     return render(request, 'myCSSAhub/message.html')
 
 @login_required(login_url='/hub/login/')
-def notifications(request):
-    return render(request, 'myCSSAhub/notifications.html')
+def notifications_list(request):
+    return render(request, 'myCSSAhub/notifications_list.html')
 
 
 ###### 账号相关 ##########
