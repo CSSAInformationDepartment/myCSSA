@@ -27,7 +27,7 @@ def CheckTelNumber(value):
         if len(data_telNumber) != 10:
             raise ValidationError(_("Invalid Mobile Phone Number"))
     # 对于中国号码的验证
-    elif data_telNumber[0:5] == '+861':
+    elif data_telNumber[0:3] == '+861':
         if len(data_telNumber) != 14:
             raise ValidationError(_('Invalid Mobile Phone Number'))
     else:

@@ -5,8 +5,9 @@ from django.views import View
 from django.views.generic.edit import CreateView, UpdateView, FormView
 from django.contrib.auth.models import update_last_login
 
-from UserAuthAPI import models as UserModels
 from django.contrib.auth.decorators import login_required
+
+from UserAuthAPI import models as UserModels
 from UserAuthAPI.forms import BasicSiginInForm, UserInfoForm
 
 from CSSANet.settings import MEDIA_ROOT, MEDIA_URL
@@ -130,11 +131,11 @@ def GetUserAvatar(request):
         data['errMsg'] = "Permission Denied"
     return JsonResponse(data)
 
-
 def CheckEmailIntegrity(request):
     data = {}
-    if request == 'POST':
-        email = request.POST['email']
+    if request.method == 'POST':
+        email = request.POST['value']
+        print(email)
         userQuery = UserModels.User.objects.filter(email=email).first()
         if userQuery is None:
             data['result']='Valid'
@@ -144,12 +145,13 @@ def CheckEmailIntegrity(request):
         data = {
             'status': '400', 'reason': 'Bad Requests!'  
         }
+    print(data)
     return JsonResponse(data)
 
 def CheckTelIntegrity(request):
     data = {}
-    if request == 'POST':
-        telNumber = request.POST['telNumber']
+    if request.method == 'POST':
+        telNumber = request.POST['value']
         userQuery = UserModels.User.objects.filter(telNumber=telNumber).first()
         if userQuery is None:
             data['result']='Valid'

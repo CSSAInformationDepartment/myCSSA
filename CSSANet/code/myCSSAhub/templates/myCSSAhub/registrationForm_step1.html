@@ -1,9 +1,15 @@
-{% extends 'components/base_page.html' %} {% block 'pg_body' %} {% load static
-%}
-<link
-  rel="stylesheet"
-  href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.0-alpha14/css/tempusdominus-bootstrap-4.min.css"
-/>
+{% extends 'components/base_page.html' %} 
+{% block 'extra_header' %}
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static '/myCSSAhub/css/registrationForm.css'%}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.0-alpha14/css/tempusdominus-bootstrap-4.min.css"/>
+{% endblock 'extra_header' %}
+
+{% block 'pg_body' %} 
+{% load static %}
+
+
+
 <style>
   #bloc-1 {
     background-image: url("{% static '/myCSSAhub/img/bg_Register.jpg' %}");
@@ -22,7 +28,7 @@
             <li>背景信息</li>
             <li>完成注册</li>
           </ul>
-          <fieldset id="step1">
+          <fieldset>
             <h5 class="fs-title">请注册你的myCSSA账号</h5>
             <div class="form-label-group required">
               <label class="control-label  col-md-6 requiredField"
@@ -38,6 +44,7 @@
                   type="text"
                   data-parsley-group="step1"
                   data-parsley-type="email"
+                  data-parsley-database-Check="email"
                 />
               </div>
             </div>
@@ -57,6 +64,8 @@
                   name="telNumber"
                   placeholder="澳洲或者中国电话号码"
                   type="text"
+                  data-parsley-tel-Number-Check="1"
+                  data-parsley-database-check="telNumber" 
                   data-parsley-group="step1"
                 />
               </div>
@@ -78,6 +87,7 @@
                   type="password"
                   data-parsley-group="step1"
                 />
+                <div id="progress-container" style="padding-top:10px"></div>
               </div>
             </div>
             <div id="password2" class="form-label-group required">
@@ -113,7 +123,7 @@
             </div>
           </fieldset>
 
-          <fieldset id="step2">
+          <fieldset>
             <h5 class="fs-title">请填写你的信息</h5>
             <div id="gender" class="form-group required">
               <label
@@ -151,6 +161,7 @@
                   name="firstNameEN"
                   placeholder="名（拼音）"
                   type="text"
+                  data-parsley-pattern="^[a-zA-Z]+$"
                   data-parsley-group="step2"
                 />
               </div>
@@ -170,6 +181,7 @@
                   name="lastNameEN"
                   placeholder="姓（拼音）"
                   type="text"
+                  data-parsley-pattern="^[a-zA-Z]+$"
                   data-parsley-group="step2"
                 />
               </div>
@@ -240,6 +252,7 @@
                   class="form-control input-medium bfh-countries"
                   id="id_postcode"
                   name="postcode"
+                  data-parsley-maxlength="4"
                   placeholder="请输入你的邮编"
                   data-parsley-group="step2"
                 />
@@ -276,7 +289,7 @@
             </div>
           </fieldset>
           <fieldset>
-            <h5 class="fs-title">请填写你的信息</h5>
+            <h5 class="fs-title">请填写你的学籍信息</h5>
             <div id="div_id_select" class="form-group required">
               <label
                 for="degree"
@@ -289,7 +302,7 @@
                   class="selectpicker form-control"
                   id="degree"
                   name="degree"
-                  data-parsley-group="step2"
+                  data-parsley-group="step3"
                 >
                   <option value="BA"> Bachelor </option>
                   <option value="MA"> Master </option>
@@ -314,7 +327,7 @@
                   id="id_major"
                   name="uniMajor"
                   placeholder="请输入你的学位"
-                  data-parsley-group="step2"
+                  data-parsley-group="step3"
                 />
               </div>
             </div>
@@ -330,7 +343,9 @@
                   name="studentId"
                   placeholder="请输入你的学生卡号"
                   type="text"
-                  data-parsley-group="step2"
+                  data-parsley-minlength="6"
+                  data-parsley-maxlength="7"
+                  data-parsley-group="step3"
                 />
               </div>
             </div>
@@ -344,7 +359,7 @@
                     type="file"
                     name="avatar"
                     id="id_avatar"
-                    data-parsley-group="step2"
+                    data-parsley-group="step3"
                   />
                 </div>
                 <div class="label--desc">请选择并上传你的头像。</div>
@@ -361,7 +376,7 @@
                       id="id_terms"
                       name="terms"
                       type="checkbox"
-                      data-parsley-group="step2"
+                      data-parsley-group="step3"
                     />
                     Agree with the terms and conditions
                   </label>
@@ -436,34 +451,45 @@
   type="text/javascript"
   src="{% static 'myCSSAhub/js/parsley.min.js' %}"
 ></script>
+<script type="text/javascript" src="{% static 'myCSSAhub/js/Password/bootstrap-strength-meter.js' %}"></script>
+<script type="text/javascript" src="{% static 'myCSSAhub/js/Password/password-score.js' %}"></script>
+<script type="text/javascript" src="{% static 'myCSSAhub/js/Password/password-score-options.js' %}"></script>
 <script type="text/javascript">
-  //Customer Parsley.js Validators
-  window.Parsley.addValidator("multipleOf", {
-    requirementType: "string",
-    validateString: function(value, requirement) {
-      return 0 === value % requirement;
-    },
-    messages: {
-      en: "This value should be a multiple of %s",
-      fr: "Cette valeur doit être un multiple de %s"
+// DO NOT REMOVE THIS WHEN THE PAGE HAS ANY AJAX APPLET
+var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
+function csrfSafeMethod(method) {
+    // these HTTP methods do not require CSRF protection
+    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+}
+$.ajaxSetup({
+    beforeSend: function(xhr, settings) {
+        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+        }
     }
-  });
-  //Form validation init
-  $("#msform").parsley({
-    errorClass: "is-invalid",
-    successClass: "is-valid",
-    errorsWrapper: '<span class="form-text text-danger"></span>',
-    errorTemplate: "<span></span>",
-    trigger: "change"
-  });
+});
 
-  //Date-Time Picker
-  $(function() {
-    $("#datetimepicker1").datetimepicker({
-      format: "L"
+  //Password Strength Indicator
+  $(document).ready(function() {
+    $('#id_password').strengthMeter('progressBar', {
+      container: $('#progress-container'),
+      base: 80,
+      hierarchy: {
+        '0': 'progress-bar-danger',
+        '25': 'progress-bar-warning',
+        '50': 'progress-bar-success'
+      },
+      passwordScore: {
+        options: [],
+        append: true
+      }
     });
   });
+
+  
 </script>
 <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.5/jquery-ui.min.js"></script>
+
+<script src="{% static '/myCSSAhub/js/registrationForm.js'%}" defer></script>
 
 {% endblock 'pg_body' %}
