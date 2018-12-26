@@ -4,14 +4,15 @@
 {% load static %}
 <style>
   #bloc-1 {
-    background-image: url("{% static '/myCSSAhub/img/bg-login.jpg' %}")
+    background-image: url("{% static '/myCSSAhub/img/bg-login.jpg' %}");
+    min-height:100%;
   }
 
 </style>
 
-<div class="bloc none l-bloc" id="bloc-1">
-  <div class="container bloc-fill-screen">
-    <div class="row" style="padding-top: 35%;">
+<div class="bloc none l-bloc" id="bloc-1" style="padding:40px">
+  <div class="container bloc-fill-screen justify-content-center">
+    <div class="row">
       <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
         <div id="ErrMsgArea">
         </div>

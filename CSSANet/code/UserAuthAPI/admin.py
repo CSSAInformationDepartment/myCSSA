@@ -12,7 +12,7 @@ class CsutomUserAdmin(UserAdmin):
 
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
-        (_('Personal info'), {'fields': ('first_name', 'last_name')}),
+        (_('Personal info'), {'fields': ('first_name', 'last_name','telNumber')}),
         (_('Permissions'), {'fields': ('is_active', 'is_staff', 'is_superuser',
                                        'groups', 'user_permissions')}),
         (_('Important dates'), {'fields': ('last_login', 'date_joined')}),
@@ -32,3 +32,4 @@ admin.site.register(models.User, CsutomUserAdmin)
 admin.site.register(models.UniMajor)
 admin.site.register(models.CSSADept)
 admin.site.register(models.CSSARole)
+admin.site.register(models.UserProfile)

@@ -16,7 +16,7 @@
 
 
 from django.db import models
-from django.contrib.auth.models import User, AbstractUser, BaseUserManager
+from django.contrib.auth.models import AbstractUser, BaseUserManager
 import uuid
 from django.utils.translation import ugettext_lazy as _
 
@@ -81,7 +81,7 @@ class UserManager(BaseUserManager):
 #部门 (对应fixture)
 class CSSADept (models.Model):
     # 此行定义表主键 - 标准写法，请复制粘贴
-    deptId = models.AutoField(primary_key = True)
+    deptId = models.AutoField(primary_key = True, editable=False)
     deptName = models.CharField(max_length=50, verbose_name="部门简称")
     deptTitle = models.CharField(max_length=50, verbose_name="部门名称")
     deptTitleEN = models.CharField(max_length=50, verbose_name="Name of the Department")
@@ -91,7 +91,7 @@ class CSSADept (models.Model):
 
 #职位 (对应fixture)
 class CSSARole (models.Model):
-    roleId = models.AutoField(primary_key = True)
+    roleId = models.AutoField(primary_key=True, editable=False)
     roleFlag = models.CharField(max_length=3)
     roleName = models.CharField(max_length=50)
 
@@ -100,7 +100,7 @@ class CSSARole (models.Model):
 
 #学校专业信息
 class UniMajor (models.Model):
-    uniMajorId = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    uniMajorId = models.AutoField(primary_key=True, editable=False)
     majorName = models.CharField(max_length=100)
 
     def __str__(self):
@@ -110,11 +110,7 @@ class User(AbstractUser):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     username = None
     email = models.CharField(verbose_name="电子邮箱",max_length = 100,unique=True)
-    telNumber = models.CharField(verbose_name="联系电话", max_length = 16, null=True)
-
-    #is_staff = models.BooleanField(default=False)
-    #is_active = models.BooleanField(default=False)
-    #is_superuser = models.BooleanField(default=False)
+    telNumber = models.CharField(verbose_name="联系电话", max_length = 16, default='0400000000')
 
     objects = UserManager()
 
@@ -126,7 +122,7 @@ class User(AbstractUser):
         verbose_name_plural = _('users')
 
     def __str__(self):
-        return '%s' % (self.id)
+        return '%s' % (self.email)
 
  ### 暂时不用，这些函数不影响模型
  #   def get_full_name(self):
@@ -151,7 +147,7 @@ class User(AbstractUser):
 
 #用户信息主体 （继承自标准admin model，参照： https://www.zmrenwu.com/post/31/）
 class UserProfile (models.Model):
-    user = models.OneToOneField(User,on_delete=models.DO_NOTHING, primary_key=True, editable=False)
+    user = models.OneToOneField(User,on_delete=models.DO_NOTHING, primary_key=True)
 
     avatar = models.ImageField(verbose_name="头像", upload_to=_GetUserDir,
     height_field=None, width_field=None, max_length=None,null=True, blank=True)
@@ -188,13 +184,12 @@ class UserProfile (models.Model):
 
 
 class CSSACommitteProfile(models.Model):
-    tableId = models.UUIDField(primary_key=True, default=uuid.uuid4,
-        editable=False)
+    Id = models.AutoField(primary_key=True, editable=False)
     member = models.ForeignKey(User, on_delete=models.DO_NOTHING)
 
     is_active = models.BooleanField(default=False)
     CommenceDate = models.DateTimeField(auto_now_add=True)
-    Department = models.ForeignKey(CSSADept, on_delete=None)
+    Department = models.ForeignKey(CSSADept, on_delete=models.DO_NOTHING)
 
 
 
@@ -210,8 +205,7 @@ class UserAcademic (models.Model):
         ('PhD', 'Doctor of Philosophy'),
     )
 
-    academicRecId = models.UUIDField(primary_key=True, default=uuid.uuid4,
-        editable=False)
+    academicRecId = models.AutoField(primary_key=True, editable=False)
     # 来自同一张表的外键变量名、配置需一致
     userProfile = models.ForeignKey(User, on_delete = models.DO_NOTHING)
     # 不同模型中表示同一功能的变量名需一致

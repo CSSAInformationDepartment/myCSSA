@@ -31,7 +31,7 @@ if DEBUG == False:
     SECRET_KEY = env_dist.get('DJANGOKEYPD')
     ALLOWED_HOSTS = ['cssanet','localhost','cssaunimelb.com','192.168.0.2']
     CSRF_COOKIE_SECURE = True
-    SESSION_COOKIE_SECURE = True
+#   SESSION_COOKIE_SECURE = True ## <- Activate in HTTPS envrioment only
     SECURE_CONTENT_TYPE_NOSNIFF = True
     SECURE_BROWSER_XSS_FILTER = True
     SECURE_SSL_REDIRECT = False
@@ -39,7 +39,6 @@ if DEBUG == False:
 else:
     ALLOWED_HOSTS = ['*']
     SECRET_KEY = env_dist.get('DJANGOKEYDEV')
-    print('Development mode secret key in use: ' + SECRET_KEY)
 
 # Application definition
 INSTALLED_APPS = [
@@ -111,7 +110,7 @@ REST_FRAMEWORK = {
 
 
 AUTH_USER_MODEL = 'UserAuthAPI.User'
-#AUTH_PROFILE_MODULE = "UserAuthAPI.UserProfile"
+AUTH_PROFILE_MODULE = "UserAuthAPI.UserProfile"
 
 AUTHENTICATION_BACKENDS = (
     # Needed to login by username in Django admin, regardless of `allauth`

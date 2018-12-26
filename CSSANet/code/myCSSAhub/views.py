@@ -2,14 +2,21 @@ from django.shortcuts import render
 from django.http import JsonResponse, HttpResponseRedirect, HttpResponse
 from django.contrib.auth import authenticate, login, logout
 from django.views import View
-from django.views.generic.edit import CreateView, UpdateView
+from django.views.generic.edit import CreateView, UpdateView, FormView
 from django.contrib.auth.models import update_last_login
 
-from UserAuthAPI import models
 from django.contrib.auth.decorators import login_required
-from UserAuthAPI.forms import BasicSiginInForm
+
+from UserAuthAPI import models as UserModels
+from UserAuthAPI.forms import BasicSiginInForm, UserInfoForm
+
+from CSSANet.settings import MEDIA_ROOT, MEDIA_URL
+from Library.Mixins import AjaxableResponseMixin
 
 # Create your views here.
+def register_guide(request):
+    return render(request, 'myCSSAhub/register_guide.html')
+
 
 @login_required(login_url='/hub/login/')
 def home(request):
@@ -27,16 +34,17 @@ def message(request):
 def notifications_list(request):
     return render(request, 'myCSSAhub/notifications_list.html')
 
-def register_guide(request):
-    return render(request, 'myCSSAhub/register_guide.html')
+@login_required(login_url='/hub/login/')
+def logout_page(request):
+    logout(request)
+    return HttpResponseRedirect('/')
 
 
 ###### 账号相关 ##########
-
 #用户登陆CBV -- 范例
 class LoginPage(View):
     #类属性
-    model = models.User
+    model = UserModels.User
     template_name = 'myCSSAhub/login.html'
     loginErrorMsg = {"result": "Login Failed!"}
     loginSuccessful = {"result": "Login Successful!"}
@@ -63,37 +71,119 @@ class LoginPage(View):
             return JsonResponse(self.loginErrorMsg)
 
 
+class BasicSignInView(FormView):
+    template_name = 'myCSSAhub/registrationForm_step1.html'
+    form_class = BasicSiginInForm
+    JsonData = {}
+   # success_url = '/'
 
-class BasicSignIn(object):
-    pass
+    def form_valid(self, form):
+        form.save()
+        email = form.cleaned_data['email']
+        password = form.cleaned_data['password']
+        user = authenticate(self.request, email=email, password=password)
+        if user is not None:
+            currentUser = UserModels.User.objects.filter(email=email).first()
+            self.JsonData['step1'] = 'done'
+            self.JsonData['user'] = currentUser.id
+        else:
+            self.JsonData['error'] = 'Authentication System Error'
+        return JsonResponse(self.JsonData)
+
+class UserProfileCreateView(View):
+    model = UserModels.User
+    form_class = UserInfoForm
+    JsonData={}
+    def get(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            self.JsonData['userID'] =  request.user.id
+        else:
+            self.JsonData['error'] = "Invalid Form Request"
+        return JsonResponse(self.JsonData)
+
+    def post(self, request, *args, **kwargs):
+        form=UserInfoForm(data=request.POST, files=request.FILES)
+        if form.is_valid():
+            currentUser = UserModels.User.objects.filter(id=form.cleaned_data['user']).first()
+            if currentUser:
+                form.save()
+                self.JsonData['step2'] = 'done'
+            else:
+                self.JsonData['error'] = "Invalid Form Request"
+        else:
+            return JsonResponse({
+               'success': False,
+                'errors': dict(form.errors.items()),
+            })
+        return JsonResponse(self.JsonData)        
 
 def register_form(request):
-
-    ########注册验证##########
-    if request.method == 'POST':
-        form = ValidationForm(request.POST)
-        if form.is_valid():
-            # redirect to a new URL:
-            return self.register_form_2(request)
-    else:
-
         return render(request, 'myCSSAhub/registrationForm_step1.html')
 
-# 跳转至注册界面的第二步
-def register_form_2(request):
-
-    return render(request, 'myCSSAhub/registrationForm_step2.html')
 
 
-@login_required(login_url='/hub/login/')
-def logout_page(request):
-    logout(request)
-    return HttpResponseRedirect('/')
 
+############################# AJAX Page Resources #####################################
 
+def GetUserAvatar(request):
+    data = {}
+    if request.user.is_authenticated:
+        userQuery = UserModels.UserProfile.objects.filter(user=request.user).first()
+        if userQuery is None:
+            data['avatarPath'] = "Undefined"
+        else:
+            data['avatarPath'] = str(userQuery.avatar.url)
+    else:
+        data['errMsg'] = "Permission Denied"
+    return JsonResponse(data)
+
+def CheckEmailIntegrity(request):
+    data = {}
+    if request.method == 'POST':
+        email = request.POST['value']
+        print(email)
+        userQuery = UserModels.User.objects.filter(email=email).first()
+        if userQuery is None:
+            data['result']='Valid'
+        else:
+            data['result']='Invalid'
+    else:
+        data = {
+            'status': '400', 'reason': 'Bad Requests!'  
+        }
+    print(data)
+    return JsonResponse(data)
+
+def CheckTelIntegrity(request):
+    data = {}
+    if request.method == 'POST':
+        telNumber = request.POST['value']
+        userQuery = UserModels.User.objects.filter(telNumber=telNumber).first()
+        if userQuery is None:
+            data['result']='Valid'
+        else:
+            data['result']='Invalid'
+    else:
+        data = {
+            'status': '400', 'reason': 'Bad Requests!'  
+        }
+    return JsonResponse(data)
+    
+def CheckStudentIdIntegrity(request):
+    data = {}
+    if request.method == 'POST':
+        studentId = request.POST['value']
+        userQuery = UserModels.UserProfile.objects.filter(studentId=studentId).first()
+        if userQuery is None:
+            data['result']='Valid'
+        else:
+            data['result']='Invalid'
+    else:
+        data = {
+            'status': '400', 'reason': 'Bad Requests!'  
+        }
+    return JsonResponse(data)
 ################################# errors pages ########################################
-from django.shortcuts import render
- 
 def bad_request(request):
  return render(request,'errors/page_400.html')
 
@@ -105,4 +195,3 @@ def page_not_found(request):
  
 def server_error(request):
  return render(request,'errors/page_500.html')
-################################# errors pages ########################################
