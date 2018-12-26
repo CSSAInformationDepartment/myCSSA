@@ -35,7 +35,7 @@ def CheckTelNumber(value):
 
 class BasicSiginInForm(forms.ModelForm):
     email = forms.EmailField()
-    telNumber = forms.CharField(validators=[CheckTelNumber])
+    telNumber = forms.CharField()
     password = forms.CharField(widget= forms.PasswordInput())
     confirmPassword = forms.CharField(widget= forms.PasswordInput())
 
@@ -60,7 +60,7 @@ class BasicSiginInForm(forms.ModelForm):
         fields = ('email','telNumber','password')
 
 class UserInfoForm(forms.ModelForm):
-
+    user = forms.CharField()
     class Meta:
         model = models.UserProfile
         fields = '__all__'

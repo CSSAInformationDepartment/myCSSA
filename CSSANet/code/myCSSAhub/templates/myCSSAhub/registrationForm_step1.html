@@ -124,6 +124,7 @@
           </fieldset>
 
           <fieldset>
+          <input type="hidden" name="user" id="id_user"/>
             <h5 class="fs-title">请填写你的信息</h5>
             <div id="gender" class="form-group required">
               <label
@@ -345,6 +346,7 @@
                   type="text"
                   data-parsley-minlength="6"
                   data-parsley-maxlength="7"
+                  data-parsley-database-check="studentId"
                   data-parsley-group="step3"
                 />
               </div>
@@ -359,6 +361,7 @@
                     type="file"
                     name="avatar"
                     id="id_avatar"
+                    data-parsley-max-file-size="2"
                     data-parsley-group="step3"
                   />
                 </div>
@@ -456,18 +459,19 @@
 <script type="text/javascript" src="{% static 'myCSSAhub/js/Password/password-score-options.js' %}"></script>
 <script type="text/javascript">
 // DO NOT REMOVE THIS WHEN THE PAGE HAS ANY AJAX APPLET
-var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
-function csrfSafeMethod(method) {
-    // these HTTP methods do not require CSRF protection
-    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
-}
-$.ajaxSetup({
-    beforeSend: function(xhr, settings) {
-        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-            xhr.setRequestHeader("X-CSRFToken", csrftoken);
-        }
-    }
-});
+  var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
+
+  function csrfSafeMethod(method) {
+      // these HTTP methods do not require CSRF protection
+      return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+  }
+  $.ajaxSetup({
+      beforeSend: function(xhr, settings) {
+          if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+              xhr.setRequestHeader("X-CSRFToken", csrftoken);
+          }
+      }
+  });
 
   //Password Strength Indicator
   $(document).ready(function() {

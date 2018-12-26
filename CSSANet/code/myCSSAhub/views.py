@@ -83,9 +83,9 @@ class BasicSignInView(FormView):
         password = form.cleaned_data['password']
         user = authenticate(self.request, email=email, password=password)
         if user is not None:
-            login(self.request, user)
-            update_last_login(None, user)
+            currentUser = UserModels.User.objects.filter(email=email).first()
             self.JsonData['step1'] = 'done'
+            self.JsonData['user'] = currentUser.id
         else:
             self.JsonData['error'] = 'Authentication System Error'
         return JsonResponse(self.JsonData)
@@ -102,13 +102,19 @@ class UserProfileCreateView(View):
         return JsonResponse(self.JsonData)
 
     def post(self, request, *args, **kwargs):
-        if request.user.is_authenticated:
-            form=UserInfoForm(request.POST)
-            form.user = request.user
-            form.save()
-            self.JsonData['step2'] = 'done'
+        form=UserInfoForm(data=request.POST, files=request.FILES)
+        if form.is_valid():
+            currentUser = UserModels.User.objects.filter(id=form.cleaned_data['user']).first()
+            if currentUser:
+                form.save()
+                self.JsonData['step2'] = 'done'
+            else:
+                self.JsonData['error'] = "Invalid Form Request"
         else:
-            self.JsonData['error'] = "Invalid Form Request"
+            return JsonResponse({
+               'success': False,
+                'errors': dict(form.errors.items()),
+            })
         return JsonResponse(self.JsonData)        
 
 def register_form(request):
@@ -162,7 +168,21 @@ def CheckTelIntegrity(request):
             'status': '400', 'reason': 'Bad Requests!'  
         }
     return JsonResponse(data)
-
+    
+def CheckStudentIdIntegrity(request):
+    data = {}
+    if request.method == 'POST':
+        studentId = request.POST['value']
+        userQuery = UserModels.UserProfile.objects.filter(studentId=studentId).first()
+        if userQuery is None:
+            data['result']='Valid'
+        else:
+            data['result']='Invalid'
+    else:
+        data = {
+            'status': '400', 'reason': 'Bad Requests!'  
+        }
+    return JsonResponse(data)
 ################################# errors pages ########################################
 def bad_request(request):
  return render(request,'errors/page_400.html')

@@ -20,5 +20,5 @@ urlpatterns += [
     path('ajax/getUserAvatar/', Views.GetUserAvatar, name="ajax_getUserAvatar"),
     path('ajax/checkEmailIntegrity/', Views.CheckEmailIntegrity, name="ajax_checkEmailIntegrity"),
     path('ajax/checkPhoneIntegrity/', Views.CheckTelIntegrity, name="ajax_checkTelIntegrity"),
-    #path('ajax/checkStudentIdIntegrity/', Views.CheckEmailIntegrity, name="ajax_checkStudentIdIntegrity")
+    path('ajax/checkStudentIdIntegrity/', Views.CheckStudentIdIntegrity, name="ajax_checkStudentIdIntegrity")
 ]

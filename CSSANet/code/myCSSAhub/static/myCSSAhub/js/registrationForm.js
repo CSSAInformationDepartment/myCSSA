@@ -5,7 +5,7 @@ var animating; //flag to prevent quick multi-click glitches
 
 var current_step = 1;
 
-//Customer Parsley.js Validators
+//Custome Parsley.js Validators
 window.Parsley.addValidator("telNumberCheck", {
     requirementType: "integer",
     validateString: function(value, requirement) {
@@ -28,6 +28,22 @@ window.Parsley.addValidator("telNumberCheck", {
     }
   });
 
+  window.Parsley.addValidator('maxFileSize', {
+    validateString: function(_value, maxSize, parsleyInstance) {
+      if (!window.FormData) {
+        alert('Your browser is no longer supported!');
+        return true;
+      }
+      var files = parsleyInstance.$element[0].files;
+      return files.length != 1  || files[0].size <= maxSize * 1024 * 1024;
+    },
+    requirementType: 'integer',
+    messages: {
+      'en': 'This file should not be larger than %s Mb',
+      'zh-cn': '文件大小不应超过 %s Mb.'
+    }
+  });
+
   window.Parsley.addValidator("databaseCheck", {
     requirementType: "string",
     validateString: function(value, requirement) {
@@ -35,10 +51,13 @@ window.Parsley.addValidator("telNumberCheck", {
       var ajax_url = '';
 
       if (requirement == 'telNumber'){
-        ajax_url = "/hub/ajax/checkEmailIntegrity/"
+        ajax_url = "/hub/ajax/checkPhoneIntegrity/"
       }
       if (requirement == 'email'){
-        ajax_url = "/hub/ajax/checkPhoneIntegrity/"
+        ajax_url = "/hub/ajax/checkEmailIntegrity/"
+      }
+      if (requirement == 'studentId'){
+        ajax_url = "/hub/ajax/checkStudentIdIntegrity/"
       }
 
       $.ajax({
@@ -190,24 +209,62 @@ $(".nextstep").click(function(){
 			formData['telNumber'] = $('form #id_telNumber').val()
 			formData['password'] = $('form #id_password').val()
 			formData['confirmPassword'] = $('form #id_confirmPassword').val()
-			$.ajax({
-				type: "POST",
-				url: "/hub/regform/",
-				data: formData,
-				async: false,
-				dataType: "json",
-				success: function (data) {
-					console.log(data)
-					LoadNextStep(current_fs,next_fs);
-				},
-				error : function(xhr,errmsg,err) {
-					$('#ajax-errmsg').html('<div class="alert alert-dismissible alert-warning fade show" role="alert">Oops! We have encountered an error: '+errmsg+
-					" <a href='#' class='close'>&times;</a></div>"); // add the error to the dom
-					console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
-					}
-			});
+      $.ajax({
+          type: "POST",
+          url: "/hub/regform/",
+          data: formData,
+          async: false,
+          dataType: "json",
+          success: function (data) {
+            console.log(data.user)
+            $('form #id_user').val(data.user);
+            LoadNextStep(current_fs,next_fs);
+          },
+          error : function(xhr,errmsg,err) {
+            $('#ajax-errmsg').html('<div class="alert alert-dismissible alert-warning fade show" role="alert">Oops! We have encountered an error: '+errmsg+
+            " <a href='#' class='close'>&times;</a></div>"); // add the error to the dom
+            console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
+            }
+        });
 		  }
-	}
+  }
+  
+  if (current_step == 2){
+		var formData = {}	
+		if ($("#msform").parsley().isValid({group:"step2", force:false})){
+		    console.log("Form Validation Complete")
+				LoadNextStep(current_fs,next_fs);
+      }
+    }
+
+  if (current_step == 3){
+      var formData = new FormData($('#msform').get(0));
+      //formData.delete('email');
+      //formData.delete('telNumber');
+      //formData.delete('password');
+      //formData.delete('confirmPassword');
+      if ($("#msform").parsley().isValid({group:"step3", force:false})){
+          console.log("Form Validation Complete")
+          $.ajax({
+            type: "POST",
+            url: "/hub/userinfo/create/",
+            data: formData,
+            processData: false,
+            contentType: false,
+            async: false,
+            cache: false,
+            success: function (data) {
+              console.log(data)
+              LoadNextStep(current_fs,next_fs);
+            },
+            error : function(xhr,errmsg,err) {
+              $('#ajax-errmsg').html('<div class="alert alert-dismissible alert-warning fade show" role="alert">Oops! We have encountered an error: '+errmsg+
+              " <a href='#' class='close'>&times;</a></div>"); // add the error to the dom
+              console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
+              }
+          });
+        }
+    }
 	
 });
 
