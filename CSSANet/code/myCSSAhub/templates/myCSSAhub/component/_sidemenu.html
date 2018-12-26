@@ -3,13 +3,13 @@
         <nav class="sidebar-nav">
           <ul class="nav">
             <li class="nav-item">
-              <a class="nav-link" href="index.html">
+              <a class="nav-link" href="{% url 'myCSSAhub:home' %}">
                 <i class="nav-icon icon-speedometer"></i> Dashboard
               </a>
             </li>
             <li class="nav-title">我的myCSSA账户</li>
             <li class="nav-item">
-              <a class="nav-link" href="colors.html">
+              <a class="nav-link" href="{% url 'myCSSAhub:userInfo' %}">
                 <i class="nav-icon cui-user"></i>个人信息</a>
             </li>
             <li class="nav-item">
@@ -128,7 +128,7 @@
                         <i class="nav-icon icon-puzzle"></i> Carousel</a>
                     </li>
                   </ul>
-              </li>                             
+              </li>
           </ul>
         </nav>
         <button class="sidebar-minimizer brand-minimizer" type="button"></button>
