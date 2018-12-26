@@ -39,13 +39,13 @@
             <div id="div_id_number" class="form-label-group required"  >
               <label for="id_number" class="control-label col-md-6  requiredField"> Contact Number<span class="asteriskField">*</span> </label>
               <div class="controls col-md-12 ">
-                <input class="input-md textinput textInput form-control" id="phone_number" name="telNumber" placeholder="澳洲或者中国电话号码" type="text" />
+                <input class="input-md textinput textInput form-control" id="id_telNumber" name="telNumber" placeholder="澳洲或者中国电话号码" type="text" />
               </div>
             </div>
             <div id="password1" class="form-label-group required"  >
               <label for="id_password1" class="control-label col-md-6 requiredField"> Password<span class="asteriskField">*</span> </label>
               <div class="controls col-md-12 ">
-                <input class="input-md textinput textInput form-control" id="id_password1" name="password" placeholder="密码" type="password" />
+                <input class="input-md textinput textInput form-control" id="id_password" name="password" placeholder="密码" type="password" />
               </div>
             </div>
             <div id="password2" class="form-label-group required"  >
@@ -77,7 +77,6 @@
                   <option value="Other">
                     Other
                   </option>
-
                 </select>
               </div>
 
@@ -87,13 +86,13 @@
 
               <label for="id_firstName" class="control-label  col-md-6  requiredField"> First Name<span class="asteriskField">*</span> </label>
               <div class="controls  col-md-12 ">
-                <input class="input-md  textinput textInput form-control" id="firstname"  name="firstNameEN" placeholder="名" type="text" />
+                <input class="input-md  textinput textInput form-control" id="id_firstname"  name="firstNameEN" placeholder="名（拼音）" type="text" />
               </div>
             </div>
             <div id="name" class="form-group required">
               <label for="id_lastName" class="control-label  col-md-6  requiredField"> Last Name<span class="asteriskField">*</span> </label>
               <div class="controls  col-md-12 ">
-                <input class="input-md  textinput textInput form-control" id="lastname" name="lastNameEN" placeholder="姓" type="text" />
+                <input class="input-md  textinput textInput form-control" id="id_lastname" name="lastNameEN" placeholder="姓（拼音）" type="text" />
               </div>
             </div>
 
@@ -112,19 +111,19 @@
         <div id="div_id_location" class="form-group required">
           <label for="id_location" class="control-label  col-md-6  requiredField"> Address<span class="asteriskField">*</span> </label>
           <div class="controls  col-md-12 ">
-            <input class="form-control input-medium bfh-countries"  name="address" placeholder="请输入你的地址" />
+            <input class="form-control input-medium bfh-countries" id="id_address" name="address" placeholder="请输入你的地址" />
           </div>
         </div>
         <div id="div_id_location" class="form-group required">
           <label for="id_location" class="control-label  col-md-6  requiredField"> Postcode<span class="asteriskField">*</span> </label>
           <div class="controls  col-md-12 ">
-            <input class="form-control input-medium bfh-countries"  name="postcode" placeholder="请输入你的邮编" />
+            <input class="form-control input-medium bfh-countries" id="id_postcode"  name="postcode" placeholder="请输入你的邮编" />
           </div>
         </div>
         <div id="div_id_location" class="form-group required">
           <label for="id_location" class="control-label  col-md-6  requiredField"> Place of Birth<span class="asteriskField">*</span> </label>
           <div class="controls  col-md-12 ">
-            <input class="form-control input-medium bfh-countries" data-country="US" name="originate" placeholder="请输入你的籍贯" />
+            <input class="form-control input-medium bfh-countries" id="id_originate" data-country="US" name="originate" placeholder="请输入你的籍贯" />
           </div>
         </div>
         <div class="form-label-group">
@@ -176,16 +175,16 @@
           </div>
         </div>
         <div class="form-group required">
-          <label class="control-label  col-md-6 requiredField"> Membership ID<span class="asteriskField">*</span></label>
+          <label class="control-label  col-md-6 requiredField"> Student ID<span class="asteriskField">*</span></label>
           <div class="controls  col-md-12">
-            <input class="input-md textinput textInput form-control" name="membershipId" placeholder="请输入你的会员卡证" type="text"/>
+            <input class="input-md textinput textInput form-control" id="id_studentId" name="studentId" placeholder="请输入你的会员卡证" type="text"/>
           </div>
         </div>
         <div class="form-group">
           <label class="control-label  col-md-6">Profile Picture</label>
           <div class="controls  col-md-12">
             <div class="input-group js-input-file">
-              <input class="input-file" type="file" name="avatar"  id="file">
+              <input class="input-file" type="file" name="avatar" id="id_avatar">
             </div>
             <div class="label--desc">请选择并上传你的头像。</div>
           </div>
@@ -206,7 +205,6 @@
         <div class="form-group">
           <div class="controls col-md-offset-5 col-md-12 text-center" >
             <input type="button" value="Submit" class="nextstep btn btn-primary btn btn-info" id="submit-id-signup" />
-
           </div>
         </div>
       </fieldset>
@@ -231,7 +229,6 @@
         <p class="col-md-6 text-center">活动报名</p>
         </div>
         </div>
-
         <div class="form-group">
           <div class="controls col-md-offset-5 col-md-12 text-center" >
             <a href=""><input type="button" class="nextstep btn btn-primary btn btn-info" id="go-to-homepage" value="返回主页"/></a>
