@@ -158,11 +158,11 @@ class UserProfile (models.Model):
     identiyConfirmed = models.BooleanField(verbose_name="会员身份状态",default=False)
     isValid = models.BooleanField(verbose_name="账号有效性",default=False)
 
-    firstNameEN = models.CharField(verbose_name="英文名",max_length = 50)
-    lastNameEN = models.CharField(verbose_name="英文姓",max_length = 50)
+    firstNameEN = models.CharField(verbose_name="英文名",max_length=50)
+    lastNameEN = models.CharField(verbose_name="英文姓",max_length=50)
 
-    firstNameCN = models.CharField(verbose_name="中文名",max_length = 50,null=True, blank=True)
-    lastNameCN = models.CharField(verbose_name="中文姓",max_length = 50,null=True, blank=True)
+    firstNameCN = models.CharField(verbose_name="中文名",max_length=50,null=True, blank=True)
+    lastNameCN = models.CharField(verbose_name="中文姓",max_length=50,null=True, blank=True)
 
     genderChoice = (
         ('Male', 'Male'),
@@ -173,13 +173,13 @@ class UserProfile (models.Model):
 
     dateOfBirth = models.DateField(verbose_name="生日", null=True)
     joinDate = models.DateTimeField(auto_now_add=True)
-    studentId = models.CharField(verbose_name="学生证号",max_length = 10)
-    membershipId = models.CharField(verbose_name="会员卡号", max_length = 10,null=True, blank=True)
+    studentId = models.CharField(verbose_name="学生证号",max_length=10)
+    membershipId = models.CharField(verbose_name="会员卡号", max_length=10,null=True, blank=True)
 
 
-    address = models.CharField(verbose_name="地址",max_length = 150, null=True)
-    postcode = models.CharField(verbose_name="邮编",max_length = 4, null=True)
-    originate = models.CharField(verbose_name="籍贯",max_length = 20, null=True)
+    address = models.CharField(verbose_name="地址",max_length=150, null=True)
+    postcode = models.CharField(verbose_name="邮编",max_length=4, null=True)
+    originate = models.CharField(verbose_name="籍贯",max_length=20, null=True)
 
 
 

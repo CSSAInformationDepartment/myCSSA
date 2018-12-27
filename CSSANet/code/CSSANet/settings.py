@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'PublicSite',
     'RecruitAPI',
     'UserAuthAPI',
+    'FinanceAPI',
     'myCSSAhub',
 
     'rest_framework',
