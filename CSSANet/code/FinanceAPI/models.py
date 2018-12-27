@@ -53,7 +53,7 @@ class Invoice(models.Model):
             new_transaction = Transaction.objects.create(
                 amount = self.amount,
                 is_expense = True,
-                transaction_type = TransactionType.objects.get(name='Lodge Expense'),
+                transaction_type = TransactionType.objects.get_or_create(name='Lodge Expense')[0],
                 is_effective = False,
             )
             self.__class__.objects.filter(id=self.id).update(
@@ -64,7 +64,6 @@ class Invoice(models.Model):
     def save(self, *args, **kwargs):
         created = self._state.adding
         super(Invoice, self).save(*args, **kwargs)
-        print("New Record Status: "+ str(created))
         self._bind_transactions(created)
 
 
@@ -80,7 +79,26 @@ class BankTransferRecipient(models.Model):
     related_transactions = models.OneToOneField(Transaction, on_delete=models.CASCADE,null=True,blank=True)
     bsb = models.CharField(max_length=6)
     acc_number = models.CharField(max_length=11)
+    amount = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     sender = models.ForeignKey(User, on_delete=models.DO_NOTHING)
     pic_scan = models.ImageField(upload_to='finance/bankreceipient/', height_field=None, width_field=None, 
         blank=True, null=True)
-    note = models.CharField(max_length=500,null=True, blank=True)    
+    note = models.CharField(max_length=500,null=True, blank=True)
+
+    def _bind_transactions(self, created=False):
+        if created:
+            new_transaction = Transaction.objects.create(
+                amount = self.amount,
+                is_expense = False,
+                transaction_type = TransactionType.objects.get_or_create(name='Bank Transfer-IN')[0],
+                is_effective = False,
+            )
+            self.__class__.objects.filter(id=self.id).update(
+                related_transactions = new_transaction
+            )
+
+
+    def save(self, *args, **kwargs):
+        created = self._state.adding
+        super(BankTransferRecipient, self).save(*args, **kwargs)
+        self._bind_transactions(created)
