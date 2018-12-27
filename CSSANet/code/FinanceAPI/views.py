@@ -19,6 +19,7 @@ class TransactionListView(LoginRequiredMixin,ListView):
 class TransactionDetailView(LoginRequiredMixin,DetailView):
     login_url = 'hub/login/'
     template_name  = 'FinanceAPI/transaction_detail.html'
+    context_object_name = 'transaction'
 
     def get_object(self):
         id = self.kwargs.get("id")
