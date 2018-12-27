@@ -22,7 +22,7 @@ class TransactionDetailView(LoginRequiredMixin,DetailView):
 
     def get_object(self):
         id = self.kwargs.get("id")
-        return get_object_or_404(models.Transaction, id)
+        return get_object_or_404(models.Transaction, id=id)
 
 
 
