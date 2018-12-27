@@ -14,6 +14,9 @@ class TransactionType(models.Model):
     id = models.AutoField(primary_key=True, editable=False)
     name = models.CharField(max_length=50)
 
+    def __str__(self):
+        return self.name
+
 class Transaction(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid1, editable=False)
     transaction_type = models.ForeignKey(TransactionType, on_delete=models.DO_NOTHING)
@@ -31,6 +34,16 @@ class TransactionReview(models.Model):
     is_approved = models.BooleanField(default=False)
     operator = models.ForeignKey(User, on_delete=models.DO_NOTHING, null=True, blank=True)
     note = models.CharField(max_length=500,null=True, blank=True)
+
+    def _update_transaction_status(self, created=False):
+        if created:
+            if self.is_approved:
+                target_transaction =  Transaction.objects.filter(id=self.transaction.id).update(is_effective=True)
+
+    def save(self, *args, **kwargs):
+        created = self._state.adding
+        super(TransactionReview, self).save(*args, **kwargs)
+        self._update_transaction_status(created)
 
 
 class Invoice(models.Model):

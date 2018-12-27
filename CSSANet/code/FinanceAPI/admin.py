@@ -9,7 +9,7 @@ class AccountBalanceAdmin(admin.ModelAdmin):
     list_per_page = 25
 
 class  TransactionAdmin(admin.ModelAdmin):
-    list_display = ('id','time','is_effective', 'amount')
+    list_display = ('id','time','is_effective','transaction_type','is_expense' ,'amount')
     list_display_links = ('id',)
     search_fields = ('id','time','is_effective')
     list_per_page = 25
