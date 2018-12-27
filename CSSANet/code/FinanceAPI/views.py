@@ -11,6 +11,7 @@ from FinanceAPI import models, forms
 
 
 class TransactionListView(LoginRequiredMixin,ListView):
+    paginate_by = 25
     login_url = 'hub/login/'
     template_name  = 'FinanceAPI/transaction_list.html'
     queryset = models.Transaction.objects.all()

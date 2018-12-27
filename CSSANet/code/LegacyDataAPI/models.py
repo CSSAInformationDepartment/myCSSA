@@ -15,15 +15,6 @@
 #                                                                             #
 ###############################################################################
 
-############################  WARNING !!! #####################################
-#                                                                             #
-#    This part of code relates to the proprietary security features of        #
-#                        myCSSA Account System                                #
-#                                                                             #
-#                                                                             #
-#                          DO NOT DISCLOSE!                                   #
-###############################################################################
-
 from django.db import  models
 import uuid
 

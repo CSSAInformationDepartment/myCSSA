@@ -29,8 +29,8 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: aiuh489ieu19vc*4
       POSTGRES_DB: myCSSA
-    expose:
-      - 5432
+    ports:
+      - 5432:5432
     networks: 
       - data_link
 
