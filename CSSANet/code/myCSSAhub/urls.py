@@ -1,6 +1,7 @@
 
-from django.urls import path, re_path
+from django.urls import path, re_path, include
 from myCSSAhub import views as Views
+from FinanceAPI import urls as FinanceUrls
 
 app_name = "myCSSAhub"
 urlpatterns = [
@@ -13,6 +14,11 @@ urlpatterns = [
     path('register/', Views.register_guide , name='hub_reg'),
     path('regform/', Views.BasicSignInView.as_view() , name='hub_regform'),
     path('userinfo/create/', Views.UserProfileCreateView.as_view(), name='hub_userinfo_create'),
+]
+
+## Admin system app directory
+urlpatterns += [
+    path('finance/', include(FinanceUrls, namespace='FinanceAPI')),
 ]
 
 ## Internal AJAX path

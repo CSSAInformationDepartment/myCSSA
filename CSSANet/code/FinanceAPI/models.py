@@ -1,5 +1,6 @@
 from django.db import models
 from django.db.models.signals import post_save
+from django.urls import reverse
 from UserAuthAPI.models import User
 import uuid
 # Create your models here.
@@ -9,6 +10,7 @@ class AccountBalance(models.Model):
     id = models.AutoField(primary_key=True, editable=False)
     time = models.DateTimeField(auto_now_add=True)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
+    
 
 class TransactionType(models.Model):
     id = models.AutoField(primary_key=True, editable=False)
@@ -26,6 +28,9 @@ class Transaction(models.Model):
     is_expense = models.BooleanField(default=False)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     note = models.CharField(max_length=500,null=True, blank=True)
+
+    def get_absolute_url(self):
+        return reverse("myCSSAhub:FinanceAPI:transaction_details", args=[str(self.id)])
 
 class TransactionReview(models.Model):
     transaction = models.OneToOneField(Transaction, on_delete=models.CASCADE)
@@ -54,7 +59,7 @@ class Invoice(models.Model):
     is_disabled = models.BooleanField(default=False)
     time = models.DateTimeField(auto_now_add=True)
     related_transactions = models.OneToOneField(Transaction, on_delete=models.CASCADE,null=True,blank=True)
-    uploader = models.ForeignKey(User, on_delete=models.DO_NOTHING)
+    uploader = models.ForeignKey(User, on_delete=models.DO_NOTHING, null=True, blank=True)
     abn_number = models.CharField(max_length=11)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     note = models.CharField(max_length=500,null=True, blank=True)
@@ -93,7 +98,7 @@ class BankTransferRecipient(models.Model):
     bsb = models.CharField(max_length=6)
     acc_number = models.CharField(max_length=11)
     amount = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
-    sender = models.ForeignKey(User, on_delete=models.DO_NOTHING)
+    sender = models.ForeignKey(User, on_delete=models.DO_NOTHING, null=True, blank=True)
     pic_scan = models.ImageField(upload_to='finance/bankreceipient/', height_field=None, width_field=None, 
         blank=True, null=True)
     note = models.CharField(max_length=500,null=True, blank=True)
@@ -113,5 +118,5 @@ class BankTransferRecipient(models.Model):
 
     def save(self, *args, **kwargs):
         created = self._state.adding
-        super(BankTransferRecipient, self).save(*args, **kwargs)
+        super(BankTransferRecipient, self).save( *args, **kwargs)
         self._bind_transactions(created)
