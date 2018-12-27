@@ -23,6 +23,7 @@ def userInfo(request):
 def message(request):
     return render(request, 'myCSSAhub/message.html')
 
+###### 站内信 ##########
 @login_required(login_url='/hub/login/')
 def notifications_list(request):
     return render(request, 'myCSSAhub/notification/notifications_list.html')
@@ -30,6 +31,12 @@ def notifications_list(request):
 @login_required(login_url='/hub/login/')
 def notifications_form(request):
     return render(request, 'myCSSAhub/notification/notifications_form.html')
+
+@login_required(login_url='/hub/login/')
+def notifications_display(request):
+    return render(request, 'myCSSAhub/notification/notifications_display.html')
+
+###### 站内信 ##########
 
 def register_guide(request):
     return render(request, 'myCSSAhub/register_guide.html')

@@ -20,7 +20,7 @@
         <label for="exampleFormControlInput1">收信人姓名/地址</label>
         <input type="email" class="form-control" id="exampleFormControlInput1">
     </div>
-    <div class="form-group">
+    {% comment %} <div class="form-group">
         <label for="exampleFormControlSelect1">信件级别</label>
         <select class="form-control" id="exampleFormControlSelect1">
             <option>1</option>
@@ -29,13 +29,13 @@
             <option>4</option>
             <option>5</option>
         </select>
-    </div>
+    </div> {% endcomment %}
     <div class="form-group">
         <label for="formGroupExampleInput">标题</label>
         <input class="form-control" type="text" placeholder="Default input">
         <div class="form-group">
             <label for="exampleFormControlTextarea1">内容</label>
-            <textarea class="form-control" id="exampleFormControlTextarea1" rows="7"></textarea>
+            <textarea class="form-control" id="exampleFormControlTextarea1" rows="11"></textarea>
         </div>
         <div class="form-group">
             <label for="exampleFormControlFile1">选择附件</label>
@@ -45,8 +45,5 @@
         <button type="submit" class="btn btn-primary">发送</button>
     </div>
 </form>
-
-
-
 
 {% endblock%}
