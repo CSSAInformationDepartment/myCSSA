@@ -1,11 +1,11 @@
-{% extends 'components/base_page.html' %} 
+{% extends 'components/base_page.html' %}
 {% block 'extra_header' %}
 {% load static %}
 <link rel="stylesheet" type="text/css" href="{% static '/myCSSAhub/css/registrationForm.css'%}">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.0-alpha14/css/tempusdominus-bootstrap-4.min.css"/>
 {% endblock 'extra_header' %}
 
-{% block 'pg_body' %} 
+{% block 'pg_body' %}
 {% load static %}
 
 
@@ -65,7 +65,7 @@
                   placeholder="澳洲或者中国电话号码"
                   type="text"
                   data-parsley-tel-Number-Check="1"
-                  data-parsley-database-check="telNumber" 
+                  data-parsley-database-check="telNumber"
                   data-parsley-group="step1"
                 />
               </div>
@@ -399,14 +399,14 @@
             </div>
           </fieldset>
 
-          <fieldset style="width:600px; margin-left:-10%;">
+          <fieldset style="width:200%; margin-left:-50%;" class="col-md-24">
             <div class="form-label-group required jumbotron">
-              <h2 class="display-3 text-center" style="margin-top:-10%">
+              <h2 class="display-3 text-center">
                 恭喜你!
               </h2>
               <p class="lead text-center">
                 你已经完成myCSSA账号注册<br /><strong
-                  >请前往邮箱确认注册成功</strong
+                  >请前往摊位领取办理会员卡</strong
                 >
               </p>
               <hr />
@@ -424,6 +424,19 @@
                 <p class="col-md-6 text-center">活动报名</p>
               </div>
             </div>
+            <p class="lead text-left">
+                <strong>What's next?</strong><br>下次会员卡开放办理时间:
+              </p>
+              <div class="table text-left">
+                <ul id="tableTime" style="margin-top:10px;">
+                  <li class="col-md-5">下次开放时间: {{table.time}}</li>
+                  <li class="col-md-5">下次开放地点: {{table.location}}</li>
+                  </ul>
+                  </div>
+
+
+
+
             <div class="form-group">
               <div class="controls col-md-offset-5 col-md-12 text-center">
                 <a href=""
@@ -476,7 +489,7 @@
     });
   });
 
-  
+
 </script>
 <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.5/jquery-ui.min.js"></script>
 
