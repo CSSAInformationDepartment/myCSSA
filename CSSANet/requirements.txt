@@ -6,6 +6,8 @@ django-filebrowser==3.11.1
 
 Djangorestframework==3.9.0
 
+django-datatables-view == 1.17.0
+
 django-rest-auth>=0.3.3
 
 django-allauth
