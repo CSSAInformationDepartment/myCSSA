@@ -19,6 +19,9 @@ BASE_DIR = os.path.dirname(PROJECT_DIR)
 
 SITE_ID = 1
 
+#Comment out the TIME_ZONE Setting if you running the project on Windows
+TIME_ZONE = 'Australia/Melbourne'
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
