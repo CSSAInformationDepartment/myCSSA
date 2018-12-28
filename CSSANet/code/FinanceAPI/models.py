@@ -22,6 +22,7 @@ class TransactionType(models.Model):
 class Transaction(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid1, editable=False)
     transaction_type = models.ForeignKey(TransactionType, on_delete=models.DO_NOTHING)
+    related_user = models.ForeignKey(User, on_delete=models.DO_NOTHING, null=True, blank=True)
     time = models.DateTimeField(auto_now_add=True)
     is_disabled = models.BooleanField(default=False)
     is_effective = models.BooleanField(default=True)
@@ -58,7 +59,7 @@ class Invoice(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     is_disabled = models.BooleanField(default=False)
     time = models.DateTimeField(auto_now_add=True)
-    related_transactions = models.OneToOneField(Transaction, on_delete=models.CASCADE,null=True,blank=True)
+    related_transaction = models.ForeignKey(Transaction, on_delete=models.CASCADE,null=True,blank=True)
     uploader = models.ForeignKey(User, on_delete=models.DO_NOTHING, null=True, blank=True)
     abn_number = models.CharField(max_length=11)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
@@ -70,12 +71,13 @@ class Invoice(models.Model):
         if created:
             new_transaction = Transaction.objects.create(
                 amount = self.amount,
+                related_user = self.uploader,
                 is_expense = True,
                 transaction_type = TransactionType.objects.get_or_create(name='Lodge Expense')[0],
                 is_effective = False,
             )
             self.__class__.objects.filter(id=self.id).update(
-                related_transactions = new_transaction
+                related_transaction = new_transaction
             )
 
 
@@ -94,7 +96,7 @@ class BankTransferRecipient(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     is_disabled = models.BooleanField(default=False)
     time = models.DateTimeField(auto_now_add=True)
-    related_transactions = models.OneToOneField(Transaction, on_delete=models.CASCADE,null=True,blank=True)
+    related_transaction = models.ForeignKey(Transaction, on_delete=models.CASCADE,null=True,blank=True)
     bsb = models.CharField(max_length=6)
     acc_number = models.CharField(max_length=11)
     amount = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
@@ -107,12 +109,13 @@ class BankTransferRecipient(models.Model):
         if created:
             new_transaction = Transaction.objects.create(
                 amount = self.amount,
+                related_user = self.sender,
                 is_expense = False,
                 transaction_type = TransactionType.objects.get_or_create(name='Bank Transfer-IN')[0],
                 is_effective = False,
             )
             self.__class__.objects.filter(id=self.id).update(
-                related_transactions = new_transaction
+                related_transaction = new_transaction
             )
 
 
