@@ -12,11 +12,11 @@ django-rest-auth>=0.3.3
 
 django-allauth
 
-django_redis
-
 psycopg2-binary
 
 Pillow
+
+django-widget-tweaks
 
 gunicorn
 

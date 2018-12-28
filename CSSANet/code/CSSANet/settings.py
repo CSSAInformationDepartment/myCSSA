@@ -73,6 +73,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'gunicorn',
+    'widget_tweaks',
+    
 ]
 
 MIDDLEWARE = [
@@ -179,18 +181,6 @@ CACHES = {
   },
  }
 }
-
-# CACHE - By Redis / Disabled in development environment
-#CACHES = {
-#    "default": {
-#        "BACKEND": "django_redis.cache.RedisCache",
-#        "LOCATION": "redis://redis:6379/1",
-#        "OPTIONS": {
-#            "CLIENT_CLASS": "django_redis.client.DefaultClient"
-#        },
-#        "KEY_PREFIX": "example"
-#    }
-#}
 
 # Cache time to live is 1 minutes.
 CACHE_TTL = 1 * 1
