@@ -19,6 +19,9 @@ BASE_DIR = os.path.dirname(PROJECT_DIR)
 
 SITE_ID = 1
 
+#Comment out the TIME_ZONE Setting if you running the project on Windows
+TIME_ZONE = 'Australia/Melbourne'
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
@@ -47,6 +50,7 @@ INSTALLED_APPS = [
     'PublicSite',
     'RecruitAPI',
     'UserAuthAPI',
+    'FinanceAPI',
     'myCSSAhub',
 
     'rest_framework',
@@ -69,6 +73,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'gunicorn',
+    'widget_tweaks',
+    
 ]
 
 MIDDLEWARE = [
@@ -175,18 +181,6 @@ CACHES = {
   },
  }
 }
-
-# CACHE - By Redis / Disabled in development environment
-#CACHES = {
-#    "default": {
-#        "BACKEND": "django_redis.cache.RedisCache",
-#        "LOCATION": "redis://redis:6379/1",
-#        "OPTIONS": {
-#            "CLIENT_CLASS": "django_redis.client.DefaultClient"
-#        },
-#        "KEY_PREFIX": "example"
-#    }
-#}
 
 # Cache time to live is 1 minutes.
 CACHE_TTL = 1 * 1

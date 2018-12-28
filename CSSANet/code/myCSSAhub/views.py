@@ -30,9 +30,20 @@ def userInfo(request):
 def message(request):
     return render(request, 'myCSSAhub/message.html')
 
+###### 站内信 ##########
 @login_required(login_url='/hub/login/')
 def notifications_list(request):
-    return render(request, 'myCSSAhub/notifications_list.html')
+    return render(request, 'myCSSAhub/notification/notifications_list.html')
+
+@login_required(login_url='/hub/login/')
+def notifications_form(request):
+    return render(request, 'myCSSAhub/notification/notifications_form.html')
+
+@login_required(login_url='/hub/login/')
+def notifications_display(request):
+    return render(request, 'myCSSAhub/notification/notifications_display.html')
+
+###### 站内信 ##########
 
 @login_required(login_url='/hub/login/')
 def logout_page(request):
@@ -144,12 +155,12 @@ def CheckEmailIntegrity(request):
         print(email)
         userQuery = UserModels.User.objects.filter(email=email).first()
         if userQuery is None:
-            data['result']='Valid'
+            data['result'] = 'Valid'
         else:
-            data['result']='Invalid'
+            data['result'] = 'Invalid'
     else:
         data = {
-            'status': '400', 'reason': 'Bad Requests!'  
+            'status': '400', 'reason': 'Bad Requests!'
         }
     print(data)
     return JsonResponse(data)
@@ -185,13 +196,13 @@ def CheckStudentIdIntegrity(request):
     return JsonResponse(data)
 ################################# errors pages ########################################
 def bad_request(request):
- return render(request,'errors/page_400.html')
+ return render(request, 'errors/page_400.html')
 
 def permission_denied(request):
- return render(request,'errors/page_403.html')
+ return render(request, 'errors/page_403.html')
  
 def page_not_found(request):
- return render(request,'errors/page_404.html')
+ return render(request, 'errors/page_404.html')
  
 def server_error(request):
- return render(request,'errors/page_500.html')
+ return render(request, 'errors/page_500.html')

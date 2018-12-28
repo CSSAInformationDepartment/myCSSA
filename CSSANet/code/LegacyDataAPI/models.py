@@ -15,22 +15,13 @@
 #                                                                             #
 ###############################################################################
 
-############################  WARNING !!! #####################################
-#                                                                             #
-#    This part of code relates to the proprietary security features of        #
-#                        myCSSA Account System                                #
-#                                                                             #
-#                                                                             #
-#                          DO NOT DISCLOSE!                                   #
-###############################################################################
-
 from django.db import  models
-import uuid
+
 
 class LegacyUsers(models.Model):
-    recordId = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    recordId = models.AutoField(primary_key=True, editable=False)
 
-    identiyConfirmed = models.BooleanField(verbose_name="会员身份状态",default=False)
+    identityConfirmed = models.BooleanField(verbose_name="会员身份状态",default=False)
     isValid = models.BooleanField(verbose_name="账号有效性",default=False)
     isAdult = models.BooleanField(verbose_name="是否成年",default=False)
     
@@ -55,13 +46,10 @@ class LegacyUsers(models.Model):
     membershipId = models.CharField(verbose_name="会员卡号", max_length = 10,null=True)
         #为确保未来扩展性，目前设置会员卡号最大位宽10位，需要在前端代码中加以限制
 
-    telNumber = models.CharField(verbose_name="联系电话",max_length = 12,null=True)
-    email = models.CharField(verbose_name="电子邮箱",max_length = 30, null=True)
+    telNumber = models.CharField(verbose_name="联系电话",max_length = 15,null=True)
+    email = models.CharField(verbose_name="电子邮箱",max_length = 60, null=True)
     address = models.CharField(verbose_name="地址",max_length = 100,null=True)
     postcode = models.CharField(verbose_name="邮编",max_length = 4,null=True)
-    originate = models.CharField(verbose_name="籍贯",max_length = 20,null=True)
+    originate = models.CharField(verbose_name="籍贯",max_length = 50,null=True)
     majorName = models.CharField(verbose_name="专业",max_length=100,null=True)
-
-    def __str__(self):
-        return '%s %s %s' % (self.membershipId,self.firstNameEN, self.lastNameEN)
 

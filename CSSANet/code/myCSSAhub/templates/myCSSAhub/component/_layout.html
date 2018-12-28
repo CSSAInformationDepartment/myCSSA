@@ -20,6 +20,8 @@
     <link href="{% static '/myCSSAhub/vendors/pace-progress/css/pace.min.css'%}" rel="stylesheet">
     <!-- Global site tag (gtag.js) - Google Analytics-->
     <script async="" src="https://www.googletagmanager.com/gtag/js?id=UA-118965717-3"></script>
+    {% block ExtraHeader %}
+    {% endblock ExtraHeader %}
     <script>
       window.dataLayer = window.dataLayer || [];
 
@@ -60,7 +62,8 @@
                 </li>
               </ol>
               <div class="container-fluid">
-                {% block pageContent%} {% endblock %}
+                {% block pageContent %} 
+                {% endblock %}
               </div>
             </main>
             {% include './_aside_bar.html'%}
@@ -79,6 +82,25 @@
     <script src="{% static '/myCSSAhub/vendors/chart.js/js/Chart.min.js'%}"></script>
     <script src="{% static '/myCSSAhub/vendors/@coreui/coreui-plugin-chartjs-custom-tooltips/js/custom-tooltips.min.js'%}"></script>
     <script src="{% static '/myCSSAhub/js/main.js'%}"></script>
+    <script>
+    // DO NOT REMOVE THIS WHEN THE PAGE HAS ANY AJAX APPLET
+      var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
+
+      function csrfSafeMethod(method) {
+          // these HTTP methods do not require CSRF protection
+          return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+      }
+      $.ajaxSetup({
+          beforeSend: function(xhr, settings) {
+              if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                  xhr.setRequestHeader("X-CSRFToken", csrftoken);
+              }
+          }
+      });
+
+    </script>
+    {% block ExtraJS %}
+    {% endblock ExtraJS %}
 
 </body>
 </html>
