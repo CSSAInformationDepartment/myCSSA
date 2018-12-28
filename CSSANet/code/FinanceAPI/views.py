@@ -14,7 +14,7 @@ class TransactionListView(LoginRequiredMixin,ListView):
     paginate_by = 25
     login_url = 'hub/login/'
     template_name  = 'FinanceAPI/transaction_list.html'
-    queryset = models.Transaction.objects.all()
+    queryset = models.Transaction.objects.all().order_by('time')
     context_object_name = 'transaction_list'
 
 class TransactionDetailView(LoginRequiredMixin,DetailView):
