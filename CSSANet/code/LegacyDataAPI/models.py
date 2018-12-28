@@ -21,7 +21,7 @@ from django.db import  models
 class LegacyUsers(models.Model):
     recordId = models.AutoField(primary_key=True, editable=False)
 
-    identiyConfirmed = models.BooleanField(verbose_name="会员身份状态",default=False)
+    identityConfirmed = models.BooleanField(verbose_name="会员身份状态",default=False)
     isValid = models.BooleanField(verbose_name="账号有效性",default=False)
     isAdult = models.BooleanField(verbose_name="是否成年",default=False)
     
