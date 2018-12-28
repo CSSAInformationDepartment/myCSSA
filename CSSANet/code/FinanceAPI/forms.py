@@ -12,7 +12,8 @@ class TransactionTypeModelForm(forms.ModelForm):
         model = models.TransactionType
         fields = ['name',]
 
-class InvoiceModelForm(forms.ModelForm):   
+class InvoiceModelForm(forms.ModelForm):
+    note = forms.CharField(widget=forms.Textarea())   
     class Meta:
         model = models.Invoice
         fields = ['abn_number','amount','note','pic_scan']
