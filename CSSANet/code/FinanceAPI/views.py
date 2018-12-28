@@ -45,6 +45,12 @@ class TransactionListJson(LoginRequiredMixin, PermissionRequiredMixin, BaseDatat
                 return '<span class="badge badge-success">已核验</span>'
             else:
                 return '<span class="badge badge-warning">未核验</span>'
+
+        elif column == 'is_expense':
+            if row.is_expense:
+                return escape('支出')
+            else:
+                return escape('收入')
         else:
             return super(TransactionListJson, self).render_column(row, column)
 
