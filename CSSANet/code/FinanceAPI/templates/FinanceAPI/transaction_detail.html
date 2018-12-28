@@ -1,70 +1,39 @@
 {% extends 'myCSSAhub/component/_layout.html' %}
 {% block pageContent %}
-<div class="col-lg-12">
-  <div class="card">
-    <div class="card-header">
-      <i class="fa fa-align-justify"></i> 账户流水
+<div class="row">
+    <div class="col-lg-5">
+    <div class="card">
+        <div class="card-header">
+        <i class="fa fa-align-justify"></i> 交易详情
+        </div>
+        <div class="card-body">
+            <ul class="list-group">
+                <li class="list-group-item">交易流水号：{{ record.id }} </li>
+                <li class="list-group-item">时间：{{ record.time }} </li>
+                <li class="list-group-item">关联用户：{{ record.related_user.email }} </li>
+                <li class="list-group-item">金额：AUD ${{ record.amount }}</li>
+            </ul>
+        </div>
     </div>
-    <div class="card-body">
-      <table class="table table-responsive-sm">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>时间</th>
-            <th>交易类型</th>
-            <th>收入/支出</th>
-            <th>金额</th>
-            <th>交易状态</th>
-          </tr>
-        </thead>
-        <tbody>
-        {% if transaction_list %}
-                {% for transaction in transaction_list %}
-                <tr>
-                    <td>
-                        <a href="{{ transaction.get_absolute_url }}">{{ transaction.id }}</a> 
-                    </td>
-                    <td>
-                        {{ transaction.time }}
-                    </td>
-                    <td>
-                        {{ transaction.transaction_type }}
-                    </td>
-                    <td>
-                        {% if transaction.is_expense %}
-                            支出
-                        {% else %}
-                            收入
-                        {% endif %}
-                    </td>
-                    <td>
-                        AUD ${{ transaction.amount }}
-                    </td>
-                    <td>
-                        {% if transaction.is_effective %}
-                            <span class="badge badge-success">已核验</span>
-                        {% else %}
-                            <span class="badge badge-warning">未核验</span>
-                        {% endif %}
-                    </td>
-                {% endfor %}
-                </tr>
-            </tr>
-            {% else %}
-                <p>There are no transaction in the system.</p>
-            {% endif %}   
-        </tbody>
-      </table>
-      <ul class="pagination">
-        <li class="page-item"><a class="page-link" href="#">Prev</a></li>
-        <li class="page-item active"><a class="page-link" href="#">1</a></li>
-        <li class="page-item"><a class="page-link" href="#">2</a></li>
-        <li class="page-item"><a class="page-link" href="#">3</a></li>
-        <li class="page-item"><a class="page-link" href="#">4</a></li>
-        <li class="page-item"><a class="page-link" href="#">Next</a></li>
-      </ul>
     </div>
-  </div>
+    <div class="col-lg-5">
+    <div class="card">
+        <div class="card-header">
+        <i class="fa fa-align-justify"></i> 关联凭据
+        </div>
+        <div class="card-body">
+        {% if invoice %}
+        <div class="card-body">
+            <ul class="list-group">
+                <li class="list-group-item">凭证类型：发票 </li>
+                <li class="list-group-item">时间：{{ invoice.time }} </li>
+                <li class="list-group-item">关联用户：{{ invoice.uploader.email }} </li>
+                <li class="list-group-item">金额：AUD ${{ invoice.amount }}</li>
+            </ul>
+        </div>
+        {% endif %}
+        </div>
+    </div>
+    </div>
 </div>
-
 {% endblock %}

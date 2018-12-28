@@ -86,6 +86,9 @@ class Invoice(models.Model):
         super(Invoice, self).save(*args, **kwargs)
         self._bind_transactions(created)
 
+    def get_absolute_url(self):
+        return reverse("myCSSAhub:FinanceAPI:transaction_details", args=[str(self.related_transaction.id)])
+
 
 
 
@@ -123,3 +126,6 @@ class BankTransferRecipient(models.Model):
         created = self._state.adding
         super(BankTransferRecipient, self).save( *args, **kwargs)
         self._bind_transactions(created)
+
+    def get_absolute_url(self):
+        return reverse("myCSSAhub:FinanceAPI:transaction_details", args=[str(self.related_transaction.id)])
