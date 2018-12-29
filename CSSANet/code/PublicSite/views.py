@@ -33,7 +33,7 @@ def LoadPagetoRegister(uri,title,template):
 ################################# View Controller ########################################
 #@cache_page(CACHE_TTL)
 def index(request):
-    LoadPagetoRegister(reverse(index),'index','PublicSite/index.html')
+#    LoadPagetoRegister(reverse(index, current_app='PublicSite'),'index','PublicSite/index.html')
 
     return render(request, 'PublicSite/index.html')
             

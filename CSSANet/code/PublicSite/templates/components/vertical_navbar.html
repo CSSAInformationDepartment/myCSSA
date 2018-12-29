@@ -17,19 +17,19 @@
 								<a class="nav-link" href="event/">{%trans "活动消息 " %}</a>
 							</li>
 							<li class="nav-item">
-								<a class="nav-link" href="news/">{%trans "新闻公告" %}</a>
+								<a class="nav-link" href="{% url 'PublicSite:news' %}">{%trans "新闻公告" %}</a>
 							</li>
 							<li class="nav-item dropdown">
 								<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 								{%trans "部门构成" %}
 								</a>
 								<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-								<a class="dropdown-item" href="/department/council">{%trans "主席团" %} </a>
-								<a class="dropdown-item" href="/department/organisation">{%trans "组织部" %}</a>
-								<a class="dropdown-item" href="/department/liaison">{%trans "外联部" %}</a>
-								<a class="dropdown-item" href="/department/information">{%trans "信息部" %}</a>
-								<a class="dropdown-item" href="/department/publicity">{%trans "宣传部 " %}</a>
-								<a class="dropdown-item" href="/department/publicity">{%trans "人力资源部" %}</a>
+								<a class="dropdown-item" href="{% url 'PublicSite:departments' 'council' %}">{%trans "主席团" %} </a>
+								<a class="dropdown-item" href="{% url 'PublicSite:departments' 'organisation' %}">{%trans "组织部" %}</a>
+								<a class="dropdown-item" href="{% url 'PublicSite:departments' 'liaison' %}">{%trans "外联部" %}</a>
+								<a class="dropdown-item" href="{% url 'PublicSite:departments' 'information' %}">{%trans "信息部" %}</a>
+								<a class="dropdown-item" href="{% url 'PublicSite:departments' 'publicity' %}">{%trans "宣传部 " %}</a>
+								<a class="dropdown-item" href="{% url 'PublicSite:departments' 'recruitment' %}">{%trans "人力资源部" %}</a>
 								</div>
 							</li>
 							<li class="nav-item" >
@@ -44,7 +44,7 @@
 						</ul>
 						<ul class="navbar-nav navbar-right" > <!--Login Info-->
 						{% if user.is_authenticated %}
-							<li class="nav-item"><a class="nav-link" href="/hub/home/"> 欢迎你：{{ user.email }}</a></li>
+							<li class="nav-item"><a class="nav-link" href="{% url 'myCSSAhub:home' %}"> 欢迎你：{{ user.email }}</a></li>
 							<li class="nav-item"><a class="nav-link" href="{% url 'myCSSAhub:hub_logout' %}"> 注销 </a></li>
 						{% else %}
 							<li class="nav-item"><a class="nav-link" href="{% url 'myCSSAhub:hub_login' %}"> 登录</a></li>
