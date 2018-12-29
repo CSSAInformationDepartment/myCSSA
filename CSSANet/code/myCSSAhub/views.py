@@ -5,6 +5,9 @@ from django.views import View
 from django.views.generic.edit import CreateView, UpdateView, FormView
 from django.contrib.auth.models import update_last_login
 
+from django.contrib.auth.mixins import  LoginRequiredMixin, PermissionRequiredMixin
+from django.http import JsonResponse, HttpResponseRedirect, HttpResponse, Http404
+
 from django.contrib.auth.decorators import login_required
 
 from UserAuthAPI import models as UserModels
@@ -67,7 +70,7 @@ class LoginPage(View):
             return HttpResponseRedirect("/hub/home/")
         return render(request, self.template_name)
 
-    #请求处理函数（post）    
+    #请求处理函数（post）
     def post(self, request, *args, **kwargs):
         email = request.POST['email']
         print(email)
@@ -96,7 +99,7 @@ class BasicSignInView(FormView):
         """Handle GET requests: instantiate a blank version of the form."""
         return self.render_to_response(self.get_context_data())
 
-        
+
     def form_valid(self, form):
         form.save()
         email = form.cleaned_data['email']
@@ -135,12 +138,20 @@ class UserProfileCreateView(View):
                'success': False,
                 'errors': dict(form.errors.items()),
             })
-        return JsonResponse(self.JsonData)        
+        return JsonResponse(self.JsonData)
 
 def register_form(request):
         return render(request, 'myCSSAhub/registrationForm_step1.html')
 
+class migrationView(FormView):
+    template_name = 'myCSSAhub/migration.html'
 
+    def get(self, request, *args, **kwargs):
+        return render(request, self.template_name)
+
+    def form_valid(self,form):
+        form.save()
+        return super().form_valid(form)
 
 
 ############################# AJAX Page Resources #####################################
@@ -185,10 +196,10 @@ def CheckTelIntegrity(request):
             data['result']='Invalid'
     else:
         data = {
-            'status': '400', 'reason': 'Bad Requests!'  
+            'status': '400', 'reason': 'Bad Requests!'
         }
     return JsonResponse(data)
-    
+
 def CheckStudentIdIntegrity(request):
     data = {}
     if request.method == 'POST':
@@ -200,12 +211,12 @@ def CheckStudentIdIntegrity(request):
             data['result']='Invalid'
     else:
         data = {
-            'status': '400', 'reason': 'Bad Requests!'  
+            'status': '400', 'reason': 'Bad Requests!'
         }
     return JsonResponse(data)
 
 class UserLookup(View):
-    
+
     def get(self, request, *args, **kwargs):
         return JsonResponse({
                'success': False,
@@ -225,9 +236,9 @@ def bad_request(request):
 
 def permission_denied(request):
  return render(request, 'errors/page_403.html')
- 
+
 def page_not_found(request):
  return render(request, 'errors/page_404.html')
- 
+
 def server_error(request):
  return render(request, 'errors/page_500.html')
