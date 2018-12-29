@@ -203,6 +203,22 @@ def CheckStudentIdIntegrity(request):
             'status': '400', 'reason': 'Bad Requests!'  
         }
     return JsonResponse(data)
+
+class UserLookup(View):
+    
+    def get(self, request, *args, **kwargs):
+        return JsonResponse({
+               'success': False,
+               'status': '400',
+            })
+
+    def post(self, request, *args, **kwargs):
+        return JsonResponse({
+               'success': False,
+               'status': '400',
+            })
+
+
 ################################# errors pages ########################################
 def bad_request(request):
  return render(request, 'errors/page_400.html')
