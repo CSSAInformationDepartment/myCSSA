@@ -14,8 +14,8 @@ urlpatterns = [
     path('notification/notifications_form/', Views.NotificationForm.as_view(), name="notifications_form"),
     path('notification/notifications_display/', Views.notifications_display, name="notifications_display"),
     path('logout/', Views.logout_page , name='hub_logout'),
-    path('register/', Views.register_guide , name='hub_reg'),
-    path('regform/', Views.NewUserSignUpView.as_view() , name='hub_regform'),
+    path('welcome/', Views.register_guide , name='hub_reg'),
+    path('regform/<str:id>/', Views.NewUserSignUpView.as_view() , name='hub_regform'),
     path('userinfo/create/', Views.UserProfileCreateView.as_view(), name='hub_userinfo_create'),
 ]
 
