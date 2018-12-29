@@ -74,18 +74,21 @@ class NotificationForm(LoginRequiredMixin, View):
                                 email="ff@gmail.com", telNumber="123456789")
         user2 = UserModels.User(id="e06d1184-de29-4c95-aa72-5180c42d5cf3",
                                 email="gg@gmail.com", telNumber="123456799")
+        
 
-     
-
+        # user1.save() 
+        # user2.save() 
+       
         # 验证数据是否合法
+
         if form.is_valid():
             recID = form.cleaned_data['recID']
             title = form.cleaned_data['title']
             content = form.cleaned_data['content']
 
             print("recID", recID)
-            print("title", title)
-            print("content", content)
+            # print("title", title)
+            # print("content", content)
 
             notification_Db = Notification_DB(sendID=user1, recID=user2, title=title, content=content,
                                               status=0)
