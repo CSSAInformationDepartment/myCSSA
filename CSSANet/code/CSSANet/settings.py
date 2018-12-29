@@ -47,10 +47,11 @@ else:
 INSTALLED_APPS = [
     'EventAPI',
     'LegacyDataAPI',
-    'PublicSite',
     'RecruitAPI',
     'UserAuthAPI',
     'FinanceAPI',
+    'OrganisationMgr',    
+    'PublicSite',
     'myCSSAhub',
 
     'rest_framework',

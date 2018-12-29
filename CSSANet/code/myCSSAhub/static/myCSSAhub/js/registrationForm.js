@@ -100,27 +100,7 @@ $(".nextstep").click(function(){
 		var formData = {}	
 		if ($("#msform").parsley().isValid({group:"step1", force:false})){
 			console.log("Form Validation Complete")
-			formData['email'] = $('form #id_email').val()
-			formData['telNumber'] = $('form #id_telNumber').val()
-			formData['password'] = $('form #id_password').val()
-			formData['confirmPassword'] = $('form #id_confirmPassword').val()
-      $.ajax({
-          type: "POST",
-          url: "/hub/regform/",
-          data: formData,
-          async: false,
-          dataType: "json",
-          success: function (data) {
-            console.log(data.user)
-            $('form #id_user').val(data.user);
-            LoadNextStep(current_fs,next_fs);
-          },
-          error : function(xhr,errmsg,err) {
-            $('#ajax-errmsg').html('<div class="alert alert-dismissible alert-warning fade show" role="alert">Oops! We have encountered an error: '+errmsg+
-            " <a href='#' class='close'>&times;</a></div>"); // add the error to the dom
-            console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
-            }
-        });
+			LoadNextStep(current_fs,next_fs);
 		  } else {
         $("#msform").parsley().whenValidate({group:"step1", force:false})
       }
@@ -132,18 +112,14 @@ $(".nextstep").click(function(){
 		    console.log("Form Validation Complete")
 				LoadNextStep(current_fs,next_fs);
       } else {
-        $("#msform").parsley().whenValidate({group:"step1", force:false})
+        $("#msform").parsley().whenValidate({group:"step2", force:false})
       }
     }
 
   if (current_step == 3){
-      var formData = new FormData($('#msform').get(0));
-      //formData.delete('email');
-      //formData.delete('telNumber');
-      //formData.delete('password');
-      //formData.delete('confirmPassword');
       if ($("#msform").parsley().isValid({group:"step3", force:false})){
-          console.log("Form Validation Complete")
+					console.log("Form Validation Complete")
+					var formData = new FormData($('#msform').get(0));
           $.ajax({
             type: "POST",
             url: "/hub/userinfo/create/",
@@ -153,8 +129,12 @@ $(".nextstep").click(function(){
             async: false,
             cache: false,
             success: function (data) {
-              console.log(data)
-              LoadNextStep(current_fs,next_fs);
+              if (data.success) {
+								LoadNextStep(current_fs,next_fs);
+							} else {
+								alert(data.errors)
+							}
+              
             },
             error : function(xhr,errmsg,err) {
               $('#ajax-errmsg').html('<div class="alert alert-dismissible alert-warning fade show" role="alert">Oops! We have encountered an error: '+errmsg+
@@ -163,7 +143,7 @@ $(".nextstep").click(function(){
               }
           });
         } else {
-          $("#msform").parsley().whenValidate({group:"step1", force:false})
+          $("#msform").parsley().whenValidate({group:"step3", force:false})
         }
     }
 	

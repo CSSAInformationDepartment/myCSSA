@@ -15,5 +15,5 @@ urlpatterns = [
 
 ## Internal AJAX path
 urlpatterns += [
-    re_path(r'^ajax/list/$',views.TransactionListJson.as_view(),name="transaction_json"),
+    re_path(r'^ajax/list/',views.TransactionListJson.as_view(),name="transaction_json"),
 ]

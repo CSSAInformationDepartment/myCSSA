@@ -22,7 +22,8 @@
   <div class="container bloc-fill-screen">
     <div class="row justify-content-md-center">
       <div id="loginbox" class="col-sm-9 col-md-7 col-lg-5 mx-auto">
-        <form id="msform" class="form-horizontal col">
+        <form id="msform" class="form-horizontal col" autocomplete="off">
+        <input autocomplete="false" name="hidden" type="text" style="display:none;">
           {% csrf_token %}
           <ul id="progressbar">
             <li class="active">注册</li>
@@ -31,7 +32,11 @@
             <li>完成注册</li>
           </ul>
           <fieldset>
+          {% if LegacyData %}
+            <h5 class="fs-title">请继续完成你的myCSSA账号迁移</h5>
+          {% else %}
             <h5 class="fs-title">请注册你的myCSSA账号</h5>
+          {% endif %}
             <div class="form-label-group required">
               <label class="control-label  col-md-6 requiredField"
                 >E-mail<span class="asteriskField">*</span></label
@@ -47,6 +52,8 @@
                   data-parsley-group="step1"
                   data-parsley-type="email"
                   data-parsley-database-Check="email"
+                  value="{{ LegacyData.email }}"
+                  autocomplete="off"
                 />
               </div>
             </div>
@@ -69,6 +76,8 @@
                   data-parsley-tel-Number-Check="1"
                   data-parsley-database-check="telNumber"
                   data-parsley-group="step1"
+                  value="{{ LegacyData.telNumber }}"
+                  autocomplete="off"
                 />
               </div>
             </div>
@@ -88,6 +97,7 @@
                   placeholder="密码"
                   type="password"
                   data-parsley-group="step1"
+                  autocomplete="off"
                 />
                 <div id="progress-container" style="padding-top:10px"></div>
               </div>
@@ -109,6 +119,7 @@
                   type="password"
                   data-parsley-group="step1"
                   data-parsley-equalto="#id_password"
+                  autocomplete="off"
                 />
               </div>
             </div>
@@ -126,7 +137,6 @@
           </fieldset>
 
           <fieldset>
-          <input type="hidden" name="user" id="id_user"/>
             <h5 class="fs-title">请填写你的信息</h5>
             <div id="gender" class="form-group required">
               <label
@@ -166,6 +176,7 @@
                   type="text"
                   data-parsley-pattern="^[a-zA-Z]+$"
                   data-parsley-group="step2"
+                  value="{{ LegacyData.firstNameEN }}"
                 />
               </div>
             </div>
@@ -186,6 +197,7 @@
                   type="text"
                   data-parsley-pattern="^[a-zA-Z]+$"
                   data-parsley-group="step2"
+                  value="{{ LegacyData.lastNameEN }}"
                 />
               </div>
             </div>
@@ -350,9 +362,11 @@
                   data-parsley-maxlength="7"
                   data-parsley-database-check="studentId"
                   data-parsley-group="step3"
+                  value="{{ LegacyData.studentId }}"
                 />
               </div>
             </div>
+            <input type="hidden" id="id_membershipId" name="membershipId" value="{{ LegacyData.membershipId }}">
             <div class="form-group">
               <label class="control-label  col-md-6">Profile Picture</label>
               <div class="controls col-md-12">
