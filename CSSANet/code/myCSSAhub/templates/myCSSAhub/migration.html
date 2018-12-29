@@ -88,6 +88,17 @@
               </div>
             </div>
           </fieldset>
+
+          <fieldset>
+            <div class="form-label-group required jumbotron">
+              <h4 class="display-3 text-center">恭喜你已完成迁移验证</h4>
+              <p class="text-center">请点击<a id="completeMigration" href="">继续</a>完成账号迁移</p>
+              </div>
+              <div class="form-label-group required jumbotron" style="display:none">
+                <h4 class="display-3 text-center">抱歉!我们无法验证您的会员身份</h4>
+                <p class="text-center">请在完成账号注册后</br>携带<strong>学生证和会员卡</strong>前往摊位免费激活账号</p>
+                </div>
+                </fieldset>
         </form>
       </div>
     </div>
@@ -109,34 +120,4 @@ src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.0-alph
 <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.5/jquery-ui.min.js"></script>
 <script type="text/javascript" src="{% static '/myCSSAhub/js/migrationForm.js' %}"></script>
 
-<script type="text/javascript">
-$(".nextstep").click(function(){
-  if ($("#msform").parsley().isValid({group:"block1", force:false})){
-    console.log("Form Validation Complete")
-    var formData = new FormData($('#msform').get(0));
-    console.log(formData)
-    $.ajax({
-      type: "POST",
-      url: "/hub/migration/",
-      data: formData,
-      processData: false,
-      contentType: false,
-      async: false,
-      cache: false,
-      dataType: "json",
-      success: function (data) {
-        console.log(data)
-      },
-      error : function(xhr,errmsg,err) {
-        $('#ajax-errmsg').html('<div class="alert alert-dismissible alert-warning fade show" role="alert">Oops! We have encountered an error: '+errmsg+
-          " <a href='#' class='close'>&times;</a></div>"); // add the error to the dom
-          console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
-        }
-      });
-    } else {
-      $("#msform").parsley().whenValidate({group:"block1", force:false})
-    }
-});
-
-  </script>
 {% endblock 'extra_js' %}
