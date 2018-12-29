@@ -15,8 +15,9 @@ urlpatterns = [
     path('notification/notifications_display/', Views.notifications_display, name="notifications_display"),
     path('logout/', Views.logout_page , name='hub_logout'),
     path('welcome/', Views.register_guide , name='hub_reg'),
-    path('regform/<str:id>/', Views.NewUserSignUpView.as_view() , name='hub_regform'),
-    path('userinfo/create/', Views.UserProfileCreateView.as_view(), name='hub_userinfo_create'),
+    path('regform/', Views.NewUserSignUpView.as_view() , name='hub_regform'),
+    path('regform/<str:id>/', Views.NewUserSignUpView.as_view() , name='hub_migrationreg'),
+    path('userinfo/create/', Views.NewUserSignUpView.as_view(), name='hub_userinfo_create'),
 ]
 
 ## Admin system app directory

@@ -60,7 +60,6 @@ class BasicSiginInForm(forms.ModelForm):
         fields = ('email','telNumber','password')
 
 class UserInfoForm(forms.ModelForm):
-    user = forms.CharField()
     class Meta:
         model = models.UserProfile
         fields = '__all__'
