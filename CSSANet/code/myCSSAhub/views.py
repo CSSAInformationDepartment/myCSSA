@@ -1,5 +1,4 @@
-from .models import Notification_DB, AccountMigration
-from .forms import NotificationForm as Notification_Form
+
 from django.shortcuts import render
 from django.http import JsonResponse, HttpResponseRedirect, HttpResponse
 from django.contrib.auth import authenticate, login, logout
@@ -16,8 +15,10 @@ from django.http import JsonResponse, HttpResponseRedirect, HttpResponse, Http40
 
 from django.contrib.auth.decorators import login_required
 
+from .models import Notification_DB, AccountMigration
+from .forms import NotificationForm as Notification_Form
 from UserAuthAPI import models as UserModels
-from UserAuthAPI.forms import BasicSiginInForm, UserInfoForm
+from UserAuthAPI.forms import BasicSiginInForm, UserInfoForm, MigrationForm
 from LegacyDataAPI import  models as LegacyDataModels
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 
@@ -191,10 +192,7 @@ class NewUserSignUpView(View):
             })
         return JsonResponse({
                 'success': True,})
-        return JsonResponse(self.JsonData)
 
-def register_form(request):
-        return render(request, 'myCSSAhub/registrationForm_step1.html')
 
 class migrationView(FormView):
     template_name = 'myCSSAhub/migration.html'
@@ -202,9 +200,33 @@ class migrationView(FormView):
     def get(self, request, *args, **kwargs):
         return render(request, self.template_name)
 
-    def form_valid(self,form):
-        form.save()
-        return super().form_valid(form)
+    def post(self, request, *args, **kwargs):
+        migration_request = MigrationForm(data=request.POST)
+        if migration_request.is_valid():
+            print (migration_request['studentId'].value())
+            try:
+                legacy_record = LegacyDataModels.LegacyUsers.objects.get(
+                    Q(studentId=migration_request['studentId'].value()) & Q(membershipId=migration_request['membershipId'].value())
+                )
+                if legacy_record.email == migration_request['email'].value() or legacy_record.telNumber == migration_request['telNumber'].value():
+                    new_migration = AccountMigration(
+                        studentId=migration_request['studentId'].value(),
+                        membershipId=migration_request['membershipId'].value()
+                    )
+                    new_migration.save()
+                    return JsonResponse({
+                        'success': True,
+                        'status': '200',
+                        'migrationId': new_migration.id
+                    }) 
+            except ObjectDoesNotExist:
+                return JsonResponse({
+                    'success': False,
+                    'status': '404',
+                    }) 
+
+        
+        
 
 
 ############################# AJAX Page Resources #####################################

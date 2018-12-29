@@ -32,7 +32,11 @@
             <li>完成注册</li>
           </ul>
           <fieldset>
+          {% if LegacyData %}
+            <h5 class="fs-title">请继续完成你的myCSSA账号迁移</h5>
+          {% else %}
             <h5 class="fs-title">请注册你的myCSSA账号</h5>
+          {% endif %}
             <div class="form-label-group required">
               <label class="control-label  col-md-6 requiredField"
                 >E-mail<span class="asteriskField">*</span></label
@@ -48,7 +52,7 @@
                   data-parsley-group="step1"
                   data-parsley-type="email"
                   data-parsley-database-Check="email"
-                  value="{{ legacy_data.email }}"
+                  value="{{ LegacyData.email }}"
                   autocomplete="off"
                 />
               </div>
@@ -72,7 +76,7 @@
                   data-parsley-tel-Number-Check="1"
                   data-parsley-database-check="telNumber"
                   data-parsley-group="step1"
-                  value="{{ legacy_data.telNumber }}"
+                  value="{{ LegacyData.telNumber }}"
                   autocomplete="off"
                 />
               </div>
@@ -172,7 +176,7 @@
                   type="text"
                   data-parsley-pattern="^[a-zA-Z]+$"
                   data-parsley-group="step2"
-                  value="{{ legacy_data.firstNameEN }}"
+                  value="{{ LegacyData.firstNameEN }}"
                 />
               </div>
             </div>
@@ -193,7 +197,7 @@
                   type="text"
                   data-parsley-pattern="^[a-zA-Z]+$"
                   data-parsley-group="step2"
-                  value="{{ legacy_data.lastNameEN }}"
+                  value="{{ LegacyData.lastNameEN }}"
                 />
               </div>
             </div>
@@ -358,11 +362,11 @@
                   data-parsley-maxlength="7"
                   data-parsley-database-check="studentId"
                   data-parsley-group="step3"
-                  value="{{ legacy_data.studentId }}"
+                  value="{{ LegacyData.studentId }}"
                 />
               </div>
             </div>
-            <input type="hidden" id="id_membershipId" name="membershipId" value="{{ legacy_data.membershipId }}">
+            <input type="hidden" id="id_membershipId" name="membershipId" value="{{ LegacyData.membershipId }}">
             <div class="form-group">
               <label class="control-label  col-md-6">Profile Picture</label>
               <div class="controls col-md-12">
