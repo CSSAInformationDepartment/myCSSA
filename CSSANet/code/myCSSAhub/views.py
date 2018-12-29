@@ -1,3 +1,5 @@
+from .models import Notification_DB
+from .forms import NotificationForm as Notification_Form
 from django.shortcuts import render
 from django.http import JsonResponse, HttpResponseRedirect, HttpResponse
 from django.contrib.auth import authenticate, login, logout
@@ -11,11 +13,14 @@ from django.contrib.auth.decorators import login_required
 
 from UserAuthAPI import models as UserModels
 from UserAuthAPI.forms import BasicSiginInForm, UserInfoForm
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 
 from CSSANet.settings import MEDIA_ROOT, MEDIA_URL
 from Library.Mixins import AjaxableResponseMixin
 
 # Create your views here.
+
+
 def register_guide(request):
     if request.user.is_authenticated:
         return HttpResponseRedirect("/hub/home/")
@@ -25,26 +30,78 @@ def register_guide(request):
 def home(request):
     return render(request, 'myCSSAhub/home.html')
 
+
 @login_required(login_url='/hub/login/')
 def userInfo(request):
     return render(request, 'myCSSAhub/userInfo.html')
+
 
 @login_required(login_url='/hub/login/')
 def message(request):
     return render(request, 'myCSSAhub/message.html')
 
+
 ###### 站内信 ##########
+
+
 @login_required(login_url='/hub/login/')
 def notifications_list(request):
     return render(request, 'myCSSAhub/notification/notifications_list.html')
 
-@login_required(login_url='/hub/login/')
-def notifications_form(request):
-    return render(request, 'myCSSAhub/notification/notifications_form.html')
 
 @login_required(login_url='/hub/login/')
 def notifications_display(request):
     return render(request, 'myCSSAhub/notification/notifications_display.html')
+
+# 处理站内信的GET和POST方法，以及业务逻辑
+
+
+class NotificationForm(LoginRequiredMixin, View):
+    login_url = '/hub/login/'
+    template_name = 'myCSSAhub/notification/notifications_form.html'
+
+    currentID = UserModels.User
+
+    def get(self, request):
+        return render(request, self.template_name)
+
+    def post(self, request):
+        # 如果form通过POST方法发送数据
+
+        form = Notification_Form(request.POST)
+
+        user1 = UserModels.User(id="27ebd0e9-5cce-4cc9-8ae9-c7398b54f4ec",
+                                email="ff@gmail.com", telNumber="123456789")
+        user2 = UserModels.User(id="e06d1184-de29-4c95-aa72-5180c42d5cf3",
+                                email="gg@gmail.com", telNumber="123456799")
+
+     
+
+        # 验证数据是否合法
+        if form.is_valid():
+            recID = form.cleaned_data['recID']
+            title = form.cleaned_data['title']
+            content = form.cleaned_data['content']
+
+            print("recID", recID)
+            print("title", title)
+            print("content", content)
+
+            notification_Db = Notification_DB(sendID=user1, recID=user2, title=title, content=content,
+                                              status=0)
+
+            # notification_Db.save()
+
+            # aa = Notification_DB.objects.all().values()
+         
+            # print(aa)
+
+
+        return render(request, self.template_name)
+
+    def queryID(self):
+        return None
+
 
 ###### 站内信 ##########
 
@@ -57,19 +114,19 @@ def logout_page(request):
 ###### 账号相关 ##########
 #用户登陆CBV -- 范例
 class LoginPage(View):
-    #类属性
+    # 类属性
     model = UserModels.User
     template_name = 'myCSSAhub/login.html'
     loginErrorMsg = {"result": "Login Failed!"}
     loginSuccessful = {"result": "Login Successful!"}
 
-    #请求处理函数 （get）
+    # 请求处理函数 （get）
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated:
             return HttpResponseRedirect("/hub/home/")
         return render(request, self.template_name)
 
-    #请求处理函数（post）    
+    # 请求处理函数（post）
     def post(self, request, *args, **kwargs):
         email = request.POST['email']
         print(email)
@@ -112,21 +169,24 @@ class BasicSignInView(FormView):
             self.JsonData['error'] = 'Authentication System Error'
         return JsonResponse(self.JsonData)
 
+
 class UserProfileCreateView(View):
     model = UserModels.User
     form_class = UserInfoForm
-    JsonData={}
+    JsonData = {}
+
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated:
-            self.JsonData['userID'] =  request.user.id
+            self.JsonData['userID'] = request.user.id
         else:
             self.JsonData['error'] = "Invalid Form Request"
         return JsonResponse(self.JsonData)
 
     def post(self, request, *args, **kwargs):
-        form=UserInfoForm(data=request.POST, files=request.FILES)
+        form = UserInfoForm(data=request.POST, files=request.FILES)
         if form.is_valid():
-            currentUser = UserModels.User.objects.filter(id=form.cleaned_data['user']).first()
+            currentUser = UserModels.User.objects.filter(
+                id=form.cleaned_data['user']).first()
             if currentUser:
                 form.save()
                 self.JsonData['step2'] = 'done'
@@ -134,15 +194,14 @@ class UserProfileCreateView(View):
                 self.JsonData['error'] = "Invalid Form Request"
         else:
             return JsonResponse({
-               'success': False,
+                'success': False,
                 'errors': dict(form.errors.items()),
             })
-        return JsonResponse(self.JsonData)        
+        return JsonResponse(self.JsonData)
+
 
 def register_form(request):
-        return render(request, 'myCSSAhub/registrationForm_step1.html')
-
-
+    return render(request, 'myCSSAhub/registrationForm_step1.html')
 
 
 ############################# AJAX Page Resources #####################################
@@ -150,7 +209,8 @@ def register_form(request):
 def GetUserAvatar(request):
     data = {}
     if request.user.is_authenticated:
-        userQuery = UserModels.UserProfile.objects.filter(user=request.user).first()
+        userQuery = UserModels.UserProfile.objects.filter(
+            user=request.user).first()
         if userQuery is None:
             data['avatarPath'] = "Undefined"
         else:
@@ -158,6 +218,7 @@ def GetUserAvatar(request):
     else:
         data['errMsg'] = "Permission Denied"
     return JsonResponse(data)
+
 
 def CheckEmailIntegrity(request):
     data = {}
@@ -176,33 +237,36 @@ def CheckEmailIntegrity(request):
     print(data)
     return JsonResponse(data)
 
+
 def CheckTelIntegrity(request):
     data = {}
     if request.method == 'POST':
         telNumber = request.POST['value']
         userQuery = UserModels.User.objects.filter(telNumber=telNumber).first()
         if userQuery is None:
-            data['result']='Valid'
+            data['result'] = 'Valid'
         else:
-            data['result']='Invalid'
+            data['result'] = 'Invalid'
     else:
         data = {
-            'status': '400', 'reason': 'Bad Requests!'  
+            'status': '400', 'reason': 'Bad Requests!'
         }
     return JsonResponse(data)
-    
+
+
 def CheckStudentIdIntegrity(request):
     data = {}
     if request.method == 'POST':
         studentId = request.POST['value']
-        userQuery = UserModels.UserProfile.objects.filter(studentId=studentId).first()
+        userQuery = UserModels.UserProfile.objects.filter(
+            studentId=studentId).first()
         if userQuery is None:
-            data['result']='Valid'
+            data['result'] = 'Valid'
         else:
-            data['result']='Invalid'
+            data['result'] = 'Invalid'
     else:
         data = {
-            'status': '400', 'reason': 'Bad Requests!'  
+            'status': '400', 'reason': 'Bad Requests!'
         }
     return JsonResponse(data)
 
@@ -255,14 +319,19 @@ class UserLookup(LoginRequiredMixin,View):
 
 
 ################################# errors pages ########################################
+
+
 def bad_request(request):
- return render(request, 'errors/page_400.html')
+    return render(request, 'errors/page_400.html')
+
 
 def permission_denied(request):
- return render(request, 'errors/page_403.html')
- 
+    return render(request, 'errors/page_403.html')
+
+
 def page_not_found(request):
- return render(request, 'errors/page_404.html')
- 
+    return render(request, 'errors/page_404.html')
+
+
 def server_error(request):
- return render(request, 'errors/page_500.html')
+    return render(request, 'errors/page_500.html')
