@@ -144,30 +144,18 @@ class LoginPage(View):
             return JsonResponse(self.loginErrorMsg)
 
 
-class BasicSignInView(FormView):
+class NewUserSignUpView(View):
     template_name = 'myCSSAhub/registrationForm_step1.html'
-    form_class = BasicSiginInForm
-    JsonData = {}
+    account_form = BasicSiginInForm
+    profile_form = UserInfoForm
 
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated:
             return HttpResponseRedirect("/hub/home/")
         """Handle GET requests: instantiate a blank version of the form."""
-        return self.render_to_response(self.get_context_data())
 
-        
-    def form_valid(self, form):
-        form.save()
-        email = form.cleaned_data['email']
-        password = form.cleaned_data['password']
-        user = authenticate(self.request, email=email, password=password)
-        if user is not None:
-            currentUser = UserModels.User.objects.filter(email=email).first()
-            self.JsonData['step1'] = 'done'
-            self.JsonData['user'] = currentUser.id
-        else:
-            self.JsonData['error'] = 'Authentication System Error'
-        return JsonResponse(self.JsonData)
+        return render(request, self.template_name, {'AccountForm':self.account_form, 'ProfileForm':self.profile_form})
+
 
 
 class UserProfileCreateView(View):
