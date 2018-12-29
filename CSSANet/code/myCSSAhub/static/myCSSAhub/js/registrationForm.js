@@ -100,7 +100,7 @@ $(".nextstep").click(function(){
 		var formData = {}	
 		if ($("#msform").parsley().isValid({group:"step1", force:false})){
 			console.log("Form Validation Complete")
-			formData['email'] = $('form #id_email').val()
+/*		formData['email'] = $('form #id_email').val()
 			formData['telNumber'] = $('form #id_telNumber').val()
 			formData['password'] = $('form #id_password').val()
 			formData['confirmPassword'] = $('form #id_confirmPassword').val()
@@ -120,7 +120,7 @@ $(".nextstep").click(function(){
             " <a href='#' class='close'>&times;</a></div>"); // add the error to the dom
             console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
             }
-        });
+        });*/
 		  } else {
         $("#msform").parsley().whenValidate({group:"step1", force:false})
       }
@@ -137,13 +137,9 @@ $(".nextstep").click(function(){
     }
 
   if (current_step == 3){
-      var formData = new FormData($('#msform').get(0));
-      //formData.delete('email');
-      //formData.delete('telNumber');
-      //formData.delete('password');
-      //formData.delete('confirmPassword');
       if ($("#msform").parsley().isValid({group:"step3", force:false})){
-          console.log("Form Validation Complete")
+					console.log("Form Validation Complete")
+					var formData = new FormData($('#msform').get(0));
           $.ajax({
             type: "POST",
             url: "/hub/userinfo/create/",
