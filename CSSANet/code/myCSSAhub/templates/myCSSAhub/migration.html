@@ -1,0 +1,141 @@
+{% extends 'components/base_page.html' %}
+
+{% block 'extra_header' %}
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static '/myCSSAhub/css/registrationForm.css'%}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.0-alpha14/css/tempusdominus-bootstrap-4.min.css"/>
+{% endblock 'extra_header' %}
+
+{% block 'pg_body' %}
+{% load static %}
+
+<style>
+  #bloc-1 {
+    background-image: url("{% static '/myCSSAhub/img/bg_Migration.jpg' %}");
+    background-color: rgba(255, 255, 255, 0.4);
+    background-blend-mode: lighten;
+  }
+
+  background-image{
+    opacity:0.8;
+  }
+
+</style>
+
+<div class="bloc none l-bloc" id="bloc-1">
+  <div class="container bloc-fill-screen">
+    <div class="row justify-content-md-center">
+      <div id="loginbox" class="col-sm-9 col-md-7 col-lg-5 mx-auto">
+        <form id="mform" class="form-horizontal col">
+          {% csrf_token %}
+          <fieldset>
+            <h5 class="fs-title">账号迁移</h5>
+            <p>请三项中请至少填写二项</p>
+            <small class="text-muted"><mark>请与最初注册信息填写一致</mark></small>
+            <div class="form-label-group required">
+              <label class="control-label  col-md-6 requiredField">Membership ID</label>
+              <div class="controls col-md-12">
+                <input required class="input-md textinput textInput form-control" id="id_membership" name="membershipId"
+                  placeholder="请填写你的会员卡号" type="text" data-parsley-group="block1" data-parsley-length="[4,4]" />
+              </div>
+            </div>
+            <div class="form-label-group required">
+              <label class="control-label col-md-6 requiredField">Student ID</label>
+              <div class="controls col-md-12">
+                <input required class="input-md textinput textInput form-control" id="id_studentId" name="studentId"
+                  placeholder="请填写你的学生证号" type="text" data-parsley-group="block1" data-parsley-length="[6,7]"
+                  data-parsley-database-check="studentId" />
+              </div>
+            </div>
+            <div id="div_id_dob" class="form-label-group required">
+              <label for="id_dob" class="control-label  col-md-6  requiredField">
+                Date of Birth
+              </label>
+              <div class="controls  col-md-12 ">
+                <div class="input-group date" id="datetimepicker1" data-target-input="nearest">
+                  <input required class="input-md textinput textInput form-control datetimepicker-input" name="dateOfBirth"
+                    placeholder="MM/DD/YYYY" type="text" data-target="#datetimepicker1" />
+                  <div class="input-group-append" data-target="#datetimepicker1" data-toggle="datetimepicker">
+                    <div class="input-group-text">
+                      <i class="fa fa-calendar"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <hr />
+            <p>请二项中至少填写一项</p>
+            <small class="text-muted"><mark>请与最初注册信息填写一致</mark></small>
+            <div class="form-label-group required">
+              <label class="control-label  col-md-6 requiredField">Phone Number</label>
+              <div class="controls col-md-12">
+                <input required class="input-md textinput textInput form-control" id="id_telNumber" name="telNumber"
+                  placeholder="请填写你的电话号码" type="text" data-parsley-tel-Number-Check="1" data-parsley-database-check="telNumber"
+                  data-parsley-group="block2" />
+              </div>
+            </div>
+            <div class="form-label-group required">
+              <label class="control-label col-md-6 requiredField">E-mail</label>
+              <div class="controls col-md-12">
+                <input required class="input-md textinput textInput form-control" id="id_email" name="email"
+                  placeholder="请填写你的邮箱" type="text" data-parsley-type="email" data-parsley-database-Check="email" />
+              </div>
+            </div>
+            <div class="form-label-group required">
+              <div class="controls col-md-offset-5 col-md-12 text-center">
+                <input type="button" class="nextstep btn btn-primary btn btn-info" name="submit" value="submit"
+                  data-parsley-group="block2" data-parsley-type="email" data-parsley-database-Check="email" />
+              </div>
+            </div>
+          </fieldset>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+{% endblock 'pg_body' %}
+
+{% block 'extra_js' %}
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.23.0/moment.min.js"></script>
+<script
+type="text/javascript"
+src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.0-alpha14/js/tempusdominus-bootstrap-4.min.js"
+></script>
+<script type="text/javascript" src="{% static 'myCSSAhub/js/parsley.min.js' %}"></script>
+<script type="text/javascript" src="{% static '/myCSSAhub/js/custom_validators.js'%}"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.5/jquery-ui.min.js"></script>
+<script type="text/javascript" src="{% static '/myCSSAhub/js/migrationForm.js' %}"></script>
+
+<script type="text/javascript">
+  var formData = {}
+  if ($("#mform").parsley().isValid({group:"block1", force:false})){
+    console.log("Form Validation Complete")
+    formData['membershipId'] = $('form #id_membership').val()
+    formData['studentId'] = $('form #id_studentId').val()
+    formData['dateOfBirth'] = $('form #id_dob').val()
+    $.ajax({
+      type: "POST",
+      url: "/hub/migration/",
+      data: formData,
+      async: false,
+      dataType: "json",
+      success: function (data) {
+        console.log(data.user)
+
+      },
+      error : function(xhr,errmsg,err) {
+        $('#ajax-errmsg').html('<div class="alert alert-dismissible alert-warning fade show" role="alert">Oops! We have encountered an error: '+errmsg+
+          " <a href='#' class='close'>&times;</a></div>"); // add the error to the dom
+          console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
+        }
+      });
+    } else {
+      $("#mform").parsley().whenValidate({group:"block1", force:false})
+    }
+
+
+  </script>
+{% endblock 'extra_js' %}

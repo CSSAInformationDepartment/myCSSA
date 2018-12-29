@@ -14,7 +14,7 @@ from FinanceAPI import models, forms
 class TransactionListView(LoginRequiredMixin, View):
     login_url = '/hub/login/'
     template_name = 'FinanceAPI/transaction_list.html'
-    
+
     #请求处理函数 （get）
     def get(self, request, *args, **kwargs):
         return render(request, self.template_name)
@@ -26,7 +26,7 @@ class TransactionListJson(LoginRequiredMixin, PermissionRequiredMixin, BaseDatat
 
     # define the columns that will be returned
     columns = ['id', 'time','transaction_type', 'related_user', 'is_expense', 'amount','is_effective']
-    
+
     # define column names that will be used in sorting
     # order is important and should be same as order of columns
     # displayed by datatables. For non sortable columns use empty
@@ -67,7 +67,7 @@ class TransactionListJson(LoginRequiredMixin, PermissionRequiredMixin, BaseDatat
             qs = qs.filter(related_user__email__istartswith=search)
         #print(qs.query.__dict__)
         return qs
-    
+
 
 class TransactionDetailView(LoginRequiredMixin,View):
     login_url = 'hub/login/'
@@ -86,7 +86,7 @@ class TransactionDetailView(LoginRequiredMixin,View):
             bankstate = models.BankTransferRecipient.objects.filter(related_transaction=id).first()
         except transaction_query.model.DoesNotExist:
             raise Http404('No %s matches the given query.' % transaction_query.model._meta.object_name)
-            
+
         return render(request, self.template_name, {'record':transaction_query, 'invoice':invoice, 'bankstate':bankstate})
 
 class LodgeInvoiceView(View):

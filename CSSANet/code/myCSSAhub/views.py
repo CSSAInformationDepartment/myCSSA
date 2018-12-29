@@ -11,6 +11,9 @@ from django.db.models import Q
 from django.core.exceptions import ObjectDoesNotExist
 
 
+from django.contrib.auth.mixins import  LoginRequiredMixin, PermissionRequiredMixin
+from django.http import JsonResponse, HttpResponseRedirect, HttpResponse, Http404
+
 from django.contrib.auth.decorators import login_required
 
 from UserAuthAPI import models as UserModels
@@ -188,6 +191,21 @@ class NewUserSignUpView(View):
             })
         return JsonResponse({
                 'success': True,})
+        return JsonResponse(self.JsonData)
+
+def register_form(request):
+        return render(request, 'myCSSAhub/registrationForm_step1.html')
+
+class migrationView(FormView):
+    template_name = 'myCSSAhub/migration.html'
+
+    def get(self, request, *args, **kwargs):
+        return render(request, self.template_name)
+
+    def form_valid(self,form):
+        form.save()
+        return super().form_valid(form)
+
 
 ############################# AJAX Page Resources #####################################
 
@@ -237,7 +255,6 @@ def CheckTelIntegrity(request):
             'status': '400', 'reason': 'Bad Requests!'
         }
     return JsonResponse(data)
-
 
 def CheckStudentIdIntegrity(request):
     data = {}
