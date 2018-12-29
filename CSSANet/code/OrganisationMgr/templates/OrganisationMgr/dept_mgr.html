@@ -1,0 +1,82 @@
+{% extends 'myCSSAhub/component/_layout.html' %} 
+{% block pageTitle %}部门成员管理 {% endblock %} 
+{% block ExtraHeader %} 
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+{% endblock ExtraHeader %}
+
+{% block pageContent %}
+{% csrf_token %}
+<div class="col-sm-4">
+  <div class="card">
+    <div class="card-header"><strong>Buttons</strong> Groups</div>
+    <div class="card-body">
+      <form class="form-horizontal" action="" method="post" _lpchecked="1">
+        <div class="form-group row">
+          <div class="col-md-12">
+            <div class="input-group">
+              <span class="input-group-prepend">
+                <button class="btn btn-primary" type="button">
+                  <i class="fa fa-search"></i> Search
+                </button>
+              </span>
+              <select
+                class="form-control"
+                data-live-search="true"
+                id="userlookup"
+                type="text"
+                name="input1-group2"
+                placeholder="Username"
+                autocomplete="off"
+                style="background-image: url(&quot;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAkCAYAAADo6zjiAAAAAXNSR0IArs4c6QAAAbNJREFUWAntV8FqwkAQnaymUkpChB7tKSfxWCie/Yb+gbdeCqGf0YsQ+hU95QNyDoWCF/HkqdeiIaEUqyZ1ArvodrOHxanQOiCzO28y781skKwFW3scPV1/febP69XqarNeNTB2KGs07U3Ttt/Ozp3bh/u7V7muheQf6ftLUWyYDB5yz1ijuPAub2QRDDunJsdGkAO55KYYjl0OUu1VXOzQZ64Tr+IiPXedGI79bQHdbheCIAD0dUY6gV6vB67rAvo6IxVgWVbFy71KBKkAFaEc2xPQarXA931ot9tyHphiPwpJgSbfe54Hw+EQHMfZ/msVEEURjMfjCjbFeG2dFxPo9/sVOSYzxmAwGIjnTDFRQLMQAjQ5pJAQkCQJ5HlekeERxHEsiE0xUUCzEO9AmqYQhiF0Oh2Yz+ewWCzEY6aYKKBZCAGYs1wuYTabKdNNMWWxnaA4gp3Yry5JBZRlWTXDvaozUgGTyQSyLAP0dbb3DtQlmcan0yngT2ekE9ARc+z4AvC7nauh9iouhpcGamJeX8XF8MaClwaeROWRA7nk+tUnyzGvZrKg0/40gdME/t8EvgG0/NOS6v9NHQAAAABJRU5ErkJggg==&quot;); background-repeat: no-repeat; background-attachment: scroll; background-size: 16px 18px; background-position: 98% 50%; cursor: auto;"
+              />
+              </select>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="card-footer">
+      <button class="btn btn-sm btn-success" type="submit">
+        <i class="fa fa-dot-circle-o"></i> Submit
+      </button>
+      <button class="btn btn-sm btn-danger" type="reset">
+        <i class="fa fa-ban"></i> Reset
+      </button>
+    </div>
+  </div>
+</div>
+
+{% endblock %} 
+
+{% block ExtraJS %} 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+
+<script>
+
+
+$('#userlookup').select2({
+  ajax: {
+    url: '{% url "myCSSAhub:ajax_userLookup" %}',
+    dataType: 'json',
+    method: 'POST',
+    data: function (params) {
+      var query = {
+        search: params.term,
+        type: 'public'
+      }
+
+      // Query parameters will be ?search=[term]&type=public
+      return query;
+    },
+    processResults: function (data) {
+      // Tranforms the top-level key of the response object from 'items' to 'results'
+      console.log(data)
+      return {
+        results: data.items
+      };
+    }
+    // Additional AJAX parameters go here; see the end of this chapter for the full code of this example
+  }
+});
+</script>
+{% endblock ExtraJS %}

@@ -1,9 +1,11 @@
 from django.shortcuts import render
 from django.http import JsonResponse, HttpResponseRedirect, HttpResponse
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.mixins import  LoginRequiredMixin, PermissionRequiredMixin
 from django.views import View
 from django.views.generic.edit import CreateView, UpdateView, FormView
 from django.contrib.auth.models import update_last_login
+from django.db.models import Q
 
 from django.contrib.auth.decorators import login_required
 
@@ -204,7 +206,8 @@ def CheckStudentIdIntegrity(request):
         }
     return JsonResponse(data)
 
-class UserLookup(View):
+class UserLookup(LoginRequiredMixin,View):
+    login_url = '/hub/login/'
     
     def get(self, request, *args, **kwargs):
         return JsonResponse({
@@ -213,10 +216,42 @@ class UserLookup(View):
             })
 
     def post(self, request, *args, **kwargs):
-        return JsonResponse({
-               'success': False,
-               'status': '400',
-            })
+        if request.user.is_authenticated:
+            search = request.POST.get('search',"")
+            print(search)
+            db_lookup = UserModels.UserProfile.objects.filter(
+                Q(firstNameEN__istartswith=search) | Q(lastNameEN__istartswith=search) |
+                Q(firstNameCN__istartswith=search) | Q(lastNameCN__istartswith=search) |
+                Q(studentId__istartswith=search) |
+                Q(user__email__istartswith=search) | 
+                Q(user__telNumber__istartswith=search)
+            )
+            if db_lookup:
+                result_set = []
+                for result in db_lookup:
+                    lookupResult = {
+                        'FullNameEN': result.firstNameEN+" "+result.lastNameEN,
+                        'FullNameCN': result.firstNameCN+" "+result.lastNameCN,
+                        'email': result.user.email,
+                    }
+                    result_set.append(lookupResult)
+
+                return JsonResponse({
+                    'success': True,
+                    'status': '200',
+                    'result': result_set,
+                })
+            else:
+                return JsonResponse({
+                    'success': False,
+                    'status': '404',
+                    'result': None,
+                })
+        else:    
+            return JsonResponse({
+                'success': False,
+                'status': '400',
+                })
 
 
 ################################# errors pages ########################################
