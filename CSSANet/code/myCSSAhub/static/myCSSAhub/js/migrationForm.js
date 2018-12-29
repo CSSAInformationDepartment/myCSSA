@@ -90,11 +90,10 @@ $(".nextstep").click(function(){
           console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
         }
       });
+      LoadNextStep(current_fs,next_fs)
     } else {
       $("#msform").parsley().whenValidate({group:"block1", force:false})
     }
-
-    LoadNextStep(current_fs,next_fs)
 });
 
 
