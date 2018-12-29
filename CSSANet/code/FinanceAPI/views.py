@@ -45,6 +45,12 @@ class TransactionListJson(LoginRequiredMixin, PermissionRequiredMixin, BaseDatat
                 return '<span class="badge badge-success">已核验</span>'
             else:
                 return '<span class="badge badge-warning">未核验</span>'
+
+        elif column == 'is_expense':
+            if row.is_expense:
+                return escape('支出')
+            else:
+                return escape('收入')
         else:
             return super(TransactionListJson, self).render_column(row, column)
 
@@ -83,6 +89,13 @@ class TransactionDetailView(LoginRequiredMixin,View):
             
         return render(request, self.template_name, {'record':transaction_query, 'invoice':invoice, 'bankstate':bankstate})
 
+class LodgeInvoiceView(View):
+    template_name  = 'FinanceAPI/invoice_lodge.html'
+
+    def get(self, request, *args, **kwargs):
+       personal_lodge = models.Invoice.objects.filter(uploader=request.user.id).order_by('-time')
+       form = forms.InvoiceModelForm
+       return render(request, self.template_name, {'record':personal_lodge, 'form':form })
 
 class CreateTransactionView(CreateView):
     model = models.Transaction

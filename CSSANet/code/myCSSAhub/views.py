@@ -15,8 +15,9 @@ from Library.Mixins import AjaxableResponseMixin
 
 # Create your views here.
 def register_guide(request):
+    if request.user.is_authenticated:
+        return HttpResponseRedirect("/hub/home/")
     return render(request, 'myCSSAhub/register_guide.html')
-
 
 @login_required(login_url='/hub/login/')
 def home(request):
@@ -62,6 +63,8 @@ class LoginPage(View):
 
     #请求处理函数 （get）
     def get(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return HttpResponseRedirect("/hub/home/")
         return render(request, self.template_name)
 
     #请求处理函数（post）    
@@ -86,8 +89,14 @@ class BasicSignInView(FormView):
     template_name = 'myCSSAhub/registrationForm_step1.html'
     form_class = BasicSiginInForm
     JsonData = {}
-   # success_url = '/'
 
+    def get(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return HttpResponseRedirect("/hub/home/")
+        """Handle GET requests: instantiate a blank version of the form."""
+        return self.render_to_response(self.get_context_data())
+
+        
     def form_valid(self, form):
         form.save()
         email = form.cleaned_data['email']
@@ -194,6 +203,22 @@ def CheckStudentIdIntegrity(request):
             'status': '400', 'reason': 'Bad Requests!'  
         }
     return JsonResponse(data)
+
+class UserLookup(View):
+    
+    def get(self, request, *args, **kwargs):
+        return JsonResponse({
+               'success': False,
+               'status': '400',
+            })
+
+    def post(self, request, *args, **kwargs):
+        return JsonResponse({
+               'success': False,
+               'status': '400',
+            })
+
+
 ################################# errors pages ########################################
 def bad_request(request):
  return render(request, 'errors/page_400.html')
