@@ -16,7 +16,7 @@ urlpatterns = [
     path('register/', Views.register_guide , name='hub_reg'),
     path('regform/', Views.BasicSignInView.as_view() , name='hub_regform'),
     path('userinfo/create/', Views.UserProfileCreateView.as_view(), name='hub_userinfo_create'),
-    path('migration',Views.migrationView.as_view(),name='hub_migration'),
+    path('migration/',Views.migrationView.as_view(),name='hub_migration'),
 ]
 
 ## Admin system app directory

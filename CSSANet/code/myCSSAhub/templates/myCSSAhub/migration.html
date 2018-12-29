@@ -24,7 +24,7 @@
   <div class="container bloc-fill-screen">
     <div class="row justify-content-md-center">
       <div id="loginbox" class="col-sm-9 col-md-7 col-lg-5 mx-auto">
-        <form id="mform" class="form-horizontal col">
+        <form id="msform" class="form-horizontal col">
           {% csrf_token %}
           <fieldset>
             <h5 class="fs-title">账号迁移</h5>
@@ -151,11 +151,8 @@ src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.0-alph
 
 <script type="text/javascript">
   var formData = {}
-  if ($("#mform").parsley().isValid({group:"block1", force:false})){
+  if ($("#msform").parsley().isValid({group:"block1","block2", force:false})){
     console.log("Form Validation Complete")
-    formData['membershipId'] = $('form #id_membership').val()
-    formData['studentId'] = $('form #id_studentId').val()
-    formData['dateOfBirth'] = $('form #id_dob').val()
     $.ajax({
       type: "POST",
       url: "/hub/migration/",
@@ -163,8 +160,7 @@ src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.0-alph
       async: false,
       dataType: "json",
       success: function (data) {
-        console.log(data.user)
-
+      console.log(data.user)
       },
       error : function(xhr,errmsg,err) {
         $('#ajax-errmsg').html('<div class="alert alert-dismissible alert-warning fade show" role="alert">Oops! We have encountered an error: '+errmsg+
@@ -173,7 +169,7 @@ src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.0-alph
         }
       });
     } else {
-      $("#mform").parsley().whenValidate({group:"block1", force:false})
+      $("#msform").parsley().whenValidate({group:"block1", force:false})
     }
 
 
