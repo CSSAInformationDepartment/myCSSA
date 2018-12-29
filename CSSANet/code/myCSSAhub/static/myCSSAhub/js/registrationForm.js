@@ -132,7 +132,7 @@ $(".nextstep").click(function(){
 		    console.log("Form Validation Complete")
 				LoadNextStep(current_fs,next_fs);
       } else {
-        $("#msform").parsley().whenValidate({group:"step1", force:false})
+        $("#msform").parsley().whenValidate({group:"step2", force:false})
       }
     }
 
@@ -163,7 +163,7 @@ $(".nextstep").click(function(){
               }
           });
         } else {
-          $("#msform").parsley().whenValidate({group:"step1", force:false})
+          $("#msform").parsley().whenValidate({group:"step3", force:false})
         }
     }
 	
