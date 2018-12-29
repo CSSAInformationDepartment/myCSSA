@@ -89,16 +89,16 @@
             </div>
           </fieldset>
 
-          <fieldset>
-            <div class="form-label-group required jumbotron">
+          <fieldset style="width:200%">
+            <div id="result-success" class="form-label-group required jumbotron" style="display:none;">
               <h4 class="display-3 text-center">恭喜你已完成迁移验证</h4>
               <p class="text-center">请点击<a id="completeMigration" href="">继续</a>完成账号迁移</p>
               </div>
-              <div class="form-label-group required jumbotron" style="display:none">
-                <h4 class="display-3 text-center">抱歉!我们无法验证您的会员身份</h4>
+              <div id="result-fail" class="form-label-group required jumbotron" style="display:none;">
+                <h4 class="display-4 text-center"><i class="fa fa-minus-circle fa-10x"></i></br>抱歉!</br>我们无法验证您的会员身份</h4>
                 <p class="text-center">请在完成账号注册后</br>携带<strong>学生证和会员卡</strong>前往摊位免费激活账号</p>
-                </div>
-            </fieldset>
+              </div>
+           </fieldset>
         </form>
       </div>
     </div>
