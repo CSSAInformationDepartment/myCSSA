@@ -1,0 +1,122 @@
+{% extends 'myCSSAhub/component/_layout.html' %} 
+{% load static %} 
+{% block ExtraHeader %} 
+{% endblock ExtraHeader %} 
+
+{% block pageContent %}
+{% load widget_tweaks %}
+<div class="col-sm-6">
+  <div class="card">
+    <div class="card-header"><strong>公务报销申请表</strong></div>
+    <div class="card-body">
+        <form method="POST" action="">
+        {% for hidden_field in form.hidden_fields %}
+        {{ hidden_field }}
+        {% endfor %}
+
+        {% if form.non_field_errors %}
+        <div class="alert alert-danger" role="alert">
+            {% for error in form.non_field_errors %}
+            {{ error }}
+            {% endfor %}
+        </div>
+        {% endif %}
+        
+        <div class="form-group">
+            <label for="abn_number">ABN注册号</label>
+            {% if form.is_bound %}
+            {% if form.abn_number.errors %}
+                {% render_field form.abn_number class="form-control is-invalid" %}
+                {% for error in form.abn_number.errors %}
+                <div class="invalid-feedback">
+                    {{ error }}
+                </div>
+                {% endfor %}
+            {% else %}
+                {% render_field form.abn_number class="form-control is-valid" %}
+            {% endif %}
+            {% else %}
+                {% render_field form.abn_number class="form-control" %}
+            {% endif %}
+
+            {% if form.abn_number.help_text %}
+                <small class="form-text text-muted">{{ form.abn_number.help_text }}</small>
+            {% endif %}
+        </div>
+        
+        <div class="form-group">
+            <label for="amount">金额</label>
+            {% if form.is_bound %}
+            {% if form.amount.errors %}
+                {% render_field form.amount class="form-control is-invalid" %}
+                {% for error in form.amount.errors %}
+                <div class="invalid-feedback">
+                    {{ error }}
+                </div>
+                {% endfor %}
+            {% else %}
+                {% render_field form.amount class="form-control is-valid" %}
+            {% endif %}
+            {% else %}
+                {% render_field form.amount class="form-control" %}
+            {% endif %}
+
+            {% if form.amount.help_text %}
+                <small class="form-text text-muted">{{ form.amount.help_text }}</small>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="note">备注</label>
+            {% if form.is_bound %}
+            {% if form.note.errors %}
+                {% render_field form.note class="form-control is-invalid" %}
+                {% for error in form.note.errors %}
+                <div class="invalid-feedback">
+                    {{ error }}
+                </div>
+                {% endfor %}
+            {% else %}
+                {% render_field form.note class="form-control is-valid" %}
+            {% endif %}
+            {% else %}
+                {% render_field form.note class="form-control"%}
+            {% endif %}
+
+            {% if form.note.help_text %}
+                <small class="form-text text-muted">{{ form.note.help_text }}</small>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="note">上传凭证</label>
+            {% if form.is_bound %}
+            {% if form.pic_scan.errors %}
+                {% render_field form.pic_scan class="form-control is-invalid" %}
+                {% for error in form.pic_scan.errors %}
+                <div class="invalid-feedback">
+                    {{ error }}
+                </div>
+                {% endfor %}
+            {% else %}
+                {% render_field form.pic_scan class="form-control is-valid" %}
+            {% endif %}
+            {% else %}
+                {% render_field form.pic_scan class="form-control"%}
+            {% endif %}
+
+            {% if form.pic_scan.help_text %}
+                <small class="form-text text-muted">{{ form.pic_scan.help_text }}</small>
+            {% endif %}
+        </div>
+
+
+        <input type="submit" class="">
+        </form>
+    </div>
+  </div>
+</div>
+{% endblock %} 
+
+{% block ExtraJS %} 
+{% endblock ExtraJS %}

@@ -28,6 +28,7 @@ class CsutomUserAdmin(UserAdmin):
     ordering = ('email',)
 
 
+
 admin.site.register(models.User, CsutomUserAdmin)
 admin.site.register(models.UniMajor)
 admin.site.register(models.CSSADept)

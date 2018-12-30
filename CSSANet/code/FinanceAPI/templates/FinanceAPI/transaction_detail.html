@@ -1,39 +1,48 @@
 {% extends 'myCSSAhub/component/_layout.html' %}
 {% block pageContent %}
-<div class="row">
-    <div class="col-lg-5">
-    <div class="card">
-        <div class="card-header">
-        <i class="fa fa-align-justify"></i> 交易详情
+
+    <div class="col-sm-8">
+        <div class="card">
+            <div class="card-header">
+            <i class="fa fa-align-justify"></i> 交易详情
+            </div>
+            <div class="card-body">
+                <ul class="list-group">
+                    <li class="list-group-item">交易流水号：{{ record.id }} </li>
+                    <li class="list-group-item">时间：{{ record.time }} </li>
+                    <li class="list-group-item">关联用户：{{ record.related_user.email }} </li>
+                    <li class="list-group-item">金额：AUD ${{ record.amount }}</li>
+                </ul>
+            </div>
         </div>
-        <div class="card-body">
-            <ul class="list-group">
-                <li class="list-group-item">交易流水号：{{ record.id }} </li>
-                <li class="list-group-item">时间：{{ record.time }} </li>
-                <li class="list-group-item">关联用户：{{ record.related_user.email }} </li>
-                <li class="list-group-item">金额：AUD ${{ record.amount }}</li>
-            </ul>
+        <div class="card">
+            <div class="card-header">
+                <i class="fa fa-align-justify"></i> 关联凭据
+            </div>
+            {% if invoice %}
+            <div class="card-body">
+                <ul class="list-group">
+                    <li class="list-group-item">凭证类型：发票 </li>
+                    <li class="list-group-item">ABN：{{ invoice.abn_number }} </li>
+                    <li class="list-group-item">关联用户：{{ invoice.uploader.email }} </li>
+                    <li class="list-group-item">金额：AUD ${{ invoice.amount }}</li>
+                    <li class="list-group-item">备注：{{ invoice.note }}</li>
+                </ul>
+            </div>
+            {% endif %}
+            {% if bankstate %}
+            <div class="card-body">
+                <ul class="list-group">
+                    <li class="list-group-item">凭证类型：转账收据 </li>
+                    <li class="list-group-item">关联用户：{{ bankstate.uploader.email }} </li>
+                    <li class="list-group-item">BSB：{{ bankstate.bsb }} </li>
+                    <li class="list-group-item">Account Number：{{ bankstate.acc_number }} </li>
+                    <li class="list-group-item">金额：AUD ${{ bankstate.amount }}</li>
+                    <li class="list-group-item">备注：{{ bankstate.note }}</li>
+                </ul>
+            </div>
+            {% endif %}
         </div>
     </div>
-    </div>
-    <div class="col-lg-5">
-    <div class="card">
-        <div class="card-header">
-        <i class="fa fa-align-justify"></i> 关联凭据
-        </div>
-        <div class="card-body">
-        {% if invoice %}
-        <div class="card-body">
-            <ul class="list-group">
-                <li class="list-group-item">凭证类型：发票 </li>
-                <li class="list-group-item">时间：{{ invoice.time }} </li>
-                <li class="list-group-item">关联用户：{{ invoice.uploader.email }} </li>
-                <li class="list-group-item">金额：AUD ${{ invoice.amount }}</li>
-            </ul>
-        </div>
-        {% endif %}
-        </div>
-    </div>
-    </div>
-</div>
+
 {% endblock %}

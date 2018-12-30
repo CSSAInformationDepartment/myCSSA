@@ -60,7 +60,13 @@ class BasicSiginInForm(forms.ModelForm):
         fields = ('email','telNumber','password')
 
 class UserInfoForm(forms.ModelForm):
-    user = forms.CharField()
     class Meta:
         model = models.UserProfile
         fields = '__all__'
+
+class MigrationForm(forms.Form):
+    membershipId = forms.CharField(required=False)
+    studentId = forms.CharField(required=False)
+    dateOfBirth = forms.DateField(required=False)
+    telNumber = forms.CharField(required=False)
+    email = forms.EmailField(required=False)

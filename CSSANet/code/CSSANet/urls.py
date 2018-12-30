@@ -29,7 +29,7 @@ from LegacyDataAPI import urls as LegacyUrl
 from myCSSAhub import urls as HubUrl
 from django.conf.urls import handler400, handler403, handler404, handler500
 
-from PublicSite import  views as PublicViews
+from PublicSite import views as PublicViews
 
 urlpatterns = [
     path('', include(PublicUrl)), 

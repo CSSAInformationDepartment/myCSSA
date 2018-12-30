@@ -1,49 +1,73 @@
 {% extends 'myCSSAhub/component/_layout.html' %}
-{% block pageTitle %}
-站内信创建
-{% endblock %}
+{% block pageTitle %} 站内信创建 {% endblock %}
+{% block ExtraHeader %}
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+{% endblock ExtraHeader %}
+
 {% block pageContent %}
 
-<script>
-    $(document).ready(function () {
-        $(".close").click(function () {
-            $("#myAlert").alert("close");
-        });
-        $("#myAlert").on('closed.bs.alert', function () {
-            alert('The alert message is now closed.');
-        });
-    });
-</script>
+<!-- <form action="" name="myForm" method="post"> -->
 
-<form>
+    {% csrf_token %}
     <div class="form-group">
-        <label for="exampleFormControlInput1">收信人姓名/地址</label>
-        <input type="email" class="form-control" id="exampleFormControlInput1">
+        <label for="notification_user">收信人姓名（新输入的名字以空格键确认）</label>
+        <select class="form-control" id="userlookup" name="recID" style="width:100%" multiple="multiple"></select>
     </div>
-    {% comment %} <div class="form-group">
-        <label for="exampleFormControlSelect1">信件级别</label>
-        <select class="form-control" id="exampleFormControlSelect1">
-            <option>1</option>
-            <option>2</option>
-            <option>3</option>
-            <option>4</option>
-            <option>5</option>
-        </select>
-    </div> {% endcomment %}
     <div class="form-group">
-        <label for="formGroupExampleInput">标题</label>
-        <input class="form-control" type="text" placeholder="Default input">
+        <label for="notification_title">标题</label>
+        <input class="form-control" id="notification_title" name="title" type="text" />
         <div class="form-group">
-            <label for="exampleFormControlTextarea1">内容</label>
-            <textarea class="form-control" id="exampleFormControlTextarea1" rows="11"></textarea>
+            <label for="notification_content">内容</label>
+            <textarea class="form-control" id="notification_content" name="content" rows="11"></textarea>
         </div>
-        <div class="form-group">
+        <!-- <div class="form-group">
             <label for="exampleFormControlFile1">选择附件</label>
             <input type="file" class="form-control-file" id="exampleFormControlFile1">
-        </div>
-
-        <button type="submit" class="btn btn-primary">发送</button>
+        </div> -->
     </div>
-</form>
+    <button class="btn btn-primary" onclick="myFunction()">发送</button>
+    <button class="btn btn-danger" type="reset">重置</button>
+
+<!-- </form> -->
 
 {% endblock%}
+
+
+{% block ExtraJS %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+
+<script>
+    $('#userlookup').select2({
+        tags: true,
+        tokenSeparators: [',', ' '],
+        ajax: {
+            url: '{% url "myCSSAhub:ajax_userLookup" %}',
+            dataType: 'json',
+            method: 'POST',
+            data: function (params) {
+                var query = {
+                    search: params.term,
+                    type: 'public'
+                }
+
+                // Query parameters will be ?search=[term]&type=public
+                return query;
+            },
+            processResults: function (data) {
+                // Tranforms the top-level key of the response object from 'items' to 'results'
+                console.log(data)
+                return {
+                    results: data.items
+                };
+            }
+            // Additional AJAX parameters go here; see the end of this chapter for the full code of this example
+        }
+    });
+    
+    function myFunction(){
+        var recIDs = $("#userlookup").val();
+        alert("Selected value is: "+recIDs);
+    }
+            
+</script>
+{% endblock ExtraJS %}

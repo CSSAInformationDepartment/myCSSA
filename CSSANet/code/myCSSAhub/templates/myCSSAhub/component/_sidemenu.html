@@ -3,13 +3,13 @@
         <nav class="sidebar-nav">
           <ul class="nav">
             <li class="nav-item">
-              <a class="nav-link" href="index.html">
+              <a class="nav-link" href="{% url 'myCSSAhub:home' %}">
                 <i class="nav-icon icon-speedometer"></i> Dashboard
               </a>
             </li>
             <li class="nav-title">我的myCSSA账户</li>
             <li class="nav-item">
-              <a class="nav-link" href="">
+              <a class="nav-link" href="{% url 'myCSSAhub:userInfo' %}">
                 <i class="nav-icon cui-user"></i>个人信息</a>
             </li>
             <li class="nav-item">
@@ -77,19 +77,19 @@
               </li>
               <li class="nav-item nav-dropdown">
                 <a class="nav-link nav-dropdown-toggle" href="#">
-                  <i class="nav-icon icon-puzzle"></i>人事管理</a>
+                  <i class="nav-icon icon-puzzle"></i>组织部门管理</a>
                   <ul class="nav-dropdown-items">
                     <li class="nav-item">
-                      <a class="nav-link" href="base/breadcrumb.html">
+                      <a class="nav-link" href="{% url 'myCSSAhub:OrganisationMgr:dept_management' %}">
                         <i class="nav-icon icon-puzzle"></i>部门人事管理</a>
                     </li>
                     <li class="nav-item">
-                      <a class="nav-link" href="base/cards.html">
+                      <a class="nav-link" href="#">
                         <i class="nav-icon icon-puzzle"></i>纳新管理</a>
                     </li>
                     <li class="nav-item">
                       <a class="nav-link" href="base/carousel.html">
-                        <i class="nav-icon icon-puzzle"></i></a>
+                        <i class="nav-icon icon-puzzle"></i>日程表</a>
                     </li>
                   </ul>
               </li>
@@ -98,19 +98,19 @@
                   <i class="nav-icon cui-dollar"></i>财务管理</a>
                   <ul class="nav-dropdown-items">
                     <li class="nav-item">
-                      <a class="nav-link" href="/hub/finance/list/">
+                      <a class="nav-link" href="{% url 'myCSSAhub:FinanceAPI:transaction_list' %}">
                         <i class="nav-icon icon-list"></i> 财务流水</a>
                     </li>
                     <li class="nav-item">
-                      <a class="nav-link" href="base/cards.html">
-                        <i class="nav-icon cui-inbox"></i> 报销申请</a>
+                      <a class="nav-link" href="{% url 'myCSSAhub:FinanceAPI:invoice_lodge' %}">
+                        <i class="nav-icon cui-inbox"></i> 公务报销申请</a>
                     </li>
                     <li class="nav-item">
-                      <a class="nav-link" href="base/carousel.html">
+                      <a class="nav-link" href="">
                         <i class="nav-icon icon-check"></i> 收款核查</a>
                     </li>
                     <li class="nav-item">
-                      <a class="nav-link" href="base/cards.html">
+                      <a class="nav-link" href="">
                         <i class="nav-icon cui-magnifying-glass"></i> 报销核查 </a>
                     </li>
                   </ul>

@@ -5,16 +5,16 @@
 {% endblock ExtraHeader %}
 
 {% block pageContent %}
-<div class="col-sm-10">
+<div class="col-md-12">
   <div class="card" >
     <div class="card-header">
       <i class="fa fa-align-justify"></i> 账户流水
     </div>
     <div class="card-body">
-        <table id="main-datatable" class="table table-responsive"  style="width:100%" >
+        <table id="main-datatable" class="table table-responsive-md"  style="width:100%" >
         <thead>
           <tr>
-            <th>ID</th>
+            <th>流水单号</th>
             <th>时间</th>
             <th>交易类型</th>
             <th>关联用户</th>
@@ -39,7 +39,16 @@ $(document).ready(function() {
         "processing": true,
         "serverSide": true,
         "ajax": "{% url 'myCSSAhub:FinanceAPI:transaction_json' %}",
-
+        "rowCallback": function( row, data, index ) {
+              if ( data[4] == "支出" )
+              {
+                  $(row).find('td:eq(4)').css('background-color', 'rgb(237, 171, 168)');
+              }
+              else
+              {
+                  $(row).find('td:eq(4)').css('background-color', 'rgb(193, 237, 168)');
+              }
+          }
     });
 });
 </script>
