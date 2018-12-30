@@ -45,12 +45,15 @@ class TransactionListJson(LoginRequiredMixin, PermissionRequiredMixin, BaseDatat
                 return '<span class="badge badge-success">已核验</span>'
             else:
                 return '<span class="badge badge-warning">未核验</span>'
-
         elif column == 'is_expense':
             if row.is_expense:
                 return escape('支出')
             else:
                 return escape('收入')
+        elif column == 'time':
+            return escape(row.time.strftime('%Y/%m/%d %H:%M:%S'))
+        elif column == 'amount':
+            return escape('AUD $'+ str(row.amount))
         else:
             return super(TransactionListJson, self).render_column(row, column)
 
@@ -65,7 +68,6 @@ class TransactionListJson(LoginRequiredMixin, PermissionRequiredMixin, BaseDatat
 
         if search:
             qs = qs.filter(related_user__email__istartswith=search)
-        #print(qs.query.__dict__)
         return qs
 
 
