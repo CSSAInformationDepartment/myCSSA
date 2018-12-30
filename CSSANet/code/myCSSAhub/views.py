@@ -325,10 +325,11 @@ class UserLookup(LoginRequiredMixin,View):
                 result_set = []
                 for result in db_lookup:
                     lookupResult = {
-                        'userId': result.user.id,
-                        'FullNameEN': result.firstNameEN+" "+result.lastNameEN,
+                        'id': result.user.id,
+                        'full_name': result.firstNameEN+" "+result.lastNameEN,
                         'FullNameCN': result.firstNameCN+" "+result.lastNameCN,
                         'email': result.user.email,
+                        'text':''
                     }
                     result_set.append(lookupResult)
 

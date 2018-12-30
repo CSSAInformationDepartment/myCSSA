@@ -39,7 +39,7 @@
 
 <script>
     $("#userlookup").select2({
-        // tags: true,
+        // tags: true,  
         // tokenSeparators: [',', ' '],
         ajax: {
             // url: "https://api.github.com/search/repositories",
@@ -61,15 +61,21 @@
                 
                 console.log(data)
 
+                // var select2Data = $.map(data.result.data, function (obj) {
+                //     obj.id = obj._id.$id;
+                //     obj.text = obj.name;
+
+                //     return obj;
+                // });
+
                 return {
                     results: data.result,
                     // results: data.items,
                     pagination: {
-                        more: (params.page * 30) < data.total_count
+                        more: (params.page * 30) < data.length
                     }
                 };
-            },
-            cache: true
+            }
         },
         escapeMarkup: function (markup) { return markup; }, // let our custom formatter work
         minimumInputLength: 1,
@@ -83,19 +89,18 @@
         }
 
         var markup = 
-            "<div class='select2-result-repository__title'>" + repo.FullNameEN 
-            +" ,English Name: " + repo.FullNameEN + ", Email: " + repo.email 
-            + "</div>";
+            "<div class='select2-result-repository__title'> 中文名：" + repo.FullNameCN
+            +"; 英文名: " + repo.FullNameEN + "; 邮箱: " + repo.email + "</div>";
 
         return markup;
     }
-     
-    {% comment %} 这里是选取的方法，就是这最后一步没有办法搞定  {% endcomment %}
+      
     function formatRepoSelection(repo) {
 
         console.log(repo)
-
-        return repo.FullNameEN || repo.text;;
+        
+        return repo.email;
+      
     }
 
 </script>
