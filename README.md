@@ -30,4 +30,4 @@ docker-compose up --build
 Welcome to join us by contacting: information@cssaunimelb.com
 
 ## Project Info
-Project Manager and Lead Engineer: Josh.Le.Lu (joshlubox@gmail.com)
+Project Manager and Lead Engineer: Le (Josh). Lu (joshlubox@gmail.com)
