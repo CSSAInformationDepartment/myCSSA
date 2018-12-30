@@ -319,9 +319,9 @@ class UserLookup(LoginRequiredMixin,View):
                 for result in db_lookup:
                     lookupResult = {
                         'userId': result.user.id,
-                        'FullNameEN': result.firstNameEN+" "+result.lastNameEN,
-                        'FullNameCN': result.firstNameCN+" "+result.lastNameCN,
-                        'email': result.user.email,
+                        'FullNameEN': str(result.firstNameEN)+" "+ str(result.lastNameEN),
+                        'FullNameCN': str(result.firstNameCN)+" "+ str(result.lastNameCN),
+                        'email': str(result.user.email),
                     }
                     result_set.append(lookupResult)
 
