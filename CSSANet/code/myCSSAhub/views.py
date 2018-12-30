@@ -283,6 +283,7 @@ def CheckTelIntegrity(request):
             'status': '400', 'reason': 'Bad Requests!'
         }
     return JsonResponse(data)
+    
 
 def CheckStudentIdIntegrity(request):
     data = {}
@@ -307,7 +308,7 @@ class UserLookup(LoginRequiredMixin,View):
         return JsonResponse({
                'success': False,
                'status': '400',
-            })
+            })  
 
     def post(self, request, *args, **kwargs):
         if request.user.is_authenticated:
@@ -333,7 +334,7 @@ class UserLookup(LoginRequiredMixin,View):
 
                 return JsonResponse({
                     'success': True,
-                    'status': '200',
+                    'status': '200', 
                     'result': result_set,
                 })
             else:

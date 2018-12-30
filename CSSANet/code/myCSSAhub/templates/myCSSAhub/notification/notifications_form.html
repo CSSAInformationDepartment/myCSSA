@@ -6,13 +6,14 @@
 
 {% block pageContent %}
 
-<form action="" method="post">
+<form action="" method="post" id="form">
 
     {% csrf_token %}
     <div class="form-group">
         <label for="notification_user">收信人姓名（新输入的名字以空格键确认）</label>
         <select class="form-control" id="userlookup" name="recID" style="width:100%" multiple="multiple"></select>
     </div>
+
     <div class="form-group">
         <label for="notification_title">标题</label>
         <input class="form-control" id="notification_title" name="title" type="text" />
@@ -37,37 +38,65 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
 
 <script>
-    $('#userlookup').select2({
-        tags: true,
-        tokenSeparators: [',', ' '],
+    $("#userlookup").select2({
+        // tags: true,
+        // tokenSeparators: [',', ' '],
         ajax: {
+            // url: "https://api.github.com/search/repositories",
             url: '{% url "myCSSAhub:ajax_userLookup" %}',
             dataType: 'json',
             method: 'POST',
             data: function (params) {
-                var query = {
-                    search: params.term,
-                    type: 'public'
-                }
-
-                // Query parameters will be ?search=[term]&type=public
-                return query;
-            },
-            processResults: function (data) {
-                // Tranforms the top-level key of the response object from 'items' to 'results'
-                console.log(data)
                 return {
-                    results: data.items
+                    search: params.term, // search term
+                    page: params.page
                 };
-            }
-            // Additional AJAX parameters go here; see the end of this chapter for the full code of this example
-        }
+            },
+            processResults: function (data, params) {
+                // parse the results into the format expected by Select2
+                // since we are using custom formatting functions we do not need to
+                // alter the remote JSON data, except to indicate that infinite
+                // scrolling can be used
+                params.page = params.page || 1;
+                
+                console.log(data)
+
+                return {
+                    results: data.result,
+                    // results: data.items,
+                    pagination: {
+                        more: (params.page * 30) < data.total_count
+                    }
+                };
+            },
+            cache: true
+        },
+        escapeMarkup: function (markup) { return markup; }, // let our custom formatter work
+        minimumInputLength: 1,
+        templateResult: formatRepo,  
+        templateSelection: formatRepoSelection
     });
-    
-    function myFunction(){
-        var recIDs = $("#userlookup").val();
-        alert("Selected value is: "+recIDs);
+  
+    function formatRepo(repo) {
+        if (repo.loading) {
+            return repo.text;
+        }
+
+        var markup = 
+            "<div class='select2-result-repository__title'>" + repo.FullNameEN 
+            +" ,English Name: " + repo.FullNameEN + ", Email: " + repo.email 
+            + "</div>";
+
+        return markup;
     }
-            
+     
+    {% comment %} 这里是选取的方法，就是这最后一步没有办法搞定  {% endcomment %}
+    function formatRepoSelection(repo) {
+
+        console.log(repo)
+
+        return repo.FullNameEN || repo.text;;
+    }
+
 </script>
 {% endblock ExtraJS %}
