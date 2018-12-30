@@ -1,19 +1,22 @@
 {% extends 'myCSSAhub/component/_layout.html' %}
-{% block pageTitle %}
-站内信创建
-{% endblock %}
+{% block pageTitle %} 站内信创建 {% endblock %}
+{% block ExtraHeader %}
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+{% endblock ExtraHeader %}
+
 {% block pageContent %}
 
-<form method="post" >
-    <!-- django的跨站请求保护机制，需要加入下面这一行 -->
-    {% csrf_token %}  
+<form action="" method="post" id="form">
+
+    {% csrf_token %}
     <div class="form-group">
-        <label for="notification_user">收信人姓名/地址</label>
-        <input type="text" class="form-control" id="notification_user" name="recID" required/>
+        <label for="notification_user">收信人姓名（新输入的名字以空格键确认）</label>
+        <select class="form-control" id="userlookup" name="recID" style="width:100%" multiple="multiple"></select>
     </div>
+
     <div class="form-group">
         <label for="notification_title">标题</label>
-        <input class="form-control" id="notification_title" name="title" type="text"/>
+        <input class="form-control" id="notification_title" name="title" type="text" />
         <div class="form-group">
             <label for="notification_content">内容</label>
             <textarea class="form-control" id="notification_content" name="content" rows="11"></textarea>
@@ -22,9 +25,83 @@
             <label for="exampleFormControlFile1">选择附件</label>
             <input type="file" class="form-control-file" id="exampleFormControlFile1">
         </div> -->
-
-        <button type="submit" class="btn btn-primary" >发送</button>
     </div>
+    <button class="btn btn-primary" type="submit">发送</button>
+    <button class="btn btn-danger" type="reset">重置</button>
+
 </form>
 
 {% endblock%}
+
+
+{% block ExtraJS %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+
+<script>
+    $("#userlookup").select2({
+        // tags: true,  
+        // tokenSeparators: [',', ' '],
+        ajax: {
+            // url: "https://api.github.com/search/repositories",
+            url: '{% url "myCSSAhub:ajax_userLookup" %}',
+            dataType: 'json',
+            method: 'POST',
+            data: function (params) {
+                return {
+                    search: params.term, // search term
+                    page: params.page
+                };
+            },
+            processResults: function (data, params) {
+                // parse the results into the format expected by Select2
+                // since we are using custom formatting functions we do not need to
+                // alter the remote JSON data, except to indicate that infinite
+                // scrolling can be used
+                params.page = params.page || 1;
+                
+                console.log(data)
+
+                // var select2Data = $.map(data.result.data, function (obj) {
+                //     obj.id = obj._id.$id;
+                //     obj.text = obj.name;
+
+                //     return obj;
+                // });
+
+                return {
+                    results: data.result,
+                    // results: data.items,
+                    pagination: {
+                        more: (params.page * 30) < data.length
+                    }
+                };
+            }
+        },
+        escapeMarkup: function (markup) { return markup; }, // let our custom formatter work
+        minimumInputLength: 1,
+        templateResult: formatRepo,  
+        templateSelection: formatRepoSelection
+    });
+  
+    function formatRepo(repo) {
+        if (repo.loading) {
+            return repo.text;
+        }
+
+        var markup = 
+            "<div class='select2-result-repository__title'> 中文名：" + repo.FullNameCN
+            +"; 英文名: " + repo.FullNameEN + "; 邮箱: " + repo.email + "</div>";
+
+        return markup;
+    }
+      
+    function formatRepoSelection(repo) {
+
+        console.log(repo)
+        
+        return repo.email;
+      
+    }
+
+</script>
+{% endblock ExtraJS %}
