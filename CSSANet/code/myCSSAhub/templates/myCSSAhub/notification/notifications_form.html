@@ -6,7 +6,7 @@
 
 {% block pageContent %}
 
-<!-- <form action="" name="myForm" method="post"> -->
+<form action="" method="post">
 
     {% csrf_token %}
     <div class="form-group">
@@ -25,10 +25,10 @@
             <input type="file" class="form-control-file" id="exampleFormControlFile1">
         </div> -->
     </div>
-    <button class="btn btn-primary" onclick="myFunction()">发送</button>
+    <button class="btn btn-primary" type="submit">发送</button>
     <button class="btn btn-danger" type="reset">重置</button>
 
-<!-- </form> -->
+</form>
 
 {% endblock%}
 

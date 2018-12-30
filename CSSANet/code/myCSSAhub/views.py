@@ -62,7 +62,6 @@ def notifications_display(request):
 
 # 处理站内信的GET和POST方法，以及业务逻辑
 
-
 class NotificationForm(LoginRequiredMixin, View):
     login_url = '/hub/login/'
     template_name = 'myCSSAhub/notification/notifications_form.html'
@@ -74,13 +73,17 @@ class NotificationForm(LoginRequiredMixin, View):
 
     def post(self, request):
         # 如果form通过POST方法发送数据
+         
+        x = request.POST.getlist('recID')
+        print("recID", x) 
 
-        form = Notification_Form(request.POST)
 
-        user1 = UserModels.User(id="27ebd0e9-5cce-4cc9-8ae9-c7398b54f4ec",
-                                email="ff@gmail.com", telNumber="123456789")
-        user2 = UserModels.User(id="e06d1184-de29-4c95-aa72-5180c42d5cf3",
-                                email="gg@gmail.com", telNumber="123456799")
+        # form = Notification_Form(request.POST)
+
+        # user1 = UserModels.User(id="27ebd0e9-5cce-4cc9-8ae9-c7398b54f4ec",
+        #                         email="ff@gmail.com", telNumber="123456789")
+        # user2 = UserModels.User(id="e06d1184-de29-4c95-aa72-5180c42d5cf3",
+        #                         email="gg@gmail.com", telNumber="123456799")
         
 
         # user1.save() 
@@ -88,17 +91,17 @@ class NotificationForm(LoginRequiredMixin, View):
        
         # 验证数据是否合法
 
-        if form.is_valid():
-            recID = form.cleaned_data['recID']
-            title = form.cleaned_data['title']
-            content = form.cleaned_data['content']
+        # if form.is_valid():
+        #     recID = form.cleaned_data['recID']
+        #     title = form.cleaned_data['title']
+        #     content = form.cleaned_data['content']
 
-            print("recID", recID)
+        #     print("recID", recID)
             # print("title", title)
             # print("content", content)
 
-            notification_Db = Notification_DB(sendID=user1, recID=user2, title=title, content=content,
-                                              status=0)
+            # notification_Db = Notification_DB(sendID=user1, recID=user2, title=title, content=content,
+            #                                   status=0)
 
             # notification_Db.save()
 
