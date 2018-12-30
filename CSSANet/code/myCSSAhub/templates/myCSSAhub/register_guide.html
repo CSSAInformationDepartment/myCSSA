@@ -4,7 +4,9 @@
 {% load static %}
 <style>
   #bloc-1 {
-    background-image: url("{% static '/myCSSAhub/img/bg-login.jpg' %}")
+    background-image: url("{% static '/myCSSAhub/img/bg-login.jpg' %}");
+    background-color: rgba(255, 255, 255, 0.4);
+    background-blend-mode: lighten;
   }
   p {
 	  	width: 100%;
@@ -29,7 +31,7 @@
 			</div>
 			<div class="container mt-3">
 				<h6 class="card-title text-center">如果您持有CSSA会员卡, 但为首次使用myCSSA服务</br>请进行</h6>
-				<a href="#" class="btn btn-block btn-lg btn-warning">myCSSA账号迁移</a>
+				<a href="{% url 'myCSSAhub:hub_migration' %}" class="btn btn-block btn-lg btn-warning">myCSSA账号迁移</a>
 			</div>
 			</div>
 		</div>

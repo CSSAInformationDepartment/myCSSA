@@ -1,5 +1,4 @@
-from .models import Notification_DB
-from .forms import NotificationForm as Notification_Form
+
 from django.shortcuts import render
 from django.http import JsonResponse, HttpResponseRedirect, HttpResponse
 from django.contrib.auth import authenticate, login, logout
@@ -8,11 +7,19 @@ from django.views import View
 from django.views.generic.edit import CreateView, UpdateView, FormView
 from django.contrib.auth.models import update_last_login
 from django.db.models import Q
+from django.core.exceptions import ObjectDoesNotExist
+
+
+from django.contrib.auth.mixins import  LoginRequiredMixin, PermissionRequiredMixin
+from django.http import JsonResponse, HttpResponseRedirect, HttpResponse, Http404
 
 from django.contrib.auth.decorators import login_required
 
+from .models import Notification_DB, AccountMigration
+from .forms import NotificationForm as Notification_Form
 from UserAuthAPI import models as UserModels
-from UserAuthAPI.forms import BasicSiginInForm, UserInfoForm
+from UserAuthAPI.forms import BasicSiginInForm, UserInfoForm, MigrationForm
+from LegacyDataAPI import  models as LegacyDataModels
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 
 from CSSANet.settings import MEDIA_ROOT, MEDIA_URL
@@ -147,64 +154,82 @@ class LoginPage(View):
             return JsonResponse(self.loginErrorMsg)
 
 
-class BasicSignInView(FormView):
+class NewUserSignUpView(View):
     template_name = 'myCSSAhub/registrationForm_step1.html'
-    form_class = BasicSiginInForm
-    JsonData = {}
+    account_form = BasicSiginInForm
+    profile_form = UserInfoForm
 
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated:
             return HttpResponseRedirect("/hub/home/")
         """Handle GET requests: instantiate a blank version of the form."""
-        return self.render_to_response(self.get_context_data())
-
-        
-    def form_valid(self, form):
-        form.save()
-        email = form.cleaned_data['email']
-        password = form.cleaned_data['password']
-        user = authenticate(self.request, email=email, password=password)
-        if user is not None:
-            currentUser = UserModels.User.objects.filter(email=email).first()
-            self.JsonData['step1'] = 'done'
-            self.JsonData['user'] = currentUser.id
-        else:
-            self.JsonData['error'] = 'Authentication System Error'
-        return JsonResponse(self.JsonData)
-
-
-class UserProfileCreateView(View):
-    model = UserModels.User
-    form_class = UserInfoForm
-    JsonData = {}
-
-    def get(self, request, *args, **kwargs):
-        if request.user.is_authenticated:
-            self.JsonData['userID'] = request.user.id
-        else:
-            self.JsonData['error'] = "Invalid Form Request"
-        return JsonResponse(self.JsonData)
-
+        id = self.kwargs.get('id')
+        legacy_data = None
+        if id:
+            try:
+                migration_record = AccountMigration.objects.filter(id=id).first()
+                legacy_data = LegacyDataModels.LegacyUsers.objects.get(
+                    Q(studentId=migration_record.studentId) & Q(membershipId=migration_record.membershipId)
+                )
+            except ObjectDoesNotExist:
+                print("Either the entry or blog doesn't exist.")
+                
+        return render(request, self.template_name, {'LegacyData':legacy_data})
+    
     def post(self, request, *args, **kwargs):
-        form = UserInfoForm(data=request.POST, files=request.FILES)
-        if form.is_valid():
-            currentUser = UserModels.User.objects.filter(
-                id=form.cleaned_data['user']).first()
-            if currentUser:
-                form.save()
-                self.JsonData['step2'] = 'done'
-            else:
-                self.JsonData['error'] = "Invalid Form Request"
+        account_form = BasicSiginInForm(data=request.POST)
+        profile_form = UserInfoForm(data=request.POST, files=request.FILES)
+        if account_form.is_valid() and profile_form.is_valid():
+            account_register = account_form.save(commit=False)
+            account_form.save()
+            profile = profile_form.save(commit=False)
+            profile.user = account_register
+            if profile.membershipId and profile.membershipId != '':
+                profile.isValid = True
+            profile.save()
         else:
+            print (dict(profile_form.errors.items()))
             return JsonResponse({
                 'success': False,
-                'errors': dict(form.errors.items()),
+                'errors': [dict(account_form.errors.items()),dict(profile_form.errors.items())]
             })
-        return JsonResponse(self.JsonData)
+        return JsonResponse({
+                'success': True,})
 
 
-def register_form(request):
-    return render(request, 'myCSSAhub/registrationForm_step1.html')
+class migrationView(FormView):
+    template_name = 'myCSSAhub/migration.html'
+
+    def get(self, request, *args, **kwargs):
+        return render(request, self.template_name)
+
+    def post(self, request, *args, **kwargs):
+        migration_request = MigrationForm(data=request.POST)
+        if migration_request.is_valid():
+            print (migration_request['studentId'].value())
+            try:
+                legacy_record = LegacyDataModels.LegacyUsers.objects.get(
+                    Q(studentId=migration_request['studentId'].value()) & Q(membershipId=migration_request['membershipId'].value())
+                )
+                if legacy_record.email == migration_request['email'].value() or legacy_record.telNumber == migration_request['telNumber'].value():
+                    new_migration = AccountMigration(
+                        studentId=migration_request['studentId'].value(),
+                        membershipId=migration_request['membershipId'].value()
+                    )
+                    new_migration.save()
+                    return JsonResponse({
+                        'success': True,
+                        'status': '200',
+                        'migrationId': new_migration.id
+                    }) 
+            except ObjectDoesNotExist:
+                return JsonResponse({
+                    'success': False,
+                    'status': '404',
+                    }) 
+
+        
+        
 
 
 ############################# AJAX Page Resources #####################################
@@ -255,7 +280,6 @@ def CheckTelIntegrity(request):
             'status': '400', 'reason': 'Bad Requests!'
         }
     return JsonResponse(data)
-
 
 def CheckStudentIdIntegrity(request):
     data = {}

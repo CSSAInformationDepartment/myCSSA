@@ -147,7 +147,7 @@ class User(AbstractUser):
 
 #用户信息主体 （继承自标准admin model，参照： https://www.zmrenwu.com/post/31/）
 class UserProfile (models.Model):
-    user = models.OneToOneField(User,on_delete=models.DO_NOTHING, primary_key=True)
+    user = models.OneToOneField(User,on_delete=models.DO_NOTHING, primary_key=True, blank=True)
 
     avatar = models.ImageField(verbose_name="头像", upload_to=_GetUserDir,
     height_field=None, width_field=None, max_length=None,null=True, blank=True)
