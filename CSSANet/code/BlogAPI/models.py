@@ -7,17 +7,32 @@ from UserAuthAPI.models import User
 # Create your models here.
 
 # 新闻本身
-class Blog (models.Model):
+class BlogDescription (models.Model):
     blogId = models.AutoField(primary_key = True)
     blogTitle = models.CharField(max_length = 100)
-    blogMainContent = models.TextField()
 
     # 阅读量
     blogReads = models.IntegerField()
 
+class BlogContent (models.Model):
+    blogId = models.ForeignKey(BlogDescription, on_delete = models.CASCADE)
+    blogContentId = models.AutoField(primary_key = True)
+    blogMainContent = models.TextField()
+    writtenDate = models.DateTimeField(auto_now_add=True)
+
+
 class BlogWrittenBy(models.Model):
     blogCreatedId = models.AutoField(primary_key = True)
-    blogId = models.ForeignKey(Blog, on_delete = models.CASCADE)
+    blogContentId = models.ForeignKey(BlogContent, on_delete = models.CASCADE)
     userId = models.ForeignKey(User, on_delete = models.DO_NOTHING)
-    writtenDate = models.DateTimeField(auto_now_add=True)
+
+class BlogTag (models.Model):
+    tagId = models.AutoField(primary_key = True)
+    tagName = models.CharField(max_length = 18)
+    tagCreateTime = models.DateTimeField(auto_now_add = True)
+
+class BlogInTag (models.Model):
+    blogId = models.ForeignKey(BlogDescription, on_delete = models.CASCADE)
+    tagId = models.ForeignKey(BlogTag, on_delete = models.CASCADE)
+    blogTagId = models.AutoField(primary_key = True)
 
