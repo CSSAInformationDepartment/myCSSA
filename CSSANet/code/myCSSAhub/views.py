@@ -326,11 +326,13 @@ class UserLookup(LoginRequiredMixin,View):
                 for result in db_lookup:
                     lookupResult = {
                         'id': result.user.id,
-                        'full_name': result.firstNameEN+" "+result.lastNameEN,
-                        'FullNameCN': result.firstNameCN+" "+result.lastNameCN,
-                        'email': result.user.email,
-                        'text':''
+                        'full_name': str(result.firstNameEN) + " " + str(result.lastNameEN),
+                        'full_name_cn': str(result.firstNameCN) + " " + str(result.lastNameCN), 
+                        'email': str(result.user.email),
+                        'text': str(result.user.email)
                     }
+                    if result.avatar:
+                       lookupResult['avatar'] = str(result.avatar.url)
                     result_set.append(lookupResult)
 
                 return JsonResponse({
