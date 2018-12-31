@@ -1,4 +1,5 @@
 {% extends 'myCSSAhub/component/_layout.html' %}
+{% load static %}
 {% block pageTitle %} 站内信创建 {% endblock %}
 {% block ExtraHeader %}
 <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
@@ -37,7 +38,7 @@
 {% block ExtraJS %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
 
-<script>
+<script> //注意！！！ 此部分代码含服务器端渲染标签，不可移入单独的.js文件
     $("#userlookup").select2({
         // tags: true,  
         // tokenSeparators: [',', ' '],
@@ -58,15 +59,13 @@
                 // alter the remote JSON data, except to indicate that infinite
                 // scrolling can be used
                 params.page = params.page || 1;
-                
-                console.log(data)
 
                 // var select2Data = $.map(data.result.data, function (obj) {
-                //     obj.id = obj._id.$id;
-                //     obj.text = obj.name;
+                //     obj.id = obj.user_id;
+                //     obj.text = obj.email;
 
-                //     return obj;
-                // });
+                //    return obj;
+                //});
 
                 return {
                     results: data.result,
@@ -78,7 +77,7 @@
             }
         },
         escapeMarkup: function (markup) { return markup; }, // let our custom formatter work
-        minimumInputLength: 1,
+        minimumInputLength: 2,
         templateResult: formatRepo,  
         templateSelection: formatRepoSelection
     });
@@ -88,9 +87,18 @@
             return repo.text;
         }
 
-        var markup = 
-            "<div class='select2-result-repository__title'> 中文名：" + repo.FullNameCN
-            +"; 英文名: " + repo.FullNameEN + "; 邮箱: " + repo.email + "</div>";
+        var markup = "<span><div class='select2-result-repository__title'> ";
+        if (repo.avatar) { //有头像显示头像，没头像显示placeholder
+            markup += "<img src='" + repo.avatar + "'class='img-flag' hight='16px' width='16px' style='margin-right:20px' />"
+        } else {
+            markup += "<img src= '{% static '/myCSSAhub/img/avatar_placeholder.png'%}' class='img-flag' hight='16px' width='16px' style='margin-right:20px'/>"
+        }
+        if (repo.full_name_cn) {
+            markup += "中文名：" + repo.full_name_cn;
+        }
+        markup += "; 英文名: " + repo.full_name + "; 邮箱: " + repo.email ;
+        
+        markup += "</div></span>";
 
         return markup;
     }
@@ -99,7 +107,7 @@
 
         console.log(repo)
         
-        return repo.email;
+        return repo.id; //返回值用Id，邮箱不一定可靠
       
     }
 
