@@ -21,7 +21,7 @@ $(function() {
 });
 
 function LoadNextStep(current_fs,next_fs){
-	if(animating) return false;	
+	if(animating) return false;
 	animating = true;
 
 
@@ -60,7 +60,7 @@ $(".nextstep").click(function(){
   current_fs = $(this).closest('fieldset')
 	next_fs = current_fs.next()
 	event.preventDefault();
-	
+
   if ($("#msform").parsley().isValid({group:"block1", force:false})){
     console.log("Form Validation Complete")
     var formData = new FormData($('#msform').get(0));
@@ -95,5 +95,3 @@ $(".nextstep").click(function(){
       $("#msform").parsley().whenValidate({group:"block1", force:false})
     }
 });
-
-
