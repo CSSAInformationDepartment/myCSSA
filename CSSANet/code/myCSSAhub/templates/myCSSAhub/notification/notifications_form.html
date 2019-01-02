@@ -11,7 +11,7 @@
 
     {% csrf_token %}
     <div class="form-group">
-        <label for="notification_user">收信人姓名（新输入的名字以空格键确认）</label>
+        <label for="notification_user">收信人邮箱：</label>
         <select class="form-control" id="userlookup" name="recID" style="width:100%" multiple="multiple"></select>
     </div>
 
@@ -27,6 +27,7 @@
             <input type="file" class="form-control-file" id="exampleFormControlFile1">
         </div> -->
     </div>
+    <!-- 直接点击submit可以发送ID至后台，select2控件已经封装好了 -->
     <button class="btn btn-primary" type="submit">发送</button>
     <button class="btn btn-danger" type="reset">重置</button>
 
@@ -77,7 +78,7 @@
             }
         },
         escapeMarkup: function (markup) { return markup; }, // let our custom formatter work
-        minimumInputLength: 2,
+        minimumInputLength: 1,
         templateResult: formatRepo,  
         templateSelection: formatRepoSelection
     });
@@ -105,7 +106,7 @@
       
     function formatRepoSelection(repo) {
 
-        console.log(repo)
+        // console.log(repo)
         
         return repo.email;
       

@@ -2,24 +2,19 @@
 from django.shortcuts import render
 from django.http import JsonResponse, HttpResponseRedirect, HttpResponse
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.mixins import  LoginRequiredMixin, PermissionRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.views import View
 from django.views.generic.edit import CreateView, UpdateView, FormView
 from django.contrib.auth.models import update_last_login
 from django.db.models import Q
 from django.core.exceptions import ObjectDoesNotExist
-
-
-from django.contrib.auth.mixins import  LoginRequiredMixin, PermissionRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.http import JsonResponse, HttpResponseRedirect, HttpResponse, Http404
-
 from django.contrib.auth.decorators import login_required
-
 from .models import Notification_DB, AccountMigration
-from .forms import NotificationForm as Notification_Form
 from UserAuthAPI import models as UserModels
 from UserAuthAPI.forms import BasicSiginInForm, UserInfoForm, MigrationForm
-from LegacyDataAPI import  models as LegacyDataModels
+from LegacyDataAPI import models as LegacyDataModels
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 
 from CSSANet.settings import MEDIA_ROOT, MEDIA_URL
@@ -32,6 +27,7 @@ def register_guide(request):
     if request.user.is_authenticated:
         return HttpResponseRedirect("/hub/home/")
     return render(request, 'myCSSAhub/register_guide.html')
+
 
 @login_required(login_url='/hub/login/')
 def home(request):
@@ -62,55 +58,24 @@ def notifications_display(request):
 
 # 处理站内信的GET和POST方法，以及业务逻辑
 
+
 class NotificationForm(LoginRequiredMixin, View):
     login_url = '/hub/login/'
     template_name = 'myCSSAhub/notification/notifications_form.html'
-
-    currentID = UserModels.User
 
     def get(self, request):
         return render(request, self.template_name)
 
     def post(self, request):
-        # 如果form通过POST方法发送数据
-         
-        x = request.POST.getlist('recID')
-        print("recID", x) 
+        if request.user.is_authenticated:
+            # 如果form通过POST方法发送数据
+            # 发送的目标用户id
+            targetUserId = request.POST.getlist('recID')
+            # print("recID", targetUserId)
+            # 当前用户id
+            currentID = request.user.id
 
-
-        # form = Notification_Form(request.POST)
-
-        # user1 = UserModels.User(id="27ebd0e9-5cce-4cc9-8ae9-c7398b54f4ec",
-        #                         email="ff@gmail.com", telNumber="123456789")
-        # user2 = UserModels.User(id="e06d1184-de29-4c95-aa72-5180c42d5cf3",
-        #                         email="gg@gmail.com", telNumber="123456799")
-        
-
-        # user1.save() 
-        # user2.save() 
-       
-        # 验证数据是否合法
-
-        # if form.is_valid():
-        #     recID = form.cleaned_data['recID']
-        #     title = form.cleaned_data['title']
-        #     content = form.cleaned_data['content']
-
-        #     print("recID", recID)
-            # print("title", title)
-            # print("content", content)
-
-            # notification_Db = Notification_DB(sendID=user1, recID=user2, title=title, content=content,
-            #                                   status=0)
-
-            # notification_Db.save()
-
-            # aa = Notification_DB.objects.all().values()
-         
-            # print(aa)
-
-
-        return render(request, self.template_name)
+            return render(request, self.template_name)
 
     def queryID(self):
         return None
@@ -170,15 +135,17 @@ class NewUserSignUpView(View):
         legacy_data = None
         if id:
             try:
-                migration_record = AccountMigration.objects.filter(id=id).first()
+                migration_record = AccountMigration.objects.filter(
+                    id=id).first()
                 legacy_data = LegacyDataModels.LegacyUsers.objects.get(
-                    Q(studentId=migration_record.studentId) & Q(membershipId=migration_record.membershipId)
+                    Q(studentId=migration_record.studentId) & Q(
+                        membershipId=migration_record.membershipId)
                 )
             except ObjectDoesNotExist:
                 print("Either the entry or blog doesn't exist.")
-                
-        return render(request, self.template_name, {'LegacyData':legacy_data})
-    
+
+        return render(request, self.template_name, {'LegacyData': legacy_data})
+
     def post(self, request, *args, **kwargs):
         account_form = BasicSiginInForm(data=request.POST)
         profile_form = UserInfoForm(data=request.POST, files=request.FILES)
@@ -191,13 +158,13 @@ class NewUserSignUpView(View):
                 profile.isValid = True
             profile.save()
         else:
-            print (dict(profile_form.errors.items()))
+            print(dict(profile_form.errors.items()))
             return JsonResponse({
                 'success': False,
-                'errors': [dict(account_form.errors.items()),dict(profile_form.errors.items())]
+                'errors': [dict(account_form.errors.items()), dict(profile_form.errors.items())]
             })
         return JsonResponse({
-                'success': True,})
+            'success': True, })
 
 
 class migrationView(FormView):
@@ -209,10 +176,11 @@ class migrationView(FormView):
     def post(self, request, *args, **kwargs):
         migration_request = MigrationForm(data=request.POST)
         if migration_request.is_valid():
-            print (migration_request['studentId'].value())
+            print(migration_request['studentId'].value())
             try:
                 legacy_record = LegacyDataModels.LegacyUsers.objects.get(
-                    Q(studentId=migration_request['studentId'].value()) & Q(membershipId=migration_request['membershipId'].value())
+                    Q(studentId=migration_request['studentId'].value()) & Q(
+                        membershipId=migration_request['membershipId'].value())
                 )
                 if legacy_record.email == migration_request['email'].value() or legacy_record.telNumber == migration_request['telNumber'].value():
                     new_migration = AccountMigration(
@@ -224,15 +192,12 @@ class migrationView(FormView):
                         'success': True,
                         'status': '200',
                         'migrationId': new_migration.id
-                    }) 
+                    })
             except ObjectDoesNotExist:
                 return JsonResponse({
                     'success': False,
                     'status': '404',
-                    }) 
-
-        
-        
+                })
 
 
 ############################# AJAX Page Resources #####################################
@@ -283,7 +248,7 @@ def CheckTelIntegrity(request):
             'status': '400', 'reason': 'Bad Requests!'
         }
     return JsonResponse(data)
-    
+
 
 def CheckStudentIdIntegrity(request):
     data = {}
@@ -301,24 +266,25 @@ def CheckStudentIdIntegrity(request):
         }
     return JsonResponse(data)
 
-class UserLookup(LoginRequiredMixin,View):
+
+class UserLookup(LoginRequiredMixin, View):
     login_url = '/hub/login/'
-    
+
     def get(self, request, *args, **kwargs):
         return JsonResponse({
-               'success': False,
-               'status': '400',
-            })  
+            'success': False,
+            'status': '400',
+        })
 
     def post(self, request, *args, **kwargs):
         if request.user.is_authenticated:
-            search = request.POST.get('search',"")
+            search = request.POST.get('search', "")
             print(search)
             db_lookup = UserModels.UserProfile.objects.filter(
                 Q(firstNameEN__istartswith=search) | Q(lastNameEN__istartswith=search) |
                 Q(firstNameCN__istartswith=search) | Q(lastNameCN__istartswith=search) |
                 Q(studentId__istartswith=search) |
-                Q(user__email__istartswith=search) | 
+                Q(user__email__istartswith=search) |
                 Q(user__telNumber__istartswith=search)
             )
             if db_lookup:
@@ -327,17 +293,17 @@ class UserLookup(LoginRequiredMixin,View):
                     lookupResult = {
                         'id': result.user.id,
                         'full_name': str(result.firstNameEN) + " " + str(result.lastNameEN),
-                        'full_name_cn': str(result.firstNameCN) + " " + str(result.lastNameCN), 
+                        'full_name_cn': str(result.firstNameCN) + " " + str(result.lastNameCN),
                         'email': str(result.user.email),
                         'text': str(result.user.email)
                     }
                     if result.avatar:
-                       lookupResult['avatar'] = str(result.avatar.url)
+                        lookupResult['avatar'] = str(result.avatar.url)
                     result_set.append(lookupResult)
 
                 return JsonResponse({
                     'success': True,
-                    'status': '200', 
+                    'status': '200',
                     'result': result_set,
                 })
             else:
@@ -346,11 +312,11 @@ class UserLookup(LoginRequiredMixin,View):
                     'status': '404',
                     'result': None,
                 })
-        else:    
+        else:
             return JsonResponse({
                 'success': False,
                 'status': '400',
-                })
+            })
 
 
 ################################# errors pages ########################################
