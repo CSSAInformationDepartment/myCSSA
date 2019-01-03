@@ -31,7 +31,12 @@
         </li>
         <li class="nav-item dropdown">
           <a class="nav-link" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
-            <img class="img-avatar" src="img/avatars/6.jpg" alt="admin@bootstrapmaster.com">
+            {% load static %}
+            {% if user.userprofile.avatar %} 
+              <img class="img-avatar" src="{{ user.userprofile.avatar.url }}" style="height:35px;width:35px;">
+            {% else %} 
+              <img class="img-avatar" src="{% static '/myCSSAhub/img/avatar_placeholder.png' %}" style="height:35px;width:35px;">
+            {% endif %}
           </a>
           <div class="dropdown-menu dropdown-menu-right">
             <div class="dropdown-header text-center">

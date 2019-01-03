@@ -85,9 +85,10 @@ class CSSADept (models.Model):
     deptName = models.CharField(max_length=50, verbose_name="部门简称")
     deptTitle = models.CharField(max_length=50, verbose_name="部门名称")
     deptTitleEN = models.CharField(max_length=50, verbose_name="Name of the Department")
-    description = models.TextField(null=True, default=None)
+    brief = models.CharField(max_length=200, null=True, blank=True, default=None)
+    description = models.TextField(blank=True ,null=True, default=None)
     head_image = models.ImageField(verbose_name="头像", upload_to='public/department/',
-    height_field=None, width_field=None, max_length=None, null=True, blank=True)
+        height_field=None, width_field=None, max_length=None, null=True, blank=True)
 
     def __str__(self):
         return self.deptName
@@ -124,24 +125,37 @@ class User(AbstractUser):
         verbose_name = _('user')
         verbose_name_plural = _('users')
 
-    def get_user_department(self):
-        
-
     def __str__(self):
         return '%s' % (self.email)
 
-    def get_full_name(self):
+    def get_full_CN_name(self):
         '''
         Returns the first_name plus the last_name, with a space in between.
         '''
-        full_name = '%s %s' % (self.first_name, self.last_name)
-        return full_name.strip()
+        Profile = UserProfile.objects.get(user=self.id)
+        if Profile.lastNameCN and Profile.firstNameCN:
+            full_name = '%s %s' % (Profile.lastNameCN, Profile.firstNameCN)
+            return full_name.strip()
+        else:
+            return None
 
-    def get_short_name(self):
+    def get_full_EN_name(self):
         '''
-        Returns the short name for the user.
+        Returns the first_name plus the last_name, with a space in between.
         '''
-        return self.first_name
+        Profile = UserProfile.objects.get(user=self.id)
+        if Profile.lastNameEN and Profile.firstNameEN:
+            full_name = '%s %s' % (Profile.firstNameEN, Profile.lastNameEN)
+            return full_name.strip()
+        else:
+            return None
+    
+    def get_committee_profile(self):
+        try:
+            return CSSACommitteProfile.objects.get(member=self.id)
+        except:
+            return False
+
 
 #    def email_user(self, subject, message, from_email=None, **kwargs):
 #        '''

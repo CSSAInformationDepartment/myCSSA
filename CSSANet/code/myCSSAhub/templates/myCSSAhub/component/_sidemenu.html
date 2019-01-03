@@ -13,11 +13,11 @@
                 <i class="nav-icon cui-user"></i>个人信息</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="typography.html">
+              <a class="nav-link" href="">
                 <i class="nav-icon cui-shield"></i>安全与隐私</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="typography.html">
+              <a class="nav-link" href="">
                 <i class="nav-icon cui-credit-card"></i>我的会员卡</a>
             </li>
             <li class="nav-item nav-dropdown">
@@ -25,31 +25,32 @@
                 <i class="nav-icon icon-puzzle"></i>myCSSA应用</a>
                 <ul class="nav-dropdown-items">
                   <li class="nav-item">
-                    <a class="nav-link" href="base/breadcrumb.html">
+                    <a class="nav-link" href="">
                       <i class="nav-icon cui-star"></i>活动报名</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link" href="base/cards.html">
+                    <a class="nav-link" href="">
                       <i class="nav-icon cui-people"></i>求职招聘</a>
                   </li>
                 </ul>
             </li>
+            {% if user.is_superuser or user.get_committee_profile %}
             <li class="nav-title">myCSSA Committe</li>
               <li class="nav-item nav-dropdown">
                 <a class="nav-link nav-dropdown-toggle" href="#">
                   <i class="nav-icon icon-puzzle"></i>活动管理</a>
                   <ul class="nav-dropdown-items">
                     <li class="nav-item">
-                      <a class="nav-link" href="base/breadcrumb.html">
-                        <i class="nav-icon icon-puzzle"></i> Breadcrumb</a>
+                      <a class="nav-link" href="">
+                        <i class="nav-icon icon-puzzle"></i> 活动计划 </a>
                     </li>
                     <li class="nav-item">
-                      <a class="nav-link" href="base/cards.html">
-                        <i class="nav-icon icon-puzzle"></i> Cards</a>
+                      <a class="nav-link" href="">
+                        <i class="nav-icon icon-puzzle"></i> 添加活动 </a>
                     </li>
                     <li class="nav-item">
-                      <a class="nav-link" href="base/carousel.html">
-                        <i class="nav-icon icon-puzzle"></i> Carousel</a>
+                      <a class="nav-link" href="">
+                        <i class="nav-icon icon-puzzle"></i> 报名管理 </a>
                     </li>
                   </ul>
               </li>
@@ -58,19 +59,19 @@
                   <i class="nav-icon icon-puzzle"></i>站点内容管理</a>
                   <ul class="nav-dropdown-items">
                     <li class="nav-item">
-                      <a class="nav-link" href="base/breadcrumb.html">
+                      <a class="nav-link" href="">
                         <i class="nav-icon icon-puzzle"></i>文章管理</a>
                     </li>
                     <li class="nav-item">
-                      <a class="nav-link" href="base/cards.html">
+                      <a class="nav-link" href="">
                         <i class="nav-icon icon-puzzle"></i>媒体文件管理</a>
                     </li>
                     <li class="nav-item">
-                      <a class="nav-link" href="base/carousel.html">
+                      <a class="nav-link" href="">
                         <i class="nav-icon icon-puzzle"></i>发布新内容</a>
                     </li>
                     <li class="nav-item">
-                      <a class="nav-link" href="base/carousel.html">
+                      <a class="nav-link" href="">
                         <i class="nav-icon icon-puzzle"></i>审稿</a>
                     </li>
                   </ul>
@@ -120,19 +121,20 @@
                   <i class="nav-icon icon-puzzle"></i>会员管理</a>
                   <ul class="nav-dropdown-items">
                     <li class="nav-item">
-                      <a class="nav-link" href="base/breadcrumb.html">
-                        <i class="nav-icon icon-puzzle"></i> Breadcrumb</a>
+                      <a class="nav-link" href="">
+                        <i class="nav-icon icon-puzzle"></i> 会员信息查询 </a>
                     </li>
                     <li class="nav-item">
-                      <a class="nav-link" href="base/cards.html">
-                        <i class="nav-icon icon-puzzle"></i> Cards</a>
+                      <a class="nav-link" href="">
+                        <i class="nav-icon icon-puzzle"></i> 会员卡激活 </a>
                     </li>
                     <li class="nav-item">
-                      <a class="nav-link" href="base/carousel.html">
-                        <i class="nav-icon icon-puzzle"></i> Carousel</a>
+                      <a class="nav-link" href="">
+                        <i class="nav-icon icon-puzzle"></i> 会员信息更改 </a>
                     </li>
                   </ul>
               </li>
+              {% endif %}
           </ul>
         </nav>
         <button class="sidebar-minimizer brand-minimizer" type="button"></button>
