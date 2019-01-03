@@ -14,27 +14,19 @@
           <a class="nav-link" href="#">Dashboard</a>
         </li>
         <li class="nav-item px-3">
-          <a class="nav-link" href="#">myCSSA应用</a>
-        </li>
-        <li class="nav-item px-3">
-          <a class="nav-link" href="#">账号设置</a>
+          <a class="nav-link" href="">myCSSA应用(暂未开启)</a>
         </li>
       </ul>
       <ul class="nav navbar-nav ml-auto">
         <li class="nav-item d-md-down-none">
-          <a class="nav-link" href="/hub/notification/notifications_list">
+          <a class="nav-link" href="{% url 'myCSSAhub:notifications_list' %}">
             <i class="icon-bell"></i>
-            <span class="badge badge-pill badge-danger">5</span>
+            <span class="badge badge-pill badge-danger">0</span>
           </a>
         </li>
         <li class="nav-item d-md-down-none">
-          <a class="nav-link" href="#">
+          <a class="nav-link" href="">
             <i class="icon-list"></i>
-          </a>
-        </li>
-        <li class="nav-item d-md-down-none">
-          <a class="nav-link" href="#">
-            <i class="icon-location-pin"></i>
           </a>
         </li>
         <li class="nav-item dropdown">
@@ -43,51 +35,34 @@
           </a>
           <div class="dropdown-menu dropdown-menu-right">
             <div class="dropdown-header text-center">
+              <strong>消息与通知</strong>
+            </div>
+            <a class="dropdown-item" href="#">
+              <i class="fa fa-bell-o"></i> 系统公告
+              <span class="badge badge-info">0</span>
+            </a>
+            <a class="dropdown-item" href="notifications/alerts.html">
+              <i class="fa fa-envelope-o"></i> 消息
+              <span class="badge badge-success">0</span>
+            </a>
+            <a class="dropdown-item" href="#">
+              <i class="fa fa-tasks"></i> 待办事项
+              <span class="badge badge-danger">0</span>
+            </a>
+            <div class="dropdown-header text-center">
               <strong>账户</strong>
             </div>
             <a class="dropdown-item" href="#">
-              <i class="fa fa-bell-o"></i> Updates
-              <span class="badge badge-info">42</span>
-            </a>
-            <a class="dropdown-item" href="notifications/alerts.html">
-              <i class="fa fa-envelope-o"></i> Messages
-              <span class="badge badge-success">42</span>
-            </a>
-            <a class="dropdown-item" href="#">
-              <i class="fa fa-tasks"></i> Tasks
-              <span class="badge badge-danger">42</span>
-            </a>
-            <a class="dropdown-item" href="#">
-              <i class="fa fa-comments"></i> Comments
-              <span class="badge badge-warning">42</span>
-            </a>
-            <div class="dropdown-header text-center">
-              <strong>Settings</strong>
-            </div>
-            <a class="dropdown-item" href="#">
-              <i class="fa fa-user"></i> Profile</a>
-            <a class="dropdown-item" href="#">
-              <i class="fa fa-wrench"></i> Settings</a>
-            <a class="dropdown-item" href="#">
-              <i class="fa fa-usd"></i> Payments
-              <span class="badge badge-secondary">42</span>
-            </a>
-            <a class="dropdown-item" href="#">
-              <i class="fa fa-file"></i> Projects
-              <span class="badge badge-primary">42</span>
-            </a>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="#">
-              <i class="fa fa-shield"></i> Lock Account</a>
-            <a class="dropdown-item" href="#">
-              <i class="fa fa-lock"></i> Logout</a>
+              <i class="fa fa-user"></i> 个人信息 </a>
+            <a class="dropdown-item" href="{% url 'myCSSAhub:hub_logout' %}">
+              <i class="fa fa-lock"></i> 登出 </a>
           </div>
         </li>
       </ul>
-      <button class="navbar-toggler aside-menu-toggler d-md-down-none" type="button" data-toggle="aside-menu-lg-show">
+      <button class="navbar-toggler aside-menu-toggler d-md-down-none" type="button" data-toggle="aside-menu-lg-show" style="display:none;">
         <span class="navbar-toggler-icon"></span>
       </button>
-      <button class="navbar-toggler aside-menu-toggler d-lg-none" type="button" data-toggle="aside-menu-show">
+      <button class="navbar-toggler aside-menu-toggler d-lg-none" type="button" data-toggle="aside-menu-show" style="display:none;">
         <span class="navbar-toggler-icon"></span>
       </button>
 </header>
