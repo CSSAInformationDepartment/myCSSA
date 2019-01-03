@@ -14,7 +14,7 @@ from django.http import JsonResponse, HttpResponseRedirect, HttpResponse, Http40
 from django.contrib.auth.decorators import login_required
 from .models import Notification_DB, AccountMigration
 from UserAuthAPI import models as UserModels
-from UserAuthAPI.forms import BasicSiginInForm, UserInfoForm, MigrationForm
+from UserAuthAPI.forms import BasicSiginInForm, UserInfoForm, MigrationForm, UserAcademicForm
 from LegacyDataAPI import models as LegacyDataModels
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 
@@ -150,19 +150,24 @@ class NewUserSignUpView(View):
     def post(self, request, *args, **kwargs):
         account_form = BasicSiginInForm(data=request.POST)
         profile_form = UserInfoForm(data=request.POST, files=request.FILES)
-        if account_form.is_valid() and profile_form.is_valid():
+        academic_form = UserAcademicForm(data=request.POST)
+        if account_form.is_valid() and profile_form.is_valid() and academic_form.is_valid():
             account_register = account_form.save(commit=False)
             account_form.save()
             profile = profile_form.save(commit=False)
             profile.user = account_register
+            academic = academic_form.save(commit=False)
+            academic.userProfile = account_register
             if profile.membershipId and profile.membershipId != '':
                 profile.isValid = True
             profile.save()
+            academic.save()
         else:
             print(dict(profile_form.errors.items()))
+            print(dict(academic_form.errors.items()))
             return JsonResponse({
                 'success': False,
-                'errors': [dict(account_form.errors.items()), dict(profile_form.errors.items())]
+                'errors': [dict(account_form.errors.items()), dict(profile_form.errors.items()), dict(academic_form.errors.items())]
             })
         return JsonResponse({
             'success': True, })

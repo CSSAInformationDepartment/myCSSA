@@ -206,10 +206,10 @@ class UserAcademic (models.Model):
 
     academicRecId = models.AutoField(primary_key=True, editable=False)
     # 来自同一张表的外键变量名、配置需一致
-    userProfile = models.ForeignKey(User, on_delete = models.DO_NOTHING)
+    userProfile = models.ForeignKey(User, on_delete = models.DO_NOTHING, blank=True)
     # 不同模型中表示同一功能的变量名需一致
     timeOfCreate  = models.DateTimeField(auto_now_add=True)
 
     degree = models.CharField(verbose_name="学位", choices=degreeChoice,
         max_length=32, default='BA')
-    uniMajor = models.ForeignKey(UniMajor,verbose_name="专业" ,on_delete=None)
+    uniMajor = models.CharField(verbose_name="专业" ,max_length=100)
