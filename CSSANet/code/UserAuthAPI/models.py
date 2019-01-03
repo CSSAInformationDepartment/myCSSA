@@ -85,6 +85,9 @@ class CSSADept (models.Model):
     deptName = models.CharField(max_length=50, verbose_name="部门简称")
     deptTitle = models.CharField(max_length=50, verbose_name="部门名称")
     deptTitleEN = models.CharField(max_length=50, verbose_name="Name of the Department")
+    description = models.TextField(null=True, default=None)
+    head_image = models.ImageField(verbose_name="头像", upload_to='public/department/',
+    height_field=None, width_field=None, max_length=None, null=True, blank=True)
 
     def __str__(self):
         return self.deptName
@@ -120,6 +123,9 @@ class User(AbstractUser):
     class Meta:
         verbose_name = _('user')
         verbose_name_plural = _('users')
+
+    def get_user_department(self):
+        
 
     def __str__(self):
         return '%s' % (self.email)
