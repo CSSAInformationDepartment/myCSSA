@@ -1,5 +1,5 @@
 
-from .notification import insertDB
+from .notification import insertDB, queryMessagesList
 from .forms import NotificationForm as Notification_Form
 from django.shortcuts import render
 from django.http import JsonResponse, HttpResponseRedirect, HttpResponse
@@ -21,6 +21,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMix
 
 from CSSANet.settings import MEDIA_ROOT, MEDIA_URL
 from Library.Mixins import AjaxableResponseMixin
+import json
 
 # Create your views here.
 
@@ -49,24 +50,36 @@ def message(request):
 ###### 站内信 ##########
 
 
+@login_required(login_url = '/hub/login/')
+def NotificationsList(request):
+     
+    currentUserID=request.user.id
+     
+    # print(currentUserID) 
+    title = queryMessagesList(currentUserID)
+    
+    
+    return render(request,'myCSSAhub/notification/notifications_list.html', locals())
+
+
+
 # 获取站内信列表
-class NotificationsList(LoginRequiredMixin, View):
-    login_url = '/hub/login/'
-    template_name = 'myCSSAhub/notification/notifications_list.html')
+# class NotificationsList(LoginRequiredMixin, View):
+#     login_url = '/hub/login/'
+#     template_name = 'myCSSAhub/notification/notifications_list.html'
 
-    def get(self, request):
-        return render(request, self.template_name)
+#     def get(self, request):
+#         return render(request, self.template_name)
 
-    def post(self, request):
-        if request.user.is_authenticated:
-            # 先获取当前用户的id以便查询
-            currentUserID=request.user.id
+#     def post(self, request):
+#         if request.user.is_authenticated:
+#             # 先获取当前用户的id以便查询
+#             currentUserID=request.user.id
 
 
-        return render(request, self.template_name)
+#         return render(request, self.template_name)
 
 # 展示站内信
-
 
 class NotificationsDisplay(LoginRequiredMixin, View):
     login_url='/hub/login/'
@@ -77,10 +90,6 @@ class NotificationsDisplay(LoginRequiredMixin, View):
         return render(request, self.template_name)
 
     def post(self, request):
-
-
-
-
 
         return render(request, self.template_name)
 

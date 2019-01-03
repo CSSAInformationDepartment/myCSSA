@@ -50,9 +50,15 @@ def insertDB(form, targetUsersId, currentUserId):
 
 
 ##### 读取数据库的操作#######
-def queryMessage(messageID):
-    # 查询当前用户未读的信息
-    info_list = Notification_DB.objects.filter(id=messageID, status=0)
-     
-    for info in info_list:
-        print(info)
+def queryMessagesList(currentUserId):
+    # 查询当前用户未读的信息, 在order_by 之前加负号，是为了以倒叙排列
+    info_list = Notification_DB.objects.filter(recID=currentUserId, status=0).order_by('-add_date').values()
+
+    title_list = []
+    
+    # 根据需要取出消息中的标题元素
+    for title in info_list:
+        title_list.append(title['title'])
+
+    # 返回给view.py
+    return title_list

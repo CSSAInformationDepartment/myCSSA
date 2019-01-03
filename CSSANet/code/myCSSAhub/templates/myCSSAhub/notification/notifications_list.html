@@ -14,12 +14,14 @@
         <i class="fa fa-align-justify"></i> 站内信息
     </div>
     <div class="card-body">
-
-        <div class="alert alert-primary alert-dismissible" role="alert">
-            <button type="button" class="close" data-dismiss="alert">×</button>
-            This is a primary alert with
-            <a class="alert-link" href="#">an example link</a>. Give it a click if you like.</div>
-
+        {% for x in title  %}
+            <div class="alert alert-primary alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert">×</button>
+               <a class="alert-link" href="#"> {{x}} </a>
+            {% comment %} This is a primary alert with
+            an example link. Give it a click if you like.{% endcomment %}
+            </div> 
+        {% endfor %}
     </div>
 </div>
 <!-- </div> -->
