@@ -50,34 +50,39 @@ def message(request):
 ###### 站内信 ##########
 
 
-@login_required(login_url = '/hub/login/')
-def NotificationsList(request):
+# @login_required(login_url = '/hub/login/')
+# def NotificationsList(request):
+#     if request.user.is_authenticated:
+#         currentUserID=request.user.id
      
-    currentUserID=request.user.id
-     
-    # print(currentUserID) 
-    title = queryMessagesList(currentUserID)
-    
-    
-    return render(request,'myCSSAhub/notification/notifications_list.html', locals())
+#     # print(currentUserID) 
+#     # 将查询到的内容发送到前端
+#         title = queryMessagesList(currentUserID)
+#         return render(request,'myCSSAhub/notification/notifications_list.html', locals())
 
 
 
 # 获取站内信列表
-# class NotificationsList(LoginRequiredMixin, View):
-#     login_url = '/hub/login/'
-#     template_name = 'myCSSAhub/notification/notifications_list.html'
+class NotificationsList(LoginRequiredMixin, View):
+    login_url = '/hub/login/'
+    template_name = 'myCSSAhub/notification/notifications_list.html'
 
-#     def get(self, request):
-#         return render(request, self.template_name)
+    def get(self, request):
+        if request.user.is_authenticated:
+            currentUserID=request.user.id
+     
+            # print(currentUserID) 
+            # 将查询到的内容发送到前端
+            infos = queryMessagesList(currentUserID)
+            return render(request,self.template_name, locals())
 
-#     def post(self, request):
-#         if request.user.is_authenticated:
-#             # 先获取当前用户的id以便查询
-#             currentUserID=request.user.id
+    def post(self, request):
+        if request.user.is_authenticated:
+            # 先获取当前用户的id以便查询
+            currentUserID=request.user.id
 
 
-#         return render(request, self.template_name)
+        return render(request, self.template_name)
 
 # 展示站内信
 
@@ -85,7 +90,9 @@ class NotificationsDisplay(LoginRequiredMixin, View):
     login_url='/hub/login/'
     template_name='myCSSAhub/notification/notifications_display.html'
 
-    def get(self, request):
+    def get(self, request, *args, **kwargs):
+        userId = self.kwargs.get('id')
+        print("usersfsdf", userId)
 
         return render(request, self.template_name)
 

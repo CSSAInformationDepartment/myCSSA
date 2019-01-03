@@ -14,12 +14,12 @@
         <i class="fa fa-align-justify"></i> 站内信息
     </div>
     <div class="card-body">
-        {% for x in title  %}
+        <!-- 循环读取后台传来的信息，并显示 -->
+        {% for x in infos  %}
             <div class="alert alert-primary alert-dismissible" role="alert">
                 <button type="button" class="close" data-dismiss="alert">×</button>
-               <a class="alert-link" href="#"> {{x}} </a>
-            {% comment %} This is a primary alert with
-            an example link. Give it a click if you like.{% endcomment %}
+                <a class="alert-link" href="/hub/notification/notifications_display/{{x.id}}"> {{x.title}} </a>   
+            {% comment %} Testing cotent.{% endcomment %}
             </div> 
         {% endfor %}
     </div>
