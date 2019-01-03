@@ -16,7 +16,7 @@
 
 
 from django.db import models
-from django.contrib.auth.models import AbstractUser, BaseUserManager
+from django.contrib.auth.models import AbstractUser, BaseUserManager, Group, Permission
 import uuid
 from django.utils.translation import ugettext_lazy as _
 
@@ -178,7 +178,7 @@ class UserProfile (models.Model):
 
     address = models.CharField(verbose_name="地址",max_length=150, null=True)
     postcode = models.CharField(verbose_name="邮编",max_length=4, null=True)
-    originate = models.CharField(verbose_name="籍贯",max_length=20, null=True)
+    originate = models.CharField(verbose_name="籍贯",max_length=50, null=True)
 
 
 
@@ -211,5 +211,5 @@ class UserAcademic (models.Model):
     timeOfCreate  = models.DateTimeField(auto_now_add=True)
 
     degree = models.CharField(verbose_name="学位", choices=degreeChoice,
-    max_length=32, default='BA')
+        max_length=32, default='BA')
     uniMajor = models.ForeignKey(UniMajor,verbose_name="专业" ,on_delete=None)
