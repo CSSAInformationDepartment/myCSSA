@@ -1,4 +1,6 @@
 
+from .notification import insertDB
+from .forms import NotificationForm as Notification_Form
 from django.shortcuts import render
 from django.http import JsonResponse, HttpResponseRedirect, HttpResponse
 from django.contrib.auth import authenticate, login, logout
@@ -47,21 +49,47 @@ def message(request):
 ###### 站内信 ##########
 
 
-@login_required(login_url='/hub/login/')
-def notifications_list(request):
-    return render(request, 'myCSSAhub/notification/notifications_list.html')
+# 获取站内信列表
+class NotificationsList(LoginRequiredMixin, View):
+    login_url = '/hub/login/'
+    template_name = 'myCSSAhub/notification/notifications_list.html')
+
+    def get(self, request):
+        return render(request, self.template_name)
+
+    def post(self, request):
+        if request.user.is_authenticated:
+            # 先获取当前用户的id以便查询
+            currentUserID=request.user.id
 
 
-@login_required(login_url='/hub/login/')
-def notifications_display(request):
-    return render(request, 'myCSSAhub/notification/notifications_display.html')
+        return render(request, self.template_name)
 
-# 处理站内信的GET和POST方法，以及业务逻辑
-from .notification import processDB
+# 展示站内信
+
+
+class NotificationsDisplay(LoginRequiredMixin, View):
+    login_url='/hub/login/'
+    template_name='myCSSAhub/notification/notifications_display.html'
+
+    def get(self, request):
+
+        return render(request, self.template_name)
+
+    def post(self, request):
+
+
+
+
+
+        return render(request, self.template_name)
+
+# 发送站内信
+
 
 class NotificationForm(LoginRequiredMixin, View):
-    login_url = '/hub/login/'
-    template_name = 'myCSSAhub/notification/notifications_form.html'
+    login_url='/hub/login/'
+    template_name='myCSSAhub/notification/notifications_form.html'
 
     def get(self, request):
         return render(request, self.template_name)
@@ -70,38 +98,38 @@ class NotificationForm(LoginRequiredMixin, View):
         if request.user.is_authenticated:
             # 如果form通过POST方法发送数据
             # 发送的目标用户id
-            targetUserId = request.POST.getlist('recID')
+            targetUserId=request.POST.getlist('recID')
             # print("recID", targetUserId)
             # 当前用户id
-            currentID = request.user.id
+            currentID=request.user.id
 
-            form = Notification_Form(request.POST)
+            form=Notification_Form(request.POST)
 
-            flag,message = processDB(form,targetUserId,currentID)
-            
+            flag, message=insertDB(form, targetUserId, currentID)
+
             # 测试返回结果
             if flag == False:
                 print(message)
-   
+
             return render(request, self.template_name)
 
 
 ###### 站内信 ##########
 
-@login_required(login_url='/hub/login/')
+@login_required(login_url = '/hub/login/')
 def logout_page(request):
     logout(request)
     return HttpResponseRedirect('/')
 
 
 ###### 账号相关 ##########
-#用户登陆CBV -- 范例
+# 用户登陆CBV -- 范例
 class LoginPage(View):
     # 类属性
-    model = UserModels.User
-    template_name = 'myCSSAhub/login.html'
-    loginErrorMsg = {"result": "Login Failed!"}
-    loginSuccessful = {"result": "Login Successful!"}
+    model=UserModels.User
+    template_name='myCSSAhub/login.html'
+    loginErrorMsg={"result": "Login Failed!"}
+    loginSuccessful={"result": "Login Successful!"}
 
     # 请求处理函数 （get）
     def get(self, request, *args, **kwargs):
@@ -111,14 +139,14 @@ class LoginPage(View):
 
     # 请求处理函数（post）
     def post(self, request, *args, **kwargs):
-        email = request.POST['email']
+        email=request.POST['email']
         print(email)
-        userQuery = self.model.objects.filter(email=email).first()
+        userQuery=self.model.objects.filter(email = email).first()
         if userQuery is None:
             return JsonResponse(self.loginErrorMsg)
-        password = request.POST['password']
+        password=request.POST['password']
         # print(email,password,username)
-        user = authenticate(request, email=email, password=password)
+        user=authenticate(request, email = email, password = password)
         if user is not None:
             login(request, user)
             update_last_login(None, user)
@@ -128,21 +156,21 @@ class LoginPage(View):
 
 
 class NewUserSignUpView(View):
-    template_name = 'myCSSAhub/registrationForm_step1.html'
-    account_form = BasicSiginInForm
-    profile_form = UserInfoForm
+    template_name='myCSSAhub/registrationForm_step1.html'
+    account_form=BasicSiginInForm
+    profile_form=UserInfoForm
 
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated:
             return HttpResponseRedirect("/hub/home/")
         """Handle GET requests: instantiate a blank version of the form."""
-        id = self.kwargs.get('id')
-        legacy_data = None
+        id=self.kwargs.get('id')
+        legacy_data=None
         if id:
             try:
-                migration_record = AccountMigration.objects.filter(
-                    id=id).first()
-                legacy_data = LegacyDataModels.LegacyUsers.objects.get(
+                migration_record=AccountMigration.objects.filter(
+                    id = id).first()
+                legacy_data=LegacyDataModels.LegacyUsers.objects.get(
                     Q(studentId=migration_record.studentId) & Q(
                         membershipId=migration_record.membershipId)
                 )
