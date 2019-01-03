@@ -57,7 +57,7 @@ def notifications_display(request):
     return render(request, 'myCSSAhub/notification/notifications_display.html')
 
 # 处理站内信的GET和POST方法，以及业务逻辑
-
+from .notification import processDB
 
 class NotificationForm(LoginRequiredMixin, View):
     login_url = '/hub/login/'
@@ -75,10 +75,15 @@ class NotificationForm(LoginRequiredMixin, View):
             # 当前用户id
             currentID = request.user.id
 
-            return render(request, self.template_name)
+            form = Notification_Form(request.POST)
 
-    def queryID(self):
-        return None
+            flag,message = processDB(form,targetUserId,currentID)
+            
+            # 测试返回结果
+            if flag == False:
+                print(message)
+   
+            return render(request, self.template_name)
 
 
 ###### 站内信 ##########
