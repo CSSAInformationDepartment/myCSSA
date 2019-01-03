@@ -2,6 +2,7 @@ from django.shortcuts import render,reverse
 from django.http import JsonResponse
 from PublicSite import models
 from UserAuthAPI import models as UserModels
+from BlogAPI import models as BlogModels
 # Static Files Path Reference
 from CSSANet.settings import MEDIA_ROOT, MEDIA_URL
 # CacheSettings
@@ -66,6 +67,12 @@ def Departments(request,dept):
     print(ViewBag)
 
     return render(request, 'PublicSite/dept.html', ViewBag)
+
+def Blogs(request, page):
+    pass
+
+def BlogContents(request, contentId):
+    pass
 
 #@cache_page(CACHE_TTL)
 #def Events(requests):

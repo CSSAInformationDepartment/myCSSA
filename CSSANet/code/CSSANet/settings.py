@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'OrganisationMgr',    
     'PublicSite',
     'myCSSAhub',
+    'BlogAPI',
 
     'rest_framework',
     'rest_framework.authtoken',

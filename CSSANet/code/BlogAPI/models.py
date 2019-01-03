@@ -20,7 +20,6 @@ class BlogContent (models.Model):
     blogMainContent = models.TextField()
     writtenDate = models.DateTimeField(auto_now_add=True)
 
-
 class BlogWrittenBy(models.Model):
     blogCreatedId = models.AutoField(primary_key = True)
     blogContentId = models.ForeignKey(BlogContent, on_delete = models.CASCADE)
