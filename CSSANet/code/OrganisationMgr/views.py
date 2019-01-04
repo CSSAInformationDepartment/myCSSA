@@ -24,8 +24,31 @@ class DepartmentManagementView(LoginRequiredMixin,UserPassesTestMixin,View):
 
     #请求处理函数 （get）
     def get(self, request, *args, **kwargs):
-        if request.user.is_superuser or request.user.get_committee_profile().
-        return render(request, self.template_name)
+        if request.user.is_superuser:
+            return render(request, self.template_name)
 
     def post(self, request, *args, **kwargs):
         return HttpResponseRedirect("")
+
+
+
+class GetCommitteeDetail(LoginRequiredMixin,PermissionRequiredMixin, View):
+    login_url = '/hub/login/'
+    template_name = 'OrganisationMgr/dept_mgr.html'
+    permission_required = 'UserAuthAPI.add_cssa_committe_profile'
+
+    def get(self, request, *args, **kwargs):
+        return JsonResponse({
+            'success': False,
+            'status': '400',
+        })
+
+    def post(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            search = request.POST.get('search', "")
+            print(search)
+        else:
+            return JsonResponse({
+                'success': False,
+                'status': '400',
+            })

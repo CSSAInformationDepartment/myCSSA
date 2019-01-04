@@ -78,11 +78,11 @@ class UserManager(BaseUserManager):
 
 
 ##### Part 1. 用户信息扩展数据 ##################################################
-#部门 (对应fixture)
+#部门 (对应fixture， 禁止人工修改)
 class CSSADept (models.Model):
     # 此行定义表主键 - 标准写法，请复制粘贴
     deptId = models.AutoField(primary_key = True, editable=False)
-    deptName = models.CharField(max_length=50, verbose_name="部门简称")
+    deptName = models.CharField(max_length=50, verbose_name="部门简称") #此数值需与部门大组权限一致
     deptTitle = models.CharField(max_length=50, verbose_name="部门名称")
     deptTitleEN = models.CharField(max_length=50, verbose_name="Name of the Department")
     brief = models.CharField(max_length=200, null=True, blank=True, default=None)
@@ -93,14 +93,14 @@ class CSSADept (models.Model):
     def __str__(self):
         return self.deptName
 
-#职位 (对应fixture)
+#职位 (对应fixture， 禁止人工修改)
 class CSSARole (models.Model):
     roleId = models.AutoField(primary_key=True, editable=False)
-    roleFlag = models.CharField(max_length=3)
+    roleFlag = models.CharField(max_length=3) #此数值需与用户大组权限一致
     roleName = models.CharField(max_length=50)
 
     def __str__(self):
-        return '%s %s' % (self.roleFlag,self.roleName)
+        return self.roleFlag
 
 #学校专业信息
 class UniMajor (models.Model):
@@ -152,7 +152,7 @@ class User(AbstractUser):
     
     def get_committee_profile(self):
         try:
-            return CSSACommitteProfile.objects.get(member=self.id)
+            return CSSACommitteProfile.objects.get(member=self.id, is_active=True)
         except:
             return False
 
