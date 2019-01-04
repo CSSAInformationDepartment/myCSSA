@@ -12,7 +12,7 @@ class AppAccessControl(models.Model):
 
 class Notification_DB(models.Model):
     id = models.AutoField(primary_key=True, editable=False)
-    # 如果为0则为所有人
+    # 如果为all@cssa.com的特定ID,则代表群发
     status = models.IntegerField()
     sendID = models.ForeignKey(userModels.User, related_name="发送者id", on_delete=None)
     recID = models.ForeignKey(userModels.User, related_name="接受者id", on_delete=None)
