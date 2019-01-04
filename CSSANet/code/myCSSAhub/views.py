@@ -4,7 +4,8 @@ from .notification import insertDB, queryMessagesList, queryMessageContent
 from .forms import NotificationForm as Notification_Form
 from django.shortcuts import render
 from django.http import JsonResponse, HttpResponseRedirect, HttpResponse
-from django.contrib.auth import authenticate, login, logout
+from django.contrib import messages
+from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.forms import SetPasswordForm, PasswordChangeForm
 
@@ -217,7 +218,7 @@ class NewUserSignUpView(View):
             'success': True, })
 
 
-class migrationView(FormView):
+class migrationView(View):
     template_name = 'myCSSAhub/migration.html'
 
     def get(self, request, *args, **kwargs):
@@ -249,19 +250,25 @@ class migrationView(FormView):
                     'status': '404',
                 })
 
-class UpdatePasswordView(LoginRequiredMixin,UpdateView):
+class UpdatePasswordView(LoginRequiredMixin,View):
     login_url = 'hub/login/'
     model = UserModels.User
     form_class =  PasswordChangeForm
     template_name = 'myCSSAhub/update-password.html'
 
-    def get_form_kwargs(self): ## 此处代码有错误，需修复！
-        kwargs = super(PasswordChangeForm, self.form_class).get_form_kwargs()
-        kwargs['user'] = self.model.objects.filter(pk=self.kwargs['pk'])
-        return kwargs
+    def get(self, request, *args, **kwargs):
+        return render(request, self.template_name, {'form':self.form_class(request.user)})
 
-    def form_valid(self, form):
-        return super().form_valid(form)
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)
+            messages.success(request, 'New Password has been updated!')
+            return HttpResponseRedirect('/hub/home')
+        else:
+            messages.error(request, 'Please double-check your input.')
+
 
 ############################# AJAX Page Resources #####################################
 
