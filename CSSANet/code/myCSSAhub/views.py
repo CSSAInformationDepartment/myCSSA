@@ -49,18 +49,7 @@ def message(request):
     return render(request, 'myCSSAhub/message.html')
 
 
-###### 站内信 ##########
-
-# @login_required(login_url = '/hub/login/')
-# def NotificationsList(request):
-#     if request.user.is_authenticated:
-#         currentUserID=request.user.id
-
-#     # print(currentUserID)
-#     # 将查询到的内容发送到前端
-#         title = queryMessagesList(currentUserID)
-#         return render(request,'myCSSAhub/notification/notifications_list.html', locals())
-
+###### 站内信 -- Start ##########
 
 # 获取站内信列表
 class NotificationsList(LoginRequiredMixin, View):
@@ -141,7 +130,7 @@ class NotificationForm(LoginRequiredMixin, View):
             return render(request, self.template_name)
 
 
-###### 站内信 ##########
+###### 站内信  -- END ##########
 
 @login_required(login_url='/hub/login/')
 def logout_page(request):

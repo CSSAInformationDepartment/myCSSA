@@ -8,6 +8,11 @@
 {% block pageContent %}
 
 <form action="" method="post" id="form">
+    {% for error in form.non_field_errors %}
+        <div class="alert alert-danger">
+            <strong>{{ error|escape }}</strong>
+        </div>
+    {% endfor %}
 
     {% csrf_token %}
     <div class="form-group">

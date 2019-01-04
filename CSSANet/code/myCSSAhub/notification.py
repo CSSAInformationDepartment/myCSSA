@@ -10,7 +10,6 @@ from .models import Notification_DB
 def insertDB(form, targetUsersId, currentUserId):
 
     allID = '3a4b499e-b49d-4e19-9c02-d0123dd196a4'
-
     if form.is_valid():
 
         title = form.cleaned_data['title']
@@ -45,7 +44,7 @@ def insertDB(form, targetUsersId, currentUserId):
             return True, "群发成功"
 
         return False, "未能写入数据库"
-
+    print(dict(form.errors))
     return False, "非法的表单"
 
 
@@ -67,12 +66,9 @@ def queryMessageContent(id):
         info_list.status = 1
         info_list.save()
 
-        # print(info_list.recID)
-        # print(info_list.sendID)
-
-        receiver = UserModels.UserProfile.objects.get(user=info_list.recID)
-        # userQuery = UserModels.UserProfile.objects.filter(user=request.user).first()
-        sender = UserModels.UserProfile.objects.get(user=info_list.sendID)
+        receiver = UserModels.UserProfile.objects.filter(user=info_list.recID).first()
+        print(info_list.recID)
+        sender = UserModels.UserProfile.objects.filter(user=info_list.sendID).first()
 
     except info_list.model.DoesNotExist:
         raise Http404('No %s matches the given query.' %
