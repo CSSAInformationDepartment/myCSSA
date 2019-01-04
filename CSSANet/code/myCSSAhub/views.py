@@ -1,5 +1,6 @@
 
-from .notification import insertDB, queryMessagesList
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from .notification import insertDB, queryMessagesList, queryMessageContent
 from .forms import NotificationForm as Notification_Form
 from django.shortcuts import render
 from django.http import JsonResponse, HttpResponseRedirect, HttpResponse
@@ -49,54 +50,61 @@ def message(request):
 
 ###### 站内信 ##########
 
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 # @login_required(login_url = '/hub/login/')
 # def NotificationsList(request):
 #     if request.user.is_authenticated:
 #         currentUserID=request.user.id
-     
-#     # print(currentUserID) 
+
+#     # print(currentUserID)
 #     # 将查询到的内容发送到前端
 #         title = queryMessagesList(currentUserID)
 #         return render(request,'myCSSAhub/notification/notifications_list.html', locals())
-
 
 
 # 获取站内信列表
 class NotificationsList(LoginRequiredMixin, View):
     login_url = '/hub/login/'
     template_name = 'myCSSAhub/notification/notifications_list.html'
-    paginate_by = 10  
-    context_object_name = 'infos' 
+    paginate_by = 10
+    context_object_name = 'infos'
 
     def get(self, request):
         if request.user.is_authenticated:
-            currentUserID=request.user.id
-            
-            # print(currentUserID) 
+            # 获取当前用户id
+            currentUserID = request.user.id
+
             # 将查询到的内容发送到前端
             infos = queryMessagesList(currentUserID)
-            return render(request,self.template_name, locals())
+
+            tmp = render(request, self.template_name, locals())
+             
+            # 设置当前页面没有缓存 
+            # tmp.setdefault('Cache-Control', 'no-store')
+            # tmp.setdefault('Expires', 0)
+            # tmp.setdefault('Pragma', 'no-cache')
+
+            return tmp
 
     def post(self, request):
-        if request.user.is_authenticated:
-            # 先获取当前用户的id以便查询
-            currentUserID=request.user.id
-
-
+        # if request.user.is_authenticated:
+        #     # 先获取当前用户的id以便查询
+        #     currentUserID=request.user.id
         return render(request, self.template_name)
 
 # 展示站内信
 
+
 class NotificationsDisplay(LoginRequiredMixin, View):
-    login_url='/hub/login/'
-    template_name='myCSSAhub/notification/notifications_display.html'
+    login_url = '/hub/login/'
+    template_name = 'myCSSAhub/notification/notifications_display.html'
 
     def get(self, request, *args, **kwargs):
-        userId = self.kwargs.get('id')
-        print("usersfsdf", userId)
+        contentId = self.kwargs.get('id')
+        # print("usersfsdf", userId)
+    #    将需要的id传入数据库已得到内容
+        content, sender, receiver = queryMessageContent(contentId)
 
-        return render(request, self.template_name)
+        return render(request, self.template_name, locals())
 
     def post(self, request):
 
@@ -106,8 +114,8 @@ class NotificationsDisplay(LoginRequiredMixin, View):
 
 
 class NotificationForm(LoginRequiredMixin, View):
-    login_url='/hub/login/'
-    template_name='myCSSAhub/notification/notifications_form.html'
+    login_url = '/hub/login/'
+    template_name = 'myCSSAhub/notification/notifications_form.html'
 
     def get(self, request):
         return render(request, self.template_name)
@@ -116,14 +124,14 @@ class NotificationForm(LoginRequiredMixin, View):
         if request.user.is_authenticated:
             # 如果form通过POST方法发送数据
             # 发送的目标用户id
-            targetUserId=request.POST.getlist('recID')
+            targetUserId = request.POST.getlist('recID')
             # print("recID", targetUserId)
             # 当前用户id
-            currentID=request.user.id
+            currentID = request.user.id
 
-            form=Notification_Form(request.POST)
+            form = Notification_Form(request.POST)
 
-            flag, message=insertDB(form, targetUserId, currentID)
+            flag, message = insertDB(form, targetUserId, currentID)
 
             # 测试返回结果
             if flag == False:
@@ -134,7 +142,7 @@ class NotificationForm(LoginRequiredMixin, View):
 
 ###### 站内信 ##########
 
-@login_required(login_url = '/hub/login/')
+@login_required(login_url='/hub/login/')
 def logout_page(request):
     logout(request)
     return HttpResponseRedirect('/')
@@ -144,10 +152,10 @@ def logout_page(request):
 # 用户登陆CBV -- 范例
 class LoginPage(View):
     # 类属性
-    model=UserModels.User
-    template_name='myCSSAhub/login.html'
-    loginErrorMsg={"result": "Login Failed!"}
-    loginSuccessful={"result": "Login Successful!"}
+    model = UserModels.User
+    template_name = 'myCSSAhub/login.html'
+    loginErrorMsg = {"result": "Login Failed!"}
+    loginSuccessful = {"result": "Login Successful!"}
 
     # 请求处理函数 （get）
     def get(self, request, *args, **kwargs):
@@ -157,14 +165,14 @@ class LoginPage(View):
 
     # 请求处理函数（post）
     def post(self, request, *args, **kwargs):
-        email=request.POST['email']
+        email = request.POST['email']
         print(email)
-        userQuery=self.model.objects.filter(email = email).first()
+        userQuery = self.model.objects.filter(email=email).first()
         if userQuery is None:
             return JsonResponse(self.loginErrorMsg)
-        password=request.POST['password']
+        password = request.POST['password']
         # print(email,password,username)
-        user=authenticate(request, email = email, password = password)
+        user = authenticate(request, email=email, password=password)
         if user is not None:
             login(request, user)
             update_last_login(None, user)
@@ -174,21 +182,21 @@ class LoginPage(View):
 
 
 class NewUserSignUpView(View):
-    template_name='myCSSAhub/registrationForm_step1.html'
-    account_form=BasicSiginInForm
-    profile_form=UserInfoForm
+    template_name = 'myCSSAhub/registrationForm_step1.html'
+    account_form = BasicSiginInForm
+    profile_form = UserInfoForm
 
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated:
             return HttpResponseRedirect("/hub/home/")
         """Handle GET requests: instantiate a blank version of the form."""
-        id=self.kwargs.get('id')
-        legacy_data=None
+        id = self.kwargs.get('id')
+        legacy_data = None
         if id:
             try:
-                migration_record=AccountMigration.objects.filter(
-                    id = id).first()
-                legacy_data=LegacyDataModels.LegacyUsers.objects.get(
+                migration_record = AccountMigration.objects.filter(
+                    id=id).first()
+                legacy_data = LegacyDataModels.LegacyUsers.objects.get(
                     Q(studentId=migration_record.studentId) & Q(
                         membershipId=migration_record.membershipId)
                 )

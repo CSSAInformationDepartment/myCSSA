@@ -4,16 +4,24 @@
 {% endblock %}
 {% block pageContent %}
 
-<h3 id="title">测试型收件</h3>
+<h3 id="title">{{content.title}}</h3>
 <hr>
-<p>发件人：Howie</p>
+{% if sender.firstNameEN is not None %}
+<p>发件人：{{sender.firstNameEN}} {{sender.lastNameEN}}</p>
+{% else %}
+<p>发件人：{{sender.firstNameCN}} {{sender.lastNameCN}}</p>
+{% endif %}
 <div class="row">
-    <div class="col-auto mr-auto">收件人：Howie</div>
-    <div class="col-auto">时间：2018-02-03，13：00</div>
+    {% if receiver.firstNameEN is not None %}
+    <div class="col-auto mr-auto">收件人：{{receiver.firstNameEN}} {{receiver.lastNameEN}}</div>
+    {% else %}
+    <div class="col-auto mr-auto">收件人：{{receiver.firstNameCN}} {{receiver.lastNameCN}}</div>
+    {% endif %}
+    <div class="col-auto">{{ content.add_date|date:"Y-m-d H:i:s" }}</div>
 </div>
 <hr>
-<div class="alert alert-light">
-    This is a light alert with an example link. Give it a click if you like.
+<div class="alert alert-dark">
+    <p>{{content.content}}</p>
 </div>
 
 {% endblock%}

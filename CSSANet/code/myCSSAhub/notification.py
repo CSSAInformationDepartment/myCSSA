@@ -52,12 +52,33 @@ def insertDB(form, targetUsersId, currentUserId):
 ##### 读取数据库的操作#######
 def queryMessagesList(currentUserId):
     # 查询当前用户未读的信息, 在order_by 之前加负号，是为了以倒叙排列
-    info_list = Notification_DB.objects.filter(recID=currentUserId, status=0).order_by('-add_date').values()
-
-    # title_list = []
-    # 根据需要取出消息中的标题元素
-    # for title in info_list:
-    #     title_list.append(title['title'])
+    info_list = Notification_DB.objects.filter(
+        recID=currentUserId).order_by('-add_date').values()
 
     # 返回给view.py
     return info_list
+
+
+def queryMessageContent(id):
+
+    try:
+        # 查询当前用户未读的信息内容, 将信息更新为已读
+        info_list = Notification_DB.objects.get(id=id)
+        info_list.status = 1
+        info_list.save()
+
+        # print(info_list.recID)
+        # print(info_list.sendID)
+
+        receiver = UserModels.UserProfile.objects.get(user=info_list.recID)
+        # userQuery = UserModels.UserProfile.objects.filter(user=request.user).first()
+        sender = UserModels.UserProfile.objects.get(user=info_list.sendID)
+
+    except info_list.model.DoesNotExist:
+        raise Http404('No %s matches the given query.' %
+                      info_list.model.object_name)
+
+    # print("sender", sender.firstNameEN)
+    # print("receiver", receiver.firstNameEN)
+
+    return info_list, sender, receiver
