@@ -13,7 +13,7 @@
                 <i class="nav-icon cui-user"></i>个人信息</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="">
+              <a class="nav-link" href="{% url 'myCSSAhub:update-password' pk=request.user.id %}">
                 <i class="nav-icon cui-shield"></i>安全与隐私</a>
             </li>
             <li class="nav-item">

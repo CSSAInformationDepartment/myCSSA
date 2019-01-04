@@ -1,4 +1,4 @@
-
+from django.shortcuts import get_object_or_404
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .notification import insertDB, queryMessagesList, queryMessageContent
 from .forms import NotificationForm as Notification_Form
@@ -6,20 +6,19 @@ from django.shortcuts import render
 from django.http import JsonResponse, HttpResponseRedirect, HttpResponse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.forms import SetPasswordForm, PasswordChangeForm
 
 from django.views import View
-from django.views.generic.edit import CreateView, UpdateView, FormView
+from django.views.generic import CreateView, UpdateView, FormView
 from django.contrib.auth.models import update_last_login
 from django.db.models import Q
 from django.core.exceptions import ObjectDoesNotExist
-from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.http import JsonResponse, HttpResponseRedirect, HttpResponse, Http404
 from django.contrib.auth.decorators import login_required
 from .models import Notification_DB, AccountMigration
 from UserAuthAPI import models as UserModels
 from UserAuthAPI.forms import BasicSiginInForm, UserInfoForm, MigrationForm, UserAcademicForm
 from LegacyDataAPI import models as LegacyDataModels
-from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 
 from CSSANet.settings import MEDIA_ROOT, MEDIA_URL
 from Library.Mixins import AjaxableResponseMixin
@@ -156,7 +155,6 @@ class LoginPage(View):
     # 请求处理函数（post）
     def post(self, request, *args, **kwargs):
         email = request.POST['email']
-        print(email)
         userQuery = self.model.objects.filter(email=email).first()
         if userQuery is None:
             return JsonResponse(self.loginErrorMsg)
@@ -211,8 +209,6 @@ class NewUserSignUpView(View):
             profile.save()
             academic.save()
         else:
-            print(dict(profile_form.errors.items()))
-            print(dict(academic_form.errors.items()))
             return JsonResponse({
                 'success': False,
                 'errors': [dict(account_form.errors.items()), dict(profile_form.errors.items()), dict(academic_form.errors.items())]
@@ -253,6 +249,19 @@ class migrationView(FormView):
                     'status': '404',
                 })
 
+class UpdatePasswordView(LoginRequiredMixin,UpdateView):
+    login_url = 'hub/login/'
+    model = UserModels.User
+    form_class =  PasswordChangeForm
+    template_name = 'myCSSAhub/update-password.html'
+
+    def get_form_kwargs(self): ## 此处代码有错误，需修复！
+        kwargs = super(PasswordChangeForm, self.form_class).get_form_kwargs()
+        kwargs['user'] = self.model.objects.filter(pk=self.kwargs['pk'])
+        return kwargs
+
+    def form_valid(self, form):
+        return super().form_valid(form)
 
 ############################# AJAX Page Resources #####################################
 
