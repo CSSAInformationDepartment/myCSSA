@@ -6,52 +6,125 @@
 
 {% block pageContent %}
 
+<style type="text/css">
+    .noti_link:link {
+        text-decoration: none;
+        color: black;
+    }
+
+    .noti_link:active {
+        text-decoration: blink;
+    }
+
+    .noti_link:visited {
+        text-decoration: none;
+        color: gray;
+    }
+</style>
+
+
+<!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/material-design-iconic-font/2.2.0/css/material-design-iconic-font.min.css"> -->
+<section class="content inbox">
+    <div class="container-fluid">
+        <div class="row clearfix">
+            <div class="col-md-12 col-lg-12 col-xl-12">
+                <ul class="mail_list list-group list-unstyled">
+                    {% for info in infos %}
+                    <a href="/hub/notification/notifications_display/{{info.id}}" class="m-r-10 noti_link">
+                        <li class="list-group-item">
+                            <div class="media">
+                                <div class="media-body">
+                                    {% if info.status is 0 %}
+                                    <b>
+                                        <div class="media-heading">
+                                            {{info.title}}
+
+                                            <!-- <span class="badge bg-blue">Family</span> -->
+                                            <div class="float-right text-muted">
+                                                <div>{{info.add_date|date:"y/m/d H:i"}}</div>
+                                            </div>
+                                        </div>
+                                        <p class="msg" style="width: 300px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">{{info.content}}
+                                        </p>
+                                    </b>
+                                    {% else %}
+                                    <div class="media-heading">
+                                        {{info.title}}
+                                        <!-- <span class="badge bg-blue">Family</span> -->
+                                        <div class="float-right text-muted">
+                                            <div>{{info.add_date|date:"y/m/d H:i"}}</div>
+                                        </div>
+                                    </div>
+                                    <p class="msg" style="width: 300px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">{{info.content}}
+                                    </p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </li>
+                    </a>
+                    {% endfor %}
+                </ul>
+                <!-- <div class="card m-t-5">
+                    <div class="body">
+                        <ul class="pagination pagination-primary m-b-0">
+                            <li class="page-item"><a class="page-link" href="javascript:void(0);">Previous</a></li>
+                            <li class="page-item"><a class="page-link" href="javascript:void(0);">1</a></li>
+                            <li class="page-item active"><a class="page-link" href="javascript:void(0);">2</a></li>
+                            <li class="page-item"><a class="page-link" href="javascript:void(0);">3</a></li>
+                            <li class="page-item"><a class="page-link" href="javascript:void(0);">Next</a></li>
+                        </ul>
+                    </div>
+                </div> -->
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
 <!-- <div class="col-lg-6"> -->
 <!-- col-lg为控制长度 -->
-<div class="card">
-    <!-- card为卡片样式 -->
-    <div class="card-header">
+<!-- <div class="card"> -->
+<!-- card为卡片样式 -->
+<!-- <div class="card-header">
         <i class="fa fa-align-justify"></i> 站内信息
     </div>
-    <div class="card-body">
-        <!-- 循环读取后台传来的信息，并显示 -->
-        {% for x in infos %}
+    <div class="card-body"> -->
+<!-- 循环读取后台传来的信息，并显示 -->
+<!-- {% for x in infos %}
         <div class="alert alert-primary alert-dismissible" role="alert">
             <button type="button" class="close" data-dismiss="alert">×</button>
             <a class="alert-link" href="/hub/notification/notifications_display/{{x.id}}"> {{x.title}} </a>
             {% comment %} Testing cotent.{% endcomment %}
         </div>
         {% endfor %}
-    </div>
+    </div> -->
 
-    {% if is_paginated %}
-    <ul class="pagination">
-        {% if page_obj.has_previous %}
-        <li><a href="?page={{ page_obj.previous_page_number }}">&laquo;</a></li>
-        {% else %}
-        <li class="disabled"><span>&laquo;</span></li>
-        {% endif %}
-        {% for i in paginator.page_range %}
-        {% if page_obj.number == i %}
-        <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
-        {% else %}
-        <li><a href="?page={{ i }}">{{ i }}</a></li>
-        {% endif %}
-        {% endfor %}
-        {% if page_obj.has_next %}
-        <li><a href="?page={{ page_obj.next_page_number }}">&raquo;</a></li>
-        {% else %}
-        <li class="disabled"><span>&raquo;</span></li>
-        {% endif %}
-    </ul>
+{% if is_paginated %}
+<ul class="pagination">
+    {% if page_obj.has_previous %}
+    <li><a href="?page={{ page_obj.previous_page_number }}">&laquo;</a></li>
+    {% else %}
+    <li class="disabled"><span>&laquo;</span></li>
     {% endif %}
+    {% for i in paginator.page_range %}
+    {% if page_obj.number == i %}
+    <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+    {% else %}
+    <li><a href="?page={{ i }}">{{ i }}</a></li>
+    {% endif %}
+    {% endfor %}
+    {% if page_obj.has_next %}
+    <li><a href="?page={{ page_obj.next_page_number }}">&raquo;</a></li>
+    {% else %}
+    <li class="disabled"><span>&raquo;</span></li>
+    {% endif %}
+</ul>
+{% endif %}
 
 
 
-</div>
-
-
-
+<!-- </div>  -->
 <!-- </div> -->
 
 {% endblock%}
