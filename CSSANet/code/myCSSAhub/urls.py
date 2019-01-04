@@ -19,7 +19,7 @@ urlpatterns = [
     path('regform/<str:id>/', Views.NewUserSignUpView.as_view() , name='hub_migrationreg'),
     path('userinfo/create/', Views.NewUserSignUpView.as_view(), name='hub_userinfo_create'),
     path('migration/',Views.migrationView.as_view(),name='hub_migration'),
-    path('reset-password/', Views.UpdatePasswordView.as_view(), name="update-password")
+    path('reset-password/', Views.UpdatePasswordView.as_view(), name="update-password"),
 ]
 
 ## Admin system app directory

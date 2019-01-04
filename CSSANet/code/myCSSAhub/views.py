@@ -268,7 +268,7 @@ class UpdatePasswordView(LoginRequiredMixin,View):
             return HttpResponseRedirect('/hub/home')
         else:
             messages.error(request, 'Please double-check your input.')
-
+        return render(request, self.template_name, {'form':form})
 
 ############################# AJAX Page Resources #####################################
 
