@@ -1,4 +1,7 @@
 
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from .notification import insertDB, queryMessagesList, queryMessageContent
+from .forms import NotificationForm as Notification_Form
 from django.shortcuts import render
 from django.http import JsonResponse, HttpResponseRedirect, HttpResponse
 from django.contrib.auth import authenticate, login, logout
@@ -20,6 +23,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMix
 
 from CSSANet.settings import MEDIA_ROOT, MEDIA_URL
 from Library.Mixins import AjaxableResponseMixin
+import json
 
 # Create your views here.
 
@@ -47,17 +51,67 @@ def message(request):
 
 ###### 站内信 ##########
 
+# @login_required(login_url = '/hub/login/')
+# def NotificationsList(request):
+#     if request.user.is_authenticated:
+#         currentUserID=request.user.id
 
-@login_required(login_url='/hub/login/')
-def notifications_list(request):
-    return render(request, 'myCSSAhub/notification/notifications_list.html')
+#     # print(currentUserID)
+#     # 将查询到的内容发送到前端
+#         title = queryMessagesList(currentUserID)
+#         return render(request,'myCSSAhub/notification/notifications_list.html', locals())
 
 
-@login_required(login_url='/hub/login/')
-def notifications_display(request):
-    return render(request, 'myCSSAhub/notification/notifications_display.html')
+# 获取站内信列表
+class NotificationsList(LoginRequiredMixin, View):
+    login_url = '/hub/login/'
+    template_name = 'myCSSAhub/notification/notifications_list.html'
+    paginate_by = 10
+    context_object_name = 'infos'
 
-# 处理站内信的GET和POST方法，以及业务逻辑
+    def get(self, request):
+        if request.user.is_authenticated:
+            # 获取当前用户id
+            currentUserID = request.user.id
+
+            # 将查询到的内容发送到前端
+            infos = queryMessagesList(currentUserID)
+
+            tmp = render(request, self.template_name, locals())
+             
+            # 设置当前页面没有缓存 
+            # tmp.setdefault('Cache-Control', 'no-store')
+            # tmp.setdefault('Expires', 0)
+            # tmp.setdefault('Pragma', 'no-cache')
+
+            return tmp
+
+    def post(self, request):
+        # if request.user.is_authenticated:
+        #     # 先获取当前用户的id以便查询
+        #     currentUserID=request.user.id
+        return render(request, self.template_name)
+
+# 展示站内信
+
+
+class NotificationsDisplay(LoginRequiredMixin, View):
+    login_url = '/hub/login/'
+    template_name = 'myCSSAhub/notification/notifications_display.html'
+
+    def get(self, request, *args, **kwargs):
+        contentId = self.kwargs.get('id')
+        # print("usersfsdf", userId)
+    #    将需要的id传入数据库已得到内容
+        content, sender, receiver = queryMessageContent(contentId)
+
+        return render(request, self.template_name, locals())
+
+    def post(self, request):
+
+        return render(request, self.template_name)
+
+# 发送站内信
 
 
 class NotificationForm(LoginRequiredMixin, View):
@@ -76,10 +130,15 @@ class NotificationForm(LoginRequiredMixin, View):
             # 当前用户id
             currentID = request.user.id
 
-            return render(request, self.template_name)
+            form = Notification_Form(request.POST)
 
-    def queryID(self):
-        return None
+            flag, message = insertDB(form, targetUserId, currentID)
+
+            # 测试返回结果
+            if flag == False:
+                print(message)
+
+            return render(request, self.template_name)
 
 
 ###### 站内信 ##########
@@ -91,7 +150,7 @@ def logout_page(request):
 
 
 ###### 账号相关 ##########
-#用户登陆CBV -- 范例
+# 用户登陆CBV -- 范例
 class LoginPage(View):
     # 类属性
     model = UserModels.User
