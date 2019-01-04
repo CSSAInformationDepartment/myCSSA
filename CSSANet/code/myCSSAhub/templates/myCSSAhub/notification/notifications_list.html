@@ -15,15 +15,43 @@
     </div>
     <div class="card-body">
         <!-- 循环读取后台传来的信息，并显示 -->
-        {% for x in infos  %}
-            <div class="alert alert-primary alert-dismissible" role="alert">
-                <button type="button" class="close" data-dismiss="alert">×</button>
-                <a class="alert-link" href="/hub/notification/notifications_display/{{x.id}}"> {{x.title}} </a>   
+        {% for x in infos %}
+        <div class="alert alert-primary alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert">×</button>
+            <a class="alert-link" href="/hub/notification/notifications_display/{{x.id}}"> {{x.title}} </a>
             {% comment %} Testing cotent.{% endcomment %}
-            </div> 
+        </div>
         {% endfor %}
     </div>
+
+    {% if is_paginated %}
+    <ul class="pagination">
+        {% if page_obj.has_previous %}
+        <li><a href="?page={{ page_obj.previous_page_number }}">&laquo;</a></li>
+        {% else %}
+        <li class="disabled"><span>&laquo;</span></li>
+        {% endif %}
+        {% for i in paginator.page_range %}
+        {% if page_obj.number == i %}
+        <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+        {% else %}
+        <li><a href="?page={{ i }}">{{ i }}</a></li>
+        {% endif %}
+        {% endfor %}
+        {% if page_obj.has_next %}
+        <li><a href="?page={{ page_obj.next_page_number }}">&raquo;</a></li>
+        {% else %}
+        <li class="disabled"><span>&raquo;</span></li>
+        {% endif %}
+    </ul>
+    {% endif %}
+
+
+
 </div>
+
+
+
 <!-- </div> -->
 
 {% endblock%}

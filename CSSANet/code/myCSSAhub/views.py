@@ -49,7 +49,7 @@ def message(request):
 
 ###### 站内信 ##########
 
-
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 # @login_required(login_url = '/hub/login/')
 # def NotificationsList(request):
 #     if request.user.is_authenticated:
@@ -66,11 +66,13 @@ def message(request):
 class NotificationsList(LoginRequiredMixin, View):
     login_url = '/hub/login/'
     template_name = 'myCSSAhub/notification/notifications_list.html'
+    paginate_by = 10  
+    context_object_name = 'infos' 
 
     def get(self, request):
         if request.user.is_authenticated:
             currentUserID=request.user.id
-     
+            
             # print(currentUserID) 
             # 将查询到的内容发送到前端
             infos = queryMessagesList(currentUserID)
