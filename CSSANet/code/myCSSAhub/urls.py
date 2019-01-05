@@ -7,6 +7,7 @@ from OrganisationMgr import  urls as OrgMgrUrls
 app_name = "myCSSAhub"
 urlpatterns = [
     path('home/', Views.home, name="home"),
+    path('under-dev/', Views.under_dev_notice, name='under-dev'),
     path('userinfo/', Views.userInfo, name="userInfo"),
     path('message/', Views.message, name="message"),
     path('login/', Views.LoginPage.as_view(), name="hub_login"),

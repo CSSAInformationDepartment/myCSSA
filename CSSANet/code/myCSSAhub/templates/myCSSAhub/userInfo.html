@@ -5,63 +5,42 @@
  {% endblock  %}
 
 {% block pageContent %}
-<div class="container-fluid">
-          <div class="row">
-            <div class="col-md-8">
-              <div class="card">
-                <div class="card-header card-header-primary">
-                <img class="avatar rounded-circle img-thumbnail">
-                <h6>Upload a different photo...</h6>
-                <input type="file" class="text-center center-block file-upload">
-                <h4 class="card-title test-right">Edit Profile</h4>
-                <p class="card-category">Complete your profile</p>
-              </div>
-              <div class="card-body">
-                <form>
-                  <div class="row col-xs-9">
-            <ul class="nav nav-tabs">
-                <li class="active nav-item"><a data-toggle="tab" href="">个人设置更新</a></li>
-                <li class="nav-item"><a data-toggle="tab" href="">基本信息更新</a></li>
-                <li class="nav-item"><a data-toggle="tab" href="">背景信息更新</a></li>
-              </ul>
-              <div class="tab-content">
-            <div class="tab-pane active" id="home">
-                <hr>
-                  <form class="form" id="registrationForm">
-                      <div class="form-group col-xs-6">
-                        <div
-
-
-
-
-
-
-
-            <!-- <div class="col-md-8">
-              <div class="card">
-                <div class="card-header card-header-primary">
-                  <h4 class="card-title">Edit Profile</h4>
-                  <p class="card-category">Complete your profile</p>
-                </div>
-                <div class="card-body">
+<div class="card">
+  <div class="card-header card-header-primary">
+    <div class="col-md-6">
+            {% load static %}
+              {% if user.userprofile.avatar %} 
+                <img class="img-avatar" src="{{ user.userprofile.avatar.url }}" style="height:70px;width:70px;"/>
+              {% else %} 
+                <img class="img-avatar" src="{% static '/myCSSAhub/img/avatar_placeholder.png' %}" style="height:70px;width:70px;"/>
+            {% endif %}
+    </div>
+    <div class="col pull-right">
+      <label for="avatar">更换您的头像:</label>
+      <input id="id_avatar" name="avatar" type="file" class="text-center center-block file-upload">
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="col-md-6 mb-4">
+        <ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+        <a class="nav-link active show" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">基本信息</a>
+        </li>
+        <li class="nav-item">
+        <a class="nav-link" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">专业背景信息</a>
+        </li>
+        <li class="nav-item">
+        <a class="nav-link" data-toggle="tab" href="#messages" role="tab" aria-controls="messages">账号偏好设置</a>
+        </li>
+        </ul>
+        <div class="tab-content">
+        <div class="tab-pane active show" id="home" role="tabpanel">
                   <form>
                     <div class="row">
-                      <div class="col-md-5">
-                        <div class="form-group bmd-form-group">
-                          <label class="bmd-label-floating">Company (disabled)</label>
-                          <input type="text" class="form-control" disabled="">
-                        </div>
-                      </div>
-                      <div class="col-md-3">
-                        <div class="form-group bmd-form-group">
-                          <label class="bmd-label-floating">Username</label>
-                          <input type="text" class="form-control">
-                        </div>
-                      </div>
-                      <div class="col-md-4">
+                      <div class="col-md-12">
                         <div class="form-group bmd-form-group">
                           <label class="bmd-label-floating">Email address</label>
-                          <input type="email" class="form-control">
+                          <input type="email" class="form-control" disabled>
                         </div>
                       </div>
                     </div>
@@ -121,10 +100,16 @@
                     <button type="submit" class="btn btn-primary pull-right">Update Profile</button>
                     <div class="clearfix"></div>
                   </form>
-                </div>
-              </div>
-            </div> -->
-
-          </div>
         </div>
+        <div class="tab-pane" id="profile" role="tabpanel">
+          该项信息编辑暂未开放，请等待后续更新
+        </div>
+        <div class="tab-pane" id="messages" role="tabpanel">
+        该项信息编辑暂未开放，请等待后续更新
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 {% endblock%}

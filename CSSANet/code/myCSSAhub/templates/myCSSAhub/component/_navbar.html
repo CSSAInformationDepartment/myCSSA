@@ -1,20 +1,21 @@
+{% load static %}
 <header class="app-header navbar">
       <button class="navbar-toggler sidebar-toggler d-lg-none mr-auto" type="button" data-toggle="sidebar-show">
         <span class="navbar-toggler-icon"></span>
       </button>
       <a class="navbar-brand" href="{% url 'PublicSite:index' %}">
-        <img class="navbar-brand-full" src="img/brand/logo.svg" width="89" height="25" alt="CoreUI Logo">
-        <img class="navbar-brand-minimized" src="img/brand/sygnet.svg" width="30" height="30" alt="CoreUI Logo">
+        <img class="navbar-brand-full" src="{% static '/myCSSAhub/img/Main-Site-Logo-m.png' %}" width="105" height="45" alt="">
+        <img class="navbar-brand-minimized" src="" width="30" height="30" alt="">
       </a>
       <button class="navbar-toggler sidebar-toggler d-md-down-none" type="button" data-toggle="sidebar-lg-show">
         <span class="navbar-toggler-icon"></span>
       </button>
       <ul class="nav navbar-nav d-md-down-none">
         <li class="nav-item px-3">
-          <a class="nav-link" href="#">Dashboard</a>
+          <a class="nav-link" href="{% url 'myCSSAhub:home' %}">Dashboard</a>
         </li>
         <li class="nav-item px-3">
-          <a class="nav-link" href="">myCSSA应用(暂未开启)</a>
+          <a class="nav-link" href="{% url 'myCSSAhub:under-dev' %}">myCSSA应用(暂未开启)</a>
         </li>
       </ul>
       <ul class="nav navbar-nav ml-auto">
@@ -57,7 +58,7 @@
             <div class="dropdown-header text-center">
               <strong>账户</strong>
             </div>
-            <a class="dropdown-item" href="#">
+            <a class="dropdown-item" href="{% url 'myCSSAhub:userInfo' %}">
               <i class="fa fa-user"></i> 个人信息 </a>
             <a class="dropdown-item" href="{% url 'myCSSAhub:hub_logout' %}">
               <i class="fa fa-lock"></i> 登出 </a>

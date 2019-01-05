@@ -406,3 +406,6 @@ def page_not_found(request):
 
 def server_error(request):
     return render(request, 'errors/page_500.html')
+
+def under_dev_notice(request):
+    return render(request, 'myCSSAhub/under-dev-function.html')
