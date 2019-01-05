@@ -10,34 +10,34 @@ officialEmail = 'automail.cssa@cssaunimelb.com'
 
 def send_single_email(title, content, targetID):
 
-    targetEmail = 'joshlubox@gmail.com'
+    targetEmail = []
     email = queryEmailConfiguration()
 
     # 设置settings里邮件的属性
     settings.EMAIL_HOST_USER = email.host_user
     settings.EMAIL_HOST_PASSWORD = email.host_password
     settings.EMAIL_PORT = email.port
-    
-    
-    print("user", email.host_user)
-    print("pwd", email.host_password)
-    print("port", email.port)
-    print("title", title)
-    print("port", content)
-    print("targetID", targetID)
+
+    # 获得需要发送的email地址
+    for userID in targetID:
+        info_list = UserModels.User.objects.get(id=userID)
+        targetEmail.append(info_list.email)
+    # print("user", email.host_user)
+    # print("pwd", email.host_password)
+    # print("port", email.port)
+    # print("title", title)
+    # print("port", content)
+    # print("targetID", targetID)
 
     # 获取需要发送的目标用户邮箱
 
-
     html_content = '<p>欢迎访问<a href="http://www.CSSA.com" target=blank>www.CSSA.com</a>'+content+'</p>'
-    
-    msg = EmailMultiAlternatives(title, content, officialEmail,[targetEmail])
-    
-    msg.attach_alternative(html_content,"text/html")
+
+    msg = EmailMultiAlternatives(title, content, officialEmail, targetEmail)
+
+    msg.attach_alternative(html_content, "text/html")
 
     msg.send()
-
-
 
 
 def queryEmailConfiguration():

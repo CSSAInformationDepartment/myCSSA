@@ -147,11 +147,7 @@ class Email(LoginRequiredMixin, View):
     def post(self, request):
 
         if request.user.is_authenticated:
-            targetUserId = request.POST.getlist('recID')
-            # form = Notification_Form(request.POST)
-
-            
-             
+            targetUserId = request.POST.getlist('recID')             
             title = request.POST['title']
             content = request.POST['content']
 
