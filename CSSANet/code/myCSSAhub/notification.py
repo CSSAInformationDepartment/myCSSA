@@ -30,7 +30,7 @@ def insertDB(form, targetUsersId, currentUserId):
 
             return True, "发送成功"
         else:
-            # 邮件群发
+            # 站内信群发
             allUsersID = UserModels.User.objects.values_list('id')
 
             for usersID in allUsersID:

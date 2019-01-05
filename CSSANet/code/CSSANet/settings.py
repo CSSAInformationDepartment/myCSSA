@@ -327,13 +327,13 @@ LOGGING = {
 }
 
 ### Email Configuration
-from myCSSAhub import email
+# from myCSSAhub import configuration
 
-email_configuration = email.queryConfiguration()
+# email_configuration = configuration.queryEmailConfiguration
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_USE_TLS = email_configuration.use_tls
-EMAIL_HOST = email_configuration.host
-EMAIL_PORT = email_configuration.port
-EMAIL_HOST_USER = email_configuration.host_user
-EMAIL_HOST_PASSWORD = email_configuration.host_password
+EMAIL_USE_TLS = False
+EMAIL_HOST = ''
+EMAIL_PORT = 0
+EMAIL_HOST_USER = ''
+EMAIL_HOST_PASSWORD = ''

@@ -49,7 +49,7 @@ def message(request):
     return render(request, 'myCSSAhub/message.html')
 
 
-###### 站内信 -- Start ##########
+################################# 站内信 #################################
 
 # 获取站内信列表
 class NotificationsList(LoginRequiredMixin, View):
@@ -67,8 +67,8 @@ class NotificationsList(LoginRequiredMixin, View):
             infos = queryMessagesList(currentUserID)
 
             tmp = render(request, self.template_name, locals())
-             
-            # 设置当前页面没有缓存 
+
+            # 设置当前页面没有缓存
             # tmp.setdefault('Cache-Control', 'no-store')
             # tmp.setdefault('Expires', 0)
             # tmp.setdefault('Pragma', 'no-cache')
@@ -130,7 +130,27 @@ class NotificationForm(LoginRequiredMixin, View):
             return render(request, self.template_name)
 
 
-###### 站内信  -- END ##########
+################################# Email ########################################
+
+
+class Email(LoginRequiredMixin, View):
+    login_url = '/hub/login/'
+    template_name = 'myCSSAhub/email.html'
+
+    def get(self, request):
+        return render(request, self.template_name)
+
+    def post(self, request):
+
+        if request.user.is_authenticated:
+            targetUserId = request.POST.getlist('recID')
+            form = Notification_Form(request.POST)
+            
+
+        return render(request, self.template_name)
+
+###### logout page ##########
+
 
 @login_required(login_url='/hub/login/')
 def logout_page(request):
