@@ -332,8 +332,8 @@ LOGGING = {
 # email_configuration = configuration.queryEmailConfiguration
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_USE_TLS = False
-EMAIL_HOST = ''
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 0
 EMAIL_HOST_USER = ''
 EMAIL_HOST_PASSWORD = ''

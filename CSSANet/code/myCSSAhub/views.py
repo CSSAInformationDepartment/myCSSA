@@ -132,10 +132,14 @@ class NotificationForm(LoginRequiredMixin, View):
 
 ################################# Email ########################################
 
+from .send_email import send_single_email
+
+
 
 class Email(LoginRequiredMixin, View):
     login_url = '/hub/login/'
     template_name = 'myCSSAhub/email.html'
+
 
     def get(self, request):
         return render(request, self.template_name)
@@ -144,7 +148,14 @@ class Email(LoginRequiredMixin, View):
 
         if request.user.is_authenticated:
             targetUserId = request.POST.getlist('recID')
-            form = Notification_Form(request.POST)
+            # form = Notification_Form(request.POST)
+
+            
+             
+            title = request.POST['title']
+            content = request.POST['content']
+
+            send_single_email(title, content, targetUserId)
             
 
         return render(request, self.template_name)

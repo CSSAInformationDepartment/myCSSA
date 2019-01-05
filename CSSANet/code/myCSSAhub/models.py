@@ -36,8 +36,6 @@ class AccountMigration(models.Model):
 
 class EmailConfiguration(models.Model):
     id = models.AutoField(primary_key=True, editable=False)
-    use_tls = models.BooleanField(default=False)
-    host = models.CharField(verbose_name="发送方", max_length=200, null=True)
     host_password = models.CharField(
         verbose_name="发送方密码", max_length=200, null=True)
     host_user = models.CharField(
