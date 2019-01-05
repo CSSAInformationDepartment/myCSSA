@@ -325,3 +325,15 @@ LOGGING = {
 		}
 	}
 }
+
+### Email Configuration
+from myCSSAhub import email
+
+email_configuration = email.queryConfiguration()
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_USE_TLS = email_configuration.use_tls
+EMAIL_HOST = email_configuration.host
+EMAIL_PORT = email_configuration.port
+EMAIL_HOST_USER = email_configuration.host_user
+EMAIL_HOST_PASSWORD = email_configuration.host_password
