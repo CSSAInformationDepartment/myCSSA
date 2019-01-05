@@ -16,8 +16,6 @@
             {% endif %}
     </div>
     <div class="col pull-right">
-      <label for="avatar">更换您的头像:</label>
-      <input id="id_avatar" name="avatar" type="file" class="text-center center-block file-upload">
     </div>
   </div>
   <div class="card-body">
@@ -35,69 +33,174 @@
         </ul>
         <div class="tab-content">
         <div class="tab-pane active show" id="home" role="tabpanel">
-                  <form>
-                    <div class="row">
-                      <div class="col-md-12">
-                        <div class="form-group bmd-form-group">
-                          <label class="bmd-label-floating">Email address</label>
-                          <input type="email" class="form-control" disabled>
-                        </div>
-                      </div>
+              <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="display-email">电子邮箱</label>
+                      <input class="form-control" id="display-email" value="{{data.user.email}}" disabled/>
                     </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="display-telNumber">电话</label>
+                      <input class="form-control" id="display-telNumber" value="{{data.user.telNumber}}" disabled/>
+                    </div>
+                  </div>
+                </div>
+                  <form method="POST" action="{% url 'myCSSAhub:userInfo' %}">
+                    {% csrf_token %}
+                    {% load widget_tweaks %}
+                    {% for hidden_field in form.hidden_fields %}
+                    {{ hidden_field }}
+                    {% endfor %}
+                    {% if form.non_field_errors %}
+                    <div class="alert alert-danger" role="alert">
+                        {% for error in form.non_field_errors %}
+                        {{ error }}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
                     <div class="row">
                       <div class="col-md-6">
-                        <div class="form-group bmd-form-group">
-                          <label class="bmd-label-floating">Fist Name</label>
-                          <input type="text" class="form-control">
-                        </div>
-                      </div>
-                      <div class="col-md-6">
-                        <div class="form-group bmd-form-group">
-                          <label class="bmd-label-floating">Last Name</label>
-                          <input type="text" class="form-control">
-                        </div>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-md-12">
-                        <div class="form-group bmd-form-group">
-                          <label class="bmd-label-floating">Adress</label>
-                          <input type="text" class="form-control">
-                        </div>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-md-4">
-                        <div class="form-group bmd-form-group">
-                          <label class="bmd-label-floating">City</label>
-                          <input type="text" class="form-control">
-                        </div>
-                      </div>
-                      <div class="col-md-4">
-                        <div class="form-group bmd-form-group">
-                          <label class="bmd-label-floating">Country</label>
-                          <input type="text" class="form-control">
-                        </div>
-                      </div>
-                      <div class="col-md-4">
-                        <div class="form-group bmd-form-group">
-                          <label class="bmd-label-floating">Postal Code</label>
-                          <input type="text" class="form-control">
-                        </div>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-md-12">
                         <div class="form-group">
-                          <label>About Me</label>
-                          <div class="form-group bmd-form-group">
-                            <label class="bmd-label-floating"> Lamborghini Mercy, Your chick she so thirsty, I'm in that two seat Lambo.</label>
-                            <textarea class="form-control" rows="5"></textarea>
-                          </div>
+                            <label for="lastNameEN">英文姓（拼音）</label>
+                            {% if form.is_bound %}
+                              {% if form.lastNameEN.errors %}
+                                  {% render_field form.lastNameEN class="form-control is-invalid" value=data.lastNameEN%}
+                                  {% for error in form.lastNameEN.errors %}
+                                  <div class="invalid-feedback">
+                                      {{ error }}
+                                  </div>
+                                  {% endfor %}
+                              {% else %}
+                                  {% render_field form.lastNameEN class="form-control is-valid" value=data.lastNameEN%}
+                              {% endif %}
+                            {% else %}
+                                {% render_field form.lastNameEN class="form-control" value=data.lastNameEN%}
+                            {% endif %}
+                            {% if form.lastNameEN.help_text %}
+                                <small class="form-text text-muted">{{ form.lastNameEN.help_text }}</small>
+                            {% endif %}
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                          <div class="form-group">
+                            <label for="firstNameEN">英文名（拼音）</label>
+                            {% if form.is_bound %}
+                              {% if form.firstNameEN.errors %}
+                                  {% render_field form.firstNameEN class="form-control is-invalid" value=data.firstNameEN%}
+                                  {% for error in form.firstNameEN.errors %}
+                                  <div class="invalid-feedback">
+                                      {{ error }}
+                                  </div>
+                                  {% endfor %}
+                              {% else %}
+                                  {% render_field form.firstNameEN class="form-control is-valid" value=data.firstNameEN%}
+                              {% endif %}
+                            {% else %}
+                                {% render_field form.firstNameEN class="form-control" value=data.firstNameEN%}
+                            {% endif %}
+                            {% if form.firstNameEN.help_text %}
+                                <small class="form-text text-muted">{{ form.firstNameEN.help_text }}</small>
+                            {% endif %}
                         </div>
                       </div>
                     </div>
-                    <button type="submit" class="btn btn-primary pull-right">Update Profile</button>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="lastNameCN">中文姓</label>
+                            {% if form.is_bound %}
+                              {% if form.lastNameCN.errors %}
+                                  {% render_field form.lastNameCN class="form-control is-invalid" value=data.lastNameCN%}
+                                  {% for error in form.lastNameCN.errors %}
+                                  <div class="invalid-feedback">
+                                      {{ error }}
+                                  </div>
+                                  {% endfor %}
+                              {% else %}
+                                  {% render_field form.lastNameCN class="form-control is-valid" value=data.lastNameCN%}
+                              {% endif %}
+                            {% else %}
+                                {% render_field form.lastNameCN class="form-control" value=data.lastNameCN%}
+                            {% endif %}
+                            {% if form.lastNameCN.help_text %}
+                                <small class="form-text text-muted">{{ form.lastNameCN.help_text }}</small>
+                            {% endif %}
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                          <div class="form-group">
+                            <label for="firstNameCN">中文名</label>
+                            {% if form.is_bound %}
+                              {% if form.firstNameCN.errors %}
+                                  {% render_field form.firstNameCN class="form-control is-invalid" value=data.firstNameCN %}
+                                  {% for error in form.firstNameCN.errors %}
+                                  <div class="invalid-feedback">
+                                      {{ error }}
+                                  </div>
+                                  {% endfor %}
+                              {% else %}
+                                  {% render_field form.firstNameCN class="form-control is-valid" value=data.firstNameCN %}
+                              {% endif %}
+                            {% else %}
+                                {% render_field form.firstNameCN class="form-control" value=data.firstNameCN %}
+                            {% endif %}
+                            {% if form.firstNameCN.help_text %}
+                                <small class="form-text text-muted">{{ form.firstNameCN.help_text }}</small>
+                            {% endif %}
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-12">
+                          <div class="form-group">
+                            <label for="address">地址</label>
+                            {% if form.is_bound %}
+                              {% if form.address.errors %}
+                                  {% render_field form.address class="form-control is-invalid" value=data.address %}
+                                  {% for error in form.address.errors %}
+                                  <div class="invalid-feedback">
+                                      {{ error }}
+                                  </div>
+                                  {% endfor %}
+                              {% else %}
+                                  {% render_field form.address class="form-control is-valid" value=data.address %}
+                              {% endif %}
+                            {% else %}
+                                {% render_field form.address class="form-control" value=data.address %}
+                            {% endif %}
+                            {% if form.address.help_text %}
+                                <small class="form-text text-muted">{{ form.address.help_text }}</small>
+                            {% endif %}
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-4">
+                          <div class="form-group">
+                            <label for="postcode">邮编</label>
+                            {% if form.is_bound %}
+                              {% if form.postcode.errors %}
+                                  {% render_field form.postcode class="form-control is-invalid" value=data.postcode %}
+                                  {% for error in form.postcode.errors %}
+                                  <div class="invalid-feedback">
+                                      {{ error }}
+                                  </div>
+                                  {% endfor %}
+                              {% else %}
+                                  {% render_field form.postcode class="form-control is-valid" value=data.postcode %}
+                              {% endif %}
+                            {% else %}
+                                {% render_field form.postcode class="form-control" value=data.postcode %}
+                            {% endif %}
+                            {% if form.postcode.help_text %}
+                                <small class="form-text text-muted">{{ form.postcode.help_text }}</small>
+                            {% endif %}
+                        </div>
+                      </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary pull-right">更新个人基本信息</button>
                     <div class="clearfix"></div>
                   </form>
         </div>
