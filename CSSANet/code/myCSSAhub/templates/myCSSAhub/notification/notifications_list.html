@@ -50,11 +50,13 @@
                                 <div class="col-md-6">
                                     <p> 您目前有{{infos|length}}条站内信</p>
                                 </div>
+                                {% if user.is_staff  %}
                                 <div class="col-md-6">
                                     <div class="btn-group float-right" role="group">
                                         <a class="btn btn-pill btn-block btn-primary" role="button" href="{% url 'myCSSAhub:notifications_form' %}">发送消息</a>
                                     </div>
                                 </div>
+                                {% endif %}
                             </div>
                             <div class="row">
                                 <div class="col-md-12 col-lg-12 col-xl-12">

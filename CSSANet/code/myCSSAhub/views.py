@@ -1,25 +1,25 @@
-
+from django.shortcuts import get_object_or_404
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .notification import insertDB, queryMessagesList, queryMessageContent
 from .forms import NotificationForm as Notification_Form
 from django.shortcuts import render
 from django.http import JsonResponse, HttpResponseRedirect, HttpResponse
-from django.contrib.auth import authenticate, login, logout
+from django.contrib import messages
+from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.forms import SetPasswordForm, PasswordChangeForm
 
 from django.views import View
-from django.views.generic.edit import CreateView, UpdateView, FormView
+from django.views.generic import CreateView, UpdateView, FormView
 from django.contrib.auth.models import update_last_login
 from django.db.models import Q
 from django.core.exceptions import ObjectDoesNotExist
-from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.http import JsonResponse, HttpResponseRedirect, HttpResponse, Http404
 from django.contrib.auth.decorators import login_required
 from .models import Notification_DB, AccountMigration
 from UserAuthAPI import models as UserModels
-from UserAuthAPI.forms import BasicSiginInForm, UserInfoForm, MigrationForm, UserAcademicForm
+from UserAuthAPI.forms import BasicSiginInForm, UserInfoForm, MigrationForm, UserAcademicForm, UserProfileUpdateForm
 from LegacyDataAPI import models as LegacyDataModels
-from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 
 from CSSANet.settings import MEDIA_ROOT, MEDIA_URL
 from Library.Mixins import AjaxableResponseMixin
@@ -40,16 +40,12 @@ def home(request):
 
 
 @login_required(login_url='/hub/login/')
-def userInfo(request):
-    return render(request, 'myCSSAhub/userInfo.html')
-
-
-@login_required(login_url='/hub/login/')
 def message(request):
     return render(request, 'myCSSAhub/message.html')
 
 
-################################# 站内信 #################################
+
+###### 站内信 -- Start ##########
 
 # 获取站内信列表
 class NotificationsList(LoginRequiredMixin, View):
@@ -183,7 +179,6 @@ class LoginPage(View):
     # 请求处理函数（post）
     def post(self, request, *args, **kwargs):
         email = request.POST['email']
-        print(email)
         userQuery = self.model.objects.filter(email=email).first()
         if userQuery is None:
             return JsonResponse(self.loginErrorMsg)
@@ -238,8 +233,6 @@ class NewUserSignUpView(View):
             profile.save()
             academic.save()
         else:
-            print(dict(profile_form.errors.items()))
-            print(dict(academic_form.errors.items()))
             return JsonResponse({
                 'success': False,
                 'errors': [dict(account_form.errors.items()), dict(profile_form.errors.items()), dict(academic_form.errors.items())]
@@ -248,7 +241,7 @@ class NewUserSignUpView(View):
             'success': True, })
 
 
-class migrationView(FormView):
+class migrationView(View):
     template_name = 'myCSSAhub/migration.html'
 
     def get(self, request, *args, **kwargs):
@@ -280,6 +273,54 @@ class migrationView(FormView):
                     'status': '404',
                 })
 
+class UpdatePasswordView(LoginRequiredMixin,View):
+    login_url = 'hub/login/'
+    model = UserModels.User
+    form_class =  PasswordChangeForm
+    template_name = 'myCSSAhub/update-password.html'
+
+    def get(self, request, *args, **kwargs):
+        return render(request, self.template_name, {'form':self.form_class(request.user)})
+
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)
+            messages.success(request, 'New Password has been updated!')
+            return HttpResponseRedirect('/hub/home')
+        else:
+            messages.error(request, 'Please double-check your input.')
+        return render(request, self.template_name, {'form':form})
+
+class UpdateUserProfileView(LoginRequiredMixin, View):
+    login_url = 'hub/login/'
+    model = UserModels.UserProfile
+    form_class =  UserProfileUpdateForm
+    template_name = 'myCSSAhub/userInfo.html'
+
+    def get(self, request, *args, **kwargs):
+        current_data = self.model.objects.get(user=request.user)
+        return render(request, self.template_name, {'form':self.form_class, 'data':current_data})
+
+    def post(self, request, *args, **kwargs):
+        current_data = self.model.objects.get(user=request.user)
+        form = self.form_class(request.POST or None, instance=current_data)
+        if form.is_valid():
+            user = form.save()
+            messages.success(request, 'User Profile has been updated!')
+            return HttpResponseRedirect('/hub/home')
+        else:
+            messages.error(request, 'Please double-check your input.')
+            print(dict(form.errors))
+        return render(request, self.template_name, {'form':form, 'data':current_data})
+
+class MembershipCardView(LoginRequiredMixin, View):
+    login_url = 'hub/login/'
+    template_name = 'myCSSAhub/membership-home.html'
+
+    def get(self, request, *args, **kwargs):
+        return render(request, self.template_name)
 
 ############################# AJAX Page Resources #####################################
 
@@ -417,3 +458,6 @@ def page_not_found(request):
 
 def server_error(request):
     return render(request, 'errors/page_500.html')
+
+def under_dev_notice(request):
+    return render(request, 'myCSSAhub/under-dev-function.html')

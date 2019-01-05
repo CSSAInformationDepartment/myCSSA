@@ -7,7 +7,9 @@ from OrganisationMgr import  urls as OrgMgrUrls
 app_name = "myCSSAhub"
 urlpatterns = [
     path('home/', Views.home, name="home"),
-    path('userinfo/', Views.userInfo, name="userInfo"),
+    path('under-dev/', Views.under_dev_notice, name='under-dev'),
+    path('userinfo/', Views.UpdateUserProfileView.as_view(), name="userInfo"),
+    path('member-card-info', Views.MembershipCardView.as_view(), name="membership-info"),
     path('message/', Views.message, name="message"),
     path('login/', Views.LoginPage.as_view(), name="hub_login"),
     path('notification/notifications_list/', Views.NotificationsList.as_view(), name="notifications_list"),
@@ -20,6 +22,7 @@ urlpatterns = [
     path('userinfo/create/', Views.NewUserSignUpView.as_view(), name='hub_userinfo_create'),
     path('migration/',Views.migrationView.as_view(),name='hub_migration'),
     path('email/',Views.Email.as_view(),name='email'),
+    path('reset-password/', Views.UpdatePasswordView.as_view(), name="update-password"),
 ]
 
 ## Admin system app directory
