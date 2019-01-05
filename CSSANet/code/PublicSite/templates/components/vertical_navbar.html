@@ -13,6 +13,7 @@
 							<li class="nav-item">
 								<a class="nav-link" href="/">{%trans "首页" %} <span class="sr-only">(current)</span></a>
 							</li>
+							{% if user.is_staff %}
 							<li class="nav-item">
 								<a class="nav-link" href="event/">{%trans "活动消息 " %}</a>
 							</li>
@@ -41,6 +42,7 @@
 							<li class="nav-item">
 								<a class="nav-link" href="#">加入我们</a>
 							</li>
+							{% endif %}
 						</ul>
 						<ul class="navbar-nav navbar-right" > <!--Login Info-->
 						{% if user.is_authenticated %}
