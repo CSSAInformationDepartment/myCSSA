@@ -19,7 +19,7 @@ class BlogContent (models.Model):
     blogContentId = models.AutoField(primary_key = True)
     blogMainContent = models.TextField()
     writtenDate = models.DateTimeField(auto_now_add=True)
-    writeIn = models.CharField(max_length = 45)
+    # writeIn = models.CharField(max_length = 45)
 
 class BlogWrittenBy(models.Model):
     blogCreatedId = models.AutoField(primary_key = True)

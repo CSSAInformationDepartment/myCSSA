@@ -72,7 +72,23 @@ def Blogs(request, page):
     pass
 
 def BlogContents(request, contentId):
-    pass
+    # 需要判断contentId
+    # avatar没有的时候会报错！
+    ViewBag = {}
+    blogContent = BlogModels.BlogContent.objects.filter()
+    blogContentSingle = blogContent[0]
+    ViewBag["blogContent"] = blogContentSingle
+    blog = blogContentSingle.blogId
+    ViewBag["blog"] = blog
+    users= BlogModels.BlogWrittenBy.objects.filter(blogContentId=blogContentSingle)
+    ViewBag["users"] = []
+    for user in users:
+        ViewBag["users"].append({
+            "user": user.userId,
+            "userProfile": UserModels.UserProfile.objects.filter(user=user.userId)[0]
+        })
+    print(ViewBag)
+    return render(request, 'PublicSite/blogs.html', ViewBag)
 
 #@cache_page(CACHE_TTL)
 #def Events(requests):
