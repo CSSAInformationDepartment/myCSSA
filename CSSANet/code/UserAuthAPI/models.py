@@ -196,9 +196,9 @@ class UserProfile (models.Model):
     membershipId = models.CharField(verbose_name="会员卡号", max_length=10,null=True, blank=True)
 
 
-    address = models.CharField(verbose_name="地址",max_length=150, null=True)
-    postcode = models.CharField(verbose_name="邮编",max_length=4, null=True)
-    originate = models.CharField(verbose_name="籍贯",max_length=50, null=True)
+    address = models.CharField(verbose_name="地址",max_length=150, null=True, blank=True)
+    postcode = models.CharField(verbose_name="邮编",max_length=4, null=True, blank=True)
+    originate = models.CharField(verbose_name="籍贯",max_length=50, null=True,blank=True)
 
 
 

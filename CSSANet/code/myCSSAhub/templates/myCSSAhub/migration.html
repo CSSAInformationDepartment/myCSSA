@@ -2,6 +2,7 @@
 
 {% block 'extra_header' %}
 {% load static %}
+<link rel="stylesheet" type="text/css" href="{% static '/myCSSAhub/vendors/jquery-ui/jquery-ui.min.css'%}">
 <link rel="stylesheet" type="text/css" href="{% static '/myCSSAhub/css/registrationForm.css'%}">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.0-alpha14/css/tempusdominus-bootstrap-4.min.css"/>
 {% endblock 'extra_header' %}
@@ -30,7 +31,7 @@
           {% csrf_token %}
           <fieldset>
             <h5 class="fs-title">账号迁移</h5>
-            <p>请三项中请至少填写二项</p>
+            <p>您需要至少提供您持有的会员卡号和学生证号</p>
             <small class="text-muted"><mark>请与最初注册信息填写一致</mark></small>
             <div class="form-label-group required">
               <label class="control-label  col-md-6 requiredField">Membership ID</label>
@@ -119,7 +120,7 @@ src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.0-alph
 ></script>
 <script type="text/javascript" src="{% static 'myCSSAhub/js/parsley.min.js' %}"></script>
 <script type="text/javascript" src="{% static '/myCSSAhub/js/custom_validators.js'%}"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.5/jquery-ui.min.js"></script>
+<script src="{% static '/myCSSAhub/vendors/jquery-ui/jquery-ui.min.js'%}"></script>
 <script type="text/javascript" src="{% static '/myCSSAhub/js/migrationForm.js' %}"></script>
 
 {% endblock 'extra_js' %}
