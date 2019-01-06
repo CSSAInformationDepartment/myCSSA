@@ -128,7 +128,7 @@ class NotificationForm(LoginRequiredMixin, View):
 
 ################################# Email ########################################
 
-from .send_email import send_single_email
+from .send_email import send_emails
 
 
 
@@ -146,9 +146,12 @@ class Email(LoginRequiredMixin, View):
             targetUserId = request.POST.getlist('recID')             
             title = request.POST['title']
             content = request.POST['content']
-
-            send_single_email(title, content, targetUserId)
             
+            # if targetUserId is not None:
+
+            #     # send_emails(title, content, targetUserId)
+            # else:
+            #     raise Exception 
 
         return render(request, self.template_name)
 

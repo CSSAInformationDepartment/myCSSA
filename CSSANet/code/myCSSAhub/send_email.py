@@ -8,8 +8,8 @@ from django.conf import settings
 officialEmail = 'automail.cssa@cssaunimelb.com'
 
 
-def send_single_email(title, content, targetID):
-
+def send_emails(title, content, targetID):
+    
     targetEmail = []
     email = queryEmailConfiguration()
 
@@ -17,7 +17,7 @@ def send_single_email(title, content, targetID):
     settings.EMAIL_HOST_USER = email.host_user
     settings.EMAIL_HOST_PASSWORD = email.host_password
     settings.EMAIL_PORT = email.port
-
+     
     # 获得需要发送的email地址
     for userID in targetID:
         info_list = UserModels.User.objects.get(id=userID)
