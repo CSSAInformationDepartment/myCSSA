@@ -33,5 +33,6 @@ urlpatterns += [
     path('ajax/checkEmailIntegrity/', Views.CheckEmailIntegrity, name="ajax_checkEmailIntegrity"),
     path('ajax/checkPhoneIntegrity/', Views.CheckTelIntegrity, name="ajax_checkTelIntegrity"),
     path('ajax/checkStudentIdIntegrity/', Views.CheckStudentIdIntegrity, name="ajax_checkStudentIdIntegrity"),
-    path('ajax/userlookup/', Views.UserLookup.as_view(), name="ajax_userLookup")
+    path('ajax/userlookup/', Views.UserLookup.as_view(), name="ajax_userLookup"),
+    path('ajax/saveBlog/', Views.saveBlog, name="ajax_saveBlog")
 ]

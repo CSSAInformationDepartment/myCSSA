@@ -13,12 +13,15 @@ class BlogDescription (models.Model):
 
     # 阅读量
     blogReads = models.IntegerField()
+    blogOpenToPublic = models.BooleanField(default=True)
 
 class BlogContent (models.Model):
     blogId = models.ForeignKey(BlogDescription, on_delete = models.CASCADE)
     blogContentId = models.AutoField(primary_key = True)
     blogMainContent = models.TextField()
     writtenDate = models.DateTimeField(auto_now_add=True)
+
+    openToPublic = models.BooleanField(default=True)
     # writeIn = models.CharField(max_length = 45)
 
 class BlogWrittenBy(models.Model):

@@ -20,6 +20,7 @@ from .forms import NotificationForm as Notification_Form
 from UserAuthAPI import models as UserModels
 from UserAuthAPI.forms import BasicSiginInForm, UserInfoForm, MigrationForm
 from LegacyDataAPI import  models as LegacyDataModels
+from BlogAPI import models as BlogModels
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 
 from CSSANet.settings import MEDIA_ROOT, MEDIA_URL
@@ -344,6 +345,18 @@ class UserLookup(LoginRequiredMixin,View):
                 'success': False,
                 'status': '400',
                 })
+
+def saveBlog(request):
+    NEW_CONTENT = -1
+    NEW_BLOG = -1
+    if request.method == "POST":
+        blogId = request.POST["blogId"]
+        contentId = request.POST["contentId"]
+        if blogId == -1:
+            pass
+
+
+
 
 
 ################################# errors pages ########################################
