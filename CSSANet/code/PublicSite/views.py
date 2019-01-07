@@ -69,7 +69,6 @@ def Departments(request,dept):
     return render(request, 'PublicSite/dept.html', ViewBag)
 
 def Blogs(request, page):
-    # 找openToPublic为true的
     pass
 
 def BlogContents(request, contentId):
@@ -78,8 +77,6 @@ def BlogContents(request, contentId):
     ViewBag = {}
     blogContent = BlogModels.BlogContent.objects.filter()
     blogContentSingle = blogContent[0]
-    if not blogContentSingle.openToPublic:
-        return page_not_found(request)
     ViewBag["blogContent"] = blogContentSingle
     blog = blogContentSingle.blogId
     ViewBag["blog"] = blog
@@ -92,15 +89,6 @@ def BlogContents(request, contentId):
         })
     print(ViewBag)
     return render(request, 'PublicSite/blogs.html', ViewBag)
-
-def editBlog(request, contentId):
-    # 需要判断contentId
-    # avatar没有的时候会报错
-    ViewBag = {}
-    blogContent = BlogModels.BlogContent.objects.filter()
-    blogContentSingle = blogContent[0]
-    return
-
 
 #@cache_page(CACHE_TTL)
 #def Events(requests):

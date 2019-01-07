@@ -8,6 +8,5 @@ urlpatterns = [
     path('news/',Views.News, name='news'),
     path('department/<str:dept>/', Views.Departments, name='departments'),
     path('blog/<int:contentId>/', Views.BlogContents, name='blogContent'),
-    path('blogs/<int:page>/', Views.Blogs, name='blogs'),
-    path('editblog/<int:contentId>/', Views.editBlog, name='editblog')
+    path('blogs/<int:page>/', Views.Blogs, name='blogs')
 ]
