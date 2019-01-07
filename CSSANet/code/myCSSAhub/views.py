@@ -26,8 +26,6 @@ from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMix
 from CSSANet.settings import MEDIA_ROOT, MEDIA_URL
 from Library.Mixins import AjaxableResponseMixin
 
-import json
-
 # Create your views here.
 
 
@@ -348,62 +346,14 @@ class UserLookup(LoginRequiredMixin,View):
                 'status': '400',
                 })
 
-class saveBlog (LoginRequiredMixin, PermissionRequiredMixin, View):
-    login_url = "/hub/login/"
-    permission_required = ("BlogAPI.can_add_blog_content", "BlogAPI.can_change_blog_content", "BlogAPI.can_delete_blog_content", 
-    "BlogAPI.can_add_blog_description", "BlogAPI.can_change_blog_description", "BlogAPI.can_delete_blog_description")
-
-    def get(self, request, *args, **kwargs):
-        data = {
-            'status': '400', 'reason': 'Bad Requests!'
-        }
-        return data
-    
-    def post(self, request, *args, **kwargs):
-        # 检查是否是新content
-        # 如果不是新content 检查是否 user对
-
-        # post: blogId contentid blogtitle blogopentopublic
-
-        NEW_CONTENT = -1
-        NEW_BLOG = -1
+def saveBlog(request):
+    NEW_CONTENT = -1
+    NEW_BLOG = -1
+    if request.method == "POST":
         blogId = request.POST["blogId"]
-        blog = -1
         contentId = request.POST["contentId"]
-        if blogId == NEW_BLOG:
-            newB = BlogModels.BlogDescription(
-                blogTitle=request.POST["blogTitle"], 
-                blogReads = 0, 
-                blogOpenToPublic = request.POST["blogOpenToPublic"])
-            newB.save()
-            blog = newB
-            blogId = newB.blogId
-        else:
-            currentBlog = BlogModels.BlogDescription.objects.get(blogId=blogId)
-            if currentBlog:
-                currentBlog = BlogModels.BlogDescription(
-                    blogId = blogId, 
-                    blogTitle=request.POST["blogTitle"], 
-                    blogReads = currentBlog.blogReads, 
-                    blogOpenToPublic = request.POST["blogOpenToPublic"])
-                currentBlog.save()
-                blog = currentBlog
-            else:
-                # currentBlog不存在 blogId有问题
-                return JsonResponse({
-                    'success': False,
-                    'status': '400',
-                    })
-
-        blogMainContent = json.loads(request.POST["contents"])
-
-        # store all 
-
-        if contentId == NEW_CONTENT:
+        if blogId == -1:
             pass
-
-        
-    
 
 
 
