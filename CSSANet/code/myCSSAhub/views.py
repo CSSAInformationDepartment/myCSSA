@@ -107,6 +107,7 @@ class NotificationForm(LoginRequiredMixin, View):
         return render(request, self.template_name)
 
     def post(self, request):
+        flag = False
         if request.user.is_authenticated:
             # 如果form通过POST方法发送数据
             # 发送的目标用户id
@@ -123,7 +124,7 @@ class NotificationForm(LoginRequiredMixin, View):
             if flag == False:
                 print(message)
 
-            return render(request, self.template_name)
+            return render(request, self.template_name, {'back_end_flag':flag})
 
 
 ################################# Email ########################################

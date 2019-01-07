@@ -8,11 +8,20 @@
 {% block pageContent %}
 
 <form action="" method="post" id="form">
-    <!-- {% for error in form.non_field_errors %}
+    {% for error in form.non_field_errors %}
         <div class="alert alert-danger">
             <strong>{{ error|escape }}</strong>
         </div>
-    {% endfor %} -->
+    {% endfor %}
+
+    {% if back_end_flag %}
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <strong>消息发送成功</strong>
+        <button class="close" type="button" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">×</span>
+        </button>
+    </div>
+    {% endif %}
 
     {% csrf_token %}
     <div class="form-group">
