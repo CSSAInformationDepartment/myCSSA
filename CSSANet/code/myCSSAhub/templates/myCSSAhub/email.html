@@ -63,7 +63,7 @@
 
     <div class="form-group">
         <label for="notification_title">标题</label>
-        <input class="form-control" id="title" name="title" type="text" required/>
+        <input class="form-control" id="title" name="title" type="text" required />
         <div class="form-group">
             <label for="notification_content">内容</label>
             <textarea class="form-control" id="content" name="content" rows="11" required></textarea>
@@ -74,14 +74,33 @@
         </div> -->
     </div>
     <!-- 直接点击submit可以发送ID至后台，select2控件已经封装好了 -->
-    <button class="btn btn-primary" type="submit">发送</button>
+    <button class="btn btn-primary" type="submit" >发送</button>
     <button class="btn btn-danger" type="reset">重置</button>
-    <button class="btn btn-warning" type="submit">存为草稿</button>
+    <button class="btn btn-warning" type="submit" >存为草稿</button>
 
 </form>
 
-{% endblock%}
+<!-- The Modal -->
+<div class="modal" id="myModal">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
 
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">您已成功发送邮件！</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <a href="#/group-buy" class="btn btn-secondary btn-embossed enable-btn" data-dismiss="modal" onclick="javascript:window.location='{% url 'myCSSAhub:notifications_list'%}'">关闭</a>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% endblock%}
 
 {% block ExtraJS %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>

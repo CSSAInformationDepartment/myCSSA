@@ -130,8 +130,6 @@ class NotificationForm(LoginRequiredMixin, View):
 
 from .send_email import send_emails
 
-
-
 class Email(LoginRequiredMixin, View):
     login_url = '/hub/login/'
     template_name = 'myCSSAhub/email.html'
@@ -146,6 +144,10 @@ class Email(LoginRequiredMixin, View):
             targetUserId = request.POST.getlist('recID')             
             title = request.POST['title']
             content = request.POST['content']
+
+            print("title", title)
+            print("targetUserId", targetUserId)
+            print("content", content)
             
             # if targetUserId is not None:
 
