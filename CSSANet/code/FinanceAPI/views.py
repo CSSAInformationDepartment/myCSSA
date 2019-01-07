@@ -21,7 +21,7 @@ class TransactionListView(LoginRequiredMixin, View):
 
 class TransactionListJson(LoginRequiredMixin, PermissionRequiredMixin, BaseDatatableView):
     login_url = '/hub/login/'
-    permission_required = ('can_view_transaction',)
+    permission_required = ('FinanceAPI.view_transaction',)
     model = models.Transaction
 
     # define the columns that will be returned
