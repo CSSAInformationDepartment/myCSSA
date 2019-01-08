@@ -64,6 +64,16 @@ class UserInfoForm(forms.ModelForm):
         model = models.UserProfile
         fields = '__all__'
 
+class UserProfileUpdateForm(forms.ModelForm):
+    class Meta:
+        model = models.UserProfile
+        fields = ('firstNameEN','lastNameEN','firstNameCN','lastNameCN','address','postcode')
+
+class UserAcademicForm(forms.ModelForm):
+    class Meta:
+        model = models.UserAcademic
+        fields = ('userProfile','degree','uniMajor')
+
 class MigrationForm(forms.Form):
     membershipId = forms.CharField(required=False)
     studentId = forms.CharField(required=False)

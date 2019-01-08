@@ -7,18 +7,22 @@ from OrganisationMgr import  urls as OrgMgrUrls
 app_name = "myCSSAhub"
 urlpatterns = [
     path('home/', Views.home, name="home"),
-    path('userinfo/', Views.userInfo, name="userInfo"),
+    path('under-dev/', Views.under_dev_notice, name='under-dev'),
+    path('userinfo/', Views.UpdateUserProfileView.as_view(), name="userInfo"),
+    path('member-card-info', Views.MembershipCardView.as_view(), name="membership-info"),
     path('message/', Views.message, name="message"),
     path('login/', Views.LoginPage.as_view(), name="hub_login"),
-    path('notification/notifications_list/', Views.notifications_list, name="notifications_list"),
-    path('notification/notifications_form/', Views.NotificationForm.as_view(), name="notifications_form"),
-    path('notification/notifications_display/', Views.notifications_display, name="notifications_display"),
+    path('notification/notifications_list/', Views.NotificationsList.as_view(), name="notifications_list"),
+    path('notification/notifications_form/', Views.NotificationForm.as_view(),  name="notifications_form"),
+    path('notification/notifications_display/<str:id>/', Views.NotificationsDisplay.as_view(), name="notifications_display"),
     path('logout/', Views.logout_page , name='hub_logout'),
     path('welcome/', Views.register_guide , name='hub_reg'),
     path('regform/', Views.NewUserSignUpView.as_view() , name='hub_regform'),
     path('regform/<str:id>/', Views.NewUserSignUpView.as_view() , name='hub_migrationreg'),
     path('userinfo/create/', Views.NewUserSignUpView.as_view(), name='hub_userinfo_create'),
     path('migration/',Views.migrationView.as_view(),name='hub_migration'),
+    path('email/',Views.Email.as_view(),name='email'),
+    path('reset-password/', Views.UpdatePasswordView.as_view(), name="update-password"),
 ]
 
 ## Admin system app directory

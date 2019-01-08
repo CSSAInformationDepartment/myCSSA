@@ -20,5 +20,4 @@ django-widget-tweaks
 
 gunicorn
 
-# For development mode only
-django-debug-toolbar
+django-braces

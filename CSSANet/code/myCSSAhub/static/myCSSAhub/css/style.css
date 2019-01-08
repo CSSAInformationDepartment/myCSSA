@@ -14168,3 +14168,8 @@ body {
   breakpoint-xl: 1200px;
 }
 /*# sourceMappingURL=style.css.map */
+
+.inbox:hover {
+  background: gray;
+}
+
