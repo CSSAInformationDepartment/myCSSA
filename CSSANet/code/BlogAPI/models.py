@@ -7,23 +7,29 @@ from UserAuthAPI.models import User
 # Create your models here.
 
 # 新闻本身
-class BlogDescription (models.Model):
+class Blog (models.Model):
     blogId = models.AutoField(primary_key = True)
     blogTitle = models.CharField(max_length = 100)
 
-    # 阅读量
-    blogReads = models.IntegerField()
+    blogMainContent = models.TextField(default=None)
+    createDate = models.DateTimeField(auto_now_add=True)
+    lastModifiedDate = models.DateTimeField(auto_now=True)
+    blogReviewed = models.BooleanField(default=False)
 
-class BlogContent (models.Model):
-    blogId = models.ForeignKey(BlogDescription, on_delete = models.CASCADE)
-    blogContentId = models.AutoField(primary_key = True)
-    blogMainContent = models.TextField()
+    # 阅读量
+    blogReads = models.IntegerField(default=0)
+
+class BlogOldContent (models.Model):
+    blogId = models.ForeignKey(Blog, on_delete = models.CASCADE)
+    blogOldContentId = models.AutoField(primary_key = True)
+    blogOldTitle = models.CharField(max_length = 100)
+    blogOldContent = models.TextField()
     writtenDate = models.DateTimeField(auto_now_add=True)
     # writeIn = models.CharField(max_length = 45)
 
 class BlogWrittenBy(models.Model):
     blogCreatedId = models.AutoField(primary_key = True)
-    blogContentId = models.ForeignKey(BlogContent, on_delete = models.CASCADE)
+    blogId = models.ForeignKey(Blog, on_delete = models.CASCADE)
     userId = models.ForeignKey(User, on_delete = models.DO_NOTHING)
 
 class BlogTag (models.Model):
@@ -32,7 +38,14 @@ class BlogTag (models.Model):
     tagCreateTime = models.DateTimeField(auto_now_add = True)
 
 class BlogInTag (models.Model):
-    blogId = models.ForeignKey(BlogDescription, on_delete = models.CASCADE)
+    blogId = models.ForeignKey(Blog, on_delete = models.CASCADE)
     tagId = models.ForeignKey(BlogTag, on_delete = models.CASCADE)
     blogTagId = models.AutoField(primary_key = True)
 
+class BlogImage (models.Model):
+    imageId = models.AutoField(primary_key = True)
+    hashValue = models.CharField(max_length = 40)
+
+    # 目前先存base64 在上传之后检查是否有重复
+    # 改成imageField?
+    imageFileB64 = models.TextField()
