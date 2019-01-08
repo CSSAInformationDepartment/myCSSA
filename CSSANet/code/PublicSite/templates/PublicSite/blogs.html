@@ -1,0 +1,141 @@
+{% extends 'components/base_page.html' %}
+{% block 'pg_body' %}
+<!-- bloc-4 -->
+{% load static %}
+    <style>
+        .blogBigContainer{
+            margin-top: 50px;
+            padding: 0px 50px;
+            min-height: 1000px;
+        }
+
+        h3{
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+
+        h5{
+            font-size: 14px;
+        }
+
+        .tagBox{
+            margin: 10px 0px;
+        }
+
+        .label {
+          display: inline;
+          padding: .2em .6em .3em;
+          font-size: 75%;
+          font-weight: bold;
+          line-height: 1;
+          color: white;
+          text-align: center;
+          white-space: nowrap;
+          vertical-align: baseline;
+          border-radius: .25em;
+            background-color: rgb(18, 123, 163);
+        }
+
+        .blogHeadingBox{
+            margin-top: 0px;
+            margin-bottom: 30px;
+        }
+
+        .blogAuthorBox{
+            float: top;
+            height: 40px;
+            margin-top: 20px;
+        }
+
+        .blogAuthorsContainer{
+            min-width: 200px;
+            padding: 25px;
+            background-color: rgba(240, 240, 240)
+        }
+
+        .avatar{
+            display: block;
+            width: 40px;
+            height: 40px;
+            float: left;
+            border-radius: 20px;
+            background-color: green;
+        }
+
+        .blogFullContentBox{
+            margin-top: 30px;
+        }
+
+        .blogAuthorInfoBox{
+            margin-left: 12px;
+            float: left;
+        }
+
+        .blogAuthorInfoBox h5{
+            font-size: 14px;
+            margin-bottom: 5px;
+            color: rgba(160, 160, 160, 1)
+        }
+
+        .blogAuthorInfoBox em{
+            font-style: normal;
+            color: rgba(90, 90, 90, 1)
+        }
+
+        .blogContainer{
+            margin-bottom: 100px;
+            padding: 0px 25px;
+        }
+    </style>
+    <div class="blogBigContainer">
+        <div class="row">
+            <div class="col-sm-8 blogContainer">
+                <div class="blogHeadingBox">
+                    <h3>文章</h3>
+                    <h1>{{ blog.blogTitle }}</h1>
+                    <div class="tagBox">
+                        <h5>
+                            标签：
+                            <span class="label label-primary" style="background-color: pink">Tag 1</span>
+                            <span class="label label-primary">Tag 2</span>
+                            <span class="label label-primary">Tag 3</span>
+                            <span class="label label-primary">Tag 4</span>
+                        </h5>
+                    </div>
+                </div>
+
+
+                <div class="blogContentBox">
+                    <hr />
+                    <div class="blogFullContentBox">
+                        {{ blogContent.blogMainContent }}
+                    </div>
+                </div>
+
+
+            </div>
+            <div class="col-sm-3 col-sm-offset-1 blogSide">
+                <div class="blogAuthorsContainer">
+                    <h4>时间</h4>
+                    <br />
+                    <h5>{{ blogContent.writtenDate }} - Parkville</h5>
+                    <br />
+                    <h4>作者</h4>
+
+                    <!-- iteration! -->
+                    {% for user in users %}
+                    <div class="blogAuthorBox">
+                        <img class="avatar" src="{{ user.userProfile.avatar.url }}">
+                        <div class="blogAuthorInfoBox">
+                            <a><h5><em>{{ user.userProfile.lastNameCN }} {{ user.userProfile.firstNameCN }}</em></h5></a>
+                            <h5>{{ user.user.username }}</h5>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    <div style="clear:both;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+{% endblock 'pg_body' %}
