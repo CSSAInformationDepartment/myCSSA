@@ -6,22 +6,143 @@
 
 {% block pageContent %}
 
-<!-- <div class="col-lg-6"> -->
-<!-- col-lg为控制长度 -->
-<div class="card">
-    <!-- card为卡片样式 -->
-    <div class="card-header">
-        <i class="fa fa-align-justify"></i> 站内信息
-    </div>
-    <div class="card-body">
+<style type="text/css">
+    .noti_link:link {
+        text-decoration: none;
+        color: black;
+    }
 
-        <div class="alert alert-primary alert-dismissible" role="alert">
-            <button type="button" class="close" data-dismiss="alert">×</button>
-            This is a primary alert with
-            <a class="alert-link" href="#">an example link</a>. Give it a click if you like.</div>
+    .noti_link:active {
+        text-decoration: blink;
+    }
 
+    .noti_link:visited {
+        text-decoration: none;
+        color: gray;
+    }
+</style>
+
+<div class="col">
+    <div class="card" style="min-height:750px;">
+        <div class="card-header">
+            <i class="fa fa-align-justify"></i> 通知中心
+            <small>beta</small>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-2">
+                    <div class="list-group" id="list-tab" role="tablist">
+                        <a class="list-group-item list-group-item-action active show" id="list-system-notification-list" data-toggle="tab" href="#list-system-notification"
+                            role="tab" aria-controls="list-system-notification" aria-selected="false">系统通知</a>
+                        <a class="list-group-item list-group-item-action" id="list-message-list" data-toggle="tab" href="#list-message"
+                            role="tab" aria-controls="list-message" aria-selected="false">站内私信</a>
+                        <a class="list-group-item list-group-item-action" id="list-dept-inbox-list" data-toggle="tab"
+                            href="#list-dept-inbox" role="tab" aria-controls="list-dept-inbox" aria-selected="false">部门邮箱</a>
+                    </div>
+                </div>
+                <div class="col-10">
+                    <div class="tab-content" id="nav-tabContent">
+                        <div class="tab-pane active show" id="list-system-notification" role="tabpanel" aria-labelledby="list-system-notification-list">
+                            <p> 新系统测试中，如遇问题，请联系CSSA信息部</p>
+                        </div>
+                        <div class="tab-pane fade" id="list-message" role="tabpanel" aria-labelledby="list-message-list">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <p> 您目前有{{infos|length}}条站内信</p>
+                                </div>
+                                {% if user.is_staff  %}
+                                <div class="col-md-6">
+                                    <div class="btn-group float-right" role="group">
+                                        <a class="btn btn-pill btn-block btn-primary" role="button" href="{% url 'myCSSAhub:notifications_form' %}">发送消息</a>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12 col-lg-12 col-xl-12">
+                                <section class="content inbox">
+                                    <div class="container-fluid">
+                                        <div class="row clearfix">
+                                            <div class="col-md-12 col-lg-12 col-xl-12">
+                                                <ul class="mail_list list-group list-unstyled">
+                                                    {% for info in infos %}
+                                                    <a href="/hub/notification/notifications_display/{{info.id}}" class="m-r-10 noti_link">
+                                                        <li class="list-group-item">
+                                                            <div class="media">
+                                                                <div class="media-body">
+                                                                    {% if info.status is 0 %}
+                                                                    <b>
+                                                                        <div class="media-heading">
+                                                                            {{info.title}}
+                                                                            <!-- <span class="badge bg-blue">Family</span> -->
+                                                                            <div class="float-right text-muted">
+                                                                                <div>{{info.add_date|date:"y/m/d H:i"}}</div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <p class="msg" style="width: 300px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">{{info.content}}
+                                                                        </p>
+                                                                    </b>
+                                                                    {% else %}
+                                                                    <div class="media-heading">
+                                                                        {{info.title}}
+                                                                        <!-- <span class="badge bg-blue">Family</span> -->
+                                                                        <div class="float-right text-muted">
+                                                                            <div>{{info.add_date|date:"y/m/d H:i"}}</div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <p class="msg" style="width: 300px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">{{info.content}}
+                                                                    </p>
+                                                                    {% endif %}
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                    </a>
+                                                    {% endfor %}
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </section>
+
+                                {% if is_paginated %}
+                                <ul class="pagination">
+                                    {% if page_obj.has_previous %}
+                                    <li><a href="?page={{ page_obj.previous_page_number }}">&laquo;</a></li>
+                                    {% else %}
+                                    <li class="disabled"><span>&laquo;</span></li>
+                                    {% endif %}
+                                    {% for i in paginator.page_range %}
+                                    {% if page_obj.number == i %}
+                                    <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+                                    {% else %}
+                                    <li><a href="?page={{ i }}">{{ i }}</a></li>
+                                    {% endif %}
+                                    {% endfor %}
+                                    {% if page_obj.has_next %}
+                                    <li><a href="?page={{ page_obj.next_page_number }}">&raquo;</a></li>
+                                    {% else %}
+                                    <li class="disabled"><span>&raquo;</span></li>
+                                    {% endif %}
+                                </ul>
+                                {% endif %}
+                            </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="list-dept-inbox" role="tabpanel" aria-labelledby="list-dept-inbox-list">
+                            <p> 该功能暂未开放，请等待后续通知</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
+
+
+
+
+
+<!-- </div>  -->
 <!-- </div> -->
 
 {% endblock%}

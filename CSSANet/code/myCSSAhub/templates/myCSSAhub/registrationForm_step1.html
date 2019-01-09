@@ -2,6 +2,8 @@
 {% block 'extra_header' %}
 {% load static %}
 <link rel="stylesheet" type="text/css" href="{% static '/myCSSAhub/css/registrationForm.css'%}">
+<link rel="stylesheet" type="text/css" href="{% static '/myCSSAhub/vendors/city-picker/css/city-picker.css'%}">
+<link rel="stylesheet" type="text/css" href="{% static '/myCSSAhub/vendors/jquery-ui/jquery-ui.min.css'%}">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.0-alpha14/css/tempusdominus-bootstrap-4.min.css"/>
 {% endblock 'extra_header' %}
 
@@ -147,11 +149,13 @@
               </label>
               <div class="controls  col-md-12 ">
                 <select
+                required
                   class="selectpicker form-control"
                   id="id_gender"
                   name="gender"
                   data-parsley-group="step2"
                 >
+                  <option value=""> --- Please Choose --- </option>
                   <option value="Female"> Female </option>
                   <option value="Male"> Male </option>
                   <option value="Other"> Other </option>
@@ -241,11 +245,27 @@
                 for="id_location"
                 class="control-label  col-md-6  requiredField"
               >
+                您来自哪里<span class="asteriskField">*</span>
+              </label>
+              <div class="controls  col-md-12 ">
+                <input
+                  class="form-control input-medium bfh-countries"
+                  id="id_originate"
+                  name="originate"
+                  placeholder="请填写你来自的省市"
+                  data-parsley-group="step2"
+                />
+              </div>
+            </div>
+            <div id="div_id_location" class="form-group required">
+              <label
+                for="id_location"
+                class="control-label  col-md-6  requiredField"
+              >
                 Address<span class="asteriskField">*</span>
               </label>
               <div class="controls  col-md-12 ">
                 <input
-                  required
                   class="form-control input-medium bfh-countries"
                   id="id_address"
                   name="address"
@@ -263,31 +283,11 @@
               </label>
               <div class="controls  col-md-12 ">
                 <input
-                  required
                   class="form-control input-medium bfh-countries"
                   id="id_postcode"
                   name="postcode"
                   data-parsley-maxlength="4"
                   placeholder="请输入你的邮编"
-                  data-parsley-group="step2"
-                />
-              </div>
-            </div>
-            <div id="div_id_location" class="form-group required">
-              <label
-                for="id_location"
-                class="control-label  col-md-6  requiredField"
-              >
-                Place of Birth<span class="asteriskField">*</span>
-              </label>
-              <div class="controls  col-md-12 ">
-                <input
-                  required
-                  class="form-control input-medium bfh-countries"
-                  id="id_originate"
-                  data-country="US"
-                  name="originate"
-                  placeholder="请输入你的籍贯"
                   data-parsley-group="step2"
                 />
               </div>
@@ -310,7 +310,7 @@
                 for="degree"
                 class="control-label  col-md-6  requiredField"
               >
-                Degree <span class="asteriskField">*</span>
+                Degree / 在读学位 <span class="asteriskField">*</span>
               </label>
               <div class="controls  col-md-12 ">
                 <select
@@ -333,17 +333,18 @@
 
             <div id="major" class="form-group required">
               <label for="major" class="control-label  col-md-6  requiredField">
-                Your Major<span class="asteriskField">*</span>
+                Major / 专业<span class="asteriskField">*</span>
               </label>
               <div class="controls  col-md-12 ">
-                <input
+                <select
                   required
                   class="selectpicker form-control"
                   id="id_major"
                   name="uniMajor"
-                  placeholder="请输入你的学位"
+                  placeholder="选择你的专业所在的分类"
                   data-parsley-group="step3"
                 />
+                </select>
               </div>
             </div>
             <div class="form-group required">
@@ -372,11 +373,11 @@
               <div class="controls col-md-12">
                 <div class="input-group js-input-file">
                   <input
-                    required
-                    class="input-file"
+                    class="btn btn-primary input-file"
                     type="file"
                     name="avatar"
                     id="id_avatar"
+                    role="button"
                     data-parsley-max-file-size="2"
                     data-parsley-group="step3"
                   />
@@ -452,7 +453,7 @@
 
             <div class="form-group">
               <div class="controls col-md-offset-5 col-md-12 text-center">
-                <a href=""
+                <a href="/"
                   ><input
                     required
                     type="button"
@@ -468,6 +469,10 @@
     </div>
   </div>
 </div>
+
+{% endblock 'pg_body' %}
+
+{% block 'extra_js' %}
 <script
   type="text/javascript"
   src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.23.0/moment.min.js"
@@ -483,7 +488,6 @@
 <script type="text/javascript" src="{% static 'myCSSAhub/js/Password/password-score.js' %}"></script>
 <script type="text/javascript" src="{% static 'myCSSAhub/js/Password/password-score-options.js' %}"></script>
 <script type="text/javascript">
-
   //Password Strength Indicator
   $(document).ready(function() {
     $('#id_password').strengthMeter('progressBar', {
@@ -501,11 +505,44 @@
     });
   });
 
+ //Major dropdown Handler
+ let dropdown = document.getElementById('id_major');
+  dropdown.length = 0;
+
+  let defaultOption = document.createElement('option');
+
+  dropdown.add(defaultOption);
+  dropdown.selectedIndex = 0;
+
+  const url = "{% static '/myCSSAhub/js/unimelb-major-picker.js' %}";
+
+  const request = new XMLHttpRequest();
+  request.open('GET', url, true);
+
+  request.onload = function() {
+    if (request.status === 200) {
+      const data = JSON.parse(request.responseText);
+      let option;
+      for (let i = 0; i < data.length; i++) {
+        option = document.createElement('option');
+        option.text = data[i].name;
+        option.value = data[i].abbreviation;
+        dropdown.add(option);
+      }
+    } else {
+      // Reached the server, but it returned an error
+    }   
+  }
+  request.onerror = function() {
+    console.error('An error occurred fetching the JSON from ' + url);
+  };
+
+  request.send();
 
 </script>
-<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.5/jquery-ui.min.js"></script>
-
+<script src="{% static '/myCSSAhub/vendors/jquery-ui/jquery-ui.min.js'%}"></script>
 <script src="{% static '/myCSSAhub/js/registrationForm.js'%}" defer></script>
-
-
-{% endblock 'pg_body' %}
+<script src="{% static '/myCSSAhub/vendors/city-picker/js/city-picker.data.js'%}" defer></script>
+<script src="{% static '/myCSSAhub/vendors/city-picker/js/city-picker.js'%}" defer></script>
+<script src="{% static '/myCSSAhub/vendors/city-picker/js/main.js'%}" defer></script>
+{% endblock 'extra_js' %}

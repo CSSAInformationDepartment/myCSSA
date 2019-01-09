@@ -4,6 +4,7 @@ from PublicSite import models
 from UserAuthAPI import models as UserModels
 # Static Files Path Reference
 from CSSANet.settings import MEDIA_ROOT, MEDIA_URL
+from Library.SiteManagement import LoadPagetoRegister
 # CacheSettings
 from django.core.cache.backends.base import DEFAULT_TIMEOUT
 from django.conf import settings
@@ -11,29 +12,9 @@ from django.views.decorators.cache import cache_page
 # Create your views here.
 
 
-############################### View Function ##########################################
-# Set cache time for page
-CACHE_TTL = getattr(settings, 'CACHE_TTL', DEFAULT_TIMEOUT)
-
-def LoadPagetoRegister(uri,title,template):
-    query_set = models.PageRegister.objects.filter(uri = uri)
-    if not query_set:
-        newRegister = models.PageRegister(
-            uri = uri,
-            title = title,
-            templates = template
-        )
-        newRegister.save()
-        print("New Registered")
-    else:
-        print("Page Already Registered "+title)
-
-
-
 ################################# View Controller ########################################
 #@cache_page(CACHE_TTL)
 def index(request):
-#    LoadPagetoRegister(reverse(index, current_app='PublicSite'),'index','PublicSite/index.html')
 
     return render(request, 'PublicSite/index.html')
             
@@ -46,7 +27,6 @@ def Departments(request,dept):
     ViewBag = {}
     ViewBag['MEDIA_ROOT'] = MEDIA_ROOT
     ViewBag['MEDIA_URL'] = MEDIA_URL
-    LoadPagetoRegister(request.get_full_path(Departments),'Departments','PublicSite/dept.html')
     DeptInfo = UserModels.CSSADept.objects.filter(deptName=dept)
     if not DeptInfo:
         ViewBag['dept'] = None

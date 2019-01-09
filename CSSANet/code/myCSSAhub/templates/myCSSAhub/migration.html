@@ -2,6 +2,7 @@
 
 {% block 'extra_header' %}
 {% load static %}
+<link rel="stylesheet" type="text/css" href="{% static '/myCSSAhub/vendors/jquery-ui/jquery-ui.min.css'%}">
 <link rel="stylesheet" type="text/css" href="{% static '/myCSSAhub/css/registrationForm.css'%}">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.0-alpha14/css/tempusdominus-bootstrap-4.min.css"/>
 {% endblock 'extra_header' %}
@@ -30,7 +31,7 @@
           {% csrf_token %}
           <fieldset>
             <h5 class="fs-title">账号迁移</h5>
-            <p>请三项中请至少填写二项</p>
+            <p>您需要至少提供您持有的会员卡号和学生证号</p>
             <small class="text-muted"><mark>请与最初注册信息填写一致</mark></small>
             <div class="form-label-group required">
               <label class="control-label  col-md-6 requiredField">Membership ID</label>
@@ -53,7 +54,7 @@
               </label>
               <div class="controls  col-md-12 ">
                 <div class="input-group date" id="datetimepicker1" data-target-input="nearest">
-                  <input required class="input-md textinput textInput form-control datetimepicker-input" name="dateOfBirth"
+                  <input class="input-md textinput textInput form-control datetimepicker-input" name="dateOfBirth"
                     placeholder="MM/DD/YYYY" type="text" data-target="#datetimepicker1" />
                   <div class="input-group-append" data-target="#datetimepicker1" data-toggle="datetimepicker">
                     <div class="input-group-text">
@@ -69,7 +70,7 @@
             <div class="form-label-group required">
               <label class="control-label  col-md-6 requiredField">Phone Number</label>
               <div class="controls col-md-12">
-                <input required class="input-md textinput textInput form-control" id="id_telNumber" name="telNumber"
+                <input class="input-md textinput textInput form-control" id="id_telNumber" name="telNumber"
                   placeholder="请填写你的电话号码" type="text" data-parsley-tel-Number-Check="1" data-parsley-database-check="telNumber"
                   data-parsley-group="block2" />
               </div>
@@ -77,7 +78,7 @@
             <div class="form-label-group required">
               <label class="control-label col-md-6 requiredField">E-mail</label>
               <div class="controls col-md-12">
-                <input required class="input-md textinput textInput form-control" id="id_email" name="email"
+                <input class="input-md textinput textInput form-control" id="id_email" name="email"
                   placeholder="请填写你的邮箱" type="text" data-parsley-type="email" data-parsley-database-Check="email" />
               </div>
             </div>
@@ -87,19 +88,21 @@
                   data-parsley-group="block2" data-parsley-type="email" data-parsley-database-Check="email" />
               </div>
             </div>
+          </form>
           </fieldset>
 
           <fieldset style="width:200%">
             <div id="result-success" class="form-label-group required jumbotron" style="display:none;">
               <h4 class="display-3 text-center">恭喜你已完成迁移验证</h4>
-              <p class="text-center">请点击<a id="completeMigration" href="">继续</a>完成账号迁移</p>
+              <a id="completeMigration" href=""><p class="text-center">请点击此处继续完成账号迁移</p></a>
               </div>
               <div id="result-fail" class="form-label-group required jumbotron" style="display:none;">
                 <h4 class="display-4 text-center"><i class="fa fa-minus-circle fa-10x"></i></br>抱歉!</br>我们无法验证您的会员身份</h4>
                 <p class="text-center">请在完成账号注册后</br>携带<strong>学生证和会员卡</strong>前往摊位免费激活账号</p>
+                <a href="{% url 'myCSSAhub:hub_regform' %}" class="btn btn-primary" role="button">点此继续</a>
               </div>
            </fieldset>
-        </form>
+
       </div>
     </div>
   </div>
@@ -117,7 +120,7 @@ src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.0-alph
 ></script>
 <script type="text/javascript" src="{% static 'myCSSAhub/js/parsley.min.js' %}"></script>
 <script type="text/javascript" src="{% static '/myCSSAhub/js/custom_validators.js'%}"></script>
-<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.5/jquery-ui.min.js"></script>
+<script src="{% static '/myCSSAhub/vendors/jquery-ui/jquery-ui.min.js'%}"></script>
 <script type="text/javascript" src="{% static '/myCSSAhub/js/migrationForm.js' %}"></script>
 
 {% endblock 'extra_js' %}

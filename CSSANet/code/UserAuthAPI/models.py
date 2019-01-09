@@ -16,7 +16,7 @@
 
 
 from django.db import models
-from django.contrib.auth.models import AbstractUser, BaseUserManager
+from django.contrib.auth.models import AbstractUser, BaseUserManager, Group, Permission
 import uuid
 from django.utils.translation import ugettext_lazy as _
 
@@ -78,25 +78,29 @@ class UserManager(BaseUserManager):
 
 
 ##### Part 1. 用户信息扩展数据 ##################################################
-#部门 (对应fixture)
+#部门 (对应fixture， 禁止人工修改)
 class CSSADept (models.Model):
     # 此行定义表主键 - 标准写法，请复制粘贴
     deptId = models.AutoField(primary_key = True, editable=False)
-    deptName = models.CharField(max_length=50, verbose_name="部门简称")
+    deptName = models.CharField(max_length=50, verbose_name="部门简称") #此数值需与部门大组权限一致
     deptTitle = models.CharField(max_length=50, verbose_name="部门名称")
     deptTitleEN = models.CharField(max_length=50, verbose_name="Name of the Department")
+    brief = models.CharField(max_length=200, null=True, blank=True, default=None)
+    description = models.TextField(blank=True ,null=True, default=None)
+    head_image = models.ImageField(verbose_name="头像", upload_to='public/department/',
+        height_field=None, width_field=None, max_length=None, null=True, blank=True)
 
     def __str__(self):
         return self.deptName
 
-#职位 (对应fixture)
+#职位 (对应fixture， 禁止人工修改)
 class CSSARole (models.Model):
     roleId = models.AutoField(primary_key=True, editable=False)
-    roleFlag = models.CharField(max_length=3)
+    roleFlag = models.CharField(max_length=3) #此数值需与用户大组权限一致
     roleName = models.CharField(max_length=50)
 
     def __str__(self):
-        return '%s %s' % (self.roleFlag,self.roleName)
+        return self.roleFlag
 
 #学校专业信息
 class UniMajor (models.Model):
@@ -124,25 +128,40 @@ class User(AbstractUser):
     def __str__(self):
         return '%s' % (self.email)
 
- ### 暂时不用，这些函数不影响模型
- #   def get_full_name(self):
- #       '''
- #       Returns the first_name plus the last_name, with a space in between.
- #       '''
- #       full_name = '%s %s' % (self.first_name, self.last_name)
- #       return full_name.strip()
+    def get_full_CN_name(self):
+        '''
+        Returns the first_name plus the last_name, with a space in between.
+        '''
+        Profile = UserProfile.objects.get(user=self.id)
+        if Profile.lastNameCN and Profile.firstNameCN:
+            full_name = '%s %s' % (Profile.lastNameCN, Profile.firstNameCN)
+            return full_name.strip()
+        else:
+            return None
 
- #   def get_short_name(self):
- #       '''
- #       Returns the short name for the user.
- #       '''
- #       return self.first_name
+    def get_full_EN_name(self):
+        '''
+        Returns the first_name plus the last_name, with a space in between.
+        '''
+        Profile = UserProfile.objects.get(user=self.id)
+        if Profile.lastNameEN and Profile.firstNameEN:
+            full_name = '%s %s' % (Profile.firstNameEN, Profile.lastNameEN)
+            return full_name.strip()
+        else:
+            return None
+    
+    def get_committee_profile(self):
+        try:
+            return CSSACommitteProfile.objects.get(member=self.id, is_active=True)
+        except:
+            return False
 
- #   def email_user(self, subject, message, from_email=None, **kwargs):
- #       '''
- #       Sends an email to this User.
- #       '''
- #       send_mail(subject, message, from_email, [self.email], **kwargs)
+
+#    def email_user(self, subject, message, from_email=None, **kwargs):
+#        '''
+#        Sends an email to this User.
+#        '''
+#        send_mail(subject, message, from_email, [self.email], **kwargs)
 
 
 #用户信息主体 （继承自标准admin model，参照： https://www.zmrenwu.com/post/31/）
@@ -177,9 +196,9 @@ class UserProfile (models.Model):
     membershipId = models.CharField(verbose_name="会员卡号", max_length=10,null=True, blank=True)
 
 
-    address = models.CharField(verbose_name="地址",max_length=150, null=True)
-    postcode = models.CharField(verbose_name="邮编",max_length=4, null=True)
-    originate = models.CharField(verbose_name="籍贯",max_length=20, null=True)
+    address = models.CharField(verbose_name="地址",max_length=150, null=True, blank=True)
+    postcode = models.CharField(verbose_name="邮编",max_length=4, null=True, blank=True)
+    originate = models.CharField(verbose_name="籍贯",max_length=50, null=True,blank=True)
 
 
 
@@ -207,10 +226,10 @@ class UserAcademic (models.Model):
 
     academicRecId = models.AutoField(primary_key=True, editable=False)
     # 来自同一张表的外键变量名、配置需一致
-    userProfile = models.ForeignKey(User, on_delete = models.DO_NOTHING)
+    userProfile = models.ForeignKey(User, on_delete = models.DO_NOTHING, blank=True)
     # 不同模型中表示同一功能的变量名需一致
     timeOfCreate  = models.DateTimeField(auto_now_add=True)
 
     degree = models.CharField(verbose_name="学位", choices=degreeChoice,
-    max_length=32, default='BA')
-    uniMajor = models.ForeignKey(UniMajor,verbose_name="专业" ,on_delete=None)
+        max_length=32, default='BA')
+    uniMajor = models.CharField(verbose_name="专业" ,max_length=100)
