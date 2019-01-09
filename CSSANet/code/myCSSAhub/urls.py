@@ -22,6 +22,7 @@ urlpatterns = [
     path('userinfo/create/', Views.NewUserSignUpView.as_view(), name='hub_userinfo_create'),
     path('migration/',Views.migrationView.as_view(),name='hub_migration'),
     path('email/',Views.Email.as_view(),name='email'),
+    path('email_history/',Views.EmailHistory.as_view(),name='email_history'),
     path('reset-password/', Views.UpdatePasswordView.as_view(), name="update-password"),
 ]
 

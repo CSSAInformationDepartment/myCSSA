@@ -1,5 +1,5 @@
 # 发送email的逻辑类
-from .models import EmailConfiguration
+from .models import EmailConfiguration, EmailDB
 from django.core.mail import EmailMultiAlternatives
 from UserAuthAPI import models as UserModels
 # 关键设定：不能直接调用CSSAnet这个module进行设定
@@ -8,7 +8,7 @@ from django.conf import settings
 officialEmail = 'automail.cssa@cssaunimelb.com'
 
 
-def send_emails(title, content, targetID):
+def send_emails(title, content, targetID, currentUserId):
     
     targetEmail = []
     email = queryEmailConfiguration()
@@ -33,11 +33,16 @@ def send_emails(title, content, targetID):
 
     html_content = '<p>欢迎访问<a href="http://www.CSSA.com" target=blank>www.CSSA.com</a>'+content+'</p>'
 
-    msg = EmailMultiAlternatives(title, content, officialEmail, targetEmail)
+    email_msg = EmailMultiAlternatives(title, content, officialEmail, targetEmail)
 
-    msg.attach_alternative(html_content, "text/html")
+    email_msg.attach_alternative(html_content, "text/html")
 
-    msg.send()
+    email_msg.send()
+
+
+    flag, message = insertEmailDB(title,content,targetID, currentUserId)
+
+    return flag
 
 
 def queryEmailConfiguration():
@@ -50,3 +55,70 @@ def queryEmailConfiguration():
                       email.model.object_name)
 
     return email
+
+
+def queryEmailList(currentUserId):
+    # 查询当前用户未读的信息, 在order_by 之前加负号，是为了以倒叙排列
+    info_list = EmailDB.objects.filter(
+        recID=currentUserId).order_by('-add_date').values()
+
+    # 返回给view.py
+    return info_list
+
+def queryEmailContent(id):
+
+    try:
+        # 查询当前用户未读的信息内容, 将信息更新为已读
+        info_list = EmailDB.objects.get(id=id)
+  
+        receiver = UserModels.UserProfile.objects.filter(user=info_list.recID).first()
+        print(info_list.recID)
+        sender = UserModels.UserProfile.objects.filter(user=info_list.sendID).first()
+
+    except info_list.model.DoesNotExist:
+        raise Http404('No %s matches the given query.' %
+                      info_list.model.object_name)
+
+    # print("sender", sender.firstNameEN)
+    # print("receiver", receiver.firstNameEN)
+
+    return info_list, sender, receiver
+
+
+def insertEmailDB(title, content, targetUsersId, currentUserId):
+    
+    allID = '3a4b499e-b49d-4e19-9c02-d0123dd196a4'
+    if form.is_valid():
+
+        # title = form.cleaned_data['title']
+        # content = form.cleaned_data['content']
+        # 先定义一个发送者instance，以免重复定义
+        sender = UserModels.User(id=currentUserId)
+
+        if allID not in targetUsersId:
+            # 把每一位接收者的ID输入到数据库之中去
+            for targetId in targetUsersId:
+
+                receiver = UserModels.User(id=targetId)
+
+                # 0表示消息未读
+                email_Db = EmailDB(sendID=sender, recID=receiver, title=title, content=content)
+                email_Db.save()
+
+            return True, "发送成功"
+        else:
+            # 邮件群发
+            allUsersID = UserModels.User.objects.values_list('id')
+
+            for usersID in allUsersID:
+                # 群发id不包含当前用户
+                if currentUserId != usersID:
+                    receiver = UserModels.User(id=usersID)
+                    email_Db = EmailDB(sendID=sender, recID=receiver, title=title, content=content)
+                    email_Db.save()
+
+            return True, "群发成功"
+
+        return False, "未能写入数据库"
+    print(dict(form.errors))
+    return False, "非法的表单"

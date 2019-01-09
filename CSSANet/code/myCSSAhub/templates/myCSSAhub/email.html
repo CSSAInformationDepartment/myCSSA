@@ -53,6 +53,40 @@
         <select class="form-control" id="userlookup" name="recID" style="width:100%" multiple="multiple" required></select>
     </div>
 
+
+    {% if back_end_flag %}
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <strong>消息发送成功</strong>
+        <div id="countdown" style="float:right;">3s后自动跳转</div>
+        <button class="close" type="button" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">×</span>
+        </button>
+    </div>
+
+    <script type="text/javascript">
+
+        var count = 3;
+        //写一个方法，显示倒数秒数  数到0后跳转页面  
+        function countDown() {
+            //将count显示在div中
+            document.getElementById("countdown").innerHTML = count+'s后自动跳转';
+            //没执行一次，count减1
+            count -= 1;
+            //count=0时，跳转页面
+            if (count == 0) {
+                location.href = '{% url 'myCSSAhub:notifications_list'%}';
+                //window.location.href="index.html";
+            }
+            //每秒执行一次,showTime()
+            setTimeout("countDown()", 1000);
+        }
+        //执行countDown方法
+        countDown();
+        // setTimeout("window.location = '{% url 'myCSSAhub:notifications_list'%}'", 1000);
+    </script>
+
+    {% endif %}
+
     <div class="btn-group-sm">
         <label>邮件模板：</label>
         <button class="btn btn-info template" type="button" onclick="enroll()">报名</button>
@@ -74,31 +108,11 @@
         </div> -->
     </div>
     <!-- 直接点击submit可以发送ID至后台，select2控件已经封装好了 -->
-    <button class="btn btn-primary" type="submit" >发送</button>
+    <button class="btn btn-primary" type="submit">发送</button>
     <button class="btn btn-danger" type="reset">重置</button>
-    <button class="btn btn-warning" type="submit" >存为草稿</button>
+    <button class="btn btn-warning" type="submit">存为草稿</button>
 
 </form>
-
-<!-- The Modal -->
-<div class="modal" id="myModal">
-    <div class="modal-dialog modal-sm">
-        <div class="modal-content">
-
-            <!-- Modal Header -->
-            <div class="modal-header">
-                <h4 class="modal-title">您已成功发送邮件！</h4>
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-            </div>
-
-            <!-- Modal footer -->
-            <div class="modal-footer">
-                <a href="#/group-buy" class="btn btn-secondary btn-embossed enable-btn" data-dismiss="modal" onclick="javascript:window.location='{% url 'myCSSAhub:notifications_list'%}'">关闭</a>
-            </div>
-
-        </div>
-    </div>
-</div>
 
 {% endblock%}
 
