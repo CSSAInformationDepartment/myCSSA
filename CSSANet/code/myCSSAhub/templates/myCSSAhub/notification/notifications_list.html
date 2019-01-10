@@ -32,8 +32,9 @@
             <div class="row">
                 <div class="col-2">
                     <div class="list-group" id="list-tab" role="tablist">
-                        <a class="list-group-item list-group-item-action active show" id="list-system-notification-list" data-toggle="tab" href="#list-system-notification"
-                            role="tab" aria-controls="list-system-notification" aria-selected="false">系统通知</a>
+                        <a class="list-group-item list-group-item-action active show" id="list-system-notification-list"
+                            data-toggle="tab" href="#list-system-notification" role="tab" aria-controls="list-system-notification"
+                            aria-selected="false">系统通知</a>
 
                         <a class="list-group-item list-group-item-action" id="list-message-list" data-toggle="tab" href="#list-message"
                             role="tab" aria-controls="list-message" aria-selected="false">站内私信</a>
@@ -53,7 +54,7 @@
                                 <div class="col-md-6">
                                     <p> 您目前有{{infos|length}}条站内信</p>
                                 </div>
-                                {% if user.is_staff  %}
+                                {% if user.is_staff %}
                                 <div class="col-md-6">
                                     <div class="btn-group float-right" role="group">
                                         <a class="btn btn-pill btn-block btn-primary" role="button" href="{% url 'myCSSAhub:notifications_form' %}">发送消息</a>
@@ -63,18 +64,31 @@
                             </div>
                             <div class="row">
                                 <div class="col-md-12 col-lg-12 col-xl-12">
-                                <section class="content inbox">
-                                    <div class="container-fluid">
-                                        <div class="row clearfix">
-                                            <div class="col-md-12 col-lg-12 col-xl-12">
-                                                <ul class="mail_list list-group list-unstyled">
-                                                    {% for info in infos %}
-                                                    <a href="/hub/notification/notifications_display/{{info.id}}" class="m-r-10 noti_link">
-                                                        <li class="list-group-item">
-                                                            <div class="media">
-                                                                <div class="media-body">
-                                                                    {% if info.status is 0 %}
-                                                                    <b>
+                                    <section class="content inbox">
+                                        <div class="container-fluid">
+                                            <div class="row clearfix">
+                                                <div class="col-md-12 col-lg-12 col-xl-12">
+                                                    <ul class="mail_list list-group list-unstyled">
+                                                        {% for info in infos %}
+                                                        <a href="/hub/notification/notifications_display/{{info.id}}"
+                                                            class="m-r-10 noti_link">
+                                                            <li class="list-group-item">
+                                                                <div class="media">
+                                                                    <div class="media-body">
+                                                                        {% if info.status is 0 %}
+                                                                        <b>
+                                                                            <div class="media-heading">
+                                                                                {{info.title}}
+                                                                                <!-- <span class="badge bg-blue">Family</span> -->
+                                                                                <div class="float-right text-muted">
+                                                                                    <div>{{info.add_date|date:"y/m/d H:i"}}
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <p class="msg" style="width: 300px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">{{info.content}}
+                                                                            </p>
+                                                                        </b>
+                                                                        {% else %}
                                                                         <div class="media-heading">
                                                                             {{info.title}}
                                                                             <!-- <span class="badge bg-blue">Family</span> -->
@@ -84,78 +98,124 @@
                                                                         </div>
                                                                         <p class="msg" style="width: 300px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">{{info.content}}
                                                                         </p>
-                                                                    </b>
-                                                                    {% else %}
-                                                                    <div class="media-heading">
-                                                                        {{info.title}}
-                                                                        <!-- <span class="badge bg-blue">Family</span> -->
-                                                                        <div class="float-right text-muted">
-                                                                            <div>{{info.add_date|date:"y/m/d H:i"}}</div>
-                                                                        </div>
+                                                                        {% endif %}
                                                                     </div>
-                                                                    <p class="msg" style="width: 300px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">{{info.content}}
-                                                                    </p>
-                                                                    {% endif %}
                                                                 </div>
-                                                            </div>
-                                                        </li>
-                                                    </a>
-                                                    {% endfor %}
-                                                </ul>
+                                                            </li>
+                                                        </a>
+                                                        {% endfor %}
+                                                    </ul>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </section>
+                                    </section>
 
-                                {% if is_paginated %}
-                                <ul class="pagination">
-                                    {% if page_obj.has_previous %}
-                                    <li><a href="?page={{ page_obj.previous_page_number }}">&laquo;</a></li>
-                                    {% else %}
-                                    <li class="disabled"><span>&laquo;</span></li>
+                                    {% if is_paginated %}
+                                    <ul class="pagination">
+                                        {% if page_obj.has_previous %}
+                                        <li><a href="?page={{ page_obj.previous_page_number }}">&laquo;</a></li>
+                                        {% else %}
+                                        <li class="disabled"><span>&laquo;</span></li>
+                                        {% endif %}
+                                        {% for i in paginator.page_range %}
+                                        {% if page_obj.number == i %}
+                                        <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+                                        {% else %}
+                                        <li><a href="?page={{ i }}">{{ i }}</a></li>
+                                        {% endif %}
+                                        {% endfor %}
+                                        {% if page_obj.has_next %}
+                                        <li><a href="?page={{ page_obj.next_page_number }}">&raquo;</a></li>
+                                        {% else %}
+                                        <li class="disabled"><span>&raquo;</span></li>
+                                        {% endif %}
+                                    </ul>
                                     {% endif %}
-                                    {% for i in paginator.page_range %}
-                                    {% if page_obj.number == i %}
-                                    <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
-                                    {% else %}
-                                    <li><a href="?page={{ i }}">{{ i }}</a></li>
-                                    {% endif %}
-                                    {% endfor %}
-                                    {% if page_obj.has_next %}
-                                    <li><a href="?page={{ page_obj.next_page_number }}">&raquo;</a></li>
-                                    {% else %}
-                                    <li class="disabled"><span>&raquo;</span></li>
-                                    {% endif %}
-                                </ul>
-                                {% endif %}
-                            </div>
+                                </div>
                             </div>
                         </div>
                         <div class="tab-pane fade" id="list-dept-inbox" role="tabpanel" aria-labelledby="list-dept-inbox-list">
-                            <p> 该功能暂未开放，请等待后续通知</p>
-                            {% if user.is_staff  %}
+                            <div class="row">
                                 <div class="col-md-6">
-                                    <div class="btn-group" role="group">
-                                        <a class="btn btn-pill btn-block btn-info" role="button" href="{% url 'myCSSAhub:email' %}">发送邮件</a>
-                                    </div>
-                                    <!-- <div class="btn-group" role="group">
-                                        <a class="btn btn-pill btn-block btn-info" role="button" href="{% url 'myCSSAhub:email' %}">草稿箱</a>
-                                    </div> -->
+                                    <p> 您目前已发送{{email_infos|length}}封邮件</p>
                                 </div>
-                            {% endif %}
+                                {% if user.is_staff %}
+                                <div class="col-md-6">
+                                    <div class="btn-group float-right" role="group">
+                                        <a class="btn btn-pill btn-block btn-primary" role="button" href="{% url 'myCSSAhub:email' %}">发送邮件</a>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12 col-lg-12 col-xl-12">
+                                    <section class="content inbox">
+                                        <div class="container-fluid">
+                                            <div class="row clearfix">
+                                                <div class="col-md-12 col-lg-12 col-xl-12">
+                                                    <ul class="mail_list list-group list-unstyled">
+                                                        {% for email_info in email_infos %}
+                                                        <a href="/hub/email_history/{{email_info.id}}"
+                                                            class="m-r-10 noti_link">
+                                                            <li class="list-group-item">
+                                                                <div class="media">
+                                                                    <div class="media-body">
+                                                                        <div class="media-heading">
+                                                                            {{email_info.title}}
+                                                                            <!-- <span class="badge bg-blue">Family</span> -->
+                                                                            <div class="float-right text-muted">
+                                                                                <div>{{email_info.add_date|date:"y/m/d H:i"}}</div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <p class="msg" style="width: 300px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">{{email_info.content}}
+                                                                        </p>
+                                                         
+                                                                    </div>
+                                                                </div>
+                                                            </li>
+                                                        </a>
+                                                        {% endfor %}
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </section>
+
+                                    {% if is_paginated %}
+                                    <ul class="pagination">
+                                        {% if page_obj.has_previous %}
+                                        <li><a href="?page={{ page_obj.previous_page_number }}">&laquo;</a></li>
+                                        {% else %}
+                                        <li class="disabled"><span>&laquo;</span></li>
+                                        {% endif %}
+                                        {% for i in paginator.page_range %}
+                                        {% if page_obj.number == i %}
+                                        <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+                                        {% else %}
+                                        <li><a href="?page={{ i }}">{{ i }}</a></li>
+                                        {% endif %}
+                                        {% endfor %}
+                                        {% if page_obj.has_next %}
+                                        <li><a href="?page={{ page_obj.next_page_number }}">&raquo;</a></li>
+                                        {% else %}
+                                        <li class="disabled"><span>&raquo;</span></li>
+                                        {% endif %}
+                                    </ul>
+                                    {% endif %}
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
 
 
 
 
-<!-- </div>  -->
-<!-- </div> -->
+    <!-- </div>  -->
+    <!-- </div> -->
 
-{% endblock%}
+    {% endblock%}

@@ -6,3 +6,4 @@ from myCSSAhub import models
 admin.site.register(models.Notification_DB)
 admin.site.register(models.AccountMigration)
 admin.site.register(models.EmailConfiguration)
+admin.site.register(models.EmailDB)

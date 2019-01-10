@@ -1,3 +1,4 @@
+from .send_email import send_emails, queryEmailContent, queryEmailContent, queryEmailList
 from django.shortcuts import get_object_or_404
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .notification import insertDB, queryMessagesList, queryMessageContent
@@ -46,7 +47,6 @@ def message(request):
     return render(request, 'myCSSAhub/message.html')
 
 
-
 ###### 站内信 -- Start ##########
 
 # 获取站内信列表
@@ -64,14 +64,13 @@ class NotificationsList(LoginRequiredMixin, View):
             # 将查询到的内容发送到前端
             infos = queryMessagesList(currentUserID)
 
-            tmp = render(request, self.template_name, locals())
-
+            email_infos = queryEmailList(currentUserID)
             # 设置当前页面没有缓存
             # tmp.setdefault('Cache-Control', 'no-store')
             # tmp.setdefault('Expires', 0)
             # tmp.setdefault('Pragma', 'no-cache')
 
-            return tmp
+            return render(request, self.template_name, locals())
 
     def post(self, request):
         # if request.user.is_authenticated:
@@ -126,39 +125,68 @@ class NotificationForm(LoginRequiredMixin, View):
             if flag == False:
                 print(message)
 
-            return render(request, self.template_name, {'back_end_flag':flag})
+            return render(request, self.template_name, {'back_end_flag': flag})
 
 
 ################################# Email ########################################
 
-from .send_email import send_emails
 
 class Email(LoginRequiredMixin, View):
     login_url = '/hub/login/'
     template_name = 'myCSSAhub/email.html'
 
-
     def get(self, request):
         return render(request, self.template_name)
 
     def post(self, request):
-
+        flag = False
         if request.user.is_authenticated:
-            targetUserId = request.POST.getlist('recID')             
+            targetUserId = request.POST.getlist('recID')
             title = request.POST['title']
             content = request.POST['content']
+            # 当前用户id
+            currentID = request.user.id
 
             print("title", title)
             print("targetUserId", targetUserId)
             print("content", content)
-            
+
+            if targetUserId is not None:
+                flag = True
+
             # if targetUserId is not None:
 
-            #     # send_emails(title, content, targetUserId)
+            #   flag = send_emails(title, content, targetUserId, currentID)
             # else:
-            #     raise Exception 
+            #     raise Exception
 
-        return render(request, self.template_name)
+        return render(request, self.template_name, {'back_end_flag': flag})
+
+class EmailHistory(LoginRequiredMixin, View):
+    login_url = '/hub/login/'
+    template_name = 'myCSSAhub/email_history.html'       
+    
+    def get(self, request, *args, **kwargs):
+
+        contentId = self.kwargs.get('id')
+        # print("usersfsdf", userId)
+         #    将需要的id传入数据库已得到内容
+        content, sender, receiver = queryEmailContent(contentId) 
+
+        return render(request, self.template_name, locals())
+
+    def post(self, request):
+        
+        # if request.user.is_authenticated:
+        #     # 获取当前用户id
+        #     currentUserID = request.user.id
+
+        #     print("currentId")
+
+        #     infos = queryEmailContent(currentUserID)
+
+        return render(request, self.template_name, locals())
+
 
 ###### logout page ##########
 

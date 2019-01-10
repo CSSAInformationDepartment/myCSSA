@@ -1,0 +1,27 @@
+{% extends 'myCSSAhub/component/_layout.html' %}
+{% block pageTitle %}
+邮件历史信息
+{% endblock %}
+{% block pageContent %}
+
+<h3 id="title">{{content.title}}</h3>
+<hr>
+{% if sender.firstNameEN is not None %}
+<p>发件人：{{sender.firstNameEN}} {{sender.lastNameEN}}</p>
+{% else %}
+<p>发件人：{{sender.firstNameCN}} {{sender.lastNameCN}}</p>
+{% endif %}
+<div class="row">
+    {% if receiver.firstNameEN is not None %}
+    <div class="col-auto mr-auto">收件人：{{receiver.firstNameEN}} {{receiver.lastNameEN}}</div>
+    {% else %}
+    <div class="col-auto mr-auto">收件人：{{receiver.firstNameCN}} {{receiver.lastNameCN}}</div>
+    {% endif %}
+    <div class="col-auto">{{ content.add_date|date:"Y-m-d H:i:s" }}</div>
+</div>
+<hr>
+<div class="alert alert-dark">
+    <p>{{content.content}}</p>
+</div>
+
+{% endblock%}
