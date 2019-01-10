@@ -12,7 +12,7 @@ class Blog (models.Model):
     blogTitle = models.CharField(max_length = 100)
 
     blogMainContent = models.TextField(default=None)
-    createDate = models.DateTimeField(auto_now_add=True)
+    createDate = models.DateTimeField()
     lastModifiedDate = models.DateTimeField(auto_now=True)
     blogReviewed = models.BooleanField(default=False)
 
@@ -48,4 +48,5 @@ class BlogImage (models.Model):
 
     # 目前先存base64 在上传之后检查是否有重复
     # 改成imageField?
-    imageFileB64 = models.TextField()
+    imageFileB64 = models.ImageField(upload_to='blog/blogpics', height_field=None, width_field=None, 
+        blank=True, null=True)

@@ -53,12 +53,12 @@ def Blogs(request, page):
     pass
 
 def BlogContents(request, blogId):
-    # 需要判断contentId
+    # 需要判断blogId
     # avatar没有的时候会报错！
     ViewBag = {}
     blogs = BlogModels.Blog.objects.filter()
     blogSingle = blogs[0]
-    if not blogSingle.openToPublic:
+    if not blogSingle.blogReviewed:
         return page_not_found(request)
     ViewBag["blog"] = blogSingle
     users= BlogModels.BlogWrittenBy.objects.filter(blogId=blogSingle)
@@ -71,13 +71,37 @@ def BlogContents(request, blogId):
     print(ViewBag)
     return render(request, 'PublicSite/blogs.html', ViewBag)
 
-def editBlog(request, contentId):
+def editBlog(request):
     # 需要判断contentId
     # avatar没有的时候会报错
+
+    NEW_BLOG = -1
+    blogId = request.GET["blogId"]
+    try:
+        blogId = int(blogId)
+    except:
+        return page_not_found(request)
+
     ViewBag = {}
-    blog = BlogModels.Blog.objects.filter()
-    blogContentSingle = blogContent[0]
-    return
+    blogContentSingle = -1
+    blogTitle = ""
+    blogMainContent = ""
+
+    if blogId != NEW_BLOG:
+        blog = BlogModels.Blog.objects.filter()
+        blogContentSingle = blog[0]
+        blogTitle = blogContentSingle.blogTitle
+        blogMainContent = blogContentSingle.blogMainContent
+    else:
+        pass
+
+    ViewBag["blogId"] = blogId
+    ViewBag["blogTitle"] = blogTitle
+    ViewBag["blogMainContent"] = blogMainContent
+
+
+    
+    return render(request, 'PublicSite/blogeditpage.html', ViewBag)
 
 
 #@cache_page(CACHE_TTL)

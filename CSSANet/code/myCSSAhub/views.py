@@ -18,14 +18,22 @@ from django.http import JsonResponse, HttpResponseRedirect, HttpResponse, Http40
 from django.contrib.auth.decorators import login_required
 from .models import Notification_DB, AccountMigration
 from UserAuthAPI import models as UserModels
+from BlogAPI import models as BlogModels
 from UserAuthAPI.forms import BasicSiginInForm, UserInfoForm, MigrationForm, UserAcademicForm, UserProfileUpdateForm
 from LegacyDataAPI import models as LegacyDataModels
 
 from CSSANet.settings import MEDIA_ROOT, MEDIA_URL
 from Library.Mixins import AjaxableResponseMixin
 import json
+import base64
+import io
+import hashlib
 
-import json
+from urllib import parse
+
+from django.core.files import File
+
+import datetime
 
 # Create your views here.
 
@@ -447,6 +455,47 @@ class saveBlog (LoginRequiredMixin, PermissionRequiredMixin, View):
     permission_required = ("BlogAPI.can_add_blog_content", "BlogAPI.can_change_blog_content", "BlogAPI.can_delete_blog_content", 
     "BlogAPI.can_add_blog_description", "BlogAPI.can_change_blog_description", "BlogAPI.can_delete_blog_description")
 
+    def storeToBlogOldContent(self, oldBlog):
+        # MAX_HIST = 3
+        # oldBlogs = BlogModels.BlogOldContent.objects.filter(blogId = oldBlog).order_by("")
+        # oldBlogs = 
+        # if len(oldBlogs) > MAX_HIST:
+
+        pass
+
+    def getContent(self, blogMainContent):
+        print(parse.unquote(blogMainContent))
+        dicContent = json.loads(blogMainContent.replace("(ffffhhhhccccc)", ";"))
+        for content in range(len(dicContent["ops"])):
+            print(dicContent["ops"][content])
+            if type(dicContent["ops"][content]["insert"]) == dict:
+                if ("image" in dicContent["ops"][content]["insert"]):
+                    imB64 = dicContent["ops"][content]["insert"]["image"]
+                    imB64 = imB64.split(",")[1]
+                    imB64bs = base64.b64decode(imB64)
+                    imB64Bytes = io.BytesIO(imB64bs)
+                    hashmm = hashlib.md5()
+                    hashmm.update(imB64bs)
+                    hashedImage = hashmm.hexdigest()
+
+                    extEndsIn = dicContent["ops"][content]["insert"]["image"].index(";")
+                    ext = dicContent["ops"][content]["insert"]["image"][10: extEndsIn]
+
+                    storedImage = BlogModels.BlogImage.objects.filter(hashValue=hashedImage)
+                    if storedImage:
+                        print("found duplicated picture")
+                        dicContent["ops"][content]["insert"]["image"] = storedImage[0].imageFileB64.url
+                    else:
+                        newImage = BlogModels.BlogImage(
+                            hashValue=hashedImage,
+                        )
+                        newImage.save()
+                        newImage.imageFileB64.save(str(newImage.imageId) + "." + ext, imB64bs)
+                        newImage.save()
+                        dicContent["ops"][content]["insert"]["image"] = newImage.imageFileB64.url
+        return json.dumps(dicContent)
+
+
     def get(self, request, *args, **kwargs):
         data = {
             'status': '400', 'reason': 'Bad Requests!'
@@ -459,11 +508,101 @@ class saveBlog (LoginRequiredMixin, PermissionRequiredMixin, View):
 
         # post: blogId contentid blogtitle blogopentopublic
 
-        NEW_CONTENT = -1
         NEW_BLOG = -1
-        blogId = request.POST["blogId"]
+        try:
+            blogId = int(request.POST["blogId"])
+        except:
+            return JsonResponse({
+                    'success': False,
+                    'status': '400',
+                    'message': "wrong blog id"
+                })
+
+        print(blogId)
         blog = -1
-        pass
+
+        userAuthed = request.user.is_authenticated
+
+        if blogId != NEW_BLOG:
+            blogWrittenBys = BlogModels.BlogWrittenBy.objects.filter(blogId=blogId)
+            wrote = False
+            if blogWrittenBys:
+                for blogWrittenBy in blogWrittenBys:
+                    if userAuthed and blogWrittenBy.userId == request.user:
+                        wrote = True
+                
+                # user没有写blog
+                if wrote == False:
+                    return JsonResponse({
+                        'success': False,
+                        'status': '400',
+                        'message': 'user is not the author'
+                    })
+                
+                blog = BlogModels.Blog.objects.get(blogId=blogId)
+                storeToBlogOldContent(blog)
+                blogMainContent = getContent(request.POST["blogMainContent"])
+                blog = BlogModels.Blog(
+                    blogId=blogId,
+                    blogTitle=request.POST["blogTitle"],
+                    createDate=blog.createDate,
+                    lastModifiedDate=datetime.datetime.now(),
+                    blogReviewed = blog.blogReviewed,
+                    blogReads = blog.blogReads,
+                    blogMainContent = blogMainContent
+                )
+                blog.save()
+
+                print(blogId)
+
+                return JsonResponse({
+                        'success': True,
+                        'status': '200',
+                        'message': 'modified'
+                    })
+
+
+            else:
+                # blogId有问题
+                return JsonResponse({
+                    'success': False,
+                    'status': '400',
+                    'message': "wrong blog id"
+                })
+        
+        else:
+            if userAuthed:
+
+                blogMainContent = self.getContent(request.POST["blogMainContent"])
+                blog = BlogModels.Blog(
+                    blogTitle=request.POST["blogTitle"],
+                    lastModifiedDate=datetime.datetime.now(),
+                    createDate=datetime.datetime.now(),
+                    blogReviewed = False,
+                    blogReads = 0,
+                    blogMainContent = blogMainContent
+                )
+                blog.save()
+
+                blogWrittenBy = BlogModels.BlogWrittenBy(
+                    blogId = blog,
+                    userId = request.user
+                )
+                blogWrittenBy.save()
+
+                return JsonResponse({
+                        'success': True,
+                        'status': '200',
+                        'message': 'created'
+                    })
+            else:
+                # 游客禁止发blog
+                return JsonResponse({
+                    'success': False,
+                    'status': '400',
+                    'message': 'visitor is not permitted to create'
+                })
+        
 
 
 ################################# errors pages ########################################
