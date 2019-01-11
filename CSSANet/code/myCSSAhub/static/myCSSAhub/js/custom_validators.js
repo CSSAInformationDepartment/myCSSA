@@ -23,7 +23,7 @@ Parsley.addMessages('zh-cn', {
     check:          "请选择 %s 到 %s 个选项",
     equalto:        "您两次输入的密码不相符"
   });
-  
+
   Parsley.setLocale('zh-cn');
 
 
@@ -48,12 +48,12 @@ window.Parsley.addValidator("telNumberCheck", {
         if (value.length == 14 && $.isNumeric(value)) {
           validate_flag = true
         }
-      } 
+      }
       return validate_flag
     },
     messages: {
       'en': "Please provide a valid mobile phone number",
-      'zh-cn': "请提供有效的中国（+861开头）或澳洲（04开头）的移动电话号码"
+      'zh-cn': "请提供有效的中国（+86开头）或澳洲（04开头）的移动电话号码"
     }
   });
 
