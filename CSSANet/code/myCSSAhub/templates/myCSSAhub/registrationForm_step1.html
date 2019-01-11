@@ -156,9 +156,9 @@
                   data-parsley-group="step2"
                 >
                   <option value=""> --- Please Choose --- </option>
-                  <option value="Female"> Female </option>
-                  <option value="Male"> Male </option>
-                  <option value="Other"> Other </option>
+                  <option value="Female"> Female/女 </option>
+                  <option value="Male"> Male / 男 </option>
+                  <option value="Other"> Other / 其他</option>
                 </select>
               </div>
             </div>
@@ -215,10 +215,19 @@
               </label>
               <div class="controls  col-md-12 ">
                 <div
-                  class="input-group date"
+                  class="controls  col-md-12 input-group date"
                   id="datetimepicker1"
                   data-target-input="nearest"
                 >
+                <div
+                  class="input-group-append"
+                  data-target="#datetimepicker1"
+                  data-toggle="datetimepicker"
+                >
+                  <div class="input-group-text">
+                    <i class="fa fa-calendar"></i>
+                  </div>
+                </div>
                   <input
                     required
                     class="input-md textinput textInput form-control datetimepicker-input"
@@ -228,15 +237,6 @@
                     data-target="#datetimepicker1"
                     data-parsley-group="step2"
                   />
-                  <div
-                    class="input-group-append"
-                    data-target="#datetimepicker1"
-                    data-toggle="datetimepicker"
-                  >
-                    <div class="input-group-text">
-                      <i class="fa fa-calendar"></i>
-                    </div>
-                  </div>
                 </div>
               </div>
             </div>
@@ -252,7 +252,7 @@
                   class="form-control input-medium bfh-countries"
                   id="id_originate"
                   name="originate"
-                  placeholder="请填写你来自的省市"
+                  placeholder="请输入你来自的省市"
                   data-parsley-group="step2"
                 />
               </div>
