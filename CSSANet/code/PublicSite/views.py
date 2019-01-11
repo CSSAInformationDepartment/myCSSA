@@ -56,9 +56,13 @@ def BlogContents(request, blogId):
     # 需要判断blogId
     # avatar没有的时候会报错！
     ViewBag = {}
-    blogs = BlogModels.Blog.objects.filter()
+    blogs = BlogModels.Blog.objects.filter(blogId=blogId)
+    if not blogs:
+        return page_not_found(request)
     blogSingle = blogs[0]
-    if not blogSingle.blogReviewed:
+    blogOpen = blogSingle.blogOpen
+    print(blogSingle.blogOpen)
+    if not blogSingle.blogReviewed or not blogOpen:
         return page_not_found(request)
     ViewBag["blog"] = blogSingle
     users= BlogModels.BlogWrittenBy.objects.filter(blogId=blogSingle)
@@ -76,11 +80,17 @@ def editBlog(request):
     # avatar没有的时候会报错
 
     NEW_BLOG = -1
+
+    CR_BLOG = "创建Blog"
+    CH_BLOG = "更改Blog"
     blogId = request.GET["blogId"]
     try:
         blogId = int(blogId)
     except:
         return page_not_found(request)
+
+
+    print(blogId)
 
     ViewBag = {}
     blogContentSingle = -1
@@ -88,11 +98,15 @@ def editBlog(request):
     blogMainContent = ""
 
     if blogId != NEW_BLOG:
-        blog = BlogModels.Blog.objects.filter()
+        blog = BlogModels.Blog.objects.filter(blogId=blogId)
+        if not blog:
+            return page_not_found(request)
         blogContentSingle = blog[0]
         blogTitle = blogContentSingle.blogTitle
         blogMainContent = blogContentSingle.blogMainContent
+        ViewBag["toolTitle"] = CH_BLOG
     else:
+        ViewBag["toolTitle"] = CR_BLOG
         pass
 
     ViewBag["blogId"] = blogId

@@ -464,35 +464,39 @@ class saveBlog (LoginRequiredMixin, PermissionRequiredMixin, View):
         pass
 
     def getContent(self, blogMainContent):
-        print(parse.unquote(blogMainContent))
-        dicContent = json.loads(blogMainContent.replace("(ffffhhhhccccc)", ";"))
+        dicContent = json.loads(blogMainContent.replace("(ffffhhhhccccc)", ";").replace(" ", "+"))
+
         for content in range(len(dicContent["ops"])):
             print(dicContent["ops"][content])
             if type(dicContent["ops"][content]["insert"]) == dict:
                 if ("image" in dicContent["ops"][content]["insert"]):
-                    imB64 = dicContent["ops"][content]["insert"]["image"]
-                    imB64 = imB64.split(",")[1]
-                    imB64bs = base64.b64decode(imB64)
-                    imB64Bytes = io.BytesIO(imB64bs)
-                    hashmm = hashlib.md5()
-                    hashmm.update(imB64bs)
-                    hashedImage = hashmm.hexdigest()
+                    try:
+                        imB64 = dicContent["ops"][content]["insert"]["image"]
+                        imB64 = imB64.split(",")[1]
+                        print(len(imB64))
+                        imB64bs = base64.b64decode(imB64)
+                        imB64Bytes = io.BytesIO(imB64bs)
+                        hashmm = hashlib.md5()
+                        hashmm.update(imB64bs)
+                        hashedImage = hashmm.hexdigest()
 
-                    extEndsIn = dicContent["ops"][content]["insert"]["image"].index(";")
-                    ext = dicContent["ops"][content]["insert"]["image"][10: extEndsIn]
+                        extEndsIn = dicContent["ops"][content]["insert"]["image"].index(";")
+                        ext = dicContent["ops"][content]["insert"]["image"][11: extEndsIn]
 
-                    storedImage = BlogModels.BlogImage.objects.filter(hashValue=hashedImage)
-                    if storedImage:
-                        print("found duplicated picture")
-                        dicContent["ops"][content]["insert"]["image"] = storedImage[0].imageFileB64.url
-                    else:
-                        newImage = BlogModels.BlogImage(
-                            hashValue=hashedImage,
-                        )
-                        newImage.save()
-                        newImage.imageFileB64.save(str(newImage.imageId) + "." + ext, imB64bs)
-                        newImage.save()
-                        dicContent["ops"][content]["insert"]["image"] = newImage.imageFileB64.url
+                        storedImage = BlogModels.BlogImage.objects.filter(hashValue=hashedImage)
+                        if storedImage:
+                            print("found duplicated picture")
+                            dicContent["ops"][content]["insert"]["image"] = storedImage[0].imageFileB64.url
+                        else:
+                            newImage = BlogModels.BlogImage(
+                                hashValue=hashedImage,
+                            )
+                            newImage.save()
+                            newImage.imageFileB64.save(str(newImage.imageId) + "." + ext, imB64Bytes)
+                            newImage.save()
+                            dicContent["ops"][content]["insert"]["image"] = newImage.imageFileB64.url
+                    except IndexError:
+                        pass
         return json.dumps(dicContent)
 
 
@@ -540,8 +544,18 @@ class saveBlog (LoginRequiredMixin, PermissionRequiredMixin, View):
                     })
                 
                 blog = BlogModels.Blog.objects.get(blogId=blogId)
-                storeToBlogOldContent(blog)
-                blogMainContent = getContent(request.POST["blogMainContent"])
+                self.storeToBlogOldContent(blog)
+                blogMainContent = self.getContent(request.POST["blogMainContent"])
+                blogOpen = request.POST["openOrNot"]
+                try:
+                    blogOpen = {"true": True, "false": False}[blogOpen]
+                    print(blogOpen)
+                except:
+                    return JsonResponse({
+                        'success': False,
+                        'status': '400',
+                        'message': "wrong openOrNot"
+                    })
                 blog = BlogModels.Blog(
                     blogId=blogId,
                     blogTitle=request.POST["blogTitle"],
@@ -549,7 +563,8 @@ class saveBlog (LoginRequiredMixin, PermissionRequiredMixin, View):
                     lastModifiedDate=datetime.datetime.now(),
                     blogReviewed = blog.blogReviewed,
                     blogReads = blog.blogReads,
-                    blogMainContent = blogMainContent
+                    blogMainContent = blogMainContent,
+                    blogOpen = blogOpen
                 )
                 blog.save()
 
@@ -573,14 +588,27 @@ class saveBlog (LoginRequiredMixin, PermissionRequiredMixin, View):
         else:
             if userAuthed:
 
+                print(request.POST["blogMainContent"])
                 blogMainContent = self.getContent(request.POST["blogMainContent"])
+                blogOpen = request.POST["openOrNot"]
+                try:
+                    blogOpen = {"true": True, "false": False}[blogOpen]
+                    print(blogOpen)
+                except:
+                    return JsonResponse({
+                        'success': False,
+                        'status': '400',
+                        'message': "wrong openOrNot"
+                    })
+                print(type(blogOpen) == bool)
                 blog = BlogModels.Blog(
                     blogTitle=request.POST["blogTitle"],
                     lastModifiedDate=datetime.datetime.now(),
                     createDate=datetime.datetime.now(),
-                    blogReviewed = False,
+                    blogReviewed = True,
                     blogReads = 0,
-                    blogMainContent = blogMainContent
+                    blogMainContent = blogMainContent,
+                    blogOpen = blogOpen
                 )
                 blog.save()
 

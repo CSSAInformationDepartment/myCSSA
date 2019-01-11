@@ -16,6 +16,8 @@ class Blog (models.Model):
     lastModifiedDate = models.DateTimeField(auto_now=True)
     blogReviewed = models.BooleanField(default=False)
 
+    blogOpen = models.BooleanField(default=True)
+
     # 阅读量
     blogReads = models.IntegerField(default=0)
 
