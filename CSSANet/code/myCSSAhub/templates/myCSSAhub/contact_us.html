@@ -1,0 +1,39 @@
+{% extends 'components/base_page.html' %}
+
+{% block 'pg_body' %}
+{% load static %}
+
+<div class="bloc none l-bloc" id="bloc-1">
+  <div class="container bloc-fill-screen">
+    <div class="row justify-content-md-center">
+      <div class="jumbotron jumbotron-fluid col-md-12" style="width:100%">
+        <div class="container-fluid">
+        <h1 class="display-3 text-center">联系我们<br>Contact Us</h1>
+        </div>
+        </div>
+
+        <div class="row w-100" style="margin-top:10px">
+          <h2 class="text-center col-md-12">扫二维码添加小助手<br><br><p>如有任何问题，或者想加入我们的新生群/租房二手群等，<br>欢迎添加CSSA小助手微信（请备注“你的专业+名字”）</p>
+            <br>
+          <img src="{% static '/myCSSAhub/img/qr_xiaozhushou.jpeg' %}" class="img-thumbnail img-fluid rounded mx-auto d-block" style="width:250px;height:300px"/><br><hr/></h2>
+          </div>
+          <div class="row w-100" style="margin-top:10px">
+            <h2 class="text-center col-md-12" >关注我们的公众号<br><br><p>墨尔本大学中国学生会<br>cssaum</p><br>
+              <img src="{% static '/myCSSAhub/img/qr_gongzhonghao.jpg' %}" class="img-thumbnail img-fluid rounded mx-auto d-block" style="width:200px;height:200px"/><br><hr/></h2>
+            </div>
+
+            <div class="row" style="margin-top:10px">
+              <h2 class="text-center col-md-12">联系部门邮箱<br><small>合作和联系推荐优先联系外联部哟~</small>
+                <hr/>
+              <p>会长：president@cssaunimelb.com <br>外联部：pr@cssaunimelb.com <br>组织部：activity@cssaunimelb.com <br>宣传部：publicity@cssaunimelb.com <br>信息部：information@cssaunimelb.com <br>HR部：hr@cssaunimelb.com
+              </p>
+              </h2>
+              </div>
+
+
+
+        </div>
+        </div>
+        </div>
+
+{% endblock 'pg_body' %}
