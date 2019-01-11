@@ -79,10 +79,14 @@ def editBlog(request, contentId):
     blogContentSingle = blogContent[0]
     return
 
-
 #@cache_page(CACHE_TTL)
 #def Events(requests):
 #    return
+
+################################# sponsor pages ########################################
+def Sponsor(request):
+
+    return render(request,'PublicSite/sponsor.html')
 
 ################################# errors pages ########################################
 from django.shortcuts import render
