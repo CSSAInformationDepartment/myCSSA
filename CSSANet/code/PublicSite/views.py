@@ -87,7 +87,7 @@ def editBlog(request):
     try:
         blogId = int(blogId)
     except:
-        return page_not_found(request)
+        return bad_request(request)
 
 
     print(blogId)
@@ -96,11 +96,23 @@ def editBlog(request):
     blogContentSingle = -1
     blogTitle = ""
     blogMainContent = ""
+    userAuthed = request.user.is_authenticated
 
     if blogId != NEW_BLOG:
+        blogWrittenBys = BlogModels.BlogWrittenBy.objects.filter(blogId=blogId)
+        wrote = False
+        if blogWrittenBys:
+            for blogWrittenBy in blogWrittenBys:
+                if userAuthed and blogWrittenBy.userId == request.user:
+                    wrote = True
+                
+
+            # user没有写blog
+            if wrote == False:
+                return permission_denied(request)
         blog = BlogModels.Blog.objects.filter(blogId=blogId)
         if not blog:
-            return page_not_found(request)
+            return bad_request(request)
         blogContentSingle = blog[0]
         blogTitle = blogContentSingle.blogTitle
         blogMainContent = blogContentSingle.blogMainContent

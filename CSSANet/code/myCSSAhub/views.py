@@ -497,7 +497,8 @@ class saveBlog (LoginRequiredMixin, PermissionRequiredMixin, View):
                             dicContent["ops"][content]["insert"]["image"] = newImage.imageFileB64.url
                     except IndexError:
                         pass
-        return json.dumps(dicContent)
+        print(json.dumps(dicContent).replace("\\", "\\\\"))
+        return json.dumps(dicContent).replace("\\", "\\\\")
 
 
     def get(self, request, *args, **kwargs):
@@ -630,6 +631,73 @@ class saveBlog (LoginRequiredMixin, PermissionRequiredMixin, View):
                     'status': '400',
                     'message': 'visitor is not permitted to create'
                 })
+
+class deleteBlog(LoginRequiredMixin, PermissionRequiredMixin, View):
+    login_url = "/hub/login/"
+    permission_required = ("BlogAPI.can_add_blog_content", "BlogAPI.can_change_blog_content", "BlogAPI.can_delete_blog_content", 
+    "BlogAPI.can_add_blog_description", "BlogAPI.can_change_blog_description", "BlogAPI.can_delete_blog_description")
+
+    def get(self, request, *args, **kwargs):
+        data = {
+            'status': '400', 'reason': 'Bad Requests!'
+        }
+        return data
+
+    def post(self, request, *args, **kwargs):
+        # 检查是否是新content
+        # 如果不是新content 检查是否 user对
+
+        # post: blogId contentid blogtitle blogopentopublic
+
+        try:
+            blogId = int(request.POST["blogId"])
+        except:
+            return JsonResponse({
+                    'success': False,
+                    'status': '400',
+                    'message': "wrong blog id"
+                })
+
+        print(blogId)
+        blog = -1
+
+        userAuthed = request.user.is_authenticated
+
+        blogWrittenBys = BlogModels.BlogWrittenBy.objects.filter(blogId=blogId)
+        wrote = False
+        if blogWrittenBys:
+            for blogWrittenBy in blogWrittenBys:
+                if userAuthed and blogWrittenBy.userId == request.user:
+                    wrote = True
+                
+            # user没有写blog
+            if wrote == False:
+                return JsonResponse({
+                    'success': False,
+                    'status': '400',
+                    'message': 'user is not the author'
+                })
+                
+            blog = BlogModels.Blog.objects.get(blogId=blogId)
+            blog.delete()
+
+            return JsonResponse({
+                    'success': True,
+                    'status': '200',
+                    'message': 'deleted'
+                })
+
+
+        else:
+                # blogId有问题
+            return JsonResponse({
+                'success': False,
+                'status': '400',
+                'message': "wrong blog id"
+            })
+    
+
+
         
 
 
