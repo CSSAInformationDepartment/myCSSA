@@ -1,0 +1,161 @@
+{% extends 'myCSSAhub/component/_layout.html' %}
+
+{% block pageTitle %}
+商家信息
+{% endblock %}
+
+{% block pageContent %}
+
+<form action="" method="post" id="form">
+    {% for error in form.non_field_errors %}
+        <div class="alert alert-danger">
+            <strong>{{ error|escape }}</strong>
+        </div>
+    {% endfor %}
+
+    {% if back_end_flag %}
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <strong>消息发送成功</strong>
+        <div id="countdown" style="float:right;">3s后自动跳转</div>
+        <button class="close" type="button" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">×</span>
+        </button>
+    </div>
+
+    <script type="text/javascript">
+
+        var count = 3;
+        //写一个方法，显示倒数秒数  数到0后跳转页面  
+        function countDown() {
+            //将count显示在div中
+            document.getElementById("countdown").innerHTML = count+'s后自动跳转';
+            //没执行一次，count减1
+            count -= 1;
+            //count=0时，跳转页面
+            if (count == 0) {
+                location.href = '{% url 'myCSSAhub:notifications_list'%}';
+                //window.location.href="index.html";
+            }
+            //每秒执行一次,showTime()
+            setTimeout("countDown()", 1000);
+        }
+        //执行countDown方法
+        countDown();
+        // setTimeout("window.location = '{% url 'myCSSAhub:notifications_list'%}'", 1000);
+    </script>
+    {% endif %}
+
+    {% csrf_token %}
+    <div class="form-group">
+        <label for="notification_user">商户名：</label>
+        <select class="form-control" id="userlookup" name="recID" style="width:100%" multiple="multiple" required></select>
+    </div>
+
+    <div class="form-group">
+        <label for="notification_title">地址：</label>
+        <input class="form-control" id="notification_title" name="title" type="text" required/>
+        <label for="notification_title">联系电话：</label>
+        <input class="form-control" id="notification_title" name="title" type="text" required/>
+        <label for="notification_title">商家网站：</label>
+        <input class="form-control" id="notification_title" name="title" type="text" required/>
+        <div class="form-group">
+            <label for="notification_content">商家简介：</label>
+            <textarea class="form-control" id="notification_content" name="content" rows="11" required></textarea>
+        </div>
+        <!-- <div class="form-group">
+            <label for="exampleFormControlFile1">选择附件</label>
+            <input type="file" class="form-control-file" id="exampleFormControlFile1">
+        </div> -->
+    </div>
+    <!-- 直接点击submit可以发送ID至后台，select2控件已经封装好了 -->
+    <button class="btn btn-primary" type="submit">发送</button>
+    <button class="btn btn-danger" type="reset">删除</button>
+
+</form>
+
+{% endblock%}
+
+
+{% block ExtraJS %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+
+<!-- <script> //注意！！！ 此部分代码含服务器端渲染标签，不可移入单独的.js文件
+    $("#userlookup").select2({
+        // tags: true,  
+        // tokenSeparators: [',', ' '],
+        ajax: {
+            // url: "https://api.github.com/search/repositories",
+            url: '{% url "myCSSAhub:ajax_userLookup" %}',
+            dataType: 'json',
+            method: 'POST',
+            data: function (params) {
+                return {
+                    search: params.term, // search term
+                    page: params.page
+                };
+            },
+            processResults: function (data, params) {
+                // parse the results into the format expected by Select2
+                // since we are using custom formatting functions we do not need to
+                // alter the remote JSON data, except to indicate that infinite
+                // scrolling can be used
+                params.page = params.page || 1;
+
+                // var select2Data = $.map(data.result.data, function (obj) {
+                //     obj.id = obj.user_id;
+                //     obj.text = obj.email;
+
+                //    return obj;
+                //});
+
+                return {
+                    results: data.result,
+                    // results: data.items,
+                    pagination: {
+                        more: (params.page * 30) < data.length
+                    }
+                };
+            }
+        },
+        escapeMarkup: function (markup) { return markup; }, // let our custom formatter work
+        minimumInputLength: 1,
+        templateResult: formatRepo,  
+        templateSelection: formatRepoSelection
+    });
+  
+    function formatRepo(repo) {
+        if (repo.loading) {
+            return repo.text;
+        }
+
+        var markup = "<span><div class='select2-result-repository__title'> ";
+        if (repo.avatar) { //有头像显示头像，没头像显示placeholder
+            markup += "<img src='" + repo.avatar + "'class='img-flag' hight='16px' width='16px' style='margin-right:20px' />"
+        } else {
+            markup += "<img src= '{% static '/myCSSAhub/img/avatar_placeholder.png'%}' class='img-flag' hight='16px' width='16px' style='margin-right:20px'/>"
+        }
+        if (repo.full_name_cn) {
+            markup += "中文名：" + repo.full_name_cn;
+        }
+        markup += "; 英文名: " + repo.full_name + "; 邮箱: " + repo.email ;
+        
+        markup += "</div></span>";
+
+        return markup;
+    }
+      
+    function formatRepoSelection(repo) {
+
+        // console.log(repo)
+        
+        return repo.email;
+      
+    }
+
+</script> -->
+
+
+
+
+
+{% endblock %}

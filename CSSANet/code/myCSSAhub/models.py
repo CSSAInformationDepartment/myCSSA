@@ -55,3 +55,11 @@ class EmailDB(models.Model):
     # 默认加入时间为写入数据库的时间
     add_date = models.DateTimeField(
         verbose_name="信息加入时间", default=timezone.now)
+
+class Merchants(models.Model):
+    id = models.AutoField(primary_key=True, editable=False) 
+    name =  models.CharField(verbose_name="商家名", max_length=256, null=True)
+    description =  models.CharField(verbose_name="商家介绍", max_length=256, null=True)
+    phone =  models.CharField(verbose_name="联系电话", max_length=256, null=True)
+    link =  models.CharField(verbose_name="商家网站", max_length=256, null=True)
+    logo =  models.CharField(verbose_name="商家图片", max_length=256, null=True)

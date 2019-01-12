@@ -24,6 +24,7 @@ urlpatterns = [
     path('email/',Views.Email.as_view(),name='email'),
     path('email_history/',Views.EmailHistory.as_view(),name='email_history'),
     path('reset-password/', Views.UpdatePasswordView.as_view(), name="update-password"),
+    path('merchants_list/', Views.Merchants_list.as_view(), name="merchants_list"),
 ]
 
 ## Admin system app directory

@@ -84,9 +84,9 @@ def editBlog(request, contentId):
 #    return
 
 ################################# sponsor pages ########################################
-def Sponsor(request):
+def Merchants(request):
 
-    return render(request,'PublicSite/sponsor.html')
+    return render(request,'PublicSite/merchant.html')
 
 ################################# errors pages ########################################
 from django.shortcuts import render
