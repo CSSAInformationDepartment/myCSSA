@@ -23,6 +23,9 @@ def index(request):
 def News(request):
     return render(request, 'PublicSite/News.html')
 
+def ContactUs(request):
+    return render(request, 'PublicSite/contact_us.html')
+
 #@cache_page(CACHE_TTL)
 def Departments(request,dept):
     ViewBag = {}
