@@ -62,4 +62,4 @@ class Merchants(models.Model):
     description =  models.CharField(verbose_name="商家介绍", max_length=256, null=True)
     phone =  models.CharField(verbose_name="联系电话", max_length=256, null=True)
     link =  models.CharField(verbose_name="商家网站", max_length=256, null=True)
-    logo =  models.CharField(verbose_name="商家图片", max_length=256, null=True)
+    logo =  models.ImageField(upload_to = 'static/img/merchants/', default = 'static/img/merchants/noneImg.jpg')

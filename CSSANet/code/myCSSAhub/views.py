@@ -195,7 +195,7 @@ class EmailHistory(LoginRequiredMixin, View):
 
         return render(request, self.template_name, locals())
 
-
+################################# merchants ########################################
 
 class Merchants_list(LoginRequiredMixin, View):
     login_url = '/hub/login/'
@@ -207,6 +207,19 @@ class Merchants_list(LoginRequiredMixin, View):
 
     def get(self, request):
         return render(request, self.template_name)
+
+
+class Merchant_profile(LoginRequiredMixin, View):
+    login_url = '/hub/login/'
+    template_name = 'myCSSAhub/merchant_profile.html'
+
+    def get(self, request):
+    
+        return render(request, self.template_name)
+
+    def get(self, request):
+        return render(request, self.template_name)
+       
 
 ###### logout page ##########
 
