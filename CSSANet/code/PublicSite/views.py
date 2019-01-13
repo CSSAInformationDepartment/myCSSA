@@ -53,12 +53,16 @@ def Blogs(request, page):
     pass
 
 def BlogContents(request, blogId):
-    # 需要判断contentId
+    # 需要判断blogId
     # avatar没有的时候会报错！
     ViewBag = {}
-    blogs = BlogModels.Blog.objects.filter()
+    blogs = BlogModels.Blog.objects.filter(blogId=blogId)
+    if not blogs:
+        return page_not_found(request)
     blogSingle = blogs[0]
-    if not blogSingle.openToPublic:
+    blogOpen = blogSingle.blogOpen
+    print(blogSingle.blogOpen)
+    if not blogSingle.blogReviewed or not blogOpen:
         return page_not_found(request)
     ViewBag["blog"] = blogSingle
     users= BlogModels.BlogWrittenBy.objects.filter(blogId=blogSingle)
@@ -71,13 +75,59 @@ def BlogContents(request, blogId):
     print(ViewBag)
     return render(request, 'PublicSite/blogs.html', ViewBag)
 
-def editBlog(request, contentId):
+def editBlog(request):
     # 需要判断contentId
     # avatar没有的时候会报错
+
+    NEW_BLOG = -1
+
+    CR_BLOG = "创建Blog"
+    CH_BLOG = "更改Blog"
+    blogId = request.GET["blogId"]
+    try:
+        blogId = int(blogId)
+    except:
+        return bad_request(request)
+
+
+    print(blogId)
+
     ViewBag = {}
-    blog = BlogModels.Blog.objects.filter()
-    blogContentSingle = blogContent[0]
-    return
+    blogContentSingle = -1
+    blogTitle = ""
+    blogMainContent = ""
+    userAuthed = request.user.is_authenticated
+
+    if blogId != NEW_BLOG:
+        blogWrittenBys = BlogModels.BlogWrittenBy.objects.filter(blogId=blogId)
+        wrote = False
+        if blogWrittenBys:
+            for blogWrittenBy in blogWrittenBys:
+                if userAuthed and blogWrittenBy.userId == request.user:
+                    wrote = True
+                
+
+            # user没有写blog
+            if wrote == False:
+                return permission_denied(request)
+        blog = BlogModels.Blog.objects.filter(blogId=blogId)
+        if not blog:
+            return bad_request(request)
+        blogContentSingle = blog[0]
+        blogTitle = blogContentSingle.blogTitle
+        blogMainContent = blogContentSingle.blogMainContent
+        ViewBag["toolTitle"] = CH_BLOG
+    else:
+        ViewBag["toolTitle"] = CR_BLOG
+        pass
+
+    ViewBag["blogId"] = blogId
+    ViewBag["blogTitle"] = blogTitle
+    ViewBag["blogMainContent"] = blogMainContent
+
+
+    
+    return render(request, 'PublicSite/blogeditpage.html', ViewBag)
 
 #@cache_page(CACHE_TTL)
 #def Events(requests):
