@@ -17,7 +17,7 @@ from django.db.models import Q
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import JsonResponse, HttpResponseRedirect, HttpResponse, Http404
 from django.contrib.auth.decorators import login_required
-from .models import Notification_DB, AccountMigration, Merchant
+from .models import Notification_DB, AccountMigration
 from UserAuthAPI import models as UserModels
 from BlogAPI import models as BlogModels
 from UserAuthAPI.forms import BasicSiginInForm, UserInfoForm, MigrationForm, UserAcademicForm, UserProfileUpdateForm
@@ -204,10 +204,12 @@ class Merchants_list(LoginRequiredMixin, View):
     template_name = 'myCSSAhub/merchants_list.html'
 
     def get(self, request):
+        if request.user.is_authenticated: 
+            infos = Merchant.objects.all().order_by("add_date").values()
 
-        return render(request, self.template_name)
+        return render(request, self.template_name, locals())
 
-    def get(self, request):
+    def post(self, request):
         return render(request, self.template_name)
 
 
@@ -221,30 +223,30 @@ class Merchant_profile(LoginRequiredMixin, View):
 
     def post(self, request):
         have_update = False
+        # 从表单获取图片并上传
+        # if request.user.is_authenticated:
+        #     form = MerchantsForm(request.POST, request.FILES)
+        #     if form.is_valid():
 
-        if request.user.is_authenticated:
-            form = MerchantsForm(request.POST, request.FILES)
-            if form.is_valid():
+        #         m_name = form.cleaned_data['m_name']
+        #         m_address = form.cleaned_data['m_address']
+        #         m_phone = form.cleaned_data['m_phone']
+        #         m_link = form.cleaned_data['m_link']
+        #         m_description = form.cleaned_data['m_description']
+        #         m_image = form.cleaned_data['m_image']
 
-                m_name = form.cleaned_data['m_name']
-                m_address = form.cleaned_data['m_address']
-                m_phone = form.cleaned_data['m_phone']
-                m_link = form.cleaned_data['m_link']
-                m_description = form.cleaned_data['m_description']
-                m_image = form.cleaned_data['m_image']
+        #         # print("name", m_name)
+        #         # print("address", m_address)
+        #         # print("phone", m_phone)
+        #         # print("link", m_link)
+        #         # print("description", m_description)
+        #         # print("image", m_image)
 
-                print("name", m_name)
-                print("address", m_address)
-                print("phone", m_phone)
-                print("link", m_link)
-                print("description", m_description)
-                print("image", m_image)
+        #         new_merchant = Merchant(merchant_name=m_name, merchant_description=m_description,
+        #                              merchant_phone=m_phone, merchant_address=m_address, merchant_link=m_link, merchant_image = m_image)
 
-                new_merchant = Merchant(merchant_name=m_name, merchant_description=m_description,
-                                     merchant_phone=m_phone, merchant_address=m_address, merchant_link=m_link, merchant_image = m_image)
-
-                new_merchant.save()
-                have_update = True
+        #         new_merchant.save()
+        #         have_update = True
 
         return render(request, self.template_name, {'update':have_update})
 

@@ -63,4 +63,6 @@ class Merchant(models.Model):
     merchant_phone =  models.CharField(verbose_name="联系电话", max_length=200, null=True)
     merchant_address =  models.CharField(verbose_name="商家地址", max_length=200, null=True)
     merchant_link =  models.CharField(verbose_name="商家网站", max_length=200, null=True)
+    merchant_add_date = models.DateTimeField(verbose_name="商户加入时间", default=timezone.now)
     merchant_image =  models.ImageField(upload_to = 'img/merchants/', default = 'img/merchants/noneImg.jpg')
+   

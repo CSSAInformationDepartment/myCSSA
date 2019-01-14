@@ -6,7 +6,7 @@
 
 {% block pageContent %}
 
-<div class="tab-pane fade" id="list-message">
+<div id="list-message">
     <div class="row">
         <div class="col-md-6">
             <p> 目前有{{infos|length}}个折扣商家</p>
@@ -14,14 +14,13 @@
         {% if user.is_staff %}
         <div class="col-md-6">
             <div class="btn-group float-right" role="group">
-                <a class="btn btn-pill btn-block btn-primary" role="button" href="{% url 'myCSSAhub:notifications_form' %}">发送消息</a>
+                <a class="btn btn-pill btn-block btn-primary" role="button" href="{% url 'myCSSAhub:notifications_form' %}">添加商户</a>
             </div>
         </div>
         {% endif %}
     </div>
     <div class="row">
         <div class="col-md-12 col-lg-12 col-xl-12">
-            <section class="content inbox">
                 <div class="container-fluid">
                     <div class="row clearfix">
                         <div class="col-md-12 col-lg-12 col-xl-12">
@@ -33,13 +32,13 @@
                                             <div class="media-body">
                                                
                                                 <div class="media-heading">
-                                                    {{info.title}}
+                                                    {{info.merchant_name}}
                                                     <!-- <span class="badge bg-blue">Family</span> -->
                                                     <div class="float-right text-muted">
-                                                        <div>{{info.add_date|date:"y/m/d H:i"}}</div>
+                                                        <div>{{info.merchant_add_date|date:"y/m/d H:i"}}</div>
                                                     </div>
                                                 </div>
-                                                <p class="msg" style="width: 300px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">{{info.content}}
+                                                <p class="msg" style="width: 300px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">{{info.merchant_description}}
                                                 </p>
                                             </div>
                                         </div>
@@ -50,7 +49,6 @@
                         </div>
                     </div>
                 </div>
-            </section>
 
             {% if is_paginated %}
             <ul class="pagination">
