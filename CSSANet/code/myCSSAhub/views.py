@@ -2,7 +2,7 @@ from .send_email import send_emails, queryEmailContent, queryEmailContent, query
 from django.shortcuts import get_object_or_404
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .notification import insertDB, queryMessagesList, queryMessageContent
-from .forms import NotificationForm as Notification_Form
+from .forms import NotificationForm, MerchantsForm
 from django.shortcuts import render
 from django.http import JsonResponse, HttpResponseRedirect, HttpResponse
 from django.contrib import messages
@@ -17,7 +17,7 @@ from django.db.models import Q
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import JsonResponse, HttpResponseRedirect, HttpResponse, Http404
 from django.contrib.auth.decorators import login_required
-from .models import Notification_DB, AccountMigration
+from .models import Notification_DB, AccountMigration, Merchant
 from UserAuthAPI import models as UserModels
 from BlogAPI import models as BlogModels
 from UserAuthAPI.forms import BasicSiginInForm, UserInfoForm, MigrationForm, UserAcademicForm, UserProfileUpdateForm
@@ -125,7 +125,7 @@ class NotificationForm(LoginRequiredMixin, View):
             # 当前用户id
             currentID = request.user.id
 
-            form = Notification_Form(request.POST)
+            form = NotificationForm(request.POST)
 
             flag, message = insertDB(form, targetUserId, currentID)
 
@@ -170,21 +170,22 @@ class Email(LoginRequiredMixin, View):
 
         return render(request, self.template_name, {'back_end_flag': flag})
 
+
 class EmailHistory(LoginRequiredMixin, View):
     login_url = '/hub/login/'
-    template_name = 'myCSSAhub/email_history.html'       
-    
+    template_name = 'myCSSAhub/email_history.html'
+
     def get(self, request, *args, **kwargs):
 
         contentId = self.kwargs.get('id')
         # print("usersfsdf", userId)
-         #    将需要的id传入数据库已得到内容
-        content, sender, receiver = queryEmailContent(contentId) 
+        #    将需要的id传入数据库已得到内容
+        content, sender, receiver = queryEmailContent(contentId)
 
         return render(request, self.template_name, locals())
 
     def post(self, request):
-        
+
         # if request.user.is_authenticated:
         #     # 获取当前用户id
         #     currentUserID = request.user.id
@@ -196,6 +197,7 @@ class EmailHistory(LoginRequiredMixin, View):
         return render(request, self.template_name, locals())
 
 ################################# merchants ########################################
+
 
 class Merchants_list(LoginRequiredMixin, View):
     login_url = '/hub/login/'
@@ -214,12 +216,38 @@ class Merchant_profile(LoginRequiredMixin, View):
     template_name = 'myCSSAhub/merchant_profile.html'
 
     def get(self, request):
-    
+
         return render(request, self.template_name)
 
-    def get(self, request):
-        return render(request, self.template_name)
-       
+    def post(self, request):
+        have_update = False
+
+        if request.user.is_authenticated:
+            form = MerchantsForm(request.POST, request.FILES)
+            if form.is_valid():
+
+                m_name = form.cleaned_data['m_name']
+                m_address = form.cleaned_data['m_address']
+                m_phone = form.cleaned_data['m_phone']
+                m_link = form.cleaned_data['m_link']
+                m_description = form.cleaned_data['m_description']
+                m_image = form.cleaned_data['m_image']
+
+                print("name", m_name)
+                print("address", m_address)
+                print("phone", m_phone)
+                print("link", m_link)
+                print("description", m_description)
+                print("image", m_image)
+
+                new_merchant = Merchant(merchant_name=m_name, merchant_description=m_description,
+                                     merchant_phone=m_phone, merchant_address=m_address, merchant_link=m_link, merchant_image = m_image)
+
+                new_merchant.save()
+                have_update = True
+
+        return render(request, self.template_name, {'update':have_update})
+
 
 ###### logout page ##########
 
@@ -342,14 +370,15 @@ class migrationView(View):
                     'status': '404',
                 })
 
-class UpdatePasswordView(LoginRequiredMixin,View):
+
+class UpdatePasswordView(LoginRequiredMixin, View):
     login_url = 'hub/login/'
     model = UserModels.User
-    form_class =  PasswordChangeForm
+    form_class = PasswordChangeForm
     template_name = 'myCSSAhub/update-password.html'
 
     def get(self, request, *args, **kwargs):
-        return render(request, self.template_name, {'form':self.form_class(request.user)})
+        return render(request, self.template_name, {'form': self.form_class(request.user)})
 
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.user, request.POST)
@@ -360,17 +389,18 @@ class UpdatePasswordView(LoginRequiredMixin,View):
             return HttpResponseRedirect('/hub/home')
         else:
             messages.error(request, 'Please double-check your input.')
-        return render(request, self.template_name, {'form':form})
+        return render(request, self.template_name, {'form': form})
+
 
 class UpdateUserProfileView(LoginRequiredMixin, View):
     login_url = 'hub/login/'
     model = UserModels.UserProfile
-    form_class =  UserProfileUpdateForm
+    form_class = UserProfileUpdateForm
     template_name = 'myCSSAhub/userInfo.html'
 
     def get(self, request, *args, **kwargs):
         current_data = self.model.objects.get(user=request.user)
-        return render(request, self.template_name, {'form':self.form_class, 'data':current_data})
+        return render(request, self.template_name, {'form': self.form_class, 'data': current_data})
 
     def post(self, request, *args, **kwargs):
         current_data = self.model.objects.get(user=request.user)
@@ -382,7 +412,8 @@ class UpdateUserProfileView(LoginRequiredMixin, View):
         else:
             messages.error(request, 'Please double-check your input.')
             print(dict(form.errors))
-        return render(request, self.template_name, {'form':form, 'data':current_data})
+        return render(request, self.template_name, {'form': form, 'data': current_data})
+
 
 class MembershipCardView(LoginRequiredMixin, View):
     login_url = 'hub/login/'
@@ -392,6 +423,7 @@ class MembershipCardView(LoginRequiredMixin, View):
         return render(request, self.template_name)
 
 ############################# AJAX Page Resources #####################################
+
 
 def GetUserAvatar(request):
     data = {}
@@ -509,21 +541,23 @@ class UserLookup(LoginRequiredMixin, View):
                 'status': '400',
             })
 
+
 class saveBlog (LoginRequiredMixin, PermissionRequiredMixin, View):
     login_url = "/hub/login/"
-    permission_required = ("BlogAPI.can_add_blog_content", "BlogAPI.can_change_blog_content", "BlogAPI.can_delete_blog_content", 
-    "BlogAPI.can_add_blog_description", "BlogAPI.can_change_blog_description", "BlogAPI.can_delete_blog_description")
+    permission_required = ("BlogAPI.can_add_blog_content", "BlogAPI.can_change_blog_content", "BlogAPI.can_delete_blog_content",
+                           "BlogAPI.can_add_blog_description", "BlogAPI.can_change_blog_description", "BlogAPI.can_delete_blog_description")
 
     def storeToBlogOldContent(self, oldBlog):
         # MAX_HIST = 3
         # oldBlogs = BlogModels.BlogOldContent.objects.filter(blogId = oldBlog).order_by("")
-        # oldBlogs = 
+        # oldBlogs =
         # if len(oldBlogs) > MAX_HIST:
 
         pass
 
     def getContent(self, blogMainContent):
-        dicContent = json.loads(blogMainContent.replace("(ffffhhhhccccc)", ";").replace(" ", "+"))
+        dicContent = json.loads(blogMainContent.replace(
+            "(ffffhhhhccccc)", ";").replace(" ", "+"))
 
         for content in range(len(dicContent["ops"])):
             print(dicContent["ops"][content])
@@ -539,10 +573,12 @@ class saveBlog (LoginRequiredMixin, PermissionRequiredMixin, View):
                         hashmm.update(imB64bs)
                         hashedImage = hashmm.hexdigest()
 
-                        extEndsIn = dicContent["ops"][content]["insert"]["image"].index(";")
+                        extEndsIn = dicContent["ops"][content]["insert"]["image"].index(
+                            ";")
                         ext = dicContent["ops"][content]["insert"]["image"][11: extEndsIn]
 
-                        storedImage = BlogModels.BlogImage.objects.filter(hashValue=hashedImage)
+                        storedImage = BlogModels.BlogImage.objects.filter(
+                            hashValue=hashedImage)
                         if storedImage:
                             print("found duplicated picture")
                             dicContent["ops"][content]["insert"]["image"] = storedImage[0].imageFileB64.url
@@ -551,7 +587,8 @@ class saveBlog (LoginRequiredMixin, PermissionRequiredMixin, View):
                                 hashValue=hashedImage,
                             )
                             newImage.save()
-                            newImage.imageFileB64.save(str(newImage.imageId) + "." + ext, imB64Bytes)
+                            newImage.imageFileB64.save(
+                                str(newImage.imageId) + "." + ext, imB64Bytes)
                             newImage.save()
                             dicContent["ops"][content]["insert"]["image"] = newImage.imageFileB64.url
                     except IndexError:
@@ -559,13 +596,12 @@ class saveBlog (LoginRequiredMixin, PermissionRequiredMixin, View):
         print(json.dumps(dicContent).replace("\\", "\\\\"))
         return json.dumps(dicContent).replace("\\", "\\\\")
 
-
     def get(self, request, *args, **kwargs):
         data = {
             'status': '400', 'reason': 'Bad Requests!'
         }
         return data
-        
+
     def post(self, request, *args, **kwargs):
         # 检查是否是新content
         # 如果不是新content 检查是否 user对
@@ -577,10 +613,10 @@ class saveBlog (LoginRequiredMixin, PermissionRequiredMixin, View):
             blogId = int(request.POST["blogId"])
         except:
             return JsonResponse({
-                    'success': False,
-                    'status': '400',
-                    'message': "wrong blog id"
-                })
+                'success': False,
+                'status': '400',
+                'message': "wrong blog id"
+            })
 
         print(blogId)
         blog = -1
@@ -588,13 +624,14 @@ class saveBlog (LoginRequiredMixin, PermissionRequiredMixin, View):
         userAuthed = request.user.is_authenticated
 
         if blogId != NEW_BLOG:
-            blogWrittenBys = BlogModels.BlogWrittenBy.objects.filter(blogId=blogId)
+            blogWrittenBys = BlogModels.BlogWrittenBy.objects.filter(
+                blogId=blogId)
             wrote = False
             if blogWrittenBys:
                 for blogWrittenBy in blogWrittenBys:
                     if userAuthed and blogWrittenBy.userId == request.user:
                         wrote = True
-                
+
                 # user没有写blog
                 if wrote == False:
                     return JsonResponse({
@@ -602,10 +639,11 @@ class saveBlog (LoginRequiredMixin, PermissionRequiredMixin, View):
                         'status': '400',
                         'message': 'user is not the author'
                     })
-                
+
                 blog = BlogModels.Blog.objects.get(blogId=blogId)
                 self.storeToBlogOldContent(blog)
-                blogMainContent = self.getContent(request.POST["blogMainContent"])
+                blogMainContent = self.getContent(
+                    request.POST["blogMainContent"])
                 blogOpen = request.POST["openOrNot"]
                 try:
                     blogOpen = {"true": True, "false": False}[blogOpen]
@@ -621,21 +659,20 @@ class saveBlog (LoginRequiredMixin, PermissionRequiredMixin, View):
                     blogTitle=request.POST["blogTitle"],
                     createDate=blog.createDate,
                     lastModifiedDate=datetime.datetime.now(),
-                    blogReviewed = blog.blogReviewed,
-                    blogReads = blog.blogReads,
-                    blogMainContent = blogMainContent,
-                    blogOpen = blogOpen
+                    blogReviewed=blog.blogReviewed,
+                    blogReads=blog.blogReads,
+                    blogMainContent=blogMainContent,
+                    blogOpen=blogOpen
                 )
                 blog.save()
 
                 print(blogId)
 
                 return JsonResponse({
-                        'success': True,
-                        'status': '200',
-                        'message': 'modified'
-                    })
-
+                    'success': True,
+                    'status': '200',
+                    'message': 'modified'
+                })
 
             else:
                 # blogId有问题
@@ -644,12 +681,13 @@ class saveBlog (LoginRequiredMixin, PermissionRequiredMixin, View):
                     'status': '400',
                     'message': "wrong blog id"
                 })
-        
+
         else:
             if userAuthed:
 
                 print(request.POST["blogMainContent"])
-                blogMainContent = self.getContent(request.POST["blogMainContent"])
+                blogMainContent = self.getContent(
+                    request.POST["blogMainContent"])
                 blogOpen = request.POST["openOrNot"]
                 try:
                     blogOpen = {"true": True, "false": False}[blogOpen]
@@ -665,24 +703,24 @@ class saveBlog (LoginRequiredMixin, PermissionRequiredMixin, View):
                     blogTitle=request.POST["blogTitle"],
                     lastModifiedDate=datetime.datetime.now(),
                     createDate=datetime.datetime.now(),
-                    blogReviewed = True,
-                    blogReads = 0,
-                    blogMainContent = blogMainContent,
-                    blogOpen = blogOpen
+                    blogReviewed=True,
+                    blogReads=0,
+                    blogMainContent=blogMainContent,
+                    blogOpen=blogOpen
                 )
                 blog.save()
 
                 blogWrittenBy = BlogModels.BlogWrittenBy(
-                    blogId = blog,
-                    userId = request.user
+                    blogId=blog,
+                    userId=request.user
                 )
                 blogWrittenBy.save()
 
                 return JsonResponse({
-                        'success': True,
-                        'status': '200',
-                        'message': 'created'
-                    })
+                    'success': True,
+                    'status': '200',
+                    'message': 'created'
+                })
             else:
                 # 游客禁止发blog
                 return JsonResponse({
@@ -691,10 +729,11 @@ class saveBlog (LoginRequiredMixin, PermissionRequiredMixin, View):
                     'message': 'visitor is not permitted to create'
                 })
 
+
 class deleteBlog(LoginRequiredMixin, PermissionRequiredMixin, View):
     login_url = "/hub/login/"
-    permission_required = ("BlogAPI.can_add_blog_content", "BlogAPI.can_change_blog_content", "BlogAPI.can_delete_blog_content", 
-    "BlogAPI.can_add_blog_description", "BlogAPI.can_change_blog_description", "BlogAPI.can_delete_blog_description")
+    permission_required = ("BlogAPI.can_add_blog_content", "BlogAPI.can_change_blog_content", "BlogAPI.can_delete_blog_content",
+                           "BlogAPI.can_add_blog_description", "BlogAPI.can_change_blog_description", "BlogAPI.can_delete_blog_description")
 
     def get(self, request, *args, **kwargs):
         data = {
@@ -712,10 +751,10 @@ class deleteBlog(LoginRequiredMixin, PermissionRequiredMixin, View):
             blogId = int(request.POST["blogId"])
         except:
             return JsonResponse({
-                    'success': False,
-                    'status': '400',
-                    'message': "wrong blog id"
-                })
+                'success': False,
+                'status': '400',
+                'message': "wrong blog id"
+            })
 
         print(blogId)
         blog = -1
@@ -728,7 +767,7 @@ class deleteBlog(LoginRequiredMixin, PermissionRequiredMixin, View):
             for blogWrittenBy in blogWrittenBys:
                 if userAuthed and blogWrittenBy.userId == request.user:
                     wrote = True
-                
+
             # user没有写blog
             if wrote == False:
                 return JsonResponse({
@@ -736,16 +775,15 @@ class deleteBlog(LoginRequiredMixin, PermissionRequiredMixin, View):
                     'status': '400',
                     'message': 'user is not the author'
                 })
-                
+
             blog = BlogModels.Blog.objects.get(blogId=blogId)
             blog.delete()
 
             return JsonResponse({
-                    'success': True,
-                    'status': '200',
-                    'message': 'deleted'
-                })
-
+                'success': True,
+                'status': '200',
+                'message': 'deleted'
+            })
 
         else:
                 # blogId有问题
@@ -754,10 +792,6 @@ class deleteBlog(LoginRequiredMixin, PermissionRequiredMixin, View):
                 'status': '400',
                 'message': "wrong blog id"
             })
-    
-
-
-        
 
 
 ################################# errors pages ########################################
@@ -777,6 +811,7 @@ def page_not_found(request):
 
 def server_error(request):
     return render(request, 'errors/page_500.html')
+
 
 def under_dev_notice(request):
     return render(request, 'myCSSAhub/under-dev-function.html')
