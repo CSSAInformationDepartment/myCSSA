@@ -14,11 +14,12 @@
         {% if user.is_staff %}
         <div class="col-md-6">
             <div class="btn-group float-right" role="group">
-                <a class="btn btn-pill btn-block btn-primary" role="button" href="{% url 'myCSSAhub:notifications_form' %}">添加商户</a>
+                <a class="btn btn-pill btn-block btn-primary" role="button" href="/hub/merchant_add">添加商户</a>
             </div>
         </div>
         {% endif %}
     </div>
+    <br>
     <div class="row">
         <div class="col-md-12 col-lg-12 col-xl-12">
                 <div class="container-fluid">
@@ -26,20 +27,19 @@
                         <div class="col-md-12 col-lg-12 col-xl-12">
                             <ul class="mail_list list-group list-unstyled">
                                 {% for info in infos %}
-                                <a href="/hub/notification/notifications_display/{{info.id}}" class="m-r-10 noti_link">
+                                <a href="/hub/merchant_profile/{{info.merchant_id}}" class="m-r-10 noti_link">
                                     <li class="list-group-item">
                                         <div class="media">
                                             <div class="media-body">
-                                               
                                                 <div class="media-heading">
-                                                    {{info.merchant_name}}
+                                                   {{forloop.counter}}.&nbsp;{{info.merchant_name}}
                                                     <!-- <span class="badge bg-blue">Family</span> -->
                                                     <div class="float-right text-muted">
                                                         <div>{{info.merchant_add_date|date:"y/m/d H:i"}}</div>
                                                     </div>
                                                 </div>
-                                                <p class="msg" style="width: 300px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">{{info.merchant_description}}
-                                                </p>
+                                                {% comment %} <p class="msg" style="width: 300px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">{{info.merchant_description}}
+                                                </p> {% endcomment %}
                                             </div>
                                         </div>
                                     </li>

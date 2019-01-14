@@ -56,7 +56,7 @@ class EmailDB(models.Model):
     add_date = models.DateTimeField(
         verbose_name="信息加入时间", default=timezone.now)
 
-class Merchant(models.Model):
+class DiscountMerchant(models.Model):
     merchant_id = models.AutoField(primary_key=True, editable=False) 
     merchant_name =  models.CharField(verbose_name="商家名", max_length=200, null=True)
     merchant_description =  models.CharField(verbose_name="商家介绍", max_length=200, null=True)
