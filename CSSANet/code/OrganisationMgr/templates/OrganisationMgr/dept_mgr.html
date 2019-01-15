@@ -1,5 +1,9 @@
 {% extends 'myCSSAhub/component/_layout.html' %} 
-{% block pageTitle %}部门成员管理 {% endblock %} 
+
+{% block pageTitle %}
+部门成员管理 
+{% endblock %} 
+
 {% block ExtraHeader %} 
 <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
 {% endblock ExtraHeader %}
@@ -12,7 +16,7 @@
     <div class="card-header"><strong>添加新成员</strong>beta</div>
       <div class="card-body">
         <div class="row">
-            <form method="POST" id="membership-check" action="{% url '' %}">
+            <form method="POST" id="membership-check" action="">
                 <div class="form-group col-sm-12">
                     <label for="notification_user">成员查询: (可使用姓名（拼音）、邮箱、电话等任意信息查询)</label>
                     <select class="form-control" id="userlookup" name="lookUPId" style="width:100%"></select>
@@ -33,7 +37,7 @@
   </div>
 </div>
 
-{% endblock %} 
+{% endblock pageContent %} 
 
 {% block ExtraJS %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>

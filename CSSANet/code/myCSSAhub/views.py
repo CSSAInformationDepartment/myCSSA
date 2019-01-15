@@ -440,7 +440,7 @@ class UpdateUserProfileView(LoginRequiredMixin, View):
     template_name = 'myCSSAhub/userInfo.html'
 
     def get(self, request, *args, **kwargs):
-        current_data = self.model.objects.get(user=request.user)
+        current_data = self.model.objects.filter(user=request.user).first()
         return render(request, self.template_name, {'form': self.form_class, 'data': current_data})
 
     def post(self, request, *args, **kwargs):

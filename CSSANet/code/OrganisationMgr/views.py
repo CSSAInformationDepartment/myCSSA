@@ -11,7 +11,7 @@ from django.utils.html import escape
 
 # Create your views here.
 
-class DepartmentManagementView(LoginRequiredMixin,UserPassesTestMixin,View):
+class DepartmentManagementView(LoginRequiredMixin, UserPassesTestMixin, View):
     login_url = '/hub/login/'
     template_name = 'OrganisationMgr/dept_mgr.html'
     def test_func(self):
