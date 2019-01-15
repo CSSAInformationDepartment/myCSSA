@@ -585,7 +585,7 @@ class UserLookup(LoginRequiredMixin, View):
 
 class saveBlog (LoginRequiredMixin, PermissionRequiredMixin, View):
     login_url = "/hub/login/"
-    permission_required = ("BlogAPI.blog.Can_add_blog", "BlogAPI.blog.Can_change_blog", "BlogAPI.blog.Can_delete_blog", 
+    permission_required = ("BlogAPI.blog.add_blog", "BlogAPI.blog.change_blog", "BlogAPI.blog.delete_blog", 
     )
 
     def storeToBlogOldContent(self, oldBlog):
@@ -804,7 +804,7 @@ class saveBlog (LoginRequiredMixin, PermissionRequiredMixin, View):
 
 class deleteBlog(LoginRequiredMixin, PermissionRequiredMixin, View):
     login_url = "/hub/login/"
-    permission_required = ("BlogAPI.can_add_blog", "BlogAPI.can_change_blog", "BlogAPI.can_delete_blog",)
+    permission_required = ("BlogAPI.add_blog", "BlogAPI.change_blog", "BlogAPI.delete_blog",)
 
     def get(self, request, *args, **kwargs):
 
