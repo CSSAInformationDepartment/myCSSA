@@ -1,4 +1,4 @@
-Django==2.1.3
+Django>=2.1.5
 
 django-grappelli==2.12.1
 
@@ -21,3 +21,11 @@ django-widget-tweaks
 gunicorn
 
 django-braces
+
+
+### For Development purpose only
+pylint
+
+pylint-django
+
+
