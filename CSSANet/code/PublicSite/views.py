@@ -10,6 +10,8 @@ from Library.SiteManagement import LoadPagetoRegister
 from django.core.cache.backends.base import DEFAULT_TIMEOUT
 from django.conf import settings
 from django.views.decorators.cache import cache_page
+
+import json
 # Create your views here.
 
 
@@ -65,8 +67,24 @@ def BlogContents(request, blogId):
     blogSingle = blogs[0]
     blogOpen = blogSingle.blogOpen
     print(blogSingle.blogOpen)
+
+    userAuthed = request.user.is_authenticated
+    
     if not blogSingle.blogReviewed or not blogOpen:
         return page_not_found(request)
+
+
+    blogWrittenBys = BlogModels.BlogWrittenBy.objects.filter(blogId=blogSingle)
+    ViewBag["userIsAuthor"] = False
+    wrote = False
+    if blogWrittenBys:
+        for blogWrittenBy in blogWrittenBys:
+            if userAuthed and blogWrittenBy.userId == request.user:
+                wrote = True
+            
+        if wrote == True:
+            ViewBag["userIsAuthor"] = True
+
     ViewBag["blog"] = blogSingle
     users= BlogModels.BlogWrittenBy.objects.filter(blogId=blogSingle)
     ViewBag["users"] = []
@@ -75,6 +93,11 @@ def BlogContents(request, blogId):
             "user": user.userId,
             "userProfile": UserModels.UserProfile.objects.filter(user=user.userId)[0]
         })
+
+    curBlogTags = BlogModels.BlogInTag.objects.filter(blogId=blogSingle)
+    blogTag = [x.tagId.tagName for x in curBlogTags]
+
+    ViewBag["blogTag"] = blogTag
     print(ViewBag)
     return render(request, 'PublicSite/blogs.html', ViewBag)
 
@@ -92,14 +115,24 @@ def editBlog(request):
     except:
         return bad_request(request)
 
-
     print(blogId)
-
     ViewBag = {}
+
+    userAuthed = request.user.is_authenticated
+
+    if userAuthed:
+        user = request.user
+        ViewBag["user"] = {
+            "user": request.user,
+            "userProfile": UserModels.UserProfile.objects.filter(user=user)[0]
+        }
+    else:
+        return bad_request(request)
+
     blogContentSingle = -1
     blogTitle = ""
     blogMainContent = ""
-    userAuthed = request.user.is_authenticated
+
 
     if blogId != NEW_BLOG:
         blogWrittenBys = BlogModels.BlogWrittenBy.objects.filter(blogId=blogId)
@@ -120,8 +153,14 @@ def editBlog(request):
         blogTitle = blogContentSingle.blogTitle
         blogMainContent = blogContentSingle.blogMainContent
         ViewBag["toolTitle"] = CH_BLOG
+        curBlogTag = BlogModels.BlogInTag.objects.filter(blogId=blog[0])
+        blogTag = json.dumps([x.tagId.tagName for x in curBlogTag]).replace("\\", "\\\\")
+
+        ViewBag["blogTag"] = blogTag
     else:
         ViewBag["toolTitle"] = CR_BLOG
+
+        ViewBag["blogTag"] = []
         pass
 
     ViewBag["blogId"] = blogId

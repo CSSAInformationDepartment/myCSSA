@@ -1,76 +1,107 @@
 {% extends 'components/base_page.html' %}
+
+{% block 'extra_header' %}
+{% load static %}
+<script src="//cdn.quilljs.com/1.2.2/quill.min.js"></script>
+<link href="//cdn.quilljs.com/1.2.2/quill.snow.css" rel="stylesheet">
+<script src="{% static 'PublicSite/js/image-resize.min.js' %}"></script>
+
+<link href="{% static 'PublicSite/css/blogstyle.css' %}" rel="stylesheet" />
+<link href="{% static 'PublicSite/css/blogeditstyle.css' %}" rel="stylesheet" />
+
+{% endblock 'extra_header' %}
+
+
 {% block 'pg_body' %}
 <!-- bloc-4 -->
 {% load static %}
-    <style>
-        #blogEdit, #blogEditAnother{
-            height: 800px;
-            margin-bottom: 50px;
-        }
-        
-        h3{
-            margin-bottom: 10px;
-        }
-
-        #blogEditAnother{
-            background-color: pink;
-            overflow-y: scroll;
-        }
-
-        .blogEditContainer{
-            padding: 50px;
-        }
-
-        .blogEditHead{
-            margin: 40px 0px 28px 0px;
-        }
-        .handButton{
-            background-color: rgba(0, 0, 0, 0.05)
-        }
-
-        .handButtonAnother{
-            color: white;
-            background-color: #158CBA !important;
-        }
-        .handButtonOther{
-            float: right;
-            color: white;
-            background-color: #993333;
-        }
-    </style>
     
     <div class="blogEditContainer">
-        <div class="blogHeadingBox">
-            <h3></h3>
-            <h1>{{ toolTitle }}</h1>
-        </div>
         
-        <div class="col-sm-8">
+        <div class="container">
             <div class="blogContainer">
+                <div class="blogHeadingBox">
+
+                    <h1>{{ toolTitle }}</h1>
+                </div>
+                <div class="blogAuthorsContainer">
+                    <div class="blogAuthorBox">
+                        <img class="avatar" src="{{ user.userProfile.avatar.url }}">
+                        <div class="blogAuthorInfoBox">
+                            <a><h5><em>{{ user.userProfile.lastNameCN }} {{ user.userProfile.firstNameCN }}</em></h5></a>
+                            <h5>{{ user.user.username }}</h5>
+                        </div>
+                    </div>
+                    <div style="clear:both;"></div>
+                </div>
+                
+                <br />
+                
                 <div class="blogEditHead">
-                    <h3>标题</h3>
+                    <h4>标题</h4>
+                    {% csrf_token %}
                     <div class="input-group">
-                        {% csrf_token %}
                       <input type="text" id="title" class="form-control" placeholder="标题" aria-describedby="basic-addon1" value="{{ blogTitle }}">
                     </div>
                 </div>
+                
+                
+                <br />
+                
+                <div class="tagEditContainer" style="margin: 0px 0px 28px 0px;">
+                    <h4>标签</h4>
+                    <div class="input-group">
 
-                <h3>文章内容</h3>
+                      <input type="text" id="newTag" class="form-control" placeholder="add tag" aria-describedby="basic-addon1">
+                        
+                        
+                        <button class="btn btn-default navbar-btn handButton" id="addTag">添加</button>
+                    </div>
+                    <style>
+                        
+                        .tagBox{
+                            overflow: scroll;
+                            height: 30px;
+                        }
+                            .deleTag{
+                                cursor: default;
+                                color: lightgrey;
+                            }
+                            
+                            
+                            .blogTag{
+                                margin-right: 9px;
+                            }
+                            
+                            #tagExm{
+                                display: none;
+                            }
+                        </style>
+                    <div class="tagBox">
+                            <h5 id="tagBoxes">
+                                <span class="label label-primary blogTag" id="tagExm">Tag 1<span class="deleTag" id="tagDel">  ×</span></span>
+                            </h5>
+                        </div>
+                </div>
+                
+                <br />
+
+                <h4>文章内容</h4>
                 <div id="blogEdit">
                 </div>
 
                 <button class="btn btn-default navbar-btn handButton" id="display">保存（不公开）</button>
                 <button class="btn btn-default navbar-btn handButtonAnother" id="out">公开发布</button>
+                {% if blogId != -1 %}
                 <button class="btn btn-default navbar-btn handButtonOther" id="delete">删除</button>
+                
+                {% endif %}
             </div>
         </div>
-
-        {% load static %}
-<script src="//cdn.quilljs.com/1.2.2/quill.min.js"></script>
-    <link href="//cdn.quilljs.com/1.2.2/quill.snow.css" rel="stylesheet">
-        <script src="{% static 'PublicSite/js/image-resize.min.js' %}"></script>
  
 <script>
+    
+    const NEW = -1;
     
     let mediaContent = '{{ blogMainContent }}'.replace(/\n/g, "\\n");
     var d = document.createElement('div');
@@ -79,6 +110,57 @@
     mediaContent = mediaContent;
     
     let blogId = {{ blogId }};
+    
+    
+    let blogTag = '{{ blogTag }}';
+    
+    d.innerHTML = blogTag;
+    blogTag = d.innerText || d.textContent;
+    
+    blogTag = JSON.parse(blogTag);
+    
+    let addTag = document.getElementById("addTag");
+    let tagEl = document.getElementById("tagExm");
+    let tagBoxes = document.getElementById("tagBoxes");
+    let newTag = document.getElementById("newTag");
+    let tagDel = document.getElementById("tagDel");
+    
+    let addBlogTag = function(tag, justAddTag){
+        if (justAddTag || (tag != "" && blogTag.indexOf(tag) == -1)){
+            if(!justAddTag){
+                blogTag.push(tag);
+            }
+            let newTagEle = document.createElement("span");
+            newTagEle.className = "label label-primary blogTag";
+            
+            let newTagDele = tagDel.cloneNode();
+            newTagDele.style.display = "inline";
+            
+            let tagEleContentNode = document.createTextNode(tag);
+            newTagEle.appendChild(tagEleContentNode);
+            
+            tagBoxes.appendChild(newTagEle);
+            newTagEle.appendChild(newTagDele);
+            
+            newTagDele.innerHTML = "  ×";
+            
+            newTagEle.children[0].onclick = () => {
+                let tagIn = blogTag.indexOf(tag);
+                blogTag.splice(tagIn, 1);
+                newTagEle.parentElement.removeChild(newTagEle)
+            }
+            
+            newTagEle.children[0].cursor = "hand"
+        }
+    }
+    addTag.onclick = function(){
+        addBlogTag(newTag.value, false);
+        newTag.value = ""
+    }
+    
+    for(let tagInBlog of blogTag){
+        addBlogTag(tagInBlog, true);
+    }
     
 
     
@@ -106,12 +188,13 @@
     
     let checkPa = (blogId, blogMainContent, blogTitle, openOrNot) => {
         if(blogTitle.length == 0){
+            alert("empty title")
             return false;
         }
         return true;
     }
     
-    let uploadClick = (blogId, blogMainContent, blogTitle, openOrNot) => {
+    let uploadClick = (blogId, blogMainContent, blogTitle, openOrNot, blogTags) => {
         if (checkPa(blogId, blogMainContent, blogTitle, openOrNot)){
             let csrf = $('input[name="csrfmiddlewaretoken"]').val();
             let pa = "blogId=" + blogId;
@@ -119,11 +202,13 @@
             pa = pa + "&blogMainContent=" + blogMainContent;
             pa = pa + "&openOrNot=" + openOrNot;
             pa = pa + "&csrfmiddlewaretoken=" + csrf;
+            pa = pa + "&tag=" + blogTags;
 
             let r = new XMLHttpRequest();
             r.onreadystatechange = function() { // Call a function when the state changes.
                 if (r.readyState === XMLHttpRequest.DONE && r.status === 200) {
                     let response = r.responseText;
+                    console.log(r)
                     response = JSON.parse(r.responseText);
                     alert(response.message);
                     // Request finished. Do processing here.
@@ -154,6 +239,8 @@
         ],
         [
             {header:[1, 2, 3, 4, 5]},
+            { 'list': 'ordered'}, 
+            { 'list': 'bullet' }
         ],
         [
             "link", 
@@ -172,15 +259,41 @@
         theme: "snow"
     };
     
+    let deleteBlog = () => {
+        if(blogId != NEW){
+            let confirmed = confirm("确认删除吗？");
+            if(confirmed){
+                let XMLobj = new XMLHttpRequest();
+                       
+                XMLobj.onreadystatechange = () => {
+                    if(XMLobj.readyState == XMLHttpRequest.DONE && XMLobj.status == 200){
+                            let response = XMLobj.responseText;
+                            response = JSON.parse(r.responseText);
+                            alert(response.message);
+                        }
+                    }
+                        
+                    XMLobj.open("GET", '/hub/ajax/deleteBlog?blogId=' + blogId, true);
+                    XMLobj.send();
+                }
+
+        }
+    }
+                
+    if(blogId != NEW){
+        let rbutton = document.getElementById("delete")
+        rbutton.onclick = deleteBlog
+    }
+    
     let editor = new Quill("#blogEdit", options);
     let editorAnother = new Quill("#blogEditAnother");
     
     displayButton.onclick = () => {
-        uploadClick(blogId, JSON.stringify(editor.getContents()).replace(/;/g, "(ffffhhhhccccc)"), title.value, false);
+        uploadClick(blogId, JSON.stringify(editor.getContents()).replace(/;/g, "(ffffhhhhccccc)"), title.value, false, JSON.stringify(blogTag).replace(/;/g, "(ffffhhhhccccc)"));
     };
     
     outButton.onclick = () => {
-        uploadClick(blogId, JSON.stringify(editor.getContents()).replace(/;/g, "(ffffhhhhccccc)"), title.value, true);
+        uploadClick(blogId, JSON.stringify(editor.getContents()).replace(/;/g, "(ffffhhhhccccc)"), title.value, true, JSON.stringify(blogTag).replace(/;/g, "(ffffhhhhccccc)"));
     }
     
     try{
@@ -188,7 +301,7 @@
         editor.setContents(JSON.parse(mediaContent).ops);
     }catch{
         // no nothing
-        blogId = -1;
+        blogId = NEW;
     }
 </script>
 </div>
