@@ -10,5 +10,6 @@ urlpatterns = [
     path('department/<str:dept>/', Views.Departments, name='departments'),
     path('blog/<int:contentId>/', Views.BlogContents, name='blogContent'),
     path('blogs/<int:page>/', Views.Blogs, name='blogs'),
-    path('contact/', Views.ContactUs, name="contact")
+    path('contact/', Views.ContactUs, name="contact"),
+    path('merchants/', Views.Merchants, name='Merchant')
 ]

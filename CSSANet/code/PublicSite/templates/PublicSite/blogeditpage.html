@@ -1,0 +1,196 @@
+{% extends 'components/base_page.html' %}
+{% block 'pg_body' %}
+<!-- bloc-4 -->
+{% load static %}
+    <style>
+        #blogEdit, #blogEditAnother{
+            height: 800px;
+            margin-bottom: 50px;
+        }
+        
+        h3{
+            margin-bottom: 10px;
+        }
+
+        #blogEditAnother{
+            background-color: pink;
+            overflow-y: scroll;
+        }
+
+        .blogEditContainer{
+            padding: 50px;
+        }
+
+        .blogEditHead{
+            margin: 40px 0px 28px 0px;
+        }
+        .handButton{
+            background-color: rgba(0, 0, 0, 0.05)
+        }
+
+        .handButtonAnother{
+            color: white;
+            background-color: #158CBA !important;
+        }
+        .handButtonOther{
+            float: right;
+            color: white;
+            background-color: #993333;
+        }
+    </style>
+    
+    <div class="blogEditContainer">
+        <div class="blogHeadingBox">
+            <h3></h3>
+            <h1>{{ toolTitle }}</h1>
+        </div>
+        
+        <div class="col-sm-8">
+            <div class="blogContainer">
+                <div class="blogEditHead">
+                    <h3>标题</h3>
+                    <div class="input-group">
+                        {% csrf_token %}
+                      <input type="text" id="title" class="form-control" placeholder="标题" aria-describedby="basic-addon1" value="{{ blogTitle }}">
+                    </div>
+                </div>
+
+                <h3>文章内容</h3>
+                <div id="blogEdit">
+                </div>
+
+                <button class="btn btn-default navbar-btn handButton" id="display">保存（不公开）</button>
+                <button class="btn btn-default navbar-btn handButtonAnother" id="out">公开发布</button>
+                <button class="btn btn-default navbar-btn handButtonOther" id="delete">删除</button>
+            </div>
+        </div>
+
+        {% load static %}
+<script src="//cdn.quilljs.com/1.2.2/quill.min.js"></script>
+    <link href="//cdn.quilljs.com/1.2.2/quill.snow.css" rel="stylesheet">
+        <script src="{% static 'PublicSite/js/image-resize.min.js' %}"></script>
+ 
+<script>
+    
+    let mediaContent = '{{ blogMainContent }}'.replace(/\n/g, "\\n");
+    var d = document.createElement('div');
+    d.innerHTML = mediaContent;
+    mediaContent = d.innerText || d.textContent;
+    mediaContent = mediaContent;
+    
+    let blogId = {{ blogId }};
+    
+
+    
+    /* let display = (editor, opts) => {
+        editor.deleteText(0, editor.getLength());
+        let index = 0;
+        for (let opt of opts){
+            let isEmbedded = typeof(opt.insert) == "object";
+            if (isEmbedded){
+                editor.insertEmbed(index, Object.keys(opt.insert)[0], opt.insert[Object.keys(opt.insert)[0]]);
+                index += 1;
+            }else{
+                editor.insertText(index, opt.insert, opt.attributes ? opt.attributes: {});
+                index += opt.insert.length;
+            }
+        }
+    } */
+    
+    let displayButton = document.getElementById("display");
+    
+    let outButton = document.getElementById("out");
+    
+    
+    let title = document.getElementById("title");
+    
+    let checkPa = (blogId, blogMainContent, blogTitle, openOrNot) => {
+        if(blogTitle.length == 0){
+            return false;
+        }
+        return true;
+    }
+    
+    let uploadClick = (blogId, blogMainContent, blogTitle, openOrNot) => {
+        if (checkPa(blogId, blogMainContent, blogTitle, openOrNot)){
+            let csrf = $('input[name="csrfmiddlewaretoken"]').val();
+            let pa = "blogId=" + blogId;
+            pa = pa + "&blogTitle=" + blogTitle;
+            pa = pa + "&blogMainContent=" + blogMainContent;
+            pa = pa + "&openOrNot=" + openOrNot;
+            pa = pa + "&csrfmiddlewaretoken=" + csrf;
+
+            let r = new XMLHttpRequest();
+            r.onreadystatechange = function() { // Call a function when the state changes.
+                if (r.readyState === XMLHttpRequest.DONE && r.status === 200) {
+                    let response = r.responseText;
+                    response = JSON.parse(r.responseText);
+                    alert(response.message);
+                    // Request finished. Do processing here.
+
+                }else if(r.status == 500){
+                    alert("Something wrong behind the scene.. ask for help!");
+                }
+            }
+
+            r.open("POST", '/hub/ajax/saveBlog/', true);
+            r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            r.send(pa);
+        }
+        
+    }
+    
+    let toolbarOpt = [
+        [
+            {size: [ 'small', "medium", 'large', 'huge' ]},
+            "bold",
+            "italic",
+            "underline",
+            "strike",
+            {font: []},
+            {color: []},
+            {background: []},
+            {align: []}
+        ],
+        [
+            {header:[1, 2, 3, 4, 5]},
+        ],
+        [
+            "link", 
+            "image",
+            "video"
+        ],
+    ];
+    
+    let options = {
+        modules: {
+            toolbar: toolbarOpt,
+            imageResize: {}
+            
+        },
+        placeholder: "寂寞部员在线敲字",
+        theme: "snow"
+    };
+    
+    let editor = new Quill("#blogEdit", options);
+    let editorAnother = new Quill("#blogEditAnother");
+    
+    displayButton.onclick = () => {
+        uploadClick(blogId, JSON.stringify(editor.getContents()).replace(/;/g, "(ffffhhhhccccc)"), title.value, false);
+    };
+    
+    outButton.onclick = () => {
+        uploadClick(blogId, JSON.stringify(editor.getContents()).replace(/;/g, "(ffffhhhhccccc)"), title.value, true);
+    }
+    
+    try{
+        // display(editor, JSON.parse(mediaContent).ops)
+        editor.setContents(JSON.parse(mediaContent).ops);
+    }catch{
+        // no nothing
+        blogId = -1;
+    }
+</script>
+</div>
+
+{% endblock 'pg_body' %}

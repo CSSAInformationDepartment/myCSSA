@@ -22,8 +22,11 @@ urlpatterns = [
     path('userinfo/create/', Views.NewUserSignUpView.as_view(), name='hub_userinfo_create'),
     path('migration/',Views.migrationView.as_view(),name='hub_migration'),
     path('email/',Views.Email.as_view(),name='email'),
-    path('email_history/',Views.EmailHistory.as_view(),name='email_history'),
+    path('email_history/<str:id>/',Views.EmailHistory.as_view(),name='email_history'),
     path('reset-password/', Views.UpdatePasswordView.as_view(), name="update-password"),
+    path('merchants_list/', Views.Merchants_list.as_view(), name="merchants_list"),
+    path('merchant_add/', Views.Merchant_add.as_view(), name="merchants_add"),
+    path('merchant_profile/<str:id>/', Views.Merchant_profile.as_view(), name="merchant_profile")
 ]
 
 ## Admin system app directory
