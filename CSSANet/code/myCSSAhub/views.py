@@ -262,30 +262,30 @@ class Merchant_profile(LoginRequiredMixin, View):
 
     def post(self, request):
         have_update = False
-        # 从表单获取图片并上传
+        # 从表单获取更新信息
         if request.user.is_authenticated:
             form = MerchantsForm(request.POST, request.FILES)
             if form.is_valid():
 
-                m_name = form.cleaned_data['m_name']
-                m_address = form.cleaned_data['m_address']
-                m_phone = form.cleaned_data['m_phone']
-                m_link = form.cleaned_data['m_link']
-                m_description = form.cleaned_data['m_description']
-                m_image = form.cleaned_data['m_image']
+                # m_name = form.cleaned_data['m_name']
+                # m_address = form.cleaned_data['m_address']
+                # m_phone = form.cleaned_data['m_phone']
+                # m_link = form.cleaned_data['m_link']
+                # m_description = form.cleaned_data['m_description']
+                # m_image = form.cleaned_data['m_image']
 
-                # print("name", m_name)
-                # print("address", m_address)
-                # print("phone", m_phone)
-                # print("link", m_link)
-                # print("description", m_description)
-                # print("image", m_image)
+                # # print("name", m_name)
+                # # print("address", m_address)
+                # # print("phone", m_phone)
+                # # print("link", m_link)
+                # # print("description", m_description)
+                # # print("image", m_image)
 
-                new_merchant = DiscountMerchant(merchant_name=m_name, merchant_description=m_description,
-                                     merchant_phone=m_phone, merchant_address=m_address, merchant_link=m_link, merchant_image = m_image)
+                # new_merchant = DiscountMerchant(merchant_name=m_name, merchant_description=m_description,
+                #                      merchant_phone=m_phone, merchant_address=m_address, merchant_link=m_link, merchant_image = m_image)
 
-                new_merchant.save()
-                have_update = True
+                # new_merchant.save()
+                # have_update = True
 
         return render(request, self.template_name, {'update':have_update})
 
