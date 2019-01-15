@@ -452,8 +452,8 @@ class UserLookup(LoginRequiredMixin, View):
 
 class saveBlog (LoginRequiredMixin, PermissionRequiredMixin, View):
     login_url = "/hub/login/"
-    permission_required = ("BlogAPI.can_add_blog_content", "BlogAPI.can_change_blog_content", "BlogAPI.can_delete_blog_content", 
-    "BlogAPI.can_add_blog_description", "BlogAPI.can_change_blog_description", "BlogAPI.can_delete_blog_description")
+    permission_required = ("BlogAPI.blog.Can_add_blog", "BlogAPI.blog.Can_change_blog", "BlogAPI.blog.Can_delete_blog", 
+    )
 
     def storeToBlogOldContent(self, oldBlog):
         # MAX_HIST = 3
@@ -462,6 +462,32 @@ class saveBlog (LoginRequiredMixin, PermissionRequiredMixin, View):
         # if len(oldBlogs) > MAX_HIST:
 
         pass
+
+    def addTagsToBlog(self, blog, tags):
+        curBlogTags = BlogModels.BlogInTag.objects.filter(blogId=blog)
+        for tagInBlog in curBlogTags:
+            if not (tagInBlog.tagId.tagName in tags):
+                tagInBlog.delete()
+            else:
+
+                tags.remove(tagInBlog.tagId.tagName)
+        
+        for tag in tags:
+            blogTagReal = ""
+            blogTag = BlogModels.BlogTag.objects.filter(tagName=tag)
+            if blogTag:
+                blogTagReal = blogTag[0]
+            else:
+                blogTagReal = BlogModels.BlogTag(
+                    tagName = tag
+                )
+                blogTagReal.save()
+            
+            newBlogInTag = BlogModels.BlogInTag(
+                blogId = blog,
+                tagId = blogTagReal
+            )
+            newBlogInTag.save()
 
     def getContent(self, blogMainContent):
         dicContent = json.loads(blogMainContent.replace("(ffffhhhhccccc)", ";").replace(" ", "+"))
@@ -569,6 +595,8 @@ class saveBlog (LoginRequiredMixin, PermissionRequiredMixin, View):
                 )
                 blog.save()
 
+                blogTags = json.loads(request.POST["tag"].replace("(ffffhhhhccccc)", ";"))
+                self.addTagsToBlog(blog, blogTags)
                 print(blogId)
 
                 return JsonResponse({
@@ -619,6 +647,9 @@ class saveBlog (LoginRequiredMixin, PermissionRequiredMixin, View):
                 )
                 blogWrittenBy.save()
 
+                blogTags = json.loads(request.POST["tag"].replace("(ffffhhhhccccc)", ";"))
+                self.addTagsToBlog(blog, blogTags)
+
                 return JsonResponse({
                         'success': True,
                         'status': '200',
@@ -634,23 +665,12 @@ class saveBlog (LoginRequiredMixin, PermissionRequiredMixin, View):
 
 class deleteBlog(LoginRequiredMixin, PermissionRequiredMixin, View):
     login_url = "/hub/login/"
-    permission_required = ("BlogAPI.can_add_blog_content", "BlogAPI.can_change_blog_content", "BlogAPI.can_delete_blog_content", 
-    "BlogAPI.can_add_blog_description", "BlogAPI.can_change_blog_description", "BlogAPI.can_delete_blog_description")
+    permission_required = ("BlogAPI.can_add_blog", "BlogAPI.can_change_blog", "BlogAPI.can_delete_blog",)
 
     def get(self, request, *args, **kwargs):
-        data = {
-            'status': '400', 'reason': 'Bad Requests!'
-        }
-        return data
-
-    def post(self, request, *args, **kwargs):
-        # 检查是否是新content
-        # 如果不是新content 检查是否 user对
-
-        # post: blogId contentid blogtitle blogopentopublic
 
         try:
-            blogId = int(request.POST["blogId"])
+            blogId = int(request.GET["blogId"])
         except:
             return JsonResponse({
                     'success': False,
@@ -695,6 +715,18 @@ class deleteBlog(LoginRequiredMixin, PermissionRequiredMixin, View):
                 'status': '400',
                 'message': "wrong blog id"
             })
+
+    def post(self, request, *args, **kwargs):
+        # 检查是否是新content
+        # 如果不是新content 检查是否 user对
+
+        # post: blogId contentid blogtitle blogopentopublic
+
+
+        data = {
+            'status': '400', 'reason': 'Bad Requests!'
+        }
+        return data
     
 
 

@@ -1,0 +1,94 @@
+.blogBigContainer{
+    margin-bottom: 100px;
+        margin-top: 50px;
+        min-height: 1000px;
+        min-width: 300px;
+    }
+    *{
+        color: rgb(65, 65, 65);
+    }
+
+    h3{
+        font-size: 20px;
+        margin-bottom: 10px;
+    }
+
+    h5{
+        font-size: 14px;
+    }
+
+    .tagBox{
+        margin: 10px 0px;
+    }
+
+.blogTag{
+    margin-top: 10px;
+}
+
+    .label {
+      display: inline;
+      padding: .2em .6em .3em;
+      font-size: 75%;
+      font-weight: bold;
+      line-height: 1;
+      color: white;
+      text-align: center;
+      white-space: nowrap;
+      vertical-align: baseline;
+      border-radius: .25em;
+        background-color: rgb(18, 123, 163);
+    }
+
+    .blogHeadingBox{
+        margin-top: 0px;
+        margin-bottom: 30px;
+    }
+
+    .blogContainer{
+        margin-bottom: 100px;
+        padding: 50px 35px;
+        box-shadow: 0px 40px 80px 2px rgba(0, 0, 0, 0.2);
+        margin-top: 50px;
+    }
+
+    .blogAuthorBox{
+        float: left;
+        height: 40px;
+        min-width: 200px;
+    }
+
+    .blogAuthorsContainer{
+        min-width: 200px;
+        padding: 20px;
+        margin: 20px 0px;
+        background-color: rgba(240, 240, 240)
+    }
+
+    .avatar{
+        display: block;
+        width: 40px;
+        height: 40px;
+        float: left;
+        border-radius: 20px;
+        background-color: green;
+    }
+
+    .blogFullContentBox{
+        margin-top: 30px;
+    }
+
+    .blogAuthorInfoBox{
+        margin-left: 12px;
+        float: left;
+    }
+
+    .blogAuthorInfoBox h5{
+        font-size: 14px;
+        margin-bottom: 5px;
+        color: rgba(160, 160, 160, 1)
+    }
+
+    .blogAuthorInfoBox em{
+        font-style: normal;
+        color: rgba(90, 90, 90, 1)
+    }
