@@ -19,11 +19,21 @@
 
 </style> -->
 {% endblock ExtraHeader %}
-
-
 {% block pageContent %}
+<script type="text/javascript">
+    
+    document.getElementById("m_img").src = '{{infos.merchant_image}}'
+    document.getElementById("m_img").alt = '{{infos.merchant_name}}'
+    document.getElementById("m_name").val() = '{{infos.merchant_name}}'
+    document.getElementById("m_address").val() = '{{infos.merchant_address}}'
+    document.getElementById("m_phone").val() = '{{infos.merchant_phone}}'
+    document.getElementById("m_link").val() = '{{infos.merchant_link}}'
+    document.getElementById("m_description").val() = '{{infos.merchant_description}}'
+    
+</script>
+
 <div>商家原图片</div>
-<center><img id="merchant_img" src="/static/myCSSAhub/img/membership-card.png" alt="Smiley face" width="350" height="170"></center>
+<center><img id="m_img" alt="" width="350" height="170"></center>
 <form method="post" id="form" enctype="multipart/form-data">
     {% comment %} {% for error in form.non_field_errors %}
     <div class="alert alert-danger">
@@ -65,16 +75,16 @@
     {% csrf_token %}
     <div class="form-group">
         <label for="merchant_name">商户名：</label>
-        <input class="form-control" id="" name="m_name" style="width:100%" required/>
+        <input class="form-control" id="m_name" name="m_name" style="width:100%" required/>
         <label for="merchant_address">地址：</label>
-        <input class="form-control" name="m_address" type="text" required />
+        <input class="form-control" id="m_address" name="m_address" type="text" required />
         <label for="merchant_phone">联系电话：</label>
-        <input class="form-control" name="m_phone" type="phone" required />
+        <input class="form-control" id="m_phone" name="m_phone" type="phone" required />
         <label for="merchant_link">商家网站：</label>
-        <input class="form-control" name="m_link" type="link" required />
+        <input class="form-control" id="m_link" name="m_link" type="link" required />
         <div class="form-group">
             <label for="merchant_description">商家简介：</label>
-            <textarea class="form-control" name="m_description" rows="11" required></textarea>
+            <textarea class="form-control" id="m_description" name="m_description" rows="11" required></textarea>
         </div>
         <div class="form-group">
             <label for="merchant_pic">选择商家图片：</label>

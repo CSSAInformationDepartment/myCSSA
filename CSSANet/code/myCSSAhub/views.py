@@ -204,7 +204,7 @@ class Merchants_list(LoginRequiredMixin, View):
     template_name = 'myCSSAhub/merchants_list.html'
 
     def get(self, request):
-        if request.user.is_authenticated: 
+        if request.user.is_authenticated:
             infos = DiscountMerchant.objects.all().order_by("merchant_add_date").values()
 
         return render(request, self.template_name, locals())
@@ -212,12 +212,13 @@ class Merchants_list(LoginRequiredMixin, View):
     def post(self, request):
         return render(request, self.template_name)
 
+
 class Merchant_add(LoginRequiredMixin, View):
     login_url = '/hub/login/'
     template_name = 'myCSSAhub/merchant_add.html'
 
     def get(self, request):
-        
+
         return render(request, self.template_name)
 
     def post(self, request):
@@ -242,23 +243,27 @@ class Merchant_add(LoginRequiredMixin, View):
                 # print("image", m_image)
 
                 new_merchant = DiscountMerchant(merchant_name=m_name, merchant_description=m_description,
-                                     merchant_phone=m_phone, merchant_address=m_address, merchant_link=m_link, merchant_image = m_image)
+                                                merchant_phone=m_phone, merchant_address=m_address, merchant_link=m_link, merchant_image=m_image)
 
                 new_merchant.save()
                 have_update = True
 
-        return render(request, self.template_name, {'update':have_update})
+        return render(request, self.template_name, {'update': have_update})
+
+# 这个页面主要是加载已经加入商家的信息，并更新
 
 
 class Merchant_profile(LoginRequiredMixin, View):
     login_url = '/hub/login/'
     template_name = 'myCSSAhub/merchant_profile.html'
+    old_info = []
 
     def get(self, request,  *args, **kwargs):
-        contentId = self.kwargs.get('id')  
-        
-
-        return render(request, self.template_name)
+        profileID = self.kwargs.get('id')
+        # 获取id相关的信息
+        infos = DiscountMerchant.objects.get(id=profileID)
+        self.old_info = infos
+        return render(request, self.template_name, locals())
 
     def post(self, request):
         have_update = False
@@ -266,32 +271,41 @@ class Merchant_profile(LoginRequiredMixin, View):
         if request.user.is_authenticated:
             form = MerchantsForm(request.POST, request.FILES)
             if form.is_valid():
+                is_change = False
+                m_name = form.cleaned_data['m_name']
+                m_address = form.cleaned_data['m_address']
+                m_phone = form.cleaned_data['m_phone']
+                m_link = form.cleaned_data['m_link']
+                m_description = form.cleaned_data['m_description']
+                m_image = form.cleaned_data['m_image']
 
-                # m_name = form.cleaned_data['m_name']
-                # m_address = form.cleaned_data['m_address']
-                # m_phone = form.cleaned_data['m_phone']
-                # m_link = form.cleaned_data['m_link']
-                # m_description = form.cleaned_data['m_description']
-                # m_image = form.cleaned_data['m_image']
+                if m_name != self.old_info.merchant_name:
+                    self.old_info.merchant_name = m_name
+                    is_change = True
+                if m_address != self.old_info.merchant_address:
+                    self.old_info.merchant_address = m_address
+                    is_change = True
+                if m_phone != self.old_info.merchant_phone:
+                    self.old_info.merchant_phone = m_phone
+                    is_change = True
+                if m_link != self.old_info.merchant_link:
+                    self.old_info.merchant_link = m_link
+                    is_change = True
+                if m_description != self.old_info.merchant_description:
+                    self.old_info.merchant_description = m_description
+                    is_change = True
+                if m_image != self.old_info.merchant_image:
+                    self.old_info.merchant_image = m_image
+                    is_change = True
+                
+                if is_change:
+                  self.old_info.save()
+                  have_update = True
 
-                # # print("name", m_name)
-                # # print("address", m_address)
-                # # print("phone", m_phone)
-                # # print("link", m_link)
-                # # print("description", m_description)
-                # # print("image", m_image)
-
-                # new_merchant = DiscountMerchant(merchant_name=m_name, merchant_description=m_description,
-                #                      merchant_phone=m_phone, merchant_address=m_address, merchant_link=m_link, merchant_image = m_image)
-
-                # new_merchant.save()
-                # have_update = True
-
-        return render(request, self.template_name, {'update':have_update})
+        return render(request, self.template_name, {'update': have_update})
 
 
 ###### logout page ##########
-
 
 @login_required(login_url='/hub/login/')
 def logout_page(request):
