@@ -11,31 +11,52 @@
 {% block pageContent %}
 {% csrf_token %}
 {% load static %}
-<div class="col-sm-12">
-  <div class="card">
-    <div class="card-header"><strong>添加新成员</strong>beta</div>
-      <div class="card-body">
-        <div class="row">
-            <form method="POST" id="membership-check" action="">
-                <div class="form-group col-sm-12">
-                    <label for="notification_user">成员查询: (可使用姓名（拼音）、邮箱、电话等任意信息查询)</label>
-                    <select class="form-control" id="userlookup" name="lookUPId" style="width:100%"></select>
-                </div>
-                <button class="btn btn-sm btn-success" type="submit" form="membership-check">
-                    <i class="fa fa-dot-circle-o"></i> 查询
-                </button>
-            </form>
-        </div>
-        <div class="row">
-          <div class="col-sm-8">
-          </div>
-          <div class="col-sm-4">
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card">
+          <div class="card-header"><strong>成员信息</strong>beta</div>
+            <div class="card-body">
+                <table>
+                    <thead>
+                        <tr></tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  </div>
 </div>
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card">
+          <div class="card-header"><strong>添加新成员</strong>beta</div>
+            <div class="card-body">
+              <div class="row">
+                  <form method="POST" id="membership-check" action="">
+                      <div class="form-group col-sm-12">
+                          <label for="notification_user">成员查询: (可使用姓名（拼音）、邮箱、电话等任意信息查询)</label>
+                          <select class="form-control" id="userlookup" name="lookUPId" style="width:100%"></select>
+                      </div>
+                      <button class="btn btn-sm btn-success" type="submit" form="membership-check">
+                          <i class="fa fa-dot-circle-o"></i> 查询
+                      </button>
+                  </form>
+              </div>
+              <div class="row">
+                <div class="col-sm-8">
+                </div>
+                <div class="col-sm-4">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+</div>
+
 
 {% endblock pageContent %} 
 
