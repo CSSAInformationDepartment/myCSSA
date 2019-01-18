@@ -10,6 +10,7 @@ from Library.SiteManagement import LoadPagetoRegister
 from django.core.cache.backends.base import DEFAULT_TIMEOUT
 from django.conf import settings
 from django.views.decorators.cache import cache_page
+from myCSSAhub import models as HubModels
 # Create your views here.
 
 
@@ -135,8 +136,10 @@ def editBlog(request):
 
 ################################# sponsor pages ########################################
 def Merchants(request):
+      
+    infos = HubModels.DiscountMerchant.objects.all().order_by("merchant_add_date").values()
 
-    return render(request,'PublicSite/merchant.html')
+    return render(request,'PublicSite/merchant.html', locals())
 
 ################################# errors pages ########################################
 from django.shortcuts import render
