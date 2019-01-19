@@ -10,5 +10,4 @@ urlpatterns = [
     path('department/<str:dept>/', Views.Departments, name='departments'),
     path('blog/<int:blogId>/', Views.BlogContents, name='blogContent'),
     path('blogs/<int:page>/', Views.Blogs, name='blogs'),
-    path('editbg', Views.editBlog, name='editblog')
 ]

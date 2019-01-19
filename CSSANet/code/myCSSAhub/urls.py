@@ -3,6 +3,7 @@ from django.urls import path, re_path, include
 from myCSSAhub import views as Views
 from FinanceAPI import urls as FinanceUrls
 from OrganisationMgr import  urls as OrgMgrUrls
+from BlogAPI import urls as BlogUrls
 
 app_name = "myCSSAhub"
 urlpatterns = [
@@ -29,6 +30,7 @@ urlpatterns = [
 urlpatterns += [
     path('finance/', include(FinanceUrls, namespace='FinanceAPI')),
     path('organisation/', include(OrgMgrUrls, namespace='OrganisationMgr')),
+    path('blog/', include(BlogUrls, namespace="BlogAPI"))
 ]
 
 ## Internal AJAX path
@@ -38,6 +40,4 @@ urlpatterns += [
     path('ajax/checkPhoneIntegrity/', Views.CheckTelIntegrity, name="ajax_checkTelIntegrity"),
     path('ajax/checkStudentIdIntegrity/', Views.CheckStudentIdIntegrity, name="ajax_checkStudentIdIntegrity"),
     path('ajax/userlookup/', Views.UserLookup.as_view(), name="ajax_userLookup"),
-    path('ajax/saveBlog/', Views.saveBlog.as_view(), name="ajax_saveBlog"),
-    path('ajax/deleteBlog/', Views.deleteBlog.as_view(), name="ajax_deleteBlog")
 ]

@@ -2,6 +2,10 @@
     color: rgb(65, 65, 65);
 }
 
+.blogContainer{
+    background-color: white;
+}
+
 .blogEditContainer{
     min-width: 500px
 }

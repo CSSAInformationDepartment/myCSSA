@@ -11,7 +11,7 @@ from django.core.cache.backends.base import DEFAULT_TIMEOUT
 from django.conf import settings
 from django.views.decorators.cache import cache_page
 
-import json
+import json, math
 # Create your views here.
 
 
@@ -52,6 +52,50 @@ def Departments(request,dept):
 
 def Blogs(request, page):
     # 找openToPublic为true的
+    BLOG_P = 2.0
+    PAGE_SHW = 3 # must be odd!
+
+    blogs = BlogModels.Blog.objects.filter(blogOpen=True, blogReviewed=True)
+    if "tag" in request.GET:
+        blogsTemp = []
+        # filter tag
+    numPage = int(math.ceil(len(blogs) / BLOG_P))
+    # no blogs
+    if page < 1 or page > numPage:
+        return page_not_found(request)
+    
+    blogStarts = int((page - 1) * BLOG_P)
+    blogEndAt = int((page) * BLOG_P)
+
+    ViewBag = {}
+    ViewBag["blogs"] = blogs[blogStarts: blogEndAt]
+
+    pagesBottom = []
+    if PAGE_SHW >= numPage:
+        pagesBottom = [(x + 1) for x in range(numPage)]
+    if page < PAGE_SHW:
+        pagesBottom = [(x + 1) for x in range(PAGE_SHW)]
+    elif page > numPage - PAGE_SHW + 1:
+        pagesBottom = [x for x in range((numPage - PAGE_SHW + 1), (numPage + 1))]
+    else:
+        pageStart = page - (PAGE_SHW - 1) / 2
+        pageEnd = page + (PAGE_SHW - 1) / 2 + 1
+        pagesBottom = [x for x in range(pageStart, pageEnd)]
+
+    ViewBag["pages"] = pagesBottom
+    ViewBag["thisPage"] = page
+    ViewBag["numPage"] = numPage
+
+
+    nextPrev = {"pr": -1, "ne": -1}
+    if page != 1:
+        nextPrev["pr"] = page - 1
+    if page != numPage:
+        nextPrev["ne"] = page + 1
+    ViewBag["hasNextPrev"] = nextPrev
+
+    return render(request, "PublicSite/blogbref.html", ViewBag)
+    
     pass
 
 def BlogContents(request, blogId):
@@ -97,76 +141,7 @@ def BlogContents(request, blogId):
     ViewBag["blogTag"] = blogTag
     print(ViewBag)
     return render(request, 'PublicSite/blogs.html', ViewBag)
-
-def editBlog(request):
-    # 需要判断contentId
-    # avatar没有的时候会报错
-
-    NEW_BLOG = -1
-
-    CR_BLOG = "创建Blog"
-    CH_BLOG = "更改Blog"
-    blogId = request.GET["blogId"]
-    try:
-        blogId = int(blogId)
-    except:
-        return bad_request(request)
-
-    print(blogId)
-    ViewBag = {}
-
-    userAuthed = request.user.is_authenticated
-
-    if userAuthed:
-        user = request.user
-        ViewBag["user"] = {
-            "user": request.user,
-            "userProfile": UserModels.UserProfile.objects.filter(user=user)[0]
-        }
-    else:
-        return bad_request(request)
-
-    blogContentSingle = -1
-    blogTitle = ""
-    blogMainContent = ""
-
-
-    if blogId != NEW_BLOG:
-        blogWrittenBys = BlogModels.BlogWrittenBy.objects.filter(blogId=blogId)
-        wrote = False
-        if blogWrittenBys:
-            for blogWrittenBy in blogWrittenBys:
-                if userAuthed and blogWrittenBy.userId == request.user:
-                    wrote = True
-                
-
-            # user没有写blog
-            if wrote == False:
-                return permission_denied(request)
-        blog = BlogModels.Blog.objects.filter(blogId=blogId)
-        if not blog:
-            return bad_request(request)
-        blogContentSingle = blog[0]
-        blogTitle = blogContentSingle.blogTitle
-        blogMainContent = blogContentSingle.blogMainContent
-        ViewBag["toolTitle"] = CH_BLOG
-        curBlogTag = BlogModels.BlogInTag.objects.filter(blogId=blog[0])
-        blogTag = json.dumps([x.tagId.tagName for x in curBlogTag]).replace("\\", "\\\\")
-
-        ViewBag["blogTag"] = blogTag
-    else:
-        ViewBag["toolTitle"] = CR_BLOG
-
-        ViewBag["blogTag"] = []
-        pass
-
-    ViewBag["blogId"] = blogId
-    ViewBag["blogTitle"] = blogTitle
-    ViewBag["blogMainContent"] = blogMainContent
-
-
     
-    return render(request, 'PublicSite/blogeditpage.html', ViewBag)
 
 
 #@cache_page(CACHE_TTL)
