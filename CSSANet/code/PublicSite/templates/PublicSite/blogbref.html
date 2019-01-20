@@ -1,0 +1,121 @@
+{% extends 'components/base_page.html' %}
+{% block 'extra_header' %}
+{% load static %}
+
+{% endblock 'extra_header' %}
+
+{% block 'pg_body' %}
+<!-- bloc-4 -->
+{% load static %}
+<style>
+.blogBrefContainer{
+    width: 80%;
+    min-width: 600px;
+    margin: 80px auto 250px auto;
+}
+    
+a:hover{
+    color: grey
+}
+
+h1{
+    font-weight: 300;
+    font-size: 50px;
+}
+
+h2{
+    font-weight: 600;
+    margin: 6px 0px;
+}
+
+h3{
+    font-weight: 400;
+    margin: 2px 0px;
+}
+
+.blogBref{
+    padding: 20px 10px;
+    border-bottom-style: solid;
+    border-bottom-color: rgba(0, 0, 0, 0.6);
+    border-bottom-width: 0.2px;
+}
+
+.blogBrefTexting{
+    float: left;
+}
+
+.blogBrefPic{
+    float: right;
+}
+
+.blogPicImg{
+    width: 100px;
+    height: 100px;
+    background-color: lightsalmon;
+}
+
+.blogBrefStatusBox{
+    margin: 20px 0px 0px 0px;
+}
+</style>
+<div class="blogBrefContainer">
+        <h1>文章</h1>
+    <br />
+    <br />
+
+
+        <div class="blogsContainer">
+            {% for blog in blogs %}
+                <div class="blogBref">
+                    <div class="blogBrefTexting">
+                        <a href="/blog/{{ blog.blogId }}/" target="_blank">
+                            <div class="blogBrefHeadBox">
+                                <h2>{{ blog.blogTitle }}</h2>
+                                <h5>{{ blog.createDate }}</h5>
+                            </div>
+                        </a>
+                        <div class="blogBrefStatusBox">
+                            <a>标签</a>
+                        </div>
+                    </div>
+                    <div class="blogBrefPic">
+                        <img class="blogPicImg"/>
+                    </div>
+                    <div style="clear: both;">
+                    </div>
+                </div>
+            {% endfor %}
+            
+            <nav>
+              <ul class="pagination">
+                  {% if hasNextPrev.pr != -1 %}
+                <li class="page-item">
+                  <a class="page-link" href="/blogs/{{ hasNextPrev.pr }}/" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                    <span class="sr-only">Previous</span>
+                  </a>
+                </li>
+                  {% endif %}
+                  {% for p in pages %}
+                  {% if p != thisPage %}
+                <li class="page-item"><a class="page-link" href="/blogs/{{ p }}/">{{ p }}</a></li>
+                  {% else %}
+                  <li class="page-item active"><a class="page-link" href="/blogs/{{ p }}/">{{ p }}</a></li>
+                  {% endif %}
+                  {% endfor %}
+                  {% if hasNextPrev.ne != -1 %}
+                <li class="page-item">
+                  <a class="page-link" href="/blogs/{{ hasNextPrev.ne }}/" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                    <span class="sr-only">Next</span>
+                  </a>
+                </li>
+                  {% endif %}
+              </ul>
+                <h5>共 {{ numPage }} 页</h5>
+            </nav>
+
+
+        </div>
+    </div>
+{% endblock 'pg_body' %}

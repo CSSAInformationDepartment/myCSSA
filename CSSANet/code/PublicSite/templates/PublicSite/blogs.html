@@ -57,7 +57,7 @@
                 {% if userIsAuthor %}
 
                 
-                <a href="/editbg?blogId={{ blog.blogId }}"><button class="btn btn-default navbar-btn handButtonAnother" id="out">编辑文章</button></a>
+                <a href="/hub/blog/editbg?blogId={{ blog.blogId }}"><button class="btn btn-default navbar-btn handButtonAnother" id="out">编辑文章</button></a>
                 <button class="btn btn-default navbar-btn handButtonOther" id="delete">删除</button>
                 
                 {% endif %}
@@ -111,7 +111,7 @@
                             }
                         }
                         
-                        XMLobj.open("GET", '/hub/ajax/deleteBlog?blogId=' + blogId, true);
+                        XMLobj.open("GET", '/hub/blog/ajax/deleteBlog?blogId=' + blogId, true);
                         XMLobj.send();
                     }
                 }

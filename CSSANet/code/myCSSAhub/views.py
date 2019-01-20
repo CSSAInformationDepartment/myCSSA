@@ -477,6 +477,78 @@ class MembershipCardView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         return render(request, self.template_name)
 
+############################# blog ####################################################
+
+def editBlog(request):
+    # 需要判断contentId
+    # avatar没有的时候会报错
+
+    NEW_BLOG = -1
+
+    CR_BLOG = "创建Blog"
+    CH_BLOG = "更改Blog"
+    blogId = request.GET["blogId"]
+    try:
+        blogId = int(blogId)
+    except:
+        return bad_request(request)
+
+    print(blogId)
+    ViewBag = {}
+
+    userAuthed = request.user.is_authenticated
+
+    if userAuthed:
+        user = request.user
+        ViewBag["user"] = {
+            "user": request.user,
+            "userProfile": UserModels.UserProfile.objects.filter(user=user)[0]
+        }
+    else:
+        return bad_request(request)
+
+    blogContentSingle = -1
+    blogTitle = ""
+    blogMainContent = ""
+
+
+    if blogId != NEW_BLOG:
+        blogWrittenBys = BlogModels.BlogWrittenBy.objects.filter(blogId=blogId)
+        wrote = False
+        if blogWrittenBys:
+            for blogWrittenBy in blogWrittenBys:
+                if userAuthed and blogWrittenBy.userId == request.user:
+                    wrote = True
+                
+
+            # user没有写blog
+            if wrote == False:
+                return permission_denied(request)
+        blog = BlogModels.Blog.objects.filter(blogId=blogId)
+        if not blog:
+            return bad_request(request)
+        blogContentSingle = blog[0]
+        blogTitle = blogContentSingle.blogTitle
+        blogMainContent = blogContentSingle.blogMainContent
+        ViewBag["toolTitle"] = CH_BLOG
+        curBlogTag = BlogModels.BlogInTag.objects.filter(blogId=blog[0])
+        blogTag = json.dumps([x.tagId.tagName for x in curBlogTag]).replace("\\", "\\\\")
+
+        ViewBag["blogTag"] = blogTag
+    else:
+        ViewBag["toolTitle"] = CR_BLOG
+
+        ViewBag["blogTag"] = []
+        pass
+
+    ViewBag["blogId"] = blogId
+    ViewBag["blogTitle"] = blogTitle
+    ViewBag["blogMainContent"] = blogMainContent
+
+
+    
+    return render(request, 'myCSSAhub/blogeditpage.html', ViewBag)
+
 ############################# AJAX Page Resources #####################################
 
 
@@ -603,14 +675,23 @@ class saveBlog (LoginRequiredMixin, PermissionRequiredMixin, View):
     )
 
     def storeToBlogOldContent(self, oldBlog):
-        # MAX_HIST = 3
-        # oldBlogs = BlogModels.BlogOldContent.objects.filter(blogId = oldBlog).order_by("")
-        # oldBlogs =
-        # if len(oldBlogs) > MAX_HIST:
+        MAX_HIST = 5
+        oldBlogs = BlogModels.BlogOldContent.objects.filter(blogId = oldBlog).order_by("writtenDate")
+        print(len(oldBlogs))
+        if len(oldBlogs) >= MAX_HIST:
+            oldBlogs[0].delete()
 
-        pass
+        newOldBlog = BlogModels.BlogOldContent(
+            blogId = oldBlog,
+            blogOldTitle = oldBlog.blogTitle,
+            blogOldContent = oldBlog.blogMainContent,
+            writtenDate = oldBlog.lastModifiedDate
+        )
+
+        newOldBlog.save()
 
     def addTagsToBlog(self, blog, tags):
+        tags = [x[:18] for x in tags]
         curBlogTags = BlogModels.BlogInTag.objects.filter(blogId=blog)
         for tagInBlog in curBlogTags:
             if not (tagInBlog.tagId.tagName in tags):
@@ -737,13 +818,13 @@ class saveBlog (LoginRequiredMixin, PermissionRequiredMixin, View):
                     })
                 blog = BlogModels.Blog(
                     blogId=blogId,
-                    blogTitle=request.POST["blogTitle"],
+                    blogTitle=request.POST["blogTitle"][:100],
                     createDate=blog.createDate,
                     lastModifiedDate=datetime.datetime.now(),
-                    blogReviewed=blog.blogReviewed,
-                    blogReads=blog.blogReads,
-                    blogMainContent=blogMainContent,
-                    blogOpen=blogOpen
+                    blogReviewed = False,
+                    blogReads = blog.blogReads,
+                    blogMainContent = blogMainContent,
+                    blogOpen = blogOpen
                 )
                 blog.save()
 
@@ -783,13 +864,13 @@ class saveBlog (LoginRequiredMixin, PermissionRequiredMixin, View):
                     })
                 print(type(blogOpen) == bool)
                 blog = BlogModels.Blog(
-                    blogTitle=request.POST["blogTitle"],
+                    blogTitle=request.POST["blogTitle"][:100],
                     lastModifiedDate=datetime.datetime.now(),
                     createDate=datetime.datetime.now(),
-                    blogReviewed=True,
-                    blogReads=0,
-                    blogMainContent=blogMainContent,
-                    blogOpen=blogOpen
+                    blogReviewed = False,
+                    blogReads = 0,
+                    blogMainContent = blogMainContent,
+                    blogOpen = blogOpen
                 )
                 blog.save()
 
