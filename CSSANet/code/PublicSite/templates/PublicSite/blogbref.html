@@ -26,12 +26,17 @@ h1{
 h2{
     font-weight: 600;
     margin: 6px 0px;
+    font-size: 22px;
 }
 
 h3{
     font-weight: 400;
     margin: 2px 0px;
 }
+    
+    h5{
+        font-size: 13px;
+    }
 
 .blogBref{
     padding: 20px 10px;
@@ -57,65 +62,102 @@ h3{
 .blogBrefStatusBox{
     margin: 20px 0px 0px 0px;
 }
+    
+    .bottomPageNum{
+        margin: 50px 0px;
+        width: auto;
+        height: auto;
+    }
+    
+    .bottomPageNum nav{
+        float: right;
+    }
+    
+    .bottomPageNum h5{
+        float: right;
+        margin: 10px 50px;
+        vertical-align: middle;
+    }
 </style>
 <div class="blogBrefContainer">
-        <h1>文章</h1>
+        <h1>{{ tagTitle }}文章</h1>
     <br />
     <br />
 
 
+    {% if haveBlogs %}
         <div class="blogsContainer">
+            <style>
+                .customImg{
+                    width: 100%;
+                }
+                
+                .cardImg{
+                    overflow: hidden;
+                    height: 180px;
+                }
+                
+                .card-title{
+                    font-weight: 300;
+                    color: rgb(25, 25, 25);
+                }
+            </style>
             {% for blog in blogs %}
-                <div class="blogBref">
-                    <div class="blogBrefTexting">
-                        <a href="/blog/{{ blog.blogId }}/" target="_blank">
-                            <div class="blogBrefHeadBox">
-                                <h2>{{ blog.blogTitle }}</h2>
-                                <h5>{{ blog.createDate }}</h5>
-                            </div>
-                        </a>
-                        <div class="blogBrefStatusBox">
-                            <a>标签</a>
-                        </div>
-                    </div>
-                    <div class="blogBrefPic">
-                        <img class="blogPicImg"/>
-                    </div>
-                    <div style="clear: both;">
-                    </div>
-                </div>
+            {% load static %}
+            <div class="card mb-3">
+                {% if blog.0.blogTopPic %}
+                <a target="_blank" href="/blog/{{ blog.0.blogId }}/"><div class="cardImg"><img class="card-img-top customImg" src="{{ blog.0.blogTopPic }}"></div></a>
+                {% else %}
+                <a target="_blank" href="/blog/{{ blog.0.blogId }}/"><div class="cardImg"><img class="card-img-top customImg" src="{% static 'PublicSite/img/index-background.jpg' %}"></div></a>
+                {% endif %}
+              <div class="card-body">
+                  <h5 class="card-title">{% if blog.1 %}{% for tag in blog.1 %}
+                    <a target="_blank" href="/blogs?page=1&tag={{ tag }}"><span class="badge badge-info">{{ tag }}</span></a>
+                    
+                    {% endfor %}
+                    {% else %}
+                    (无标签)
+                      {% endif %}</h5>
+                  <a target="_blank" href="/blog/{{ blog.0.blogId }}/"><p class="card-text">{{ blog.0.blogTitle }}</p></a>
+                <p class="card-text"><small class="text-muted">创建于 {{ blog.0.createDate|date:"Y-m-d H:i:s" }}, 修改于 {{ blog.0.lastModifiedDate|date:"Y-m-d H:i:s" }}</small></p>
+              </div>
+            </div>
             {% endfor %}
-            
-            <nav>
-              <ul class="pagination">
-                  {% if hasNextPrev.pr != -1 %}
-                <li class="page-item">
-                  <a class="page-link" href="/blogs/{{ hasNextPrev.pr }}/" aria-label="Previous">
-                    <span aria-hidden="true">&laquo;</span>
-                    <span class="sr-only">Previous</span>
-                  </a>
-                </li>
-                  {% endif %}
-                  {% for p in pages %}
-                  {% if p != thisPage %}
-                <li class="page-item"><a class="page-link" href="/blogs/{{ p }}/">{{ p }}</a></li>
-                  {% else %}
-                  <li class="page-item active"><a class="page-link" href="/blogs/{{ p }}/">{{ p }}</a></li>
-                  {% endif %}
-                  {% endfor %}
-                  {% if hasNextPrev.ne != -1 %}
-                <li class="page-item">
-                  <a class="page-link" href="/blogs/{{ hasNextPrev.ne }}/" aria-label="Next">
-                    <span aria-hidden="true">&raquo;</span>
-                    <span class="sr-only">Next</span>
-                  </a>
-                </li>
-                  {% endif %}
-              </ul>
-                <h5>共 {{ numPage }} 页</h5>
-            </nav>
-
-
-        </div>
     </div>
+            
+            <div class="bottomPageNum">
+                <nav>
+                  <ul class="pagination">
+                      {% if hasNextPrev.pr != -1 %}
+                    <li class="page-item">
+                      <a class="page-link" href="/blogs?page={{ hasNextPrev.pr }}" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                        <span class="sr-only">Previous</span>
+                      </a>
+                    </li>
+                      {% endif %}
+                      {% for p in pages %}
+                      {% if p != thisPage %}
+                    <li class="page-item"><a class="page-link" href="/blogs?page={{ p }}">{{ p }}</a></li>
+                      {% else %}
+                      <li class="page-item active"><a class="page-link" href="/blogs?page={{ p }}">{{ p }}</a></li>
+                      {% endif %}
+                      {% endfor %}
+                      {% if hasNextPrev.ne != -1 %}
+                    <li class="page-item">
+                      <a class="page-link" href="/blogs?page={{ hasNextPrev.ne }}" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                        <span class="sr-only">Next</span>
+                      </a>
+                    </li>
+                      {% endif %}
+                  </ul>
+                </nav>
+                <h5>共 {{ numPage }} 页</h5>
+            </div>
+    {% else %}
+    <h2>来早啦，暂时无文章哦</h2>
+    {% endif %}
+
+</div>
 {% endblock 'pg_body' %}

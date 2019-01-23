@@ -27,6 +27,7 @@
                 <div class="blogHeadingBox">
 
                     <h1>{{ toolTitle }}</h1>
+                    <h5>感觉系统出了点问题？ <button onclick="window.location.reload();">刷新</button></h5>
                 </div>
                 <div class="blogAuthorsContainer">
                     <div class="blogAuthorBox">
@@ -83,19 +84,48 @@
                         </style>
                     <div class="tagBox">
                             <h5 id="tagBoxes">
-                                <span class="label label-primary blogTag" id="tagExm">Tag 1<span class="deleTag" id="tagDel">  ×</span></span>
+                                <span class="badge badge-info" id="tagExm">Tag 1<span class="deleTag" id="tagDel">  ×</span></span>
                             </h5>
                         </div>
+                    
                 </div>
                 
+                {% if blogId != -1%}
+                <h4>恢复历史版本</h4>
+                <h5>后台只保存最近的五份哦。如果看不到你编辑的文章请刷新页面。</h5>
+                    <ul class="list-group">
+                        {% if not isHistory %}
+
+                        
+                        <li class="list-group-item active"><a href="/hub/blog/editbg?blogId={{ blogId }}"><b>{{ blogTitle }}</b>, <span class="badge badge-success">最新版本</span>
+                            </a></li>
+                        {% else %}
+                        <li class="list-group-item"><a href="/hub/blog/editbg?blogId={{ blogId }}"><b>{{ blogTitle }}</b>, <span class="badge badge-success">最新版本</span>
+                            </a></li>
+                        {% endif %}
+                        {% for versi in versions %}
+                        {% if not curVersion.blogOldContentId == versi.1.blogOldContentId %}
+                        <li class="list-group-item"><a href="/hub/blog/editbg?blogId={{ blogId }}&version={{ versi.0 }}">
+                            <b>{{ versi.1.blogOldTitle }}</b>, <span class="badge badge-success">历史版本</span>, 创建于<span class="badge badge-light">{{ versi.1.writtenDate|date:"Y-m-d H:i:s" }}</span></a>
+                        </li>
+                        {% else %}
+                        <li class="list-group-item active"><a href="/hub/blog/editbg?blogId={{ blogId }}&version={{ versi.0 }}">
+                            <b>{{ versi.1.blogOldTitle }}</b>, <span class="badge badge-success">历史版本</span>, 创建于<span class="badge badge-light">{{ versi.1.writtenDate|date:"Y-m-d H:i:s" }}</span></a>
+                        </li>
+                        {% endif %}
+                        {% endfor %}
+                    </ul>
+                
                 <br />
+                {% endif %}
 
                 <h4>文章内容</h4>
                 <div id="blogEdit">
                 </div>
 
                 <button class="btn btn-default navbar-btn handButton" id="display">保存（不公开）</button>
-                <button class="btn btn-default navbar-btn handButtonAnother" id="out">公开发布</button>
+                <button class="btn btn-default navbar-btn handButtonAnother" id="out">公开发布并重新审核</button>
+                <button class="btn btn-default navbar-btn handButton" id="cancel">取消</button>
                 {% if blogId != -1 %}
                 <button class="btn btn-default navbar-btn handButtonOther" id="delete">删除</button>
                 
@@ -135,7 +165,11 @@
                 blogTag.push(tag.slice(0, 18));
             }
             let newTagEle = document.createElement("span");
-            newTagEle.className = "label label-primary blogTag";
+            newTagEle.className = "badge badge-info";
+            
+            newTagEle.style.color = "white"
+            newTagEle.style.margin = "0px 2px 0px 0px";
+            newTagEle.style.boxShadow = "0px 3px 13px 0px rgba(0, 0, 0, 0.1)"
             
             let newTagDele = tagDel.cloneNode();
             newTagDele.style.display = "inline";
@@ -182,7 +216,7 @@
             }
         }
     } */
-    
+    let cancelButton = document.getElementById("cancel");
     let displayButton = document.getElementById("display");
     
     let outButton = document.getElementById("out");
@@ -271,7 +305,7 @@
                 XMLobj.onreadystatechange = () => {
                     if(XMLobj.readyState == XMLHttpRequest.DONE && XMLobj.status == 200){
                             let response = XMLobj.responseText;
-                            response = JSON.parse(r.responseText);
+                            response = JSON.parse(XMLobj.responseText);
                             alert(response.message);
                         }
                     }
@@ -291,12 +325,21 @@
     let editor = new Quill("#blogEdit", options);
     let editorAnother = new Quill("#blogEditAnother");
     
+    cancelButton.onclick = () => {
+        let conf = confirm("所有更改不不会被保存，确定吗？")
+        if (conf){
+            window.location = "/hub/blog/writtenBlogs";
+        }
+    }
+    
     displayButton.onclick = () => {
         uploadClick(blogId, JSON.stringify(editor.getContents()).replace(/;/g, "(ffffhhhhccccc)"), title.value, false, JSON.stringify(blogTag).replace(/;/g, "(ffffhhhhccccc)"));
+        window.location = "/hub/blog/writtenBlogs"
     };
     
     outButton.onclick = () => {
         uploadClick(blogId, JSON.stringify(editor.getContents()).replace(/;/g, "(ffffhhhhccccc)"), title.value, true, JSON.stringify(blogTag).replace(/;/g, "(ffffhhhhccccc)"));
+        window.location = "/hub/blog/writtenBlogs"
     }
     
     try{

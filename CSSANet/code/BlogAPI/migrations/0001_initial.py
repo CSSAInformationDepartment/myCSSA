@@ -20,9 +20,11 @@ class Migration(migrations.Migration):
                 ('blogId', models.AutoField(primary_key=True, serialize=False)),
                 ('blogTitle', models.CharField(max_length=100)),
                 ('blogMainContent', models.TextField(default=None)),
-                ('createDate', models.DateTimeField(auto_now_add=True)),
+                ('createDate', models.DateTimeField()),
                 ('lastModifiedDate', models.DateTimeField(auto_now=True)),
-                ('blogReviewed', models.BooleanField(default=False)),
+                ('blogReviewed', models.SmallIntegerField(default=0)),
+                ('blogOpen', models.BooleanField(default=True)),
+                ('blogTopPic', models.ImageField(blank=True, null=True, upload_to='blog/blogpics')),
                 ('blogReads', models.IntegerField(default=0)),
             ],
         ),
@@ -31,7 +33,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('imageId', models.AutoField(primary_key=True, serialize=False)),
                 ('hashValue', models.CharField(max_length=40)),
-                ('imageFileB64', models.TextField()),
+                ('imageFileB64', models.ImageField(blank=True, null=True, upload_to='blog/blogpics')),
             ],
         ),
         migrations.CreateModel(
@@ -47,8 +49,16 @@ class Migration(migrations.Migration):
                 ('blogOldContentId', models.AutoField(primary_key=True, serialize=False)),
                 ('blogOldTitle', models.CharField(max_length=100)),
                 ('blogOldContent', models.TextField()),
-                ('writtenDate', models.DateTimeField(auto_now_add=True)),
+                ('writtenDate', models.DateTimeField(default=None)),
                 ('blogId', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='BlogAPI.Blog')),
+            ],
+        ),
+        migrations.CreateModel(
+            name='BlogReviewed',
+            fields=[
+                ('reviewedId', models.AutoField(primary_key=True, serialize=False)),
+                ('blogId', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='BlogAPI.Blog')),
+                ('userId', models.ForeignKey(on_delete=django.db.models.deletion.DO_NOTHING, to=settings.AUTH_USER_MODEL)),
             ],
         ),
         migrations.CreateModel(

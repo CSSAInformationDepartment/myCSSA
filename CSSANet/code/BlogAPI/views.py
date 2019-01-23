@@ -36,7 +36,7 @@ import datetime
 
 class editBlog (LoginRequiredMixin, PermissionRequiredMixin, View):
     login_url = "/hub/login/"
-    permission_required = ("BlogAPI.blog.add_blog", "BlogAPI.blog.change_blog", "BlogAPI.blog.delete_blog", 
+    permission_required = ("BlogAPI.add_blog", "BlogAPI.change_blog", "BlogAPI.delete_blog", 
     )
 
     def get(self, request, *args, **kwargs):
@@ -67,6 +67,8 @@ class editBlog (LoginRequiredMixin, PermissionRequiredMixin, View):
         blogTitle = ""
         blogMainContent = ""
 
+        ViewBag["versions"] = []
+
 
         if blogId != NEW_BLOG:
             blogWrittenBys = BlogModels.BlogWrittenBy.objects.filter(blogId=blogId)
@@ -77,16 +79,42 @@ class editBlog (LoginRequiredMixin, PermissionRequiredMixin, View):
                         wrote = True
                     
 
+
                 # user没有写blog
                 if wrote == False:
                     return permission_denied(request)
+            # access version history
+            oldBlogs = BlogModels.BlogOldContent.objects.filter(blogId = blogId).order_by("writtenDate")
+            ViewBag["versions"] = [[i, oldBlogs[i]] for i in range(len(oldBlogs))]
             blog = BlogModels.Blog.objects.filter(blogId=blogId)
-            if not blog:
-                return bad_request(request)
-            blogContentSingle = blog[0]
-            blogTitle = blogContentSingle.blogTitle
-            blogMainContent = blogContentSingle.blogMainContent
-            ViewBag["toolTitle"] = CH_BLOG
+            if "version" in request.GET:
+                
+                try:
+                    version = int(request.GET["version"])
+                except:
+                    return bad_request(request)
+
+
+
+                if version > len(oldBlogs) or version < 0:
+                    return page_not_found(request)
+
+                ViewBag["toolTitle"] = CR_BLOG + " 版本: " + oldBlogs[version].writtenDate.ctime()
+
+                ViewBag["curVersion"] = oldBlogs[version]
+                ViewBag["isHistory"] = True
+                blogTitle = oldBlogs[version].blogOldTitle
+                blogMainContent = oldBlogs[version].blogOldContent
+
+
+            else:
+                if not blog:
+                    return bad_request(request)
+                blogContentSingle = blog[0]
+                blogTitle = blogContentSingle.blogTitle
+                blogMainContent = blogContentSingle.blogMainContent
+                ViewBag["toolTitle"] = CH_BLOG
+                ViewBag["isHistory"] = False
             curBlogTag = BlogModels.BlogInTag.objects.filter(blogId=blog[0])
             blogTag = json.dumps([x.tagId.tagName for x in curBlogTag]).replace("\\", "\\\\")
 
@@ -111,7 +139,7 @@ class editBlog (LoginRequiredMixin, PermissionRequiredMixin, View):
 
 class saveBlog (LoginRequiredMixin, PermissionRequiredMixin, View):
     login_url = "/hub/login/"
-    permission_required = ("BlogAPI.blog.add_blog", "BlogAPI.blog.change_blog", "BlogAPI.blog.delete_blog", 
+    permission_required = ("BlogAPI.add_blog", "BlogAPI.change_blog", "BlogAPI.delete_blog", 
     )
 
     def storeToBlogOldContent(self, oldBlog):
@@ -159,6 +187,10 @@ class saveBlog (LoginRequiredMixin, PermissionRequiredMixin, View):
 
     def getContent(self, blogMainContent):
         dicContent = json.loads(blogMainContent.replace("(ffffhhhhccccc)", ";").replace(" ", "+"))
+        gotFirstPic = False
+        picExt = ""
+        
+        stPic = ""
 
         for content in range(len(dicContent["ops"])):
             print(dicContent["ops"][content])
@@ -170,17 +202,21 @@ class saveBlog (LoginRequiredMixin, PermissionRequiredMixin, View):
                         print(len(imB64))
                         imB64bs = base64.b64decode(imB64)
                         imB64Bytes = io.BytesIO(imB64bs)
+                        extEndsIn = dicContent["ops"][content]["insert"]["image"].index(";")
                         hashmm = hashlib.md5()
                         hashmm.update(imB64bs)
                         hashedImage = hashmm.hexdigest()
 
-                        extEndsIn = dicContent["ops"][content]["insert"]["image"].index(";")
                         ext = dicContent["ops"][content]["insert"]["image"][11: extEndsIn]
 
                         storedImage = BlogModels.BlogImage.objects.filter(hashValue=hashedImage)
                         if storedImage:
                             print("found duplicated picture")
                             dicContent["ops"][content]["insert"]["image"] = storedImage[0].imageFileB64.url
+                            if not gotFirstPic:
+                                stPic = storedImage[0].imageFileB64.url
+
+                                gotFirstPic = True
                         else:
                             newImage = BlogModels.BlogImage(
                                 hashValue=hashedImage,
@@ -188,11 +224,19 @@ class saveBlog (LoginRequiredMixin, PermissionRequiredMixin, View):
                             newImage.save()
                             newImage.imageFileB64.save(str(newImage.imageId) + "." + ext, imB64Bytes)
                             newImage.save()
+                            if not gotFirstPic:
+                                stPic = newImage.imageFileB64.url
+
+                                gotFirstPic = True
                             dicContent["ops"][content]["insert"]["image"] = newImage.imageFileB64.url
                     except IndexError:
+                        if not gotFirstPic:
+                            stPic = dicContent["ops"][content]["insert"]["image"]
+
+
+                            gotFirstPic = True
                         pass
-        print(json.dumps(dicContent).replace("\\", "\\\\"))
-        return json.dumps(dicContent).replace("\\", "\\\\")
+        return json.dumps(dicContent).replace("\\", "\\\\"), stPic
 
 
     def get(self, request, *args, **kwargs):
@@ -240,7 +284,8 @@ class saveBlog (LoginRequiredMixin, PermissionRequiredMixin, View):
                 
                 blog = BlogModels.Blog.objects.get(blogId=blogId)
                 self.storeToBlogOldContent(blog)
-                blogMainContent = self.getContent(request.POST["blogMainContent"])
+                contented = self.getContent(request.POST["blogMainContent"])
+                blogMainContent = contented[0]
                 blogOpen = request.POST["openOrNot"]
                 try:
                     blogOpen = {"true": True, "false": False}[blogOpen]
@@ -256,12 +301,14 @@ class saveBlog (LoginRequiredMixin, PermissionRequiredMixin, View):
                     blogTitle=request.POST["blogTitle"][:100],
                     createDate=blog.createDate,
                     lastModifiedDate=datetime.datetime.now(),
-                    blogReviewed = False,
+                    blogReviewed = 0,
                     blogReads = blog.blogReads,
                     blogMainContent = blogMainContent,
-                    blogOpen = blogOpen
+                    blogOpen = blogOpen,
+                    blogTopPic = contented[1]
                 )
                 blog.save()
+                print(contented[1])
 
                 blogTags = json.loads(request.POST["tag"].replace("(ffffhhhhccccc)", ";"))
                 self.addTagsToBlog(blog, blogTags)
@@ -286,7 +333,8 @@ class saveBlog (LoginRequiredMixin, PermissionRequiredMixin, View):
             if userAuthed:
 
                 print(request.POST["blogMainContent"])
-                blogMainContent = self.getContent(request.POST["blogMainContent"])
+                contented = self.getContent(request.POST["blogMainContent"])
+                blogMainContent = contented[0]
                 blogOpen = request.POST["openOrNot"]
                 try:
                     blogOpen = {"true": True, "false": False}[blogOpen]
@@ -302,12 +350,14 @@ class saveBlog (LoginRequiredMixin, PermissionRequiredMixin, View):
                     blogTitle=request.POST["blogTitle"][:100],
                     lastModifiedDate=datetime.datetime.now(),
                     createDate=datetime.datetime.now(),
-                    blogReviewed = False,
+                    blogReviewed = 0,
                     blogReads = 0,
                     blogMainContent = blogMainContent,
-                    blogOpen = blogOpen
+                    blogOpen = blogOpen,
+                    blogTopPic = contented[1]
                 )
                 blog.save()
+                print(contented[1])
 
                 blogWrittenBy = BlogModels.BlogWrittenBy(
                     blogId = blog,
@@ -331,9 +381,144 @@ class saveBlog (LoginRequiredMixin, PermissionRequiredMixin, View):
                     'message': 'visitor is not permitted to create'
                 })
 
+class writtenBlogs(LoginRequiredMixin, PermissionRequiredMixin, View):
+    login_url = "/hub/login/"
+    permission_required = ("BlogAPI.add_blog", "BlogAPI.change_blog", "BlogAPI.delete_blog")
+
+    def get(self, request):
+        ViewBag = {}
+        userAuthed = request.user.is_authenticated
+
+        if userAuthed:
+
+            ViewBag["writtenOrReview"] = True
+            blogWrittenBys = BlogModels.BlogWrittenBy.objects.filter(userId=request.user)
+            ViewBag["blogs"] = [blogWritten.blogId for blogWritten in blogWrittenBys][::-1]
+
+
+
+            return render(request, "myCSSAhub/blogLess.html", ViewBag)
+        else:
+            return page_not_found(request)
+
+class reviewBlogs(LoginRequiredMixin, PermissionRequiredMixin, View):
+    login_url = "/hub/login/"
+
+    # review permission
+    permission_required = ("BlogAPI.add_blogreviewed", "BlogAPI.delete_blogreviewed",)
+
+     
+    def get(self, request):
+        ViewBag = {}
+        userAuthed = request.user.is_authenticated
+
+        if userAuthed:
+
+
+            ViewBag["writtenOrReview"] = False
+            blog = BlogModels.Blog.objects.filter(blogReviewed=0, blogOpen=True)
+            ViewBag["blogs"] = blog[::-1]
+
+
+            return render(request, "myCSSAhub/blogLess.html", ViewBag)
+        else:
+            return page_not_found(request)
+
+        
+
+
+
+class reviewBlogAjax(LoginRequiredMixin, PermissionRequiredMixin, View):
+    login_url = "/hub/login/"
+    permission_required = ("BlogAPI.add_blogreviewed", "BlogAPI.delete_blogreviewed", 
+    )
+
+    def get(self, request, *args, **kwargs):
+
+        try:
+            blogId = int(request.GET["blogId"])
+            blogReviewStatus = int(request.GET["blogReviewStatus"])
+        except:
+
+            return JsonResponse({
+                    'success': False,
+                    'status': '400',
+                    'message': "wrong blog id"
+                })
+
+        
+
+        if blogReviewStatus > 2:
+            return JsonResponse({
+                    'success': False,
+                    'status': '400',
+                    'message': "wrong blogReviewStatus"
+                })
+
+        print(blogId)
+        blog = -1
+
+        userAuthed = request.user.is_authenticated
+
+
+        print(blogId)
+
+        if userAuthed: 
+            # create reviewed
+            blog = BlogModels.Blog.objects.filter(blogId=blogId)
+            print(blogId)
+            if blog:
+                blogTmp = BlogModels.Blog(
+                    blogId=blog[0].blogId,
+                    blogTitle=blog[0].blogTitle,
+                    lastModifiedDate=blog[0].lastModifiedDate,
+                    createDate=blog[0].createDate,
+                    blogReviewed = blogReviewStatus,
+                    blogReads = 0,
+                    blogMainContent = blog[0].blogMainContent,
+                    blogOpen = blog[0].blogOpen,
+                    blogTopPic = blog[0].blogTopPic
+                )
+                blogTmp.save()
+                print(blog[0])
+
+                return JsonResponse({
+                        'success': True,
+                        'status': '200',
+                        'message': 'reviewed'
+                    })
+
+            else:
+                    # blogId有问题
+                return JsonResponse({
+                    'success': False,
+                    'status': '400',
+                    'message': "wrong blog id"
+                })
+        else:
+            return JsonResponse({
+                    'success': False,
+                    'status': '400',
+                    'message': "wrong blog id"
+                })
+
+
+    def post(self, request, *args, **kwargs):
+        # 检查是否是新content
+        # 如果不是新content 检查是否 user对
+
+        # post: blogId contentid blogtitle blogopentopublic
+
+
+        data = {
+            'status': '400', 'reason': 'Bad Requests!'
+        }
+        return data
+
+
 class deleteBlog(LoginRequiredMixin, PermissionRequiredMixin, View):
     login_url = "/hub/login/"
-    permission_required = ("BlogAPI.can_add_blog", "BlogAPI.can_change_blog", "BlogAPI.can_delete_blog",)
+    permission_required = ("BlogAPI.add_blog", "BlogAPI.change_blog", "BlogAPI.delete_blog",)
 
     def get(self, request, *args, **kwargs):
 

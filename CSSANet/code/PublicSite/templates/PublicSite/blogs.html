@@ -19,7 +19,7 @@
             <div class="container blogContainer">
                 <div class="blogHeadingBox">
 
-                    <h1>{{ blog.blogTitle }}</h1>
+                    <h1>{{ onlyForReview }}{{ blog.blogTitle }}</h1>
                     <br />
                     <h5>{{ blog.createDate }}</h5>
                     <div class="blogAuthorsContainer">
@@ -38,7 +38,7 @@
                         <h5>
                             标签：
                             {% for tag in blogTag %}
-                            <span class="label label-primary">{{ tag }}</span>
+                            <span class="badge badge-info">{{ tag }}</span>
                             {% endfor %}
                         </h5>
                     </div>
@@ -106,7 +106,7 @@
                         XMLobj.onreadystatechange = () => {
                             if(XMLobj.readyState == XMLHttpRequest.DONE && XMLobj.status == 200){
                                 let response = XMLobj.responseText;
-                                response = JSON.parse(r.responseText);
+                                response = JSON.parse(XMLobj.responseText);
                                 alert(response.message);
                             }
                         }
