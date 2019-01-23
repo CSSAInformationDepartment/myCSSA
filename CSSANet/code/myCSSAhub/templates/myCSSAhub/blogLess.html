@@ -63,13 +63,13 @@
             审核不通过，编辑后发布会重新提交审核
         
                 {% else %}
-                未审核
+                未审核，未公开
                 {% endif %}</i>
             ,
             {% if blog.blogOpen %}
-            会被公开
+                <span class="badge badge-info">对外</span>
             {% else %}
-            不公开发布
+                <span class="badge badge-light">已保存</span>
             {% endif %}
             {% if writtenOrReview %}
             <a href="/hub/blog/editbg?blogId={{ blog.blogId }}"><button class="btn btn-primary" id="out">编辑文章</button></a>

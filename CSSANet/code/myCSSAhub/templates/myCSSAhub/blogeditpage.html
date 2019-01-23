@@ -334,6 +334,7 @@
     
     displayButton.onclick = () => {
         uploadClick(blogId, JSON.stringify(editor.getContents()).replace(/;/g, "(ffffhhhhccccc)"), title.value, false, JSON.stringify(blogTag).replace(/;/g, "(ffffhhhhccccc)"));
+        window.location = "/hub/blog/writtenBlogs"
     };
     
     outButton.onclick = () => {
