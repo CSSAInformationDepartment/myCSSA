@@ -18,8 +18,7 @@ class Blog (models.Model):
 
     blogOpen = models.BooleanField(default=True)
 
-    blogTopPic = models.ImageField(upload_to='blog/blogpics', height_field=None, width_field=None, 
-        blank=True, null=True)
+    blogTopPic = models.CharField(max_length=95)
 
     # 阅读量
     blogReads = models.IntegerField(default=0)

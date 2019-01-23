@@ -103,8 +103,13 @@ h3{
                 }
             </style>
             {% for blog in blogs %}
+            {% load static %}
             <div class="card mb-3">
-                <a target="_blank" href="/blog/{{ blog.0.blogId }}/"><div class="cardImg"><img class="card-img-top customImg" src="//timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1548008154635&di=36b74cd87f48d9f8005e61f22de5d421&imgtype=0&src=http%3A%2F%2Fc.hiphotos.baidu.com%2Fimage%2Fpic%2Fitem%2F8b13632762d0f703fb8b190102fa513d2697c536.jpg" alt="Card image cap"></div></a>
+                {% if blog.0.blogTopPic %}
+                <a target="_blank" href="/blog/{{ blog.0.blogId }}/"><div class="cardImg"><img class="card-img-top customImg" src="{{ blog.0.blogTopPic }}"></div></a>
+                {% else %}
+                <a target="_blank" href="/blog/{{ blog.0.blogId }}/"><div class="cardImg"><img class="card-img-top customImg" src="{% static 'PublicSite/img/index-background.jpg' %}"></div></a>
+                {% endif %}
               <div class="card-body">
                   <h5 class="card-title">{% if blog.1 %}{% for tag in blog.1 %}
                     <a target="_blank" href="/blogs?page=1&tag={{ tag }}"><span class="badge badge-info">{{ tag }}</span></a>

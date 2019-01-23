@@ -187,6 +187,10 @@ class saveBlog (LoginRequiredMixin, PermissionRequiredMixin, View):
 
     def getContent(self, blogMainContent):
         dicContent = json.loads(blogMainContent.replace("(ffffhhhhccccc)", ";").replace(" ", "+"))
+        gotFirstPic = False
+        picExt = ""
+        
+        stPic = ""
 
         for content in range(len(dicContent["ops"])):
             print(dicContent["ops"][content])
@@ -198,17 +202,21 @@ class saveBlog (LoginRequiredMixin, PermissionRequiredMixin, View):
                         print(len(imB64))
                         imB64bs = base64.b64decode(imB64)
                         imB64Bytes = io.BytesIO(imB64bs)
+                        extEndsIn = dicContent["ops"][content]["insert"]["image"].index(";")
                         hashmm = hashlib.md5()
                         hashmm.update(imB64bs)
                         hashedImage = hashmm.hexdigest()
 
-                        extEndsIn = dicContent["ops"][content]["insert"]["image"].index(";")
                         ext = dicContent["ops"][content]["insert"]["image"][11: extEndsIn]
 
                         storedImage = BlogModels.BlogImage.objects.filter(hashValue=hashedImage)
                         if storedImage:
                             print("found duplicated picture")
                             dicContent["ops"][content]["insert"]["image"] = storedImage[0].imageFileB64.url
+                            if not gotFirstPic:
+                                stPic = storedImage[0].imageFileB64.url
+
+                                gotFirstPic = True
                         else:
                             newImage = BlogModels.BlogImage(
                                 hashValue=hashedImage,
@@ -216,11 +224,19 @@ class saveBlog (LoginRequiredMixin, PermissionRequiredMixin, View):
                             newImage.save()
                             newImage.imageFileB64.save(str(newImage.imageId) + "." + ext, imB64Bytes)
                             newImage.save()
+                            if not gotFirstPic:
+                                stPic = newImage.imageFileB64.url
+
+                                gotFirstPic = True
                             dicContent["ops"][content]["insert"]["image"] = newImage.imageFileB64.url
                     except IndexError:
+                        if not gotFirstPic:
+                            stPic = dicContent["ops"][content]["insert"]["image"]
+
+
+                            gotFirstPic = True
                         pass
-        print(json.dumps(dicContent).replace("\\", "\\\\"))
-        return json.dumps(dicContent).replace("\\", "\\\\")
+        return json.dumps(dicContent).replace("\\", "\\\\"), stPic
 
 
     def get(self, request, *args, **kwargs):
@@ -268,7 +284,8 @@ class saveBlog (LoginRequiredMixin, PermissionRequiredMixin, View):
                 
                 blog = BlogModels.Blog.objects.get(blogId=blogId)
                 self.storeToBlogOldContent(blog)
-                blogMainContent = self.getContent(request.POST["blogMainContent"])
+                contented = self.getContent(request.POST["blogMainContent"])
+                blogMainContent = contented[0]
                 blogOpen = request.POST["openOrNot"]
                 try:
                     blogOpen = {"true": True, "false": False}[blogOpen]
@@ -287,9 +304,11 @@ class saveBlog (LoginRequiredMixin, PermissionRequiredMixin, View):
                     blogReviewed = 0,
                     blogReads = blog.blogReads,
                     blogMainContent = blogMainContent,
-                    blogOpen = blogOpen
+                    blogOpen = blogOpen,
+                    blogTopPic = contented[1]
                 )
                 blog.save()
+                print(contented[1])
 
                 blogTags = json.loads(request.POST["tag"].replace("(ffffhhhhccccc)", ";"))
                 self.addTagsToBlog(blog, blogTags)
@@ -314,7 +333,8 @@ class saveBlog (LoginRequiredMixin, PermissionRequiredMixin, View):
             if userAuthed:
 
                 print(request.POST["blogMainContent"])
-                blogMainContent = self.getContent(request.POST["blogMainContent"])
+                contented = self.getContent(request.POST["blogMainContent"])
+                blogMainContent = contented[0]
                 blogOpen = request.POST["openOrNot"]
                 try:
                     blogOpen = {"true": True, "false": False}[blogOpen]
@@ -333,9 +353,11 @@ class saveBlog (LoginRequiredMixin, PermissionRequiredMixin, View):
                     blogReviewed = 0,
                     blogReads = 0,
                     blogMainContent = blogMainContent,
-                    blogOpen = blogOpen
+                    blogOpen = blogOpen,
+                    blogTopPic = contented[1]
                 )
                 blog.save()
+                print(contented[1])
 
                 blogWrittenBy = BlogModels.BlogWrittenBy(
                     blogId = blog,
@@ -454,7 +476,8 @@ class reviewBlogAjax(LoginRequiredMixin, PermissionRequiredMixin, View):
                     blogReviewed = blogReviewStatus,
                     blogReads = 0,
                     blogMainContent = blog[0].blogMainContent,
-                    blogOpen = blog[0].blogOpen
+                    blogOpen = blog[0].blogOpen,
+                    blogTopPic = blog[0].blogTopPic
                 )
                 blogTmp.save()
                 print(blog[0])
