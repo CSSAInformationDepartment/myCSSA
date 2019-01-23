@@ -9,5 +9,6 @@ urlpatterns = [
     path('news/',Views.News, name='news'),
     path('department/<str:dept>/', Views.Departments, name='departments'),
     path('blog/<int:blogId>/', Views.BlogContents, name='blogContent'),
-    path('blogs/<int:page>/', Views.Blogs, name='blogs'),
+    path('blogs', Views.Blogs, name='blogs'),
+    path('reviewblog', Views.reviewBlogPublic.as_view(), name='reviewBlogPublic')
 ]

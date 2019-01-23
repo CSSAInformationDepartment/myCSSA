@@ -12,6 +12,26 @@ from django.conf import settings
 from django.views.decorators.cache import cache_page
 
 import json, math
+
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.http import JsonResponse, HttpResponseRedirect, HttpResponse
+from django.contrib import messages
+from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.forms import SetPasswordForm, PasswordChangeForm
+
+from django.views import View
+from django.views.generic import CreateView, UpdateView, FormView
+from django.contrib.auth.models import update_last_login
+from django.db.models import Q
+from django.core.exceptions import ObjectDoesNotExist
+from django.http import JsonResponse, HttpResponseRedirect, HttpResponse, Http404
+from django.contrib.auth.decorators import login_required
+from UserAuthAPI import models as UserModels
+from BlogAPI import models as BlogModels
+from UserAuthAPI.forms import BasicSiginInForm, UserInfoForm, MigrationForm, UserAcademicForm, UserProfileUpdateForm
+from LegacyDataAPI import models as LegacyDataModels
+
 # Create your views here.
 
 
@@ -50,30 +70,52 @@ def Departments(request,dept):
 
     return render(request, 'PublicSite/dept.html', ViewBag)
 
-def Blogs(request, page):
+def Blogs(request):
     # 找openToPublic为true的
-    BLOG_P = 2.0
+    BLOG_P = 5.0
     PAGE_SHW = 3 # must be odd!
 
-    blogs = BlogModels.Blog.objects.filter(blogOpen=True, blogReviewed=True)
+    try:
+        page = int(request.GET["page"])
+    except:
+        return page_not_found(request)
+
+    ViewBag = {}
+
+    ViewBag["tagTitle"] = ""
+
+    blogs = BlogModels.Blog.objects.filter(blogOpen=True, blogReviewed=2).order_by("createDate")[::-1]
     if "tag" in request.GET:
         blogsTemp = []
         # filter tag
+        tags = BlogModels.BlogTag.objects.filter(tagName=request.GET["tag"])
+        ViewBag["tagTitle"] = "标签为 " + request.GET["tag"] + " 的"
+        if tags:
+            BlogInTags = BlogModels.BlogInTag.objects.filter(tagId=tags[0])
+            blogs = [tag.blogId for tag in BlogInTags if tag.blogId.blogOpen==True and tag.blogId.blogReviewed==2]
+        else:
+            blogs = []
+
+
     numPage = int(math.ceil(len(blogs) / BLOG_P))
     # no blogs
-    if page < 1 or page > numPage:
+    if numPage == 0:
+        ViewBag["haveBlogs"] = False
+    else:
+        ViewBag["haveBlogs"] = True
+    if numPage != 0 and (page < 1 or page > numPage):
         return page_not_found(request)
     
     blogStarts = int((page - 1) * BLOG_P)
     blogEndAt = int((page) * BLOG_P)
+    ViewBag["blogs"] = [[y, [x.tagId.tagName for x in
+        BlogModels.BlogInTag.objects.filter(blogId=y)]] for y in blogs[blogStarts: blogEndAt]]
 
-    ViewBag = {}
-    ViewBag["blogs"] = blogs[blogStarts: blogEndAt]
 
     pagesBottom = []
     if PAGE_SHW >= numPage:
         pagesBottom = [(x + 1) for x in range(numPage)]
-    if page < PAGE_SHW:
+    elif page < PAGE_SHW:
         pagesBottom = [(x + 1) for x in range(PAGE_SHW)]
     elif page > numPage - PAGE_SHW + 1:
         pagesBottom = [x for x in range((numPage - PAGE_SHW + 1), (numPage + 1))]
@@ -107,11 +149,10 @@ def BlogContents(request, blogId):
         return page_not_found(request)
     blogSingle = blogs[0]
     blogOpen = blogSingle.blogOpen
-    print(blogSingle.blogOpen)
 
     userAuthed = request.user.is_authenticated
     
-    if not blogSingle.blogReviewed or not blogOpen:
+    if blogSingle.blogReviewed != 2 or not blogOpen:
         return page_not_found(request)
 
 
@@ -139,8 +180,62 @@ def BlogContents(request, blogId):
     blogTag = [x.tagId.tagName for x in curBlogTags]
 
     ViewBag["blogTag"] = blogTag
-    print(ViewBag)
     return render(request, 'PublicSite/blogs.html', ViewBag)
+
+
+class reviewBlogPublic(LoginRequiredMixin, PermissionRequiredMixin, View):
+    login_url = "/hub/login/"
+    permission_required = ("BlogAPI.add_blogreviewed", "BlogAPI.delete_blogreviewed", 
+    )
+
+    def get(self, request, *args, **kwargs):
+        ViewBag = {}
+
+        try:
+            blogId = int(request.GET["blogId"])
+        except:
+            return page_not_found(request)
+
+        blogs = BlogModels.Blog.objects.filter(blogId=blogId)
+        if not blogs:
+            return page_not_found(request)
+        blogSingle = blogs[0]
+        blogOpen = blogSingle.blogOpen
+        print(blogSingle.blogOpen)
+
+        userAuthed = request.user.is_authenticated
+        
+        if not blogOpen:
+            return page_not_found(request)
+
+
+        blogWrittenBys = BlogModels.BlogWrittenBy.objects.filter(blogId=blogSingle)
+        ViewBag["userIsAuthor"] = False
+        ViewBag["onlyForReview"] = "[审核中] "
+        wrote = False
+        if blogWrittenBys:
+            for blogWrittenBy in blogWrittenBys:
+                if userAuthed and blogWrittenBy.userId == request.user:
+                    wrote = True
+                
+            if wrote == True:
+                ViewBag["userIsAuthor"] = True
+
+        ViewBag["blog"] = blogSingle
+        users= BlogModels.BlogWrittenBy.objects.filter(blogId=blogSingle)
+        ViewBag["users"] = []
+        for user in users:
+            ViewBag["users"].append({
+                "user": user.userId,
+                "userProfile": UserModels.UserProfile.objects.filter(user=user.userId)[0]
+            })
+
+        curBlogTags = BlogModels.BlogInTag.objects.filter(blogId=blogSingle)
+        blogTag = [x.tagId.tagName for x in curBlogTags]
+
+        ViewBag["blogTag"] = blogTag
+        print(ViewBag)
+        return render(request, 'PublicSite/blogs.html', ViewBag)
     
 
 
