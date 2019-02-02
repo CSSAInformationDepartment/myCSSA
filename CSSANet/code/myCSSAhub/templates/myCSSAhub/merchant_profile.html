@@ -22,8 +22,6 @@
 {% block pageContent %}
 <script type="text/javascript">
     
-    document.getElementById("m_img").src = '{{infos.merchant_image}}'
-    document.getElementById("m_img").alt = '{{infos.merchant_name}}'
     document.getElementById("m_name").val() = '{{infos.merchant_name}}'
     document.getElementById("m_address").val() = '{{infos.merchant_address}}'
     document.getElementById("m_phone").val() = '{{infos.merchant_phone}}'
@@ -33,7 +31,7 @@
 </script>
 
 <div>商家原图片</div>
-<center><img id="m_img" alt="" width="350" height="170"></center>
+<center><img id="m_img" src="{{infos.merchant_image}}" alt="{{infos.merchant_name}}" width="350" height="170"></center>
 <form method="post" id="form" enctype="multipart/form-data">
     {% comment %} {% for error in form.non_field_errors %}
     <div class="alert alert-danger">

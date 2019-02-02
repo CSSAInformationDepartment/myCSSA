@@ -32,6 +32,8 @@ from BlogAPI import models as BlogModels
 from UserAuthAPI.forms import BasicSiginInForm, UserInfoForm, MigrationForm, UserAcademicForm, UserProfileUpdateForm
 from LegacyDataAPI import models as LegacyDataModels
 
+from myCSSAhub import models as HubModels
+
 # Create your views here.
 
 
@@ -40,7 +42,7 @@ from LegacyDataAPI import models as LegacyDataModels
 def index(request):
 
     return render(request, 'PublicSite/index.html')
-            
+
 #@cache_page(CACHE_TTL)
 def News(request):
     return render(request, 'PublicSite/News.html')
@@ -108,7 +110,7 @@ def Blogs(request):
         ViewBag["haveBlogs"] = True
     if numPage != 0 and (page < 1 or page > numPage):
         return page_not_found(request)
-    
+
     blogStarts = int((page - 1) * BLOG_P)
     blogEndAt = int((page) * BLOG_P)
     ViewBag["blogs"] = [[y, [x.tagId.tagName for x in
@@ -140,7 +142,7 @@ def Blogs(request):
     ViewBag["hasNextPrev"] = nextPrev
 
     return render(request, "PublicSite/blogbref.html", ViewBag)
-    
+
     pass
 
 def BlogContents(request, blogId):
@@ -154,7 +156,7 @@ def BlogContents(request, blogId):
     blogOpen = blogSingle.blogOpen
 
     userAuthed = request.user.is_authenticated
-    
+
     if blogSingle.blogReviewed != 2 or not blogOpen:
         return page_not_found(request)
 
@@ -166,7 +168,7 @@ def BlogContents(request, blogId):
         for blogWrittenBy in blogWrittenBys:
             if userAuthed and blogWrittenBy.userId == request.user:
                 wrote = True
-            
+
         if wrote == True:
             ViewBag["userIsAuthor"] = True
 
@@ -188,7 +190,7 @@ def BlogContents(request, blogId):
 
 class reviewBlogPublic(LoginRequiredMixin, PermissionRequiredMixin, View):
     login_url = "/hub/login/"
-    permission_required = ("BlogAPI.add_blogreviewed", "BlogAPI.delete_blogreviewed", 
+    permission_required = ("BlogAPI.add_blogreviewed", "BlogAPI.delete_blogreviewed",
     )
 
     def get(self, request, *args, **kwargs):
@@ -207,7 +209,7 @@ class reviewBlogPublic(LoginRequiredMixin, PermissionRequiredMixin, View):
         print(blogSingle.blogOpen)
 
         userAuthed = request.user.is_authenticated
-        
+
         if not blogOpen:
             return page_not_found(request)
 
@@ -220,7 +222,7 @@ class reviewBlogPublic(LoginRequiredMixin, PermissionRequiredMixin, View):
             for blogWrittenBy in blogWrittenBys:
                 if userAuthed and blogWrittenBy.userId == request.user:
                     wrote = True
-                
+
             if wrote == True:
                 ViewBag["userIsAuthor"] = True
 
@@ -239,7 +241,7 @@ class reviewBlogPublic(LoginRequiredMixin, PermissionRequiredMixin, View):
         ViewBag["blogTag"] = blogTag
         print(ViewBag)
         return render(request, 'PublicSite/blogs.html', ViewBag)
-    
+
 
 #@cache_page(CACHE_TTL)
 #def Events(requests):
@@ -248,20 +250,22 @@ class reviewBlogPublic(LoginRequiredMixin, PermissionRequiredMixin, View):
 ################################# sponsor pages ########################################
 def Merchants(request):
 
-    return render(request,'PublicSite/merchant.html')
+    infos = HubModels.DiscountMerchant.objects.all().order_by("merchant_add_date").values()
+
+    return render(request,'PublicSite/merchant.html', locals())
 
 ################################# errors pages ########################################
 from django.shortcuts import render
- 
+
 def bad_request(request):
  return render(request,'errors/page_400.html')
 
 def permission_denied(request):
  return render(request,'errors/page_403.html')
- 
+
 def page_not_found(request):
  return render(request,'errors/page_404.html')
- 
+
 def server_error(request):
  return render(request,'errors/page_500.html')
 ################################# errors pages ########################################
