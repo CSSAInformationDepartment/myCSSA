@@ -1,7 +1,7 @@
 {% extends 'components/base_page.html' %}
 {% block 'pg_body' %}
 <!-- Page Content -->
-      <div class="container">
+      <div class="page-container">
 
       <!-- Page Heading -->
       <h1 class="my-4">合作折扣商家
@@ -9,7 +9,7 @@
       </h1>
 
       <div class="row">
-       {% for info in infos %}      
+       {% for info in infos %}
         <div class="col-lg-4 col-sm-6 portfolio-item">
           <div class="card h-100">
             <a href="{{info.merchant_link}}"><img alt="{{info.merchant_name}}" class="card-img-top" src="{{info.merchant_image}}"></a>

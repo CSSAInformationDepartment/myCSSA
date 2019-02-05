@@ -19,9 +19,9 @@
 {% block pageContent %}
 <!-- bloc-4 -->
 {% load static %}
-    
+
     <div class="blogEditContainer">
-        
+
         <div class="container">
             <div class="blogContainer">
                 <div class="blogHeadingBox">
@@ -39,9 +39,7 @@
                     </div>
                     <div style="clear:both;"></div>
                 </div>
-                
-                <br />
-                
+
                 <div class="blogEditHead">
                     <h4>标题</h4>
                     {% csrf_token %}
@@ -49,21 +47,18 @@
                       <input type="text" id="title" class="form-control" placeholder="标题" aria-describedby="basic-addon1" value="{{ blogTitle }}">
                     </div>
                 </div>
-                
-                
-                <br />
-                
-                <div class="tagEditContainer" style="margin: 0px 0px 28px 0px;">
+
+                <div class="tagEditContainer" >
                     <h4>标签</h4>
                     <div class="input-group">
 
                       <input type="text" id="newTag" class="form-control" placeholder="最多18个字哦。" aria-describedby="basic-addon1">
-                        
-                        
+
+
                         <button class="btn btn-default navbar-btn handButton" id="addTag">添加</button>
                     </div>
                     <style>
-                        
+
                         .tagBox{
                             overflow: scroll;
                             height: 30px;
@@ -72,12 +67,12 @@
                                 cursor: default;
                                 color: lightgrey;
                             }
-                            
-                            
+
+
                             .blogTag{
                                 margin-right: 9px;
                             }
-                            
+
                             #tagExm{
                                 display: none;
                             }
@@ -87,16 +82,16 @@
                                 <span class="badge badge-info" id="tagExm">Tag 1<span class="deleTag" id="tagDel">  ×</span></span>
                             </h5>
                         </div>
-                    
+
                 </div>
-                
+
                 {% if blogId != -1%}
                 <h4>恢复历史版本</h4>
                 <h5>后台只保存最近的五份哦。如果看不到你编辑的文章请刷新页面。</h5>
                     <ul class="list-group">
                         {% if not isHistory %}
 
-                        
+
                         <li class="list-group-item active"><a href="/hub/blog/editbg?blogId={{ blogId }}"><b>{{ blogTitle }}</b>, <span class="badge badge-success">最新版本</span>
                             </a></li>
                         {% else %}
@@ -115,7 +110,7 @@
                         {% endif %}
                         {% endfor %}
                     </ul>
-                
+
                 <br />
                 {% endif %}
 
@@ -128,37 +123,37 @@
                 <button class="btn btn-default navbar-btn handButton" id="cancel">取消</button>
                 {% if blogId != -1 %}
                 <button class="btn btn-default navbar-btn handButtonOther" id="delete">删除</button>
-                
+
                 {% endif %}
             </div>
         </div>
-        
+
 <script>
-    
+
     const NEW = -1;
-    
+
     let mediaContent = '{{ blogMainContent }}'.replace(/\n/g, "\\n");
     var d = document.createElement('div');
     d.innerHTML = mediaContent;
     mediaContent = d.innerText || d.textContent;
     mediaContent = mediaContent;
-    
+
     let blogId = {{ blogId }};
-    
-    
+
+
     let blogTag = '{{ blogTag }}';
-    
+
     d.innerHTML = blogTag;
     blogTag = d.innerText || d.textContent;
-    
+
     blogTag = JSON.parse(blogTag);
-    
+
     let addTag = document.getElementById("addTag");
     let tagEl = document.getElementById("tagExm");
     let tagBoxes = document.getElementById("tagBoxes");
     let newTag = document.getElementById("newTag");
     let tagDel = document.getElementById("tagDel");
-    
+
     let addBlogTag = function(tag, justAddTag){
         if (justAddTag || (tag != "" && blogTag.indexOf(tag) == -1)){
             if(!justAddTag){
@@ -166,28 +161,28 @@
             }
             let newTagEle = document.createElement("span");
             newTagEle.className = "badge badge-info";
-            
+
             newTagEle.style.color = "white"
             newTagEle.style.margin = "0px 2px 0px 0px";
             newTagEle.style.boxShadow = "0px 3px 13px 0px rgba(0, 0, 0, 0.1)"
-            
+
             let newTagDele = tagDel.cloneNode();
             newTagDele.style.display = "inline";
-            
+
             let tagEleContentNode = document.createTextNode(tag.slice(0, 18));
             newTagEle.appendChild(tagEleContentNode);
-            
+
             tagBoxes.appendChild(newTagEle);
             newTagEle.appendChild(newTagDele);
-            
+
             newTagDele.innerHTML = "  ×";
-            
+
             newTagEle.children[0].onclick = () => {
                 let tagIn = blogTag.indexOf(tag);
                 blogTag.splice(tagIn, 1);
                 newTagEle.parentElement.removeChild(newTagEle)
             }
-            
+
             newTagEle.children[0].cursor = "hand"
         }
     }
@@ -195,13 +190,13 @@
         addBlogTag(newTag.value, false);
         newTag.value = ""
     }
-    
+
     for(let tagInBlog of blogTag){
         addBlogTag(tagInBlog, true);
     }
-    
 
-    
+
+
     /* let display = (editor, opts) => {
         editor.deleteText(0, editor.getLength());
         let index = 0;
@@ -218,12 +213,12 @@
     } */
     let cancelButton = document.getElementById("cancel");
     let displayButton = document.getElementById("display");
-    
+
     let outButton = document.getElementById("out");
-    
-    
+
+
     let title = document.getElementById("title");
-    
+
     let checkPa = (blogId, blogMainContent, blogTitle, openOrNot) => {
         if(blogTitle.length == 0){
             alert("empty title")
@@ -231,7 +226,7 @@
         }
         return true;
     }
-    
+
     let uploadClick = (blogId, blogMainContent, blogTitle, openOrNot, blogTags) => {
         if (checkPa(blogId, blogMainContent, blogTitle, openOrNot)){
             let csrf = $('input[name="csrfmiddlewaretoken"]').val();
@@ -259,9 +254,9 @@
             r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
             r.send(pa);
         }
-        
+
     }
-    
+
     let toolbarOpt = [
         [
             {size: [ 'small', "medium", 'large', 'huge' ]},
@@ -276,32 +271,32 @@
         ],
         [
             {header:[1, 2, 3, 4, 5]},
-            { 'list': 'ordered'}, 
+            { 'list': 'ordered'},
             { 'list': 'bullet' }
         ],
         [
-            "link", 
+            "link",
             "image",
             "video"
         ],
     ];
-    
+
     let options = {
         modules: {
             toolbar: toolbarOpt,
             imageResize: {}
-            
+
         },
         placeholder: "寂寞部员在线敲字",
         theme: "snow"
     };
-    
+
     let deleteBlog = () => {
         if(blogId != NEW){
             let confirmed = confirm("确认删除吗？");
             if(confirmed){
                 let XMLobj = new XMLHttpRequest();
-                       
+
                 XMLobj.onreadystatechange = () => {
                     if(XMLobj.readyState == XMLHttpRequest.DONE && XMLobj.status == 200){
                             let response = XMLobj.responseText;
@@ -309,39 +304,39 @@
                             alert(response.message);
                         }
                     }
-                        
+
                     XMLobj.open("GET", '/hub/blog/ajax/deleteBlog?blogId=' + blogId, true);
                     XMLobj.send();
                 }
 
         }
     }
-                
+
     if(blogId != NEW){
         let rbutton = document.getElementById("delete")
         rbutton.onclick = deleteBlog
     }
-    
+
     let editor = new Quill("#blogEdit", options);
     let editorAnother = new Quill("#blogEditAnother");
-    
+
     cancelButton.onclick = () => {
         let conf = confirm("所有更改不不会被保存，确定吗？")
         if (conf){
             window.location = "/hub/blog/writtenBlogs";
         }
     }
-    
+
     displayButton.onclick = () => {
         uploadClick(blogId, JSON.stringify(editor.getContents()).replace(/;/g, "(ffffhhhhccccc)"), title.value, false, JSON.stringify(blogTag).replace(/;/g, "(ffffhhhhccccc)"));
         window.location = "/hub/blog/writtenBlogs"
     };
-    
+
     outButton.onclick = () => {
         uploadClick(blogId, JSON.stringify(editor.getContents()).replace(/;/g, "(ffffhhhhccccc)"), title.value, true, JSON.stringify(blogTag).replace(/;/g, "(ffffhhhhccccc)"));
         window.location = "/hub/blog/writtenBlogs"
     }
-    
+
     try{
         // display(editor, JSON.parse(mediaContent).ops)
         editor.setContents(JSON.parse(mediaContent).ops);

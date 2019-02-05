@@ -18,13 +18,12 @@ from django.db import models
 from UserAuthAPI import models as adminModel
 import uuid
 # Create your models here
-# 
+#
 
 #岗位列表
 class JobList(models.Model):
     jobId = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     dept = models.ForeignKey(adminModel.CSSADept,verbose_name="部门", on_delete=models.CASCADE)
-
     timeOfCreate = models.DateTimeField(auto_now_add=True)
     jobName = models.CharField(verbose_name="职位名称", max_length = 50, default = None)
     description = models.CharField(verbose_name="职位介绍", max_length = 400, default = None)
@@ -34,7 +33,7 @@ class JobList(models.Model):
 class Resume(models.Model):
     CVId = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     jobRelated = models.ForeignKey(JobList,verbose_name="相应职位", on_delete=models.CASCADE)
-    
+
     reason = models.CharField(verbose_name="申请原因", max_length = 400, default = None)
     hobby = models.CharField(verbose_name="兴趣爱好", max_length = 400, default = None)
     eduBackground = models.CharField(verbose_name="教育背景", max_length = 400, default = None)
@@ -54,5 +53,3 @@ class Resume(models.Model):
 #    userProfile = models.ForeignKey(UserProfile, verbose_name="用户",
 #        on_delete=models.CASCADE)
 #    comment = models.CharField(verbose_name="备注", max_length=200)
-
-    

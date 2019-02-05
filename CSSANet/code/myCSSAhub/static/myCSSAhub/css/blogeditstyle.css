@@ -11,10 +11,10 @@
 }
 
 #blogEdit, #blogEditAnother{
-    min-height: 800px;
+    min-height: 300px;
     height: auto;
-    margin-bottom: 50px;
-            
+    margin-bottom: 10px;
+
 }
 
 #blogEditAnother{

@@ -1,102 +1,14 @@
-<!doctype html>
-<html lang="zh-Hans">
-<head>
-    <meta charset="utf-8">
-    <meta name="keywords" content="">
-    <meta name="description" content="">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <link rel="shortcut icon" type="image/png" href="favicon.png">
-    
-	<link rel="stylesheet" type="text/css" href="./css/bootstrap.min.css?866">
-	<link rel="stylesheet" type="text/css" href="style.css?7541">
-	<link rel="stylesheet" type="text/css" href="./css/font-awesome.min.css">
-	
-    
-	<script src="./js/jquery-3.3.1.min.js?7205"></script>
-	<script src="./js/bootstrap.bundle.min.js?6704"></script>
-	<script src="./js/blocs.js?6227"></script>
-	<script src="./js/jqBootstrapValidation.js"></script>
-	<script src="./js/formHandler.js"></script>
-	<script src="./js/lazysizes.min.js" defer></script>
+{% extends 'components/base_page.html' %}
+{% block 'pg_body' %}
     <title>纳新表单</title>
-
-    
-<!-- Analytics -->
- 
-<!-- Analytics END -->
-    
-</head>
-<body>
-<!-- Main container -->
 <div class="page-container">
-    
-<!-- bloc-0 -->
-<div class="bloc bloc-bg-texture texture-geometry-shapes-2 bg-center bgc-blue-gray d-bloc" id="bloc-0">
-	<div class="container">
-		<div class="row">
-			<div class="col">
-				<nav class="navbar row navbar-expand-md navbar-light">
-					<a class="navbar-brand" href="index.html"><img src="img/logo.png" alt="logo" class="mr-2" />CSSA</a>
-					<button id="nav-toggle" type="button" class="ui-navbar-toggler navbar-toggler border-0 p-0 ml-auto mr-md-0" data-toggle="collapse" data-target=".navbar-1" aria-expanded="false" aria-label="Toggle navigation">
-						<span class="navbar-toggler-icon"></span>
-					</button>
-					<div class="collapse navbar-collapse navbar-1">
-						<ul class="site-navigation nav navbar-nav ml-auto">
-							<li class="nav-item">
-								<a href="index.html" class="nav-link ltc-white ltc-6027 ltc-2869">首页</a>
-							</li>
-							<li class="nav-item">
-								<div class="dropdown">
-									<a href="#" class="nav-link dropdown-toggle a-btn ltc-white ltc-6027 ltc-2869" data-toggle="dropdown" aria-expanded="false">部门介绍</a>
-									<ul class="dropdown-menu" role="menu">
-										<li class="nav-item">
-											<a href="部门介绍模版.html" class="nav-link a-btn ltc-white ltc-6027 ltc-2869">部门介绍模版</a>
-										</li>
-									</ul>
-								</div>
-							</li>
-							<li class="nav-item">
-							</li>
-							<li class="nav-item">
-								<a href="新闻模版.html" class="a-btn nav-link">新闻模版</a>
-							</li>
-							<li class="nav-item">
-								<a href="活动报名模版.html" class="a-btn nav-link">活动报名模版</a>
-							</li>
-							<li class="nav-item">
-								<a href="空白模版.html" class="a-btn nav-link">空白模版</a>
-							</li>
-							<li class="nav-item">
-								<a href="表单模版.html" class="a-btn nav-link">表单模版</a>
-							</li>
-							<li class="nav-item">
-								<a href="纳新表单.html" class="a-btn nav-link">纳新表单</a>
-							</li>
-							<li class="nav-item">
-								<a href="岗位信息.html" class="a-btn nav-link">岗位信息</a>
-							</li>
-							<li class="nav-item">
-								<a href="个人档案.html" class="a-btn nav-link">个人档案</a>
-							</li>
-							<li class="nav-item">
-								<a href="内容展示页.html" class="a-btn nav-link">内容展示页</a>
-							</li>
-						</ul>
-					</div>
-				</nav>
-			</div>
-		</div>
-	</div>
-</div>
-<!-- bloc-0 END -->
-
 <!-- bloc-18 -->
 <div class="bloc l-bloc" id="bloc-18">
 	<div class="container bloc-sm">
 		<div class="row">
 			<div class="col">
 				<h1 class="mg-md">
-					{{纳新职务 - 年份 - 简历}}
+					提交申请
 				</h1>
 			</div>
 		</div>
@@ -120,11 +32,15 @@
 							<div class="form-group">
 								<select class="form-control" id="select_1708" name="select_1708">
 									<option value="0">
-										Option 1
+										社交网站
 									</option>
 									<option value="1">
-										Option 2
+										朋友介绍
 									</option>
+                  <option value="1">
+										网络搜索
+									</option>
+
 								</select>
 							</div>
 							<div class="form-group">
@@ -144,10 +60,11 @@
 							</div>
 							<div class="form-group container-div-margin-bottom">
 								<label>
-									如果您有准备单独的简历，或与职位高度相关的个人作品，请于此上传：<br>
-								</label>
+									如果您有准备单独的简历，或与职位高度相关的个人作品，请于此上传：<br></label>
+                  <input id="input-b1" name="m_image" type="file" class="file" data-browse-on-zone-click="true">
+
 							</div>
-							<h6 class="mg-md h6-7-margin-top">
+							<h6 class="mg-md h6-7-margin-top" style="margin-top:10px">
 								请注意：附件仅可上传一份，类型为.pdf或.doc/.docx, 大小不超过2MB。如果是个人作品，请将其上传至任意网盘（推荐Google Drive），并将链接附于文档之中
 							</h6>
 							<div class="file-uploader-area container-div-margin-top">
@@ -162,7 +79,7 @@
 								<label class="form-check-label">
 									我了解CSSA的个人数据及敏感信息管理政策，并自愿分享用于在Australia Privacy Principle定义之下的合理用于范围内的个人信息供CSSA使用
 								</label>
-							</div> 
+							</div>
 							<button class="bloc-button btn btn-d btn-lg btn-block" type="submit">
 								提交简历
 							</button>
@@ -238,107 +155,9 @@
 <a class="bloc-button btn btn-d scrollToTop" onclick="scrollToTarget('1',this)"><span class="fa fa-chevron-up"></span></a>
 <!-- ScrollToTop Button END-->
 
-
-<!-- bloc-20 -->
-<div class="bloc bgc-blue-gray d-bloc none" id="bloc-20">
-	<div class="container bloc-sm">
-		<div class="row">
-			<div class="col-md-3 col-sm-6">
-				<h4 class="mg-md text-sm-left text-center tc-white">
-					关于我们
-				</h4><a href="index.html" class="a-btn a-block footer-link">The Team</a><a href="index.html" class="a-btn a-block footer-link">Contact Us</a>
-			</div>
-			<div class="col-md-3 col-sm-6">
-				<h4 class="mg-md text-sm-left text-center tc-white">
-					myCSSA Hub<br>
-				</h4><a href="index.html" class="a-btn a-block footer-link">Android</a><a href="index.html" class="a-btn a-block footer-link">iOS</a>
-			</div>
-			<div class="col-md-3 col-sm-6">
-				<h4 class="mg-md text-sm-left text-center tc-white">
-					墨大内外
-				</h4><a href="index.html" class="a-btn a-block footer-link">Twitter</a><a href="index.html" class="a-btn a-block footer-link">Facebook</a>
-			</div>
-			<div class="col-md-3 col-sm-6">
-				<h4 class="mg-md text-sm-left text-center tc-white">
-					Connect
-				</h4>
-				<div class="row">
-					<div class="col-6 col-sm-2 col offset-sm-0">
-						<div class="text-center">
-							<a href="https://blocsapp.com/"><span class="fa fa-facebook-official icon-md"></span></a>
-						</div>
-					</div>
-					<div class="col-6 col-sm-2">
-						<div class="text-center">
-							<a href="https://blocsapp.com/"><span class="fa fa-twitter icon-md"></span></a>
-						</div>
-					</div>
-					<div class="col-6 col-sm-2">
-						<div class="text-center">
-							<a href="https://blocsapp.com/"><span class="fa fa-instagram icon-md"></span></a>
-						</div>
-					</div>
-					<div class="col-6 col-sm-2">
-						<div class="text-center">
-							<a href="https://blocsapp.com/"><span class="fa fa-envelope-o icon-md"></span></a>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
 </div>
-<!-- bloc-20 END -->
-
-<!-- bloc-28 -->
-<div class="bloc bgc-blue-gray none d-bloc" id="bloc-28">
-	<div class="container bloc-sm">
-		<div class="row">
-			<div class="col-6 col-sm-3">
-				<img src="img/lazyload-ph.png" data-src="img/ny-times.png" class="img-fluid mx-auto d-block lazyload" />
-			</div>
-			<div class="col-6 col-sm-3">
-				<img src="img/lazyload-ph.png" data-src="img/forbes.png" class="img-fluid mx-auto d-block lazyload" />
-			</div>
-			<div class="col-6 col-sm-3">
-				<img src="img/lazyload-ph.png" data-src="img/wired.png" class="img-fluid mx-auto d-block lazyload" />
-			</div>
-			<div class="col-6 col-sm-3">
-				<img src="img/lazyload-ph.png" data-src="img/guardian.png" class="img-fluid mx-auto d-block lazyload" />
-			</div>
-		</div>
-	</div>
-</div>
-<!-- bloc-28 END -->
-
-<!-- bloc-22 -->
-<div class="bloc bgc-black d-bloc" id="bloc-22">
-	<div class="container">
-		<div class="row">
-			<div class="col">
-				<h6 class="mg-md text-lg-center">
-					卢玏 设计管理项目 <br>
-				</h6>
-				<p class="mg-md text-lg-center h6-margin-top">
-					Designed &amp; Managed by Josh. Le. Lu
-				</p>
-				<p class="mg-md text-lg-center h6-margin-top">
-					版权所有 墨尔本大学中国学生会 Copyrights @ Chinese Student and Scholars Association, University of Melbourne 2012 - 2019
-				</p>
-			</div>
-		</div>
-	</div>
-</div>
-<!-- bloc-22 END -->
-
-</div>
-<!-- Main container END -->
-    
-
-
 <!-- Preloader -->
 <div id="page-loading-blocs-notifaction" class="page-preloader"></div>
 <!-- Preloader END -->
 
-</body>
-</html>
+{% endblock 'pg_body' %}

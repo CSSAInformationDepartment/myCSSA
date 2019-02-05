@@ -75,6 +75,13 @@ def Departments(request,dept):
 
     return render(request, 'PublicSite/dept.html', ViewBag)
 
+def Recruitments(request):
+    return render(request, 'PublicSite/recruit.html')
+
+def Resumes(request):
+    return render(request,'PublicSite/jobapplication.html')
+
+
 def Blogs(request):
     # 找openToPublic为true的
     BLOG_P = 5.0
