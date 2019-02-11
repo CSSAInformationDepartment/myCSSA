@@ -13,6 +13,12 @@
 							<li class="nav-item">
 								<a class="nav-link" href="/">{%trans "首页" %} <span class="sr-only">(current)</span></a>
 							</li>
+							<li class="nav-item">
+								<a class="nav-link" href="{% url 'PublicSite:recruitment' %}">加入CSSA</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link" href="{% url 'PublicSite:contact' %}">{%trans "联系我们" %}</a>
+							</li>
 							{% if user.is_staff %}
 							<li class="nav-item">
 								<a class="nav-link" href="event/">{%trans "活动消息 " %}</a>
@@ -35,12 +41,6 @@
 							</li>
 							<li class="nav-item" >
 								<a class="nav-link" href="{% url 'PublicSite:merchants' %}">{%trans "合作机构 " %}</a>
-							</li>
-							<li class="nav-item">
-								<a class="nav-link" href="{% url 'PublicSite:contact' %}">{%trans "联系我们" %}</a>
-							</li>
-							<li class="nav-item">
-								<a class="nav-link" href="{% url 'PublicSite:recruitment' %}">加入我们</a>
 							</li>
 							{% endif %}
 						</ul>

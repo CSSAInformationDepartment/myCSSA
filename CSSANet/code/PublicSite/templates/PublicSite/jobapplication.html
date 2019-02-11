@@ -1,6 +1,6 @@
 {% extends 'components/base_page.html' %}
 {% block 'pg_body' %}
-    <title>纳新表单</title>
+<title>纳新表单</title>
 <div class="page-container">
 <!-- bloc-18 -->
 <div class="bloc l-bloc" id="bloc-18">
@@ -8,7 +8,7 @@
 		<div class="row">
 			<div class="col">
 				<h1 class="mg-md">
-					提交申请
+					提交申请 - {{job_title.jobName}}
 				</h1>
 			</div>
 		</div>
@@ -30,45 +30,43 @@
 								</label>
 							</div>
 							<div class="form-group">
-								<select class="form-control" id="select_1708" name="select_1708">
-									<option value="0">
+								<select class="form-control" id="job-source" name="job-source">
+									<option value="SNS">
 										社交网站
 									</option>
-									<option value="1">
+									<option value="Friend">
 										朋友介绍
 									</option>
-                  <option value="1">
+                  <option value="WebSearch">
 										网络搜索
 									</option>
-
 								</select>
 							</div>
 							<div class="form-group">
 								<label>
 									您为何想加入这个职位<br>
-								</label><textarea id="message" class="form-control" rows="4" cols="50" required name="message"></textarea>
+								</label><textarea id="job-reason" class="form-control" rows="4" cols="50" required name="reason"></textarea>
 							</div>
 							<div class="form-group">
 								<label>
 									简单介绍下您的个人学习生活，和相关经历<br>
-								</label><textarea id="message" class="form-control" rows="4" cols="50" required name="message"></textarea>
+								</label><textarea id="job-inSchoolExp" class="form-control" rows="4" cols="50" required name="inSchoolExp"></textarea>
 							</div>
 							<div class="form-group">
 								<label>
 									您有何特长或兴趣爱好<br>
-								</label><textarea id="message" class="form-control" rows="4" cols="50" required name="message"></textarea>
+								</label><textarea id="job-hobby" class="form-control" rows="4" cols="50" required name="hobby"></textarea>
 							</div>
-							<div class="form-group container-div-margin-bottom">
+							<!---div class="form-group container-div-margin-bottom">
 								<label>
 									如果您有准备单独的简历，或与职位高度相关的个人作品，请于此上传：<br></label>
                   <input id="input-b1" name="m_image" type="file" class="file" data-browse-on-zone-click="true">
-
 							</div>
 							<h6 class="mg-md h6-7-margin-top" style="margin-top:10px">
 								请注意：附件仅可上传一份，类型为.pdf或.doc/.docx, 大小不超过2MB。如果是个人作品，请将其上传至任意网盘（推荐Google Drive），并将链接附于文档之中
 							</h6>
 							<div class="file-uploader-area container-div-margin-top">
-							</div>
+							</div-->
 							<div class="form-group">
 								<label>
 									最后，您对CSSA有何问题或者建议？（选填）<br>
@@ -117,30 +115,11 @@
 									邮箱<br>
 								</label>
 								<input class="form-control" />
-								<div class="form-group container-div-0-margin-top">
-									<label>
-										专业<br>
-									</label>
-								</div>
-								<div class="form-group">
-									<select class="form-control option-select-margin-top">
-										<option value="0">
-											Option 1
-										</option>
-										<option value="1">
-											Option 2
-										</option>
-									</select>
-								</div>
 								<p>
 									以上信息取自您的账号设定，他们将会被用于评估您的岗位申请。请确保以上信息准确无误。
 								</p>
-								<div class="form-check">
-									<input class="form-check-input" type="checkbox" />
-									<label class="form-check-label">
-										我确认我的个人信息正确
-									</label>
-								</div><a href="index.html" class="btn btn-lg btn-block btn-light-gray-2 btn-margin-top">点此编辑<span class="special-tag-for-editing-text-with-html"></span></a>
+
+								<a href="index.html" class="btn btn-lg btn-block btn-light-gray-2 btn-margin-top">点此编辑<span class="special-tag-for-editing-text-with-html"></span></a>
 							</div>
 						</div>
 					</div>

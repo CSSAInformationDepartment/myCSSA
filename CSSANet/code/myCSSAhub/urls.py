@@ -4,6 +4,7 @@ from myCSSAhub import views as Views
 from FinanceAPI import urls as FinanceUrls
 from OrganisationMgr import  urls as OrgMgrUrls
 from BlogAPI import urls as BlogUrls
+from RecruitAPI import urls as RecruitUrls
 
 app_name = "myCSSAhub"
 urlpatterns = [
@@ -35,7 +36,7 @@ urlpatterns += [
     path('finance/', include(FinanceUrls, namespace='FinanceAPI')),
     path('organisation/', include(OrgMgrUrls, namespace='OrganisationMgr')),
     path('blog/', include(BlogUrls, namespace="BlogAPI")),
-    path('recruit/', include())
+    path('recruit/', include(RecruitUrls, namespace="RecruitAPI"))
 ]
 
 ## Internal AJAX path

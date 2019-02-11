@@ -28,11 +28,12 @@
 						<div class="row">
 							<div class="col">
 								<ul class="list-unstyled">
+									{% for job in job_list %}
 									<li class="bloc-4298-margin-bottom">
 										<div class="row bgc-light-gray">
 											<div class="col-lg-2 align-self-center text-center">
 												<h5 class="mg-md">
-													 宣传部
+													 {{ job.dept.deptTitle}}
 												</h5>
 												<!-- <h3 class="mg-md text-lg-center">
 													{{岗位名称}}
@@ -40,81 +41,13 @@
 											</div>
 											<div class="col align-self-center" style="margin-top:10px">
 												<p>
-													宣传部是一个人才济济，又温暖有爱的部门。顾名思义，它的主要职责就是将一个个发生在我们身边的事物，以文字和图片的形式展示分享给每一个人。也许一次CSSA精心策划的活动，届时微信平台上那些引人注目的宣传推文，与校园里那些别出心裁的设计海报便是出自宣传部之手；也许一次公益的讲座或学习的攻略，推文里详尽的介绍或是手边清晰的传单也同样是宣传部的职责。还有拍照摄影，粉笔绘画，公众号运营……我们仍朝着尽善尽美的道路，不断前进并完善。在这里，我们用文字记录下一个个记忆与愿望，用图片传递出一份份斑斓与憧憬，通过每一位成员的共同努力，将CSSA的每一样美好悉数展现。
-												</p><a href="{% url 'PublicSite:resumes'%}" class="btn  btn-d float-lg-right btn-margin-left" style="margin-top:10px">申请加入</a>
+													{{ job.description}}
+												</p>
+												<a href="{% url 'PublicSite:resumes'%}{{job.jobId}}/" class="btn  btn-primary float-lg-right btn-margin-left" style="margin-top:10px">申请加入</a>
 											</div>
 										</div>
 									</li>
-									<li class="bloc-4298-margin-bottom">
-										<div class="row bgc-light-gray">
-											<div class="col-lg-2 align-self-center text-center">
-												<h5 class="mg-md">
-													 外联部
-												</h5>
-												<!-- <h3 class="mg-md text-lg-center">
-													{{岗位名称}}
-												</h3> -->
-											</div>
-											<div class="col align-self-center" style="margin-top:10px">
-												<p>
-													外联部是墨尔本大学中国学生会五大部之一，作为社团与外界沟通的窗口，我们对外会负责一切合作事宜，包括但不局限于赞助商，折扣商家，战略合作伙伴以及校外其他活动的沟通和参与。我们是墨大中国学生会对外界的形象代表。作为主要负责社团资金来源的部门，外联部同样需要寻求年度赞助商，活动合作商家，来减轻社团的负担，更好的给与广大社员福利。
-外联部提供了一个充分锻炼社交能力和沟通技巧的平台。日常事务包括：与墨尔本各个商家和企业维持良好的关系，代表社团联系并参加墨尔本地区的各个活动，与校内各个兄弟社团保持良好的关系，对于兄弟社团的活动推广互相帮助支持，扩大社团影响力。进入外联，是开拓人脉，建立良好交际人脉圈的绝佳机会。不断的沟通，经验的交流，相信你变得更加优秀！
-												</p><a href="{% url 'PublicSite:resumes'%}" class="btn  btn-d float-lg-right btn-margin-left" style="margin-top:10px">申请加入</a>
-											</div>
-										</div>
-									</li>
-									<li class="bloc-4298-margin-bottom">
-										<div class="row bgc-light-gray">
-											<div class="col-lg-2 align-self-center text-center">
-												<h5 class="mg-md">
-													 信息部
-												</h5>
-												<!-- <h3 class="mg-md text-lg-center">
-													{{岗位名称}}
-												</h3> -->
-											</div>
-											<div class="col align-self-center" style="margin-top:10px">
-												<p>
-												信息部主要以网站设计及开发，维护为主，为整个社团提供高质量的信息与技术支持。与此同时我们还担任了社团记录者，撰写社团历史的责任，比如编写墨城攻略，活动的拍照等等。平时，信息部也会组织线上或线下的交流讨论等活动，为对编程有兴趣的会员们提供一个环境来跟着大神学习。信息部是一个包容友爱的大家庭，我们欢迎每一位对技术有兴趣的朋友们来加入到我们的大家庭里来，或许你是对网站的开发有兴趣，或者你是喜欢平面设计愿意一起来编写墨城攻略的同学，或许你就是技术的大神，或许你只是想要在大学生涯里面做些有意义，可以留下深刻印象的活动，又或许你只是想要结交更多的朋友，我们都欢迎你来报名加入我们信息部，跟我们一起学习跟成长，让你的大学生活不再单调!
-												</p><a href="{% url 'PublicSite:resumes'%}" class="btn  btn-d float-lg-right btn-margin-left" style="margin-top:10px">申请加入</a>
-											</div>
-										</div>
-									</li>
-									<li class="bloc-4298-margin-bottom">
-										<div class="row bgc-light-gray">
-											<div class="col-lg-2 align-self-center text-center">
-												<h5 class="mg-md">
-													 人力资源部
-												</h5>
-												<!-- <h3 class="mg-md text-lg-center">
-													{{岗位名称}}
-												</h3> -->
-											</div>
-											<div class="col align-self-center" style="margin-top:10px">
-												<p>
-													人力资源部是CSSA最年轻最活力最温暖的
-	存在，我们致力于扮演多重角色，在CSSA里有着不可替代的重要地位哦! 比如作为各个部门的沟通枢纽，将各个部门联系在一起使社团更紧密; 比如是温暖贴心照顾社员们方方面面的知心姐姐 (哥哥)，比如是追求完美致力于帮助社团发展的行政工作者，比如脑洞大开创意飞扬的周边设计狗，又比如写文能力6到飞起的微信推送和认真负责的小助手...... 如果你热情好学，活泼开朗，能力超群，认真负责，那人力资源部一定是你最好的选择，我们为你搭建平台，只等你站上舞台，绽放属于你的光芒! 我们欢迎你的到来，期待你给我们人力资源部和CSSA贡献属于你的力量!
-												</p><a href="{% url 'PublicSite:resumes'%}" class="btn btn-d float-lg-right btn-margin-left" style="margin-top:10px">申请加入</a>
-											</div>
-										</div>
-									</li>
-									<li class="bloc-4298-margin-bottom">
-										<div class="row bgc-light-gray">
-											<div class="col-lg-2 align-self-center text-center">
-												<h5 class="mg-md">
-													 组织部
-												</h5>
-												<!-- <h3 class="mg-md text-lg-center">
-													{{岗位名称}}
-												</h3> -->
-											</div>
-											<div class="col align-self-center" style="margin-top:10px">
-												<p>
-													在这里，你收获的不仅仅是组织策划能力， 更有把自己奇思现实化的机遇和成就感。从活动形式、前期准备， 到道具预算、人员安排， 每一项流程从零到一，带领团队为了同一个目标共同努力时的爆棚凝聚力，这一切都赋予了组织部和每一位成员的必要性和不可取代性。 活动成功时的满足感和成就感更是无法言喻。 当然，组织活动也是一个富有挑战性的课题，千里之堤溃于蚁穴，一个前期没有考虑周全的失误可能会让整个活动无法顺利进行。但无论如何，只要你有想法，想实践，组织部一定需要你。当你才思枯竭不知所措，看着策划生怕细节没有完善的时候，请不要迟疑的和我们说: 我有策划，你有酒吗。
-												</p><a href="{% url 'PublicSite:resumes'%}" class="btn  btn-d float-lg-right btn-margin-left" style="margin-top:10px">申请加入</a>
-											</div>
-										</div>
-									</li>
+									{% endfor %}
 								</ul>
 					</div>
 				</div>

@@ -3,6 +3,7 @@ from django.http import JsonResponse
 from PublicSite import models
 from UserAuthAPI import models as UserModels
 from BlogAPI import models as BlogModels
+from RecruitAPI import models as JobModels
 # Static Files Path Reference
 from CSSANet.settings import MEDIA_ROOT, MEDIA_URL
 from Library.SiteManagement import LoadPagetoRegister
@@ -76,10 +77,21 @@ def Departments(request,dept):
     return render(request, 'PublicSite/dept.html', ViewBag)
 
 def Recruitments(request):
-    return render(request, 'PublicSite/recruit.html')
+    job_list = JobModels.JobList.objects.filter()
+    return render(request, 'PublicSite/recruit.html', {'job_list': job_list})
 
-def Resumes(request):
-    return render(request,'PublicSite/jobapplication.html')
+class ResumeSubmissionView(View):
+    def get(self, request, *args, **kwargs):
+        jobId = self.kwargs.get('jobId')
+        job_title = JobModels.JobList.objects.get(jobId=jobId)
+        return render(request, 'PublicSite/jobapplication.html', {'job_title': job_title})
+    
+    def post(self, request, *args, **kwargs):
+        jobId = self.kwargs.get('jobId')
+        job_title = JobModels.JobList.objects.get(jobId=jobId)
+
+        
+        return render(request, 'PublicSite/jobapplication.html', {'job_title': job_title})
 
 
 def Blogs(request):
