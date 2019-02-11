@@ -37,7 +37,7 @@ do
     `nc -z $SERVER $PORT`
     result1=$?
     if [  "$result1" != 0 ]; then
-      >&2 echo '[Bootloader] Postgres is unavailable - Waiting for 3 sec to Retry'
+      >&2 echo '[Bootloader] Postgres is unavailable - Waiting for 3 sec and Retry'
       sleep 3
     else
         >&2 echo "[Bootloader] Postgres is up - Web Service Engine boot sequence initiated"
