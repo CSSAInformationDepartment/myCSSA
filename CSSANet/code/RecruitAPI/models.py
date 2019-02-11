@@ -32,6 +32,7 @@ class JobList(models.Model):
 class Resume(models.Model):
     CVId = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     jobRelated = models.ForeignKey(JobList,verbose_name="相应职位", on_delete=models.CASCADE)
+    user = models.ForeignKey(adminModel.User, on_delete=models.DO_NOTHING, defalut=None, blank=True)
 
     reason = models.CharField(verbose_name="申请原因", max_length=400, default=None)
     hobby = models.CharField(verbose_name="兴趣爱好", max_length=400, default=None)

@@ -31,6 +31,7 @@ from django.contrib.auth.decorators import login_required
 from UserAuthAPI import models as UserModels
 from BlogAPI import models as BlogModels
 from UserAuthAPI.forms import BasicSiginInForm, UserInfoForm, MigrationForm, UserAcademicForm, UserProfileUpdateForm
+from RecruitAPI.forms import ResumeSubmissionForm
 from LegacyDataAPI import models as LegacyDataModels
 
 from myCSSAhub import models as HubModels
@@ -83,15 +84,16 @@ def Recruitments(request):
 class ResumeSubmissionView(View):
     def get(self, request, *args, **kwargs):
         jobId = self.kwargs.get('jobId')
-        job_title = JobModels.JobList.objects.get(jobId=jobId)
-        return render(request, 'PublicSite/jobapplication.html', {'job_title': job_title})
+        job_data = JobModels.JobList.objects.get(jobId=jobId)
+        return render(request, 'PublicSite/jobapplication.html', {'job_data': job_data})
     
     def post(self, request, *args, **kwargs):
         jobId = self.kwargs.get('jobId')
-        job_title = JobModels.JobList.objects.get(jobId=jobId)
+        job_data = JobModels.JobList.objects.get(jobId=jobId)
+        if request.user.is_authenticated:
+            form = ResumeSubmissionForm(data=request.POST)
 
-        
-        return render(request, 'PublicSite/jobapplication.html', {'job_title': job_title})
+        return render(request, 'PublicSite/jobapplication.html', {'job_data': job_data})
 
 
 def Blogs(request):

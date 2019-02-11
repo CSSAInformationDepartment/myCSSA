@@ -8,7 +8,7 @@
 		<div class="row">
 			<div class="col">
 				<h1 class="mg-md">
-					提交申请 - {{job_title.jobName}}
+					提交申请 - {{job_data.jobName}}
 				</h1>
 			</div>
 		</div>
@@ -24,6 +24,8 @@
 				<div class="row">
 					<div class="col-lg-9">
 						<form id="form_2" novalidate data-success-msg="Your message has been sent." data-fail-msg="Sorry it seems that our mail server is not responding, Sorry for the inconvenience!" action="custom-action-url" method="POST">
+							{% csrf_token %}
+							<input type="hidden" name='jobRelated' value="{{job_data.jobId}}"/>
 							<div class="form-group">
 								<label>
 									您从何种渠道了解到CSSA Committe <br>
