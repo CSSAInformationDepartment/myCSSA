@@ -4,6 +4,10 @@
 {% block 'pg_body' %}
 
 {% include 'components/index/_hero.html' %}
+{% block 'extra_header' %}
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static '/myCSSAhub/css/index.css'%}">
+{% endblock 'extra_header' %}
 
 {% load static %}
 
@@ -17,6 +21,118 @@
 				</h3>
 			</div>
 		</div>
+
+		<section class="bg-light" id="portfolio">
+		    <div class="container">
+		      <div class="row">
+		        <div class="col-lg-12 text-center">
+		          <h2 class="section-heading text-uppercase">活动回顾</h2>
+		          <h3 class="section-subheading text-muted">近期cssa活动回顾</h3>
+		        </div>
+		      </div>
+					<div class="row">
+        <div class="col-md-4 col-sm-6 portfolio-item">
+          <a class="portfolio-link" data-toggle="modal" href="#portfolioModal1">
+            <div class="portfolio-hover">
+              <div class="portfolio-hover-content">
+                <i class="fas fa-plus fa-3x"></i>
+              </div>
+            </div>
+            <img class="img-fluid" src="{% static '/myCSSAhub/img/hd-template.png'%}" alt="">
+          </a>
+          <div class="portfolio-caption">
+						<div class="portfolio-caption">
+            <h4>ORIENTATION WEEK</h4>
+            <!-- <p class="text-muted">我们趋行在人生这个亘古的旅程，总觉得寂寞在延续。而在 O-WEEK，来到墨尔本大学中国学生会招新的这一刻，将改写你生命的轨迹。让最多最贴心的礼物袋，最暖最热情的小 伙伴，最酷最给力的后续活动 开启你的留学新篇章。</p> -->
+          </div>
+        </div>
+				</div>
+				<div class="col-md-4 col-sm-6 portfolio-item">
+					<a class="portfolio-link" data-toggle="modal" href="#portfolioModal1">
+						<div class="portfolio-hover">
+							<div class="portfolio-hover-content">
+								<i class="fas fa-plus fa-3x"></i>
+							</div>
+						</div>
+						<img class="img-fluid" src="{% static '/myCSSAhub/img/hd-template2.png'%}" alt="">
+					</a>
+					<div class="portfolio-caption">
+						<div class="portfolio-caption">
+						<h4>SPEED AND CITY</h4>
+						<!-- <p class="text-muted">我们趋行在人生这个亘古的旅程，总觉得寂寞在延续。而在 O-WEEK，来到墨尔本大学中国学生会招新的这一刻，将改写你生命的轨迹。让最多最贴心的礼物袋，最暖最热情的小 伙伴，最酷最给力的后续活动 开启你的留学新篇章。</p> -->
+					</div>
+				</div>
+				</div>
+				<div class="col-md-4 col-sm-6 portfolio-item">
+					<a class="portfolio-link" data-toggle="modal" href="#portfolioModal1">
+						<div class="portfolio-hover">
+							<div class="portfolio-hover-content">
+								<i class="fas fa-plus fa-3x"></i>
+							</div>
+						</div>
+						<img class="img-fluid" src="{% static '/myCSSAhub/img/hd-template3.png'%}" alt="">
+					</a>
+					<div class="portfolio-caption">
+						<div class="portfolio-caption">
+						<h4>WELCOME PARTY</h4>
+						<!-- <p class="text-muted">我们趋行在人生这个亘古的旅程，总觉得寂寞在延续。而在 O-WEEK，来到墨尔本大学中国学生会招新的这一刻，将改写你生命的轨迹。让最多最贴心的礼物袋，最暖最热情的小 伙伴，最酷最给力的后续活动 开启你的留学新篇章。</p> -->
+					</div>
+				</div>
+				</div>
+
+					</div>
+					</section>
+
+					<section id="about" style="margin-top:-200px">
+				     <div class="container">
+				       <div class="row">
+				         <div class="col-lg-12 text-center">
+				           <h2 class="section-heading text-uppercase">关于我们</h2>
+				         </div>
+				       </div>
+				       <div class="row">
+				         <div class="col-lg-12">
+				           <ul class="timeline">
+				             <li>
+				               <div class="timeline-image">
+				                 <img class="rounded-circle img-fluid" src="{% static '/myCSSAhub/img/1.jpg'%}" alt="">
+				               </div>
+				               <div class="timeline-panel">
+				                 <div class="timeline-heading">
+				                   <h4>2009</h4>
+				                   <h4 class="subheading">墨尔本大学中国学联成立</h4>
+				                 </div>
+				                 <div class="timeline-body">
+
+				                 </div>
+				               </div>
+				             </li>
+				             <li class="timeline-inverted">
+				               <div class="timeline-image">
+				                 <img class="rounded-circle img-fluid" src="{% static '/myCSSAhub/img/2.jpg'%}" alt="">
+				               </div>
+				               <div class="timeline-panel">
+				                 <div class="timeline-heading">
+				                   <h4>March 2011</h4>
+				                   <h4 class="subheading">cssa网站成立</h4>
+				                 </div>
+				                 <div class="timeline-body">
+
+				                 </div>
+				               </div>
+				             </li>
+				             <li class="timeline-inverted">
+				               <div class="timeline-image">
+				                 <h4>加入我们</h4>
+				               </div>
+				             </li>
+				           </ul>
+				         </div>
+				       </div>
+				     </div>
+				   </section>
+
+
 		<div class="row">
 			<div class="col-md-4" style="text-align:center;">
 				<img src="{% static 'PublicSite/img/icon/wechat.png'%}" height="64px" width="64px" alt="..." class="mx-auto d-block" id="WeChatModal">
@@ -39,12 +155,12 @@
 					<img src="{% static 'PublicSite/img/icon/Facebook.png'%}" height="64px" width="64px"  alt="..." class="mx-auto d-block">
 				<h4>Facebook</h4>
 					<div style="padding: 5px">
-				   <div class="fb-page" data-href="https://www.facebook.com/CSSAunimelb" data-tabs="timeline" 
-					   data-width="370" data-height="300" 
-						 data-small-header="true" data-adapt-container-width="false" 
+				   <div class="fb-page" data-href="https://www.facebook.com/CSSAunimelb" data-tabs="timeline"
+					   data-width="370" data-height="300"
+						 data-small-header="true" data-adapt-container-width="false"
 						 data-hide-cover="false" data-show-facepile="false">
            </div>
-					</div>	
+					</div>
 				</a>
 			</div>
 		</div>
@@ -96,6 +212,6 @@ $('#WeChatQRCode').on('shown.bs.modal', function () {
 }(document, 'script', 'facebook-jssdk'));</script>
 <!-- facebook plugin-->
 
-
+<script src="{% static '/myCSSAhub/js/index.js'%}" defer></script>
 
 {% endblock 'pg_body' %}

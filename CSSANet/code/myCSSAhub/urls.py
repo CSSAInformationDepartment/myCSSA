@@ -34,8 +34,8 @@ urlpatterns = [
 urlpatterns += [
     path('finance/', include(FinanceUrls, namespace='FinanceAPI')),
     path('organisation/', include(OrgMgrUrls, namespace='OrganisationMgr')),
-    path('blog/', include(BlogUrls, namespace="BlogAPI")),
-    path('recruit/', include())
+    path('blog/', include(BlogUrls, namespace="BlogAPI"))
+    # path('recruit/', include())
 ]
 
 ## Internal AJAX path
