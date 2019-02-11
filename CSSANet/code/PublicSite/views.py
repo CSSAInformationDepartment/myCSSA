@@ -78,7 +78,7 @@ def Departments(request,dept):
     return render(request, 'PublicSite/dept.html', ViewBag)
 
 def Recruitments(request):
-    job_list = JobModels.JobList.objects.filter()
+    job_list = JobModels.JobList.objects.all()
     return render(request, 'PublicSite/recruit.html', {'job_list': job_list})
 
 class ResumeSubmissionView(View):
@@ -92,8 +92,11 @@ class ResumeSubmissionView(View):
         job_data = JobModels.JobList.objects.get(jobId=jobId)
         if request.user.is_authenticated:
             form = ResumeSubmissionForm(data=request.POST)
-
-        return render(request, 'PublicSite/jobapplication.html', {'job_data': job_data})
+            form.user = request.user
+            if form.is_valid:
+                form.save()
+                return HttpResponseRedirect('/')
+        return render(request, 'PublicSite/jobapplication.html', {'job_data': job_data, 'form':form})
 
 
 def Blogs(request):

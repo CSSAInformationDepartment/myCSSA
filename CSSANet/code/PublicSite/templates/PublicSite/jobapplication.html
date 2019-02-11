@@ -1,5 +1,6 @@
 {% extends 'components/base_page.html' %}
 {% block 'pg_body' %}
+{% load widget_tweaks %}
 <title>纳新表单</title>
 <div class="page-container">
 <!-- bloc-18 -->
@@ -23,8 +24,19 @@
 			<div class="col">
 				<div class="row">
 					<div class="col-lg-9">
-						<form id="form_2" novalidate data-success-msg="Your message has been sent." data-fail-msg="Sorry it seems that our mail server is not responding, Sorry for the inconvenience!" action="custom-action-url" method="POST">
+						<form id="form_2" action="custom-action-url" method="POST">
 							{% csrf_token %}
+							{% for hidden_field in form.hidden_fields %}
+							{{ hidden_field }}
+							{% endfor %}
+			
+							{% if form.non_field_errors %}
+							<div class="alert alert-danger" role="alert">
+									{% for error in form.non_field_errors %}
+									{{ error }}
+									{% endfor %}
+							</div>
+							{% endif %}
 							<input type="hidden" name='jobRelated' value="{{job_data.jobId}}"/>
 							<div class="form-group">
 								<label>
