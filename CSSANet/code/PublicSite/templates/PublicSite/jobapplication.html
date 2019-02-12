@@ -24,7 +24,7 @@
 			<div class="col">
 				<div class="row">
 					<div class="col-lg-9">
-						<form id="form_2" action="custom-action-url" method="POST">
+						<form id="form_2" action="custom-action-url" method="POST" onsubmit="openModal()">
 							{% csrf_token %}
 							{% for hidden_field in form.hidden_fields %}
 							{{ hidden_field }}
@@ -80,8 +80,8 @@
 								请注意：附件仅可上传一份，类型为.pdf或.doc/.docx, 大小不超过2MB。如果是个人作品，请将其上传至任意网盘（推荐Google Drive），并将链接附于文档之中
 							</h6>
 							<div class="file-uploader-area container-div-margin-top">
-							</div-->
-							<div class="form-group">
+							</div> -->
+							<div class="form-group" style="margin-top:10px">
 								<label>
 									最后，您对CSSA有何问题或者建议？（选填）<br>
 								</label><textarea id="message" class="form-control" rows="4" cols="50" name="message"></textarea>
@@ -143,7 +143,24 @@
 	</div>
 </div>
 <!-- bloc-19 END -->
-
+<div class="modal fade" tabindex="-1" role="dialog" id="myModal">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">提交成功</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      </div>
+      <div class="modal-body">
+      <p>你的简历已经提交成功咯，请随时关注邮箱，会有相关人员联系你面试。
+        <br>
+      <strong>不要忘记成为Committee前要先在oweek去摊位领取会员卡成为cssa会员哦！</strong></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal" href="#">回到主页</button>
+      </div>
+    </div>
+  </div>
+</div>
 <!-- ScrollToTop Button -->
 <a class="bloc-button btn btn-d scrollToTop" onclick="scrollToTarget('1',this)"><span class="fa fa-chevron-up"></span></a>
 <!-- ScrollToTop Button END-->
@@ -154,3 +171,14 @@
 <!-- Preloader END -->
 
 {% endblock 'pg_body' %}
+
+{% block 'extra_js' %}
+<script type="text/javascript">
+  $('#form').on('submit', function(e){
+    $('#myModal').modal('show');
+    e.preventDefault();
+  });
+</script>
+
+
+{% endblock 'extra_js' %}
