@@ -24,7 +24,7 @@
 			<div class="col">
 				<div class="row">
 					<div class="col-lg-9">
-						<form id="form_2" action="custom-action-url" method="POST" onsubmit="openModal()">
+						<form id="main_form">
 							{% csrf_token %}
 							{% for hidden_field in form.hidden_fields %}
 							{{ hidden_field }}
@@ -38,6 +38,7 @@
 							</div>
 							{% endif %}
 							<input type="hidden" name='jobRelated' value="{{job_data.jobId}}"/>
+							<input type="hidden" name='user' value="{{user.id}}"/>
 							<div class="form-group">
 								<label>
 									您从何种渠道了解到CSSA Committe <br>
@@ -105,35 +106,27 @@
 							<label>
 								姓<br>
 							</label>
-							<input class="form-control" />
+							<input class="form-control" value="{{user.userprofile.lastNameEN}}"/>
 						</div>
 						<div class="form-group">
 							<label>
 								名<br>
 							</label>
-							<input class="form-control" />
-							<div class="form-group">
-								<label>
-									生日<br>
-								</label>
-								<input class="form-control" />
-							</div>
+							<input class="form-control" value="{{user.userprofile.firstNameEN}}"/>
 							<div class="form-group">
 								<label>
 									联系电话<br>
 								</label>
-								<input class="form-control" />
+								<input class="form-control" value="{{user.telNumber}}"/>
 							</div>
 							<div class="form-group">
 								<label>
 									邮箱<br>
 								</label>
-								<input class="form-control" />
+								<input class="form-control" value="{{ user.email }}" />
 								<p>
 									以上信息取自您的账号设定，他们将会被用于评估您的岗位申请。请确保以上信息准确无误。
 								</p>
-
-								<a href="index.html" class="btn btn-lg btn-block btn-light-gray-2 btn-margin-top">点此编辑<span class="special-tag-for-editing-text-with-html"></span></a>
 							</div>
 						</div>
 					</div>
@@ -156,7 +149,7 @@
       <strong>不要忘记成为Committee前要先在oweek去摊位领取会员卡成为cssa会员哦！</strong></p>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary" data-dismiss="modal" href="#">回到主页</button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="gotoParentPage();">回到主页</button>
       </div>
     </div>
   </div>
@@ -174,8 +167,31 @@
 
 {% block 'extra_js' %}
 <script type="text/javascript">
-  $('#form').on('submit', function(e){
-    $('#myModal').modal('show');
+function gotoParentPage(){
+	window.location.href = "{% url 'PublicSite:recruitment' %}"
+}
+
+  $('#main_form').on('submit', function(e){
+	$.ajax({
+	url : window.location.href, // the endpoint
+	type : "POST", // http method
+	data : $('#main_form').serialize(),// data sent with the post request
+	// handle a successful response
+	success : function(json) {
+		if (json["result"]) {
+			$('#myModal').modal('show');
+		} else {
+			console.log(json);
+		}
+	},
+	// handle a non-successful response
+	error : function(xhr,errmsg,err) {
+		$('#results').html('<div class="alert alert-dismissible alert-warning fade show" role="alert">Oops! We have encountered an error: '+errmsg+
+		" <a href='#' class='close'>&times;</a></div>"); // add the error to the dom
+		console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
+		}
+	});
+    
     e.preventDefault();
   });
 </script>

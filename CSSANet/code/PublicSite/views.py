@@ -82,6 +82,8 @@ def Recruitments(request):
     return render(request, 'PublicSite/recruit.html', {'job_list': job_list})
 
 class ResumeSubmissionView(View):
+    json_data={}
+    
     def get(self, request, *args, **kwargs):
         jobId = self.kwargs.get('jobId')
         job_data = JobModels.JobList.objects.get(jobId=jobId)
@@ -95,8 +97,14 @@ class ResumeSubmissionView(View):
             form.user = request.user
             if form.is_valid:
                 form.save()
-                return HttpResponseRedirect('/')
-        return render(request, 'PublicSite/jobapplication.html', {'job_data': job_data, 'form':form})
+                self.json_data['result'] = True
+         #       return JsonResponse(self.json_data)
+            else:
+                self.json_data['result'] = False
+                self.json_data['error'] = form.error_class
+                
+        return JsonResponse(self.json_data)
+        #return render(request, 'PublicSite/jobapplication.html', {'job_data': job_data, 'form':form})
 
 
 def Blogs(request):

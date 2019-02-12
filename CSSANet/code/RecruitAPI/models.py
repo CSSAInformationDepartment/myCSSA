@@ -32,18 +32,19 @@ class JobList(models.Model):
 class Resume(models.Model):
     CVId = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     jobRelated = models.ForeignKey(JobList,verbose_name="相应职位", on_delete=models.CASCADE)
-    user = models.ForeignKey(adminModel.User, on_delete=models.DO_NOTHING, default=None, blank=True)
+    user = models.ForeignKey(adminModel.User, on_delete=models.DO_NOTHING, default=None, blank=True, null=True)
 
     reason = models.CharField(verbose_name="申请原因", max_length=400, default=None)
     hobby = models.CharField(verbose_name="兴趣爱好", max_length=400, default=None)
-    eduBackground = models.CharField(verbose_name="教育背景", max_length=400, default=None, blank=True)
+    eduBackground = models.CharField(verbose_name="教育背景", max_length=400, default=None, blank=True, null=True)
     inSchoolExp = models.CharField(verbose_name="校内经历", max_length=400, default=None)
-    outSchoolExp = models.CharField(verbose_name="校外经历", max_length=400, default=None, blank=True)
+    outSchoolExp = models.CharField(verbose_name="校外经历", max_length=400, default=None, blank=True, null=True)
+    additionMsg = models.CharField(max_length=400, default=None, blank=True, null=True)
 
-    isOpened = models.BooleanField(default=False)
-    isEnrolled = models.BooleanField(default=False)
-    isOfferd = models.BooleanField(default=False)
-    isReject = models.BooleanField(default=None, blank=True)
+    isOpened = models.BooleanField(default=False, blank=True, null=True)
+    isEnrolled = models.BooleanField(default=False, blank= True, null=True)
+    isOfferd = models.BooleanField(default=False, blank=True, null=True)
+    isReject = models.BooleanField(default=None, blank=True, null=True)
 
 
 # 可能以后要并入认识管理模块

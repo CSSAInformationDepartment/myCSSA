@@ -9,4 +9,4 @@ class AddJobForm(forms.ModelForm):
 class ResumeSubmissionForm(forms.ModelForm):
     class Meta:
         model = Resume
-        fields = ('jobRelated', 'reason', 'hobby', 'inSchoolExp')
+        fields = ('jobRelated', 'user' ,'reason', 'hobby', 'inSchoolExp')
