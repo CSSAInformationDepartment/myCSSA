@@ -14,7 +14,7 @@
 								<a class="nav-link" href="/">{%trans "首页" %} <span class="sr-only">(current)</span></a>
 							</li>
 							<li class="nav-item">
-								<a class="nav-link" href="{% url 'PublicSite:recruitment' %}">加入CSSA</a>
+								<a class="nav-link" href="{% url 'PublicSite:recruitment' %}">加入CSSA理事</a>
 							</li>
 							<li class="nav-item">
 								<a class="nav-link" href="{% url 'PublicSite:contact' %}">{%trans "联系我们" %}</a>
@@ -50,7 +50,7 @@
 							<li class="nav-item"><a class="nav-link" href="{% url 'myCSSAhub:hub_logout' %}"> 注销 </a></li>
 						{% else %}
 							<li class="nav-item"><a class="nav-link" href="{% url 'myCSSAhub:hub_login' %}"> 登录</a></li>
-							<li class="nav-item"><a class="nav-link" href="{% url 'myCSSAhub:hub_reg' %}"> 成为myCSSA会员 </a> </li>
+							<li class="nav-item"><a class="nav-link" href="{% url 'myCSSAhub:hub_reg' %}"> 成为CSSA会员 </a> </li>
 						{% endif %}
 						</ul>
 					</div>
