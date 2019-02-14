@@ -29,7 +29,7 @@
 							{% for hidden_field in form.hidden_fields %}
 							{{ hidden_field }}
 							{% endfor %}
-			
+
 							{% if form.non_field_errors %}
 							<div class="alert alert-danger" role="alert">
 									{% for error in form.non_field_errors %}
@@ -41,7 +41,7 @@
 							<input type="hidden" name='user' value="{{user.id}}"/>
 							<div class="form-group">
 								<label>
-									您从何种渠道了解到CSSA Committe <br>
+									您从何种渠道了解到CSSA Committe <span class="asteriskField">*</span><br>
 								</label>
 							</div>
 							<div class="form-group">
@@ -59,17 +59,17 @@
 							</div>
 							<div class="form-group">
 								<label>
-									您为何想加入这个职位<br>
+									您为何想加入这个职位<span class="asteriskField">*</span><br>
 								</label><textarea id="job-reason" class="form-control" rows="4" cols="50" required name="reason"></textarea>
 							</div>
 							<div class="form-group">
 								<label>
-									简单介绍下您的个人学习生活，和相关经历<br>
+									简单介绍下您的个人学习生活，和相关经历（字数100字左右）<span class="asteriskField">*</span><br>
 								</label><textarea id="job-inSchoolExp" class="form-control" rows="4" cols="50" required name="inSchoolExp"></textarea>
 							</div>
 							<div class="form-group">
 								<label>
-									您有何特长或兴趣爱好<br>
+									您有何特长或兴趣爱好（字数50字左右）<span class="asteriskField">*</span><br>
 								</label><textarea id="job-hobby" class="form-control" rows="4" cols="50" required name="hobby"></textarea>
 							</div>
 							<!---div class="form-group container-div-margin-bottom">
@@ -191,7 +191,7 @@ function gotoParentPage(){
 		console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
 		}
 	});
-    
+
     e.preventDefault();
   });
 </script>

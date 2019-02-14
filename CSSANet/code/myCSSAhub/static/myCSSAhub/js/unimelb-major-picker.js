@@ -69,7 +69,7 @@
   {
     "name": "Sciences and mathematics",
     "abbreviation": "Sciences and mathematics"
-  }
+  },
   {
     "name": "Engineering",
     "abbreviation": "Engineering"
