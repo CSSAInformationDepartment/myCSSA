@@ -13,6 +13,6 @@ urlpatterns = [
     path('resumes/<str:jobId>/', Views.ResumeSubmissionView.as_view(), name='resumes'),
     path('merchants/', Views.Merchants, name='merchants'),
     path('blog/<int:blogId>/', Views.BlogContents, name='blogContent'),
-    path('blogs', Views.Blogs, name='blogs'),
-    path('reviewblog', Views.reviewBlogPublic.as_view(), name='reviewBlogPublic')
+    path('blogs/', Views.Blogs, name='blogs'),
+    path('reviewblog/', Views.reviewBlogPublic.as_view(), name='reviewBlogPublic')
 ]
