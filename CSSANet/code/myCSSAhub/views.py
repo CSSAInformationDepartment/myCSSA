@@ -332,6 +332,7 @@ class LoginPage(View):
     def post(self, request, *args, **kwargs):
         email = request.POST['email']
         userQuery = self.model.objects.filter(email=email).first()
+        redirect_to = request.GET.get('redirect_to')
         if userQuery is None:
             return JsonResponse(self.loginErrorMsg)
         password = request.POST['password']
@@ -340,6 +341,10 @@ class LoginPage(View):
         if user is not None:
             login(request, user)
             update_last_login(None, user)
+            if redirect_to:
+                self.loginSuccessful['redirect'] = redirect_to
+            else:
+                self.loginSuccessful['redirect'] = '/hub/home/'
             return JsonResponse(self.loginSuccessful)
         else:
             return JsonResponse(self.loginErrorMsg)

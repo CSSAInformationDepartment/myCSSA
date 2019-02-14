@@ -81,7 +81,10 @@ def Recruitments(request):
     job_list = JobModels.JobList.objects.all()
     return render(request, 'PublicSite/recruit.html', {'job_list': job_list})
 
-class ResumeSubmissionView(View):
+class ResumeSubmissionView(LoginRequiredMixin,View):
+    login_url = "/hub/login/"
+    redirect_field_name = 'redirect_to'
+
     json_data={}
     
     def get(self, request, *args, **kwargs):
@@ -102,10 +105,16 @@ class ResumeSubmissionView(View):
             else:
                 self.json_data['result'] = False
                 self.json_data['error'] = form.error_class
-                
+        else:
+            self.json_data['result'] = False
+            self.json_data['error'] =  'You need to login first! '
         return JsonResponse(self.json_data)
-        #return render(request, 'PublicSite/jobapplication.html', {'job_data': job_data, 'form':form})
 
+class EventsListView(LoginRequiredMixin ,View):
+    
+    
+    def get(self, request, *args, **kwargs):
+        return render(request, 'PublicSite/event.html')
 
 def Blogs(request):
     # 找openToPublic为true的

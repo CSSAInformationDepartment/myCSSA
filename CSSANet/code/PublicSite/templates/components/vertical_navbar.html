@@ -17,11 +17,11 @@
 				<a class="nav-link" href="{% url 'PublicSite:blogs' %}?page=1">{%trans "新闻公告" %}</a>
 			</li>
 			{% if user.is_authenticated %}
+
+			{% endif %}
 			<li class="nav-item">
 				<a class="nav-link" href="{% url 'PublicSite:recruitment' %}">加入CSSA</a>
 			</li>
-			{% endif %}
-
 			<li class="nav-item">
 				<a class="nav-link" href="{% url 'PublicSite:contact' %}">{%trans "联系我们" %}</a>
 			</li>
