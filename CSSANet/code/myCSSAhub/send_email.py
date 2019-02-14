@@ -39,12 +39,12 @@ def send_emails(title, content, targetID, currentUserId):
         dept = content.jobRelated.dept.deptTitle
         username = content.user.userprofile.lastNameEN + " " + content.user.userprofile.firstNameEN
         print("Ready to send !!")
-        html_content = get_template('myCSSAhub/email/register_mail.html').render({'username': username, 'dept': dept,
+        html_content = get_template('myCSSAhub/email/cv_mail.html').render({'username': username, 'dept': dept,
                                                                                   'jobName': jobName, 'cvId': cvId})
 
         targetEmail.append(targetID)
 
-        email_content(title, content, html_content, targetEmail)
+        email_content(title, 'CV Submitted', html_content, targetEmail)
 
     else:
 
