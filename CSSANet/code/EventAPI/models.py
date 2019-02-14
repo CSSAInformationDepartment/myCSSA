@@ -40,6 +40,9 @@ class EventUndertaker (models.Model):
     eventTakerId = models.UUIDField(primary_key = True, default = uuid.uuid4, editable = False)
     eventTakerName = models.CharField(max_length = 50)
 
+    def __str__(self):
+        return self.eventTakerName
+
 # contacter weak entity
 class TakerContacter (models.Model):
     contacterId = models.UUIDField(primary_key = True, default = uuid.uuid4, editable = False)
@@ -47,9 +50,15 @@ class TakerContacter (models.Model):
     eventTakerId = models.ForeignKey(EventUndertaker, on_delete = models.CASCADE)
     contacterContact = models.CharField(max_length = 50)
 
+    def __str__(self):
+        return self.contacterName
+
 class EventType(models.Model):
     eventTypeId = models.UUIDField(primary_key = True, default = uuid.uuid4, editable = False)
     typeName = models.CharField(max_length = 50)
+
+    def __str__(self):
+        return self.typeName
 
 # Event本身
 class Event (models.Model):
@@ -67,6 +76,8 @@ class Event (models.Model):
     #活动类型
     eventTypes = models.ForeignKey(EventType,on_delete=models.DO_NOTHING)
 
+    def __str__(self):
+        return self.eventName
 
 # UserProfile 参加 Event 的多对多 association entity
 class AttendEvent (models.Model):
