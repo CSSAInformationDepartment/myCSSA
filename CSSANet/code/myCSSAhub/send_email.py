@@ -4,6 +4,8 @@ from django.core.mail import EmailMultiAlternatives
 from UserAuthAPI import models as UserModels
 # 关键设定：不能直接调用CSSAnet这个module进行设定
 from django.conf import settings
+from django.template.loader import get_template
+from django.template import Context
 
 officialEmail = 'automail.cssa@cssaunimelb.com'
 
@@ -18,10 +20,25 @@ def send_emails(title, content, targetID, currentUserId):
     settings.EMAIL_HOST_PASSWORD = email.host_password
     settings.EMAIL_PORT = email.port
      
+
+    if title == 'Register Successful':
+         
+        # print("email", targetID)
+        # d = Context()
+
+        html_content = get_template('myCSSAhub/email/CSSAmail.html').render({'username': content})
+
+        targetEmail.append(targetID)
+        
+        email_content(title, content, html_content, targetEmail)
+   
+ 
+    else:
+
     # 获得需要发送的email地址
-    for userID in targetID:
-        info_list = UserModels.User.objects.get(id=userID)
-        targetEmail.append(info_list.email)
+        for userID in targetID:
+            info_list = UserModels.User.objects.get(id=userID)
+            targetEmail.append(info_list.email)
     # print("user", email.host_user)
     # print("pwd", email.host_password)
     # print("port", email.port)
@@ -31,7 +48,10 @@ def send_emails(title, content, targetID, currentUserId):
 
     # 获取需要发送的目标用户邮箱
 
-    html_content = '<p>欢迎访问<a href="http://www.CSSA.com" target=blank>www.CSSA.com</a>'+content+'</p>'
+# 根据不同内容，发送email   
+def email_content(title, content, html_content, targetEmail):
+    
+    # html_content = '<p>欢迎访问<a href="http://www.CSSA.com" target=blank>www.CSSA.com</a>'+content+'</p>'
 
     email_msg = EmailMultiAlternatives(title, content, officialEmail, targetEmail)
 
@@ -39,10 +59,9 @@ def send_emails(title, content, targetID, currentUserId):
 
     email_msg.send()
 
+    # flag, message = insertEmailDB(title,content,targetID, currentUserId)
 
-    flag, message = insertEmailDB(title,content,targetID, currentUserId)
-
-    return flag
+    # return flag
 
 
 def queryEmailConfiguration():

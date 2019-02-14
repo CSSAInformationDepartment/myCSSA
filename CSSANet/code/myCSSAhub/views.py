@@ -1,4 +1,4 @@
-from .send_email import send_emails, queryEmailContent, queryEmailContent, queryEmailList
+from myCSSAhub.send_email import send_emails, queryEmailContent, queryEmailContent, queryEmailList
 from django.shortcuts import get_object_or_404
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .notification import insertDB, queryMessagesList, queryMessageContent
@@ -384,6 +384,11 @@ class NewUserSignUpView(View):
                 profile.isValid = True
             profile.save()
             academic.save()
+
+            # 完成信息保存以后，发送注册成功的邮件
+            target_email = BasicSiginInForm.email
+            send_emails('Register Successful','Howie Chen', 'shenhai0910@gmail.com', None)
+
         else:
             return JsonResponse({
                 'success': False,
