@@ -35,6 +35,7 @@ from RecruitAPI.forms import ResumeSubmissionForm
 from LegacyDataAPI import models as LegacyDataModels
 
 from myCSSAhub import models as HubModels
+from myCSSAhub.send_email import send_emails
 
 # Create your views here.
 
@@ -96,8 +97,10 @@ class ResumeSubmissionView(View):
             form = ResumeSubmissionForm(data=request.POST)
             form.user = request.user
             if form.is_valid:
-                form.save()
+                instance = form.save()
                 self.json_data['result'] = True
+
+                send_emails("CV Submitted", instance, request.user.email, None)
          #       return JsonResponse(self.json_data)
             else:
                 self.json_data['result'] = False

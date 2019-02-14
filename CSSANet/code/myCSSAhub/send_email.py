@@ -11,7 +11,7 @@ officialEmail = 'automail.cssa@cssaunimelb.com'
 
 
 def send_emails(title, content, targetID, currentUserId):
-    
+
     targetEmail = []
     email = queryEmailConfiguration()
 
@@ -19,23 +19,36 @@ def send_emails(title, content, targetID, currentUserId):
     settings.EMAIL_HOST_USER = email.host_user
     settings.EMAIL_HOST_PASSWORD = email.host_password
     settings.EMAIL_PORT = email.port
-     
 
     if title == 'Register Successful':
-         
+
         # print("email", targetID)
         # d = Context()
 
-        html_content = get_template('myCSSAhub/email/CSSAmail.html').render({'username': content})
+        html_content = get_template(
+            'myCSSAhub/email/register_mail.html').render({'username': content})
 
         targetEmail.append(targetID)
-        
+
         email_content(title, content, html_content, targetEmail)
-   
- 
+
+    elif title == 'CV Submitted':
+
+        cvId = content.CVId
+        jobName = content.jobRelated.jobName
+        dept = content.jobRelated.dept.deptTitle
+        username = content.jobRelated.user.username
+
+        html_content = get_template('myCSSAhub/email/register_mail.html').render({'username': username, 'dept': dept,
+                                                                                  'jobName': jobName, 'cvId': cvId})
+
+        targetEmail.append(targetID)
+
+        email_content(title, content, html_content, targetEmail)
+
     else:
 
-    # 获得需要发送的email地址
+        # 获得需要发送的email地址
         for userID in targetID:
             info_list = UserModels.User.objects.get(id=userID)
             targetEmail.append(info_list.email)
@@ -48,12 +61,15 @@ def send_emails(title, content, targetID, currentUserId):
 
     # 获取需要发送的目标用户邮箱
 
-# 根据不同内容，发送email   
+# 根据不同内容，发送email
+
+
 def email_content(title, content, html_content, targetEmail):
-    
+
     # html_content = '<p>欢迎访问<a href="http://www.CSSA.com" target=blank>www.CSSA.com</a>'+content+'</p>'
 
-    email_msg = EmailMultiAlternatives(title, content, officialEmail, targetEmail)
+    email_msg = EmailMultiAlternatives(
+        title, content, officialEmail, targetEmail)
 
     email_msg.attach_alternative(html_content, "text/html")
 
@@ -84,15 +100,18 @@ def queryEmailList(currentUserId):
     # 返回给view.py
     return info_list
 
+
 def queryEmailContent(id):
 
     try:
         # 查询当前用户未读的信息内容, 将信息更新为已读
         info_list = EmailDB.objects.get(id=id)
-  
-        receiver = UserModels.UserProfile.objects.filter(user=info_list.recID).first()
+
+        receiver = UserModels.UserProfile.objects.filter(
+            user=info_list.recID).first()
         print(info_list.recID)
-        sender = UserModels.UserProfile.objects.filter(user=info_list.sendID).first()
+        sender = UserModels.UserProfile.objects.filter(
+            user=info_list.sendID).first()
 
     except info_list.model.DoesNotExist:
         raise Http404('No %s matches the given query.' %
@@ -105,7 +124,7 @@ def queryEmailContent(id):
 
 
 def insertEmailDB(title, content, targetUsersId, currentUserId):
-    
+
     allID = '3a4b499e-b49d-4e19-9c02-d0123dd196a4'
     if form.is_valid():
 
@@ -121,7 +140,8 @@ def insertEmailDB(title, content, targetUsersId, currentUserId):
                 receiver = UserModels.User(id=targetId)
 
                 # 0表示消息未读
-                email_Db = EmailDB(sendID=sender, recID=receiver, title=title, content=content)
+                email_Db = EmailDB(sendID=sender, recID=receiver,
+                                   title=title, content=content)
                 email_Db.save()
 
             return True, "发送成功"
@@ -133,7 +153,8 @@ def insertEmailDB(title, content, targetUsersId, currentUserId):
                 # 群发id不包含当前用户
                 if currentUserId != usersID:
                     receiver = UserModels.User(id=usersID)
-                    email_Db = EmailDB(sendID=sender, recID=receiver, title=title, content=content)
+                    email_Db = EmailDB(
+                        sendID=sender, recID=receiver, title=title, content=content)
                     email_Db.save()
 
             return True, "群发成功"

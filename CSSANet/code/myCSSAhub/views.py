@@ -386,8 +386,9 @@ class NewUserSignUpView(View):
             academic.save()
 
             # 完成信息保存以后，发送注册成功的邮件
-            target_email = BasicSiginInForm.email
-            send_emails('Register Successful','Howie Chen', 'shenhai0910@gmail.com', None)
+            target_email = account_form.email
+            userName = profile_form.firstNameEN + " " +profile_form.lastNameEN
+            send_emails('Register Successful', userName , target_email, None)
 
         else:
             return JsonResponse({
