@@ -102,7 +102,6 @@ class ResumeSubmissionView(LoginRequiredMixin,View):
             if form.is_valid:
                 instance = form.save()
                 self.json_data['result'] = True
-
                 send_emails("CV Submitted", instance, request.user.email, None)
          #       return JsonResponse(self.json_data)
             else:

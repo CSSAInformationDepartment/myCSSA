@@ -37,8 +37,8 @@ def send_emails(title, content, targetID, currentUserId):
         cvId = content.CVId
         jobName = content.jobRelated.jobName
         dept = content.jobRelated.dept.deptTitle
-        username = content.jobRelated.user.username
-
+        username = content.user.userprofile.lastNameEN + " " + content.user.userprofile.firstNameEN
+        print("Ready to send !!")
         html_content = get_template('myCSSAhub/email/register_mail.html').render({'username': username, 'dept': dept,
                                                                                   'jobName': jobName, 'cvId': cvId})
 

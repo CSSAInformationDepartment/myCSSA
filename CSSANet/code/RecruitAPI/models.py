@@ -21,7 +21,7 @@ import uuid
 #
 
 def _GetUserDir(instance, filename):
-    return 'user_{0}/{1}'.format(instance.user.id, filename)
+    return 'resume_attachment/user_{0}/{1}'.format(instance.user.id, filename)
 
 #岗位列表
 class JobList(models.Model):
@@ -34,6 +34,8 @@ class JobList(models.Model):
 
 class Resume(models.Model):
     CVId = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    timeOfCreate = models.DateTimeField(auto_now_add=True)
+
     jobRelated = models.ForeignKey(JobList,verbose_name="相应职位", on_delete=models.CASCADE)
     user = models.ForeignKey(adminModel.User, on_delete=models.DO_NOTHING, default=None, blank=True, null=True)
 
@@ -44,7 +46,7 @@ class Resume(models.Model):
     outSchoolExp = models.CharField(verbose_name="校外经历", max_length=400, default=None, blank=True, null=True)
     additionMsg = models.CharField(max_length=400, default=None, blank=True, null=True)
 
-    attachment = models.FileField(default=None, null=True, blank=True, upload_to='resume_attachment/'+_GetUserDir)
+    attachment = models.FileField(default=None, null=True, blank=True, upload_to=_GetUserDir)
 
     isOpened = models.BooleanField(default=False, blank=True, null=True)
     isEnrolled = models.BooleanField(default=False, blank= True, null=True)
