@@ -96,7 +96,7 @@ class ResumeSubmissionView(LoginRequiredMixin,View):
         jobId = self.kwargs.get('jobId')
         job_data = JobModels.JobList.objects.get(jobId=jobId)
         if request.user.is_authenticated:
-            form = ResumeSubmissionForm(data=request.POST)
+            form = ResumeSubmissionForm(data=request.POST, files=request.FILES)
             form.user = request.user
             if form.is_valid:
                 form.save()

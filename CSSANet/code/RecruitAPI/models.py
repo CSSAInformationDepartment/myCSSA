@@ -20,6 +20,9 @@ import uuid
 # Create your models here
 #
 
+def _GetUserDir(instance, filename):
+    return 'user_{0}/{1}'.format(instance.user.id, filename)
+
 #岗位列表
 class JobList(models.Model):
     jobId = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -40,6 +43,8 @@ class Resume(models.Model):
     inSchoolExp = models.CharField(verbose_name="校内经历", max_length=400, default=None)
     outSchoolExp = models.CharField(verbose_name="校外经历", max_length=400, default=None, blank=True, null=True)
     additionMsg = models.CharField(max_length=400, default=None, blank=True, null=True)
+
+    attachment = models.FileField(default=None, null=True, blank=True, upload_to='resume_attachment/'+_GetUserDir)
 
     isOpened = models.BooleanField(default=False, blank=True, null=True)
     isEnrolled = models.BooleanField(default=False, blank= True, null=True)
