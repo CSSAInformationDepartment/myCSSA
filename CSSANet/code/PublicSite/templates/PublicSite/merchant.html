@@ -12,10 +12,10 @@
        {% for info in infos %}
         <div class="col-lg-4 col-sm-6 portfolio-item">
           <div class="card h-100">
-            <a href="{{info.merchant_link}}"><img alt="{{info.merchant_name}}" class="card-img-top" src="{{info.merchant_image}}"></a>
+            <a href="{{info.merchant_link}}"><img alt="{{info.merchant_name}}" class="card-img-top" src="/media/{{info.merchant_image}}"></a>
             <div class="card-body">
               <h4 class="card-title">
-                <a href="{{info.merchant_link}}">{{info.merchant_image}}</a>
+                <a href="{{info.merchant_link}}">{{info.merchant_name}}</a>
               </h4>
               <p class="card-text">{{info.merchant_description}}</p>
             </div>

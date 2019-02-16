@@ -134,6 +134,24 @@
                     </li>
                   </ul>
               </li>
+              {% if perms.myCSSAhub.change_discountmerchant %}
+              
+                <li class="nav-item nav-dropdown">
+                  <a class="nav-link nav-dropdown-toggle" href="#">
+                    <i class="nav-icon fa fa-shopping-bag"></i>折扣商家管理</a>
+                    <ul class="nav-dropdown-items">
+                      <li class="nav-item">
+                        <a class="nav-link" href="{% url 'myCSSAhub:merchants_list' %}">
+                          <i class="nav-icon cui-list"></i> 商家总览 </a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link" href="{% url 'myCSSAhub:merchants_add' %}">
+                          <i class="nav-icon fa fa-plus-circle"></i> 新增折扣商家 </a>
+                      </li>
+                    </ul>
+                </li>
+              {% endif %}
+
               {% endif %}
           </ul>
         </nav>

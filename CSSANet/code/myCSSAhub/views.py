@@ -199,9 +199,10 @@ class EmailHistory(LoginRequiredMixin, View):
 ################################# merchants ########################################
 
 
-class Merchants_list(LoginRequiredMixin, View):
+class Merchants_list(PermissionRequiredMixin, LoginRequiredMixin, View):
     login_url = '/hub/login/'
     template_name = 'myCSSAhub/merchants_list.html'
+    permission_required = ('myCSSAhub.change_discountmerchant')
 
     def get(self, request):
         if request.user.is_authenticated:
@@ -213,9 +214,10 @@ class Merchants_list(LoginRequiredMixin, View):
         return render(request, self.template_name)
 
 
-class Merchant_add(LoginRequiredMixin, View):
+class Merchant_add(PermissionRequiredMixin, LoginRequiredMixin, View):
     login_url = '/hub/login/'
     template_name = 'myCSSAhub/merchant_add.html'
+    permission_required = ('myCSSAhub.change_discountmerchant')
 
     def get(self, request):
 
@@ -261,7 +263,7 @@ class Merchant_profile(LoginRequiredMixin, View):
     def get(self, request,  *args, **kwargs):
         profileID = self.kwargs.get('id')
         # 获取id相关的信息
-        infos = DiscountMerchant.objects.get(id=profileID)
+        infos = DiscountMerchant.objects.get(merchant_id=profileID)
         self.old_info = infos
         return render(request, self.template_name, locals())
 
