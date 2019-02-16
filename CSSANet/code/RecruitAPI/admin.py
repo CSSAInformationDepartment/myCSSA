@@ -8,7 +8,7 @@ class JobListAdmin(admin.ModelAdmin):
     list_per_page = 25
 
 class ResumeAdmin(admin.ModelAdmin):
-    list_display = ('CVId', 'jobRelated', 'isOpened', 'isEnrolled', 'isOfferd', 'isReject')
+    list_display = ('CVId','timeOfCreate', 'jobRelated', 'isOpened', 'isEnrolled', 'isOfferd', 'isReject')
     list_display_links = ('CVId',)
     search_fields = ('CVId',)
     list_per_page = 25

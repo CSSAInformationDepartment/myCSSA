@@ -98,8 +98,9 @@ class ResumeSubmissionView(LoginRequiredMixin,View):
         job_data = JobModels.JobList.objects.get(jobId=jobId)
         if request.user.is_authenticated:
             form = ResumeSubmissionForm(data=request.POST, files=request.FILES)
+            print(form)
             form.user = request.user
-            if form.is_valid:
+            if form.is_valid():
                 instance = form.save()
                 self.json_data['result'] = True
                 send_emails("CV Submitted", instance, request.user.email, None)

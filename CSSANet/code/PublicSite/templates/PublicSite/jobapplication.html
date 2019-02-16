@@ -1,12 +1,16 @@
 {% extends 'components/base_page.html' %}
 {% block 'extra_header' %}
-<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.5.1/css/fileinput.min.css" media="all" rel="stylesheet"
-    type="text/css" />
-		{% endblock 'extra_header' %}
+	{% load static %}
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.5.1/css/fileinput.min.css" media="all" rel="stylesheet"
+			type="text/css" />
+	<link rel="stylesheet" href="{% static '/PublicSite/vendors/css-loader/css-loader.css' %}" type="text/css" />
+{% endblock 'extra_header' %}
 {% block 'pg_body' %}
 {% load widget_tweaks %}
 <title>纳新表单</title>
 <div class="page-container">
+<div id="submit-loader" class="loader loader-curtain" colorful data-curtain-text="Submitting..."></div>
+
 <!-- bloc-18 -->
 <div class="bloc l-bloc" id="bloc-18">
 	<div class="container bloc-sm">
@@ -28,6 +32,8 @@
 			<div class="col">
 				<div class="row">
 					<div class="col-lg-9">
+					  <div id="ErrMsgArea">
+        		</div>
 						<form id="main_form">
 							{% csrf_token %}
 							{% for hidden_field in form.hidden_fields %}
@@ -91,12 +97,12 @@
 								</label><textarea id="additionMsg" class="form-control" rows="4" cols="50" name="message"></textarea>
 							</div>
 							<div class="form-check">
-								<input class="form-check-input" type="checkbox" id="option" data-validation-minchecked-message="You must agree to this before we can take your information." data-validation-minchecked-minchecked="1" name="optin" />
+								<input class="form-check-input" type="checkbox" id="form-agreement" data-validation-minchecked-message="You must agree to this before we can take your information." data-validation-minchecked-minchecked="1" name="optin" />
 								<label class="form-check-label">
 									我了解CSSA的个人数据及敏感信息管理政策，并自愿分享用于在Australia Privacy Principle定义之下的合理用于范围内的个人信息供CSSA使用
 								</label>
 							</div>
-							<button class="bloc-button btn btn-d btn-lg btn-block" type="submit">
+							<button id="form-submit" class="btn btn-secondary btn-lg btn-block" disabled="disabled" type="submit">
 								提交简历
 							</button>
 						</form>
@@ -171,33 +177,49 @@
 {% block 'extra_js' %}
 <script type="text/javascript" src="https://unpkg.com/file-upload-with-preview"></script>
 <script type="text/javascript">
-function gotoParentPage(){
-	window.location.href = "{% url 'PublicSite:recruitment' %}"
-}
-
-  $('#main_form').on('submit', function(e){
-	$.ajax({
-	url : window.location.href, // the endpoint
-	type : "POST", // http method
-	data : $('#main_form').serialize(),// data sent with the post request
-	// handle a successful response
-	success : function(json) {
-		if (json["result"]) {
-			$('#myModal').modal('show');
-		} else {
-			console.log(json);
-		}
-	},
-	// handle a non-successful response
-	error : function(xhr,errmsg,err) {
-		$('#results').html('<div class="alert alert-dismissible alert-warning fade show" role="alert">Oops! We have encountered an error: '+errmsg+
-		" <a href='#' class='close'>&times;</a></div>"); // add the error to the dom
-		console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
+	$('#form-agreement').on('click', function(){
+		if ($('#form-agreement').prop('checked')){
+		$('#form-submit').removeAttr('disabled')
+		$('#form-submit').attr('class','btn btn-primary btn-lg btn-block')
+		} else
+		{
+			$('#form-submit').attr('disabled','disabled')
+			$('#form-submit').attr('class','btn btn-secondary btn-lg btn-block')
 		}
 	});
 
-    e.preventDefault();
-  });
+	function gotoParentPage(){
+		window.location.href = "{% url 'PublicSite:recruitment' %}"
+	}
+
+	$('#main_form').on('submit', function(e){
+		e.preventDefault();
+		var formData = new FormData(this);
+		$('#submit-loader').attr('class', 'loader loader-curtain is-active')
+		$.ajax({
+			url : window.location.href, // the endpoint
+			type : "POST", // http method
+			data : formData,
+			processData:false,
+			contentType:false,
+			// handle a successful response
+			success : function(json) {
+				$('#submit-loader').attr('class', 'loader loader-curtain')
+				if (json["result"]) {
+					$('#myModal').modal('show');
+				} else {
+					console.log(json);
+				}
+			},
+			// handle a non-successful response
+			error : function(xhr,errmsg,err) {
+				$('#submit-loader').attr('class', 'loader loader-curtain')
+ 				$('#ErrMsgArea').html('<div id="login-fail-alert" class="alert alert-dismissible alert-warning fade show" role="alert"><button type="button" class="close" data-dismiss="alert">&times;</button><h4 class="alert-heading">服务器故障</h4><p class="mb-0">'+errmsg+'</p></div>')
+				console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
+				}
+			});
+
+		});
 </script>
 
 
@@ -218,8 +240,7 @@ function gotoParentPage(){
 
 <script>
 	$("#input-b1").fileinput({
-
-	        allowedFileExtensions: ['pdf','doc'],
+	        allowedFileExtensions: ['pdf','doc', 'docx'],
 	        overwriteInitial: false,
 	        maxFileSize: 2048,
 	        maxFilesNum: 1,
