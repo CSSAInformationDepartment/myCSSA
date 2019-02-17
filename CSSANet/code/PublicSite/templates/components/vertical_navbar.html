@@ -14,7 +14,14 @@
 								<a class="nav-link" href="/">{%trans "首页" %} <span class="sr-only">(current)</span></a>
 							</li>
 							<li class="nav-item">
+<<<<<<< HEAD
 								<a class="nav-link" href="{% url 'PublicSite:recruitment' %}">加入CSSA理事</a>
+=======
+								<a class="nav-link" href="{% url 'PublicSite:blogs' %}?page=1">{%trans "新闻公告" %}</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link" href="{% url 'PublicSite:recruitment' %}">加入CSSA</a>
+>>>>>>> Josh_WorkOn
 							</li>
 							<li class="nav-item">
 								<a class="nav-link" href="{% url 'PublicSite:contact' %}">{%trans "联系我们" %}</a>
@@ -22,9 +29,6 @@
 							{% if user.is_staff %}
 							<li class="nav-item">
 								<a class="nav-link" href="event/">{%trans "活动消息 " %}</a>
-							</li>
-							<li class="nav-item">
-								<a class="nav-link" href="{% url 'PublicSite:news' %}">{%trans "新闻公告" %}</a>
 							</li>
 							<li class="nav-item dropdown">
 								<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

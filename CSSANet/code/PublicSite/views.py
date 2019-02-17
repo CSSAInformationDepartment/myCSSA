@@ -172,7 +172,7 @@ def Blogs(request):
     if page != numPage:
         nextPrev["ne"] = page + 1
     ViewBag["hasNextPrev"] = nextPrev
-
+    print("GET HERE !!")
     return render(request, "PublicSite/blogbref.html", ViewBag)
 
     pass
