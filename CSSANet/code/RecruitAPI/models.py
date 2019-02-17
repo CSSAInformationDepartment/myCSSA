@@ -32,6 +32,9 @@ class JobList(models.Model):
     description = models.CharField(verbose_name="职位介绍", max_length=400, default=None)
     dueDate = models.DateTimeField(verbose_name="截止日期", default=None, null=True)
 
+    disabled = models.BooleanField(default=False, blank=True,null=True)
+
+
 class Resume(models.Model):
     CVId = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     timeOfCreate = models.DateTimeField(auto_now_add=True)
@@ -53,6 +56,13 @@ class Resume(models.Model):
     isOfferd = models.BooleanField(default=False, blank=True, null=True)
     isReject = models.BooleanField(default=None, blank=True, null=True)
 
+    disabled = models.BooleanField(default=False, blank=True,null=True)
+
+class InterviewTimetable(models.Model):
+    id = models.AutoField(primary_key=True, editable=False)
+    date = models.DateField()
+    time = models.TimeField()
+    
 
 # 可能以后要并入认识管理模块
 #class UserAccComment (models.Model):

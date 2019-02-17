@@ -4,6 +4,7 @@
 	<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.5.1/css/fileinput.min.css" media="all" rel="stylesheet"
 			type="text/css" />
 	<link rel="stylesheet" href="{% static '/PublicSite/vendors/css-loader/css-loader.css' %}" type="text/css" />
+
 {% endblock 'extra_header' %}
 {% block 'pg_body' %}
 {% load widget_tweaks %}
@@ -34,6 +35,15 @@
 					<div class="col-lg-9">
 					  <div id="ErrMsgArea">
         		</div>
+						{% if prev_submission %}
+						<div class="card text-white bg-warning mb-3">
+                <div class="card-header">你已经提交过该职位的申请</div>
+                <div class="card-body">
+                  <p class="card-text">上次提交时间为：{{ prev_submission.timeOfCreate }}</p>
+                </div>
+            </div>
+						{% endif %}
+
 						<form id="main_form">
 							{% csrf_token %}
 							{% for hidden_field in form.hidden_fields %}
@@ -135,6 +145,7 @@
 								<input class="form-control" value="{{ user.email }}" />
 								<p>
 									以上信息取自您的账号设定，他们将会被用于评估您的岗位申请。请确保以上信息准确无误。
+									<i class="glyphicon glyphicon-zoom-in"></i>
 								</p>
 							</div>
 						</div>
@@ -175,51 +186,63 @@
 {% endblock 'pg_body' %}
 
 {% block 'extra_js' %}
-<script type="text/javascript" src="https://unpkg.com/file-upload-with-preview"></script>
-<script type="text/javascript">
-	$('#form-agreement').on('click', function(){
-		if ($('#form-agreement').prop('checked')){
-		$('#form-submit').removeAttr('disabled')
-		$('#form-submit').attr('class','btn btn-primary btn-lg btn-block')
-		} else
-		{
-			$('#form-submit').attr('disabled','disabled')
-			$('#form-submit').attr('class','btn btn-secondary btn-lg btn-block')
-		}
-	});
 
-	function gotoParentPage(){
-		window.location.href = "{% url 'PublicSite:recruitment' %}"
-	}
+	<script type="text/javascript" src="https://unpkg.com/file-upload-with-preview"></script>
+	<script type="text/javascript">
+		{% if prev_submission %}
+			$("#main_form :input").prop("disabled", true);
 
-	$('#main_form').on('submit', function(e){
-		e.preventDefault();
-		var formData = new FormData(this);
-		$('#submit-loader').attr('class', 'loader loader-curtain is-active')
-		$.ajax({
-			url : window.location.href, // the endpoint
-			type : "POST", // http method
-			data : formData,
-			processData:false,
-			contentType:false,
-			// handle a successful response
-			success : function(json) {
-				$('#submit-loader').attr('class', 'loader loader-curtain')
-				if (json["result"]) {
-					$('#myModal').modal('show');
-				} else {
-					console.log(json);
-				}
-			},
-			// handle a non-successful response
-			error : function(xhr,errmsg,err) {
-				$('#submit-loader').attr('class', 'loader loader-curtain')
- 				$('#ErrMsgArea').html('<div id="login-fail-alert" class="alert alert-dismissible alert-warning fade show" role="alert"><button type="button" class="close" data-dismiss="alert">&times;</button><h4 class="alert-heading">服务器故障</h4><p class="mb-0">'+errmsg+'</p></div>')
-				console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
-				}
-			});
-
+			$('#job-reason').val("{{ prev_submission.reason }}");
+			$('#job-inSchoolExp').val("{{ prev_submission.inSchoolExp }}");
+			$('#job-hobby').val("{{ prev_submission.hobby }}");
+			$('#additionMsg').val("{{ prev_submission.message }}");
+			$('#form-agreement').hide();
+			$('#form-submit').hide();
+		{% endif %}
+		$('#form-agreement').on('click', function(){
+			if ($('#form-agreement').prop('checked')){
+			$('#form-submit').removeAttr('disabled')
+			$('#form-submit').attr('class','btn btn-primary btn-lg btn-block')
+			} else
+			{
+				$('#form-submit').attr('disabled','disabled')
+				$('#form-submit').attr('class','btn btn-secondary btn-lg btn-block')
+			}
 		});
+
+		function gotoParentPage(){
+			window.location.href = "{% url 'PublicSite:recruitment' %}"
+		}
+
+		$('#main_form').on('submit', function(e){
+			e.preventDefault();
+			var formData = new FormData(this);
+			$('#submit-loader').attr('class', 'loader loader-curtain is-active')
+			$.ajax({
+				url : window.location.href, // the endpoint
+				type : "POST", // http method
+				data : formData,
+				processData:false,
+				contentType:false,
+				// handle a successful response
+				success : function(json) {
+					$('#submit-loader').attr('class', 'loader loader-curtain')
+					if (json["result"]) {
+						$('#myModal').modal('show');
+					} else {
+						$('#ErrMsgArea').html('<div id="login-fail-alert" class="alert alert-dismissible alert-warning fade show" role="alert"><button type="button" class="close" data-dismiss="alert">&times;</button><h4 class="alert-heading">表单验证失败！请检查您的输入</h4><p class="mb-0">'+errmsg+'</p></div>')
+						console.log(json);
+					}
+				},
+				// handle a non-successful response
+				error : function(xhr,errmsg,err) {
+					$('#submit-loader').attr('class', 'loader loader-curtain')
+					$('#ErrMsgArea').html('<div id="login-fail-alert" class="alert alert-dismissible alert-warning fade show" role="alert"><button type="button" class="close" data-dismiss="alert">&times;</button><h4 class="alert-heading">服务器故障</h4><p class="mb-0">'+errmsg+'</p></div>')
+					console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
+					}
+				});
+
+			});
 </script>
 
 
@@ -234,20 +257,30 @@
 <!-- the main fileinput plugin file -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.5.1/js/fileinput.min.js"></script>
 <!-- following theme script is needed to use the Font Awesome 5.x theme (`fas`) -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.5.1/themes/fas/theme.min.js"></script>
-<!-- optionally if you need translation for your language then include the locale file as mentioned below (replace LANG.js with your language locale) -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.5.1/js/locales/LANG.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.5.1/themes/fa/theme.min.js"></script>
+
 
 <script>
 	$("#input-b1").fileinput({
+					theme: "fa",
 	        allowedFileExtensions: ['pdf','doc', 'docx'],
 	        overwriteInitial: false,
 	        maxFileSize: 2048,
 	        maxFilesNum: 1,
-
 	        slugCallback: function (filename) {
 	            return filename.replace('(', '_').replace(']', '_');
-	        }
+	        },
+					{% if prev_submission %}
+					initialPreview: [
+					'{{ prev_submission.attachment.url }}',
+					
+					],
+					initialPreviewAsData: true, 
+					initialPreviewConfig:[
+						 {type: "pdf", caption:'' ,key: 1}, ]
+					{% endif %}
 	    });
 </script>
+
 {% endblock 'extra_js' %}

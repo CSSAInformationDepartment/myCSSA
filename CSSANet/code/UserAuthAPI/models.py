@@ -87,7 +87,7 @@ class CSSADept (models.Model):
     deptTitleEN = models.CharField(max_length=50, verbose_name="Name of the Department")
     brief = models.CharField(max_length=200, null=True, blank=True, default=None)
     description = models.TextField(blank=True ,null=True, default=None)
-    head_image = models.ImageField(verbose_name="头像", upload_to='public/department/',
+    head_image = models.ImageField(verbose_name="部门图", upload_to='public/department/',
         height_field=None, width_field=None, max_length=None, null=True, blank=True)
 
     def __str__(self):
