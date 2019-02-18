@@ -14,9 +14,9 @@
         <table id="main-datatable" class="table table-responsive-md"  style="width:100%" >
         <thead>
           <tr>
-            <th>发布时间</th>
             <th>岗位名称</th>
             <th>相关部门</th>
+            <th>发布时间</th>
             <th>截止日期</th>
           </tr>
         </thead>
@@ -35,7 +35,7 @@ $(document).ready(function() {
         "responsive": true,
         "processing": true,
         "serverSide": true,
-        "ajax": "{% url 'myCSSAhub:RecruitAPI:job_list' %}",
+        "ajax": "{% url 'myCSSAhub:RecruitAPI:job_jsonlist' %}",
     });
 });
 </script>

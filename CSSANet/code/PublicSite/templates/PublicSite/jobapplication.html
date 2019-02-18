@@ -273,8 +273,10 @@
 	        },
 					{% if prev_submission %}
 					initialPreview: [
-					'{{ prev_submission.attachment.url }}',
-					
+						{% if prev_submission.attachment %}
+								"{{ prev_submission.attachment.url }}"
+						{% endif %}
+						,		
 					],
 					initialPreviewAsData: true, 
 					initialPreviewConfig:[

@@ -88,6 +88,12 @@
                       <a class="nav-link" href="{% url 'myCSSAhub:under-dev' %}">
                         <i class="nav-icon cui-inbox"></i>纳新管理</a>
                     </li>
+                    {% if perms.RecruitAPI.change_joblist %}
+                      <li class="nav-item">
+                        <a class="nav-link" href="{% url 'myCSSAhub:RecruitAPI:job_list' %}">
+                          <i class="nav-icon cui-inbox"></i>岗位信息发布</a>
+                      </li>
+                    {% endif %}
                     <li class="nav-item">
                       <a class="nav-link" href="{% url 'myCSSAhub:under-dev' %}">
                         <i class="nav-icon cui-task"></i>日程表</a>
@@ -135,7 +141,6 @@
                   </ul>
               </li>
               {% if perms.myCSSAhub.change_discountmerchant %}
-              
                 <li class="nav-item nav-dropdown">
                   <a class="nav-link nav-dropdown-toggle" href="#">
                     <i class="nav-icon fa fa-shopping-bag"></i>折扣商家管理</a>
