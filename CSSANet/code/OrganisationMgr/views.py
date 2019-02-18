@@ -24,8 +24,7 @@ class DepartmentManagementView(LoginRequiredMixin, UserPassesTestMixin, View):
 
     #请求处理函数 （get）
     def get(self, request, *args, **kwargs):
-        if request.user.is_superuser:
-            return render(request, self.template_name)
+        return render(request, self.template_name)
 
     def post(self, request, *args, **kwargs):
         return HttpResponseRedirect("")
