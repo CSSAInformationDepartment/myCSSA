@@ -69,6 +69,8 @@ class InterviewTimetable(models.Model):
     time = models.TimeField()
     location = models.CharField(max_length=200, default=None)
     note = models.CharField(max_length=200, default=None, blank=True, null=True)
+
+    disabled = models.BooleanField(default=False, blank=True,null=True)
     
 
 # 可能以后要并入认识管理模块

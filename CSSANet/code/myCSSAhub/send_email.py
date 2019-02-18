@@ -30,22 +30,36 @@ def send_emails(title, content, targetID, currentUserId):
 
         targetEmail.append(targetID)
 
-        email_content(title, content, html_content, targetEmail)
+        email_content(title+" 欢迎您来到myCSSA", content, html_content, targetEmail)
 
     elif title == 'CV Submitted':
 
-        cvId = content.CVId
         jobName = content.jobRelated.jobName
         dept = content.jobRelated.dept.deptTitle
         username = content.user.userprofile.lastNameEN + " " + content.user.userprofile.firstNameEN
-        print("Ready to send !!")
+        username = content.user.userprofile.lastNameEN + " " + content.user.userprofile.firstNameEN
         html_content = get_template('myCSSAhub/email/cv_mail.html').render({'username': username, 'dept': dept,
                                                                                   'jobName': jobName, 'cvId': cvId})
 
         targetEmail.append(targetID)
 
-        email_content(title, 'CV Submitted', html_content, targetEmail)
+        email_content(title+" 我们已经收到您的简历", 'CV Submitted', html_content, targetEmail)
+    
+    elif title == "Interview Scheduled":
 
+        date = content.date
+        time = content.time
+        location = content.location
+        note = content.note
+        username = content.resume.user.userprofile.lastNameEN + " " + content.resume.user.userprofile.firstNameEN
+        jobName = content.resume.jobRelated.jobName
+
+        html_content = get_template('myCSSAhub/email/interview_notice.html').render({'username': username, 'date': date,
+                                                                                  'time': time, 'location': location, 'note':note, 'jobName':jobName})
+
+        targetEmail.append(targetID)
+
+        email_content(title+" 您的CSSA Committee面试即将开始", 'Interview Scheduled', html_content, targetEmail)
     else:
 
         # 获得需要发送的email地址

@@ -6,17 +6,15 @@
 
 {% block pageContent %}
 <div class="row">
-    <div class="row">
-        <div class="col-6">
-            <p> 目前有{{a}}份未读简历</p>
-        </div>
-        {% if user.is_staff %}
-        <div class="col-6">
-
-        </div>
-        {% endif %}
+    <div class="col-6">
+        <p> 目前有{{a}}份未读简历</p>
     </div>
+    {% if user.is_staff %}
+    <div class="col-6">
+    </div>
+    {% endif %}
 </div>
+
 <div class="row">
   <div class="col-12">
     <div class="card" >
@@ -40,6 +38,30 @@
     </div>
   </div>
 </div>
+
+<div class="row">
+  <div class="col-12">
+    <div class="card" >
+      <div class="card-header">
+        <i class="fa fa-align-justify"></i> 面试安排
+      </div>
+      <div class="card-body">
+          <table id="interview-datatable" class="table table-responsive-md"  style="width:100%" >
+          <thead>
+            <tr>
+                <th>ID</th>
+                <th>受试者</th>
+                <th>日期</th>
+                <th>时间</th>
+                <th>地点</th>
+            </tr>
+          </thead>
+          </table>
+      </div>
+    </div>
+  </div>
+</div>
+
 {% endblock %}
 
 {% block ExtraJS %}
@@ -52,6 +74,15 @@ $(document).ready(function() {
         "processing": true,
         "serverSide": true,
         "ajax": "{% url 'myCSSAhub:RecruitAPI:resume_jsonlist' %}",
+    });
+});
+
+$(document).ready(function() {
+    var oTable = $('#interview-datatable').dataTable({
+        "responsive": true,
+        "processing": true,
+        "serverSide": true,
+        "ajax": "{% url 'myCSSAhub:RecruitAPI:interview_jsonlist' %}",
     });
 });
 </script>

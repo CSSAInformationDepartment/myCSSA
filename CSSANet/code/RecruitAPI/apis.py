@@ -10,9 +10,22 @@ def GetResumesByDepartments(request_user):
         else:
             committe_profile = CSSACommitteProfile.objects.filter(Q(is_active=True) & Q(member=request_user)).first()
             if committe_profile:
-                return Resume.objects.filter(Q(disabled=False) & Q(jobRelated__dept__deptId=committe_profile.Department.deptId)).order_by('-timeOfCreate')
+                return Resume.objects.filter(Q(disabled=False) & Q(jobRelated__dept=committe_profile.Department)).order_by('-timeOfCreate')
             else:
                 return None
     else:
         return None
 
+def GetInterviewTimeByDepartments(request_user):
+    if request_user.is_authenticated and request_user.is_staff:
+        if request_user.is_superuser:
+            return InterviewTimetable.objects.filter(disabled=False).order_by('-timeOfCreate')
+        else:
+            committe_profile = CSSACommitteProfile.objects.filter(Q(is_active=True) & Q(member=request_user)).first()
+            if committe_profile:
+                return InterviewTimetable.objects.filter(Q(disabled=False) & 
+                    Q(resume__jobRelated__dept=committe_profile.Department)).order_by('-timeOfCreate')
+            else:
+                return None
+    else:
+        return None

@@ -8,6 +8,7 @@ def GetDocViewData(instance, headers, user_info_required, attachments, **kwargs)
         - attachments
     '''
     view_bag = {'Data':[]}
+    view_bag['id'] = instance.pk
 
     for item in headers:
         view_bag['Data'].append({
