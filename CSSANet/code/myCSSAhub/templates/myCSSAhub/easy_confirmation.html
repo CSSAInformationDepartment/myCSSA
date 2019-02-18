@@ -1,0 +1,32 @@
+{% extends 'components/base_page.html' %}
+{% block 'extra_header' %}
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static '/myCSSAhub/css/registrationForm.css'%}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.0-alpha14/css/tempusdominus-bootstrap-4.min.css"/>
+{% endblock 'extra_header' %}
+
+{% block 'pg_body' %}
+{% load static %}
+
+<style>
+  #bloc-1 {
+    background-image: url("{% static '/myCSSAhub/img/bg_Register.jpg' %}");
+    background-color: rgba(255, 255, 255, 0.4);
+    background-blend-mode: lighten;
+  }
+</style>
+
+<div class="bloc none l-bloc" id="bloc-1">
+  <div class="container bloc-fill-screen">
+    <div class="row justify-content-md-center">
+      <h1><strong>恭喜你！已经完成注册！</strong></h1>
+      <br>
+      <h5>请直接去table找工作人员领会员卡激活账号</h5>
+      <br>
+      <small>记得完成之后要在cssa官网上补全信息哦</small>
+
+    </div>
+    </div>
+    </div>
+
+    {% endblock 'pg_body' %}

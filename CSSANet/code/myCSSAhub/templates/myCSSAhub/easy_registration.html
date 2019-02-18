@@ -22,7 +22,7 @@
     <div class="row justify-content-md-center">
       <div id="loginbox" class="col-sm-9 col-md-7 col-lg-5 mx-auto">
         <form id="msform" class="form-horizontal col" autocomplete="off">
-        <input autocomplete="false" name="hidden" type="text" style="display:none;">
+        <input autocomplete="false" name="hidden" type="text" style="display:none;"/>
           {% csrf_token %}
 
           <h5 class="fs-title">请填写你的基本信息</h5>
@@ -265,7 +265,7 @@
 </div>
 </div>
 
-{% endblock 'pg_body' %}
+
 
 {% block 'extra_js' %}
         <script
