@@ -64,6 +64,7 @@ class Resume(models.Model):
 
 class InterviewTimetable(models.Model):
     id = models.AutoField(primary_key=True, editable=False)
+    resume = models.ForeignKey(Resume, on_delete=models.DO_NOTHING, default=None)
     date = models.DateField()
     time = models.TimeField()
     location = models.CharField(max_length=200, default=None)
