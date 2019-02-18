@@ -21,10 +21,11 @@
   <div class="container bloc-fill-screen">
     <div class="row justify-content-md-center">
       <div id="loginbox" class="col-sm-9 col-md-7 col-lg-5 mx-auto">
-        <form id="msform" class="form-horizontal col" autocomplete="off">
-        <input autocomplete="false" name="hidden" type="text" style="display:none;"/>
-          {% csrf_token %}
+        <form id="msform" class="form-horizontal col" autocomplete="off" action="{% url 'myCSSAhub:hub_userinfo_create' %}" method="POST">
 
+          {% csrf_token %}
+          <input type="hidden" name="membershipId" value="{{LegacyData.membershipId}}"/>
+<fieldset>
           <h5 class="fs-title">请填写你的基本信息</h5>
           <div class="form-label-group required">
             <label class="control-label  col-md-6 requiredField"
@@ -111,6 +112,13 @@
               />
             </div>
           </div>
+          <div id="gender" class="form-group required">
+            <label
+              for="id_gender"
+              class="control-label  col-md-6 requiredField"
+            >
+              Gender<span class="asteriskField">*</span>
+            </label>
           <div class="controls  col-md-12 ">
             <select
             required
@@ -125,7 +133,8 @@
               <option value="Other"> Other / 其他</option>
             </select>
           </div>
-        </div>
+          </div>
+
           <div id="name" class="form-group required">
             <label
               for="id_firstName"
@@ -224,6 +233,14 @@
               />
             </div>
           </div>
+
+          <div id="div_id_select" class="form-group required">
+            <label
+              for="degree"
+              class="control-label  col-md-6  requiredField"
+            >
+              Degree / 在读学位 <span class="asteriskField">*</span>
+            </label>
           <div class="controls  col-md-12 ">
             <select
               class="selectpicker form-control"
@@ -241,7 +258,7 @@
               <option value="PHD"> Doctor of Philosophy </option>
             </select>
           </div>
-        </div>
+          </div>
 
         <div id="major" class="form-group required">
           <label for="major" class="control-label  col-md-6  requiredField">
@@ -259,12 +276,24 @@
             </select>
           </div>
         </div>
+        <div class="form-group">
+          <div class="controls col-md-offset-5 col-md-12 text-center">
+            <input
+              type="submit"
+              value="Submit"
+              class="btn btn-primary btn btn-info"
+              id="easy_submit"
+            />
+          </div>
+        </div>
+
+        </fieldset>
       </form>
     </div>
   </div>
 </div>
 </div>
-
+{% endblock 'pg_body' %}
 
 
 {% block 'extra_js' %}
@@ -282,6 +311,7 @@
         <script type="text/javascript" src="{% static 'myCSSAhub/js/Password/bootstrap-strength-meter.js' %}"></script>
         <script type="text/javascript" src="{% static 'myCSSAhub/js/Password/password-score.js' %}"></script>
         <script type="text/javascript" src="{% static 'myCSSAhub/js/Password/password-score-options.js' %}"></script>
+        <script src="{% static '/myCSSAhub/vendors/jquery-ui/jquery-ui.min.js'%}"></script>
         <script type="text/javascript">
           //Password Strength Indicator
           $(document).ready(function() {
@@ -334,7 +364,23 @@
 
           request.send();
 
+          $("#msform").parsley({
+            errorClass: "is-invalid",
+            successClass: "is-valid",
+            errorsWrapper: '<span class="form-text text-danger"></span>',
+            errorTemplate: "<span></span>",
+            trigger: "blur"
+          });
+
+          $(function() {
+            $("#datetimepicker1").datetimepicker({
+              format: "L"
+            });
+          });
+
+
         </script>
-        <script src="{% static '/myCSSAhub/vendors/jquery-ui/jquery-ui.min.js'%}"></script>
-        <script src="{% static '/myCSSAhub/js/registrationForm.js'%}" defer></script>
+
+
+
         {% endblock 'extra_js' %}

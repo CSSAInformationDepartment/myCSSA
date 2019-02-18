@@ -19,14 +19,43 @@
 <div class="bloc none l-bloc" id="bloc-1">
   <div class="container bloc-fill-screen">
     <div class="row justify-content-md-center">
-      <h1><strong>恭喜你！已经完成注册！</strong></h1>
-      <br>
-      <h5>请直接去table找工作人员领会员卡激活账号</h5>
-      <br>
-      <small>记得完成之后要在cssa官网上补全信息哦</small>
+      <div class="form-label-group required jumbotron justify-content-center">
+        <h2 class="text-center">
+         恭喜你！<br>已经完成注册！
+        </h2>
+        <p class="lead text-center">
+        <br>
+        请于Oweek到CSSA摊位办理会员卡
+        <br> 如有疑问请联系<a href="{% url 'PublicSite:contact' %}">小助手（二维码）</a></strong
+      >
+    </p>
+    <hr />
+    <p class="lead text-left">成为会员您将享受以下优惠:<br><small>*点击图标查看详细信息</small></p>
+    <div class="row form-label-group">
+      <a href="https://mp.weixin.qq.com/s/i2j2LK7d3ZzE42HsqloWXQ" class="iconfont col-md-6"><i class="iconfont">&#xe66d;</i></a>
+      <a href="https://mp.weixin.qq.com/s/DXXb7g2v5hiTT9MyvkoGOQ" class="iconfont col-md-6"><i class="iconfont">&#xe63d;</i></a>
+      <a href="https://mp.weixin.qq.com/s/i2j2LK7d3ZzE42HsqloWXQ" class="col-md-6 text-center"><p>免费手机卡</p></a>
+      <a href="https://mp.weixin.qq.com/s/DXXb7g2v5hiTT9MyvkoGOQ" class="col-md-6 text-center"><p>商家折扣</p></a>
+    </div>
+    <div class="row form-label-group">
+      <i class="iconfont col-md-6 ">&#xe607;</i>
+      <i class="iconfont col-md-6 ">&#xeab5;</i>
+      <p class="col-md-6 text-center">墨城攻略<br>(请Oweek前往cssa摊位免费领取哦)</p>
+      <p class="col-md-6 text-center">活动报名<br>(该功能尚未开放，敬请期待)</p>
+    </div>
+  <hr/>
+  <p class="lead text-left">
+      <strong>What's next?</strong><br>下次会员卡开放办理时间:
+    </p>
+    <div class="table text-left">
+      <ul id="tableTime" style="margin-top:10px;">
+        <li class="col-md-5">下次开放时间: 2019年2月28号 {{table.time}}</li>
+        <li class="col-md-12">下次开放地点: 时间未确定，请时刻关注CSSA微信公众号通知哦 {{table.location}}</li>
+        </ul>
+        </div>
 
     </div>
     </div>
     </div>
-
+</div>
     {% endblock 'pg_body' %}
