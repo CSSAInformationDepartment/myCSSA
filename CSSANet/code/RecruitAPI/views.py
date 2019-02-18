@@ -1,7 +1,10 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.db.models import Q
 
 from .models import Resume, JobList
+from .apis import GetResumesByDepartments
+from myCSSAhub.apis import GetDocViewData
+from UserAuthAPI.models import UserProfile
 from django.http import JsonResponse, HttpResponseRedirect, HttpResponse, Http404
 from django.contrib.auth.mixins import  LoginRequiredMixin, PermissionRequiredMixin
 from django.views import View
@@ -22,8 +25,96 @@ class JobListView(LoginRequiredMixin, PermissionRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         return render(request, self.template_name)
 
+class ResumeListView(LoginRequiredMixin, PermissionRequiredMixin, View):
+    login_url = '/hub/login/'
+    permission_required = ('RecruitAPI.view_resume',)
+    model = Resume
+    template_name='RecruitAPI/resume_list.html'
 
-# Create your views here.
+    def get(self, request, *args, **kwargs):
+        return render(request, self.template_name)
+
+
+class AddJobView(PermissionRequiredMixin, CreateView):
+     form_class = AddJobForm
+     permission_required = ('RecruitAPI.add_joblist',)
+     model = JobList
+
+     def form_valid(self, form):
+         form.save()
+         return super().form_valid(form)
+
+
+class ResumeDetailView(PermissionRequiredMixin, LoginRequiredMixin, View):
+    login_url = '/hub/login/'
+    permission_required = ('RecruitAPI.view_resume',)
+    model = Resume
+    template_name='RecruitAPI/resume_detail.html'
+
+    def get(self,request,*args, **kwargs):
+        cv_id = self.kwargs.get('id')
+        resume = get_object_or_404(Resume, CVId=cv_id)
+        if request.user.is_staff and (not resume.isOpened):
+            resume.isOpened = True
+            resume.save()
+            print("Resume Readed")
+
+        info_headers = [{'name':'提交时间', 'dbAttr': 'timeOfCreate'},{'name':'申请职位', 'dbAttr': 'jobRelated.jobName'},
+            {'name':'主管部门', 'dbAttr': 'jobRelated.dept.deptTitle'},
+            {'name':'申请原因', 'dbAttr': 'reason'},{'name':'兴趣爱好', 'dbAttr': 'hobby'}, 
+            {'name':'校内经历', 'dbAttr': 'inSchoolExp'}, {'name':'其他信息/询问', 'dbAttr': 'additionMsg'}]
+
+        return render(request, self.template_name, GetDocViewData(resume,info_headers, user_info_required=True, attachments=resume.attachment))
+
+class ResumeListJsonView(LoginRequiredMixin, PermissionRequiredMixin, BaseDatatableView):
+    login_url = '/hub/login/'
+    permission_required = ('RecruitAPI.view_resume',)
+    model = Resume
+
+    # define the columns that will be returned
+    columns = ['CVId', 'user', 'jobRelated.dept.deptTitle',  'jobRelated.jobName', 'timeOfCreate', 'status']
+    order_columns = ['CVId', 'user', 'jobRelated.dept.deptTitle',  'jobRelated.jobName', 'timeOfCreate']
+
+    max_display_length = 500
+
+    def render_column(self, row, column):
+        # Customer HTML column rendering
+        if (column == 'timeOfCreate'):
+            return escape(row.timeOfCreate.strftime('%Y/%m/%d %H:%M:%S'))
+        elif (column == 'user'):
+            user_profile = UserProfile.objects.filter(user__id=row.user.id).first()
+            if user_profile:
+                return escape('%s %s' % (user_profile.lastNameEN, user_profile.firstNameEN))
+            else:
+                return escape(row.user.email)
+        elif (column == 'status'):
+            if row.isOpened:
+                return '<span class="badge badge-primary">已读</span>'
+            else:
+                return '<span class="badge badge-secondary">未读</span>'
+            if row.isEnrolled:
+                return '<span class="badge badge-warning">已计划面试</span>'
+            if row.isOfferd:
+                return '<span class="badge badge-success">考核通过</span>'
+            if row.isReject:
+                return '<span class="badge badge-danger">已拒绝</span>'
+
+        else:
+            return super(ResumeListJsonView, self).render_column(row, column)
+
+    def get_initial_queryset(self):
+        if not self.model:
+            raise NotImplementedError("Need to provide a model or implement get_initial_queryset!")
+        return GetResumesByDepartments(self.request.user)
+
+    def filter_queryset(self, qs):
+        # DO NOT CHANGE THIS LINE
+        search = self.request.GET.get('search[value]', None)
+
+        if search:
+            qs = qs.filter(Q(user__email__istartswith=search))
+        return qs
+
 class JobListJsonView(LoginRequiredMixin, PermissionRequiredMixin, BaseDatatableView):
     login_url = '/hub/login/'
     permission_required = ('RecruitAPI.change_joblist',)
@@ -57,11 +148,3 @@ class JobListJsonView(LoginRequiredMixin, PermissionRequiredMixin, BaseDatatable
             qs = qs.filter(Q(jobName__istartswith=search))
         return qs
 
-class AddJobView(PermissionRequiredMixin, CreateView):
-     form_class = AddJobForm
-     permission_required = ('RecruitAPI.add_joblist',)
-     model = JobList
-
-     def form_valid(self, form):
-         form.save()
-         return super().form_valid(form)

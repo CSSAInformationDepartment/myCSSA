@@ -17,6 +17,7 @@
 from django.db import models
 from UserAuthAPI import models as adminModel
 import uuid
+from django.urls import reverse
 # Create your models here
 #
 
@@ -58,10 +59,15 @@ class Resume(models.Model):
 
     disabled = models.BooleanField(default=False, blank=True,null=True)
 
+    def get_absolute_url(self):
+        return reverse("myCSSAhub:RecruitAPI:resume_detail", args=[str(self.CVId)])
+
 class InterviewTimetable(models.Model):
     id = models.AutoField(primary_key=True, editable=False)
     date = models.DateField()
     time = models.TimeField()
+    location = models.CharField(max_length=200, default=None)
+    note = models.CharField(max_length=200, default=None, blank=True, null=True)
     
 
 # 可能以后要并入认识管理模块

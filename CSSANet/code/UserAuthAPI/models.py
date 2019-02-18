@@ -209,6 +209,7 @@ class CSSACommitteProfile(models.Model):
     is_active = models.BooleanField(default=False)
     CommenceDate = models.DateTimeField(auto_now_add=True)
     Department = models.ForeignKey(CSSADept, on_delete=models.DO_NOTHING)
+    role = models.ForeignKey(CSSARole, on_delete=models.DO_NOTHING, default=None, null=True, blank=True)
 
 
 
