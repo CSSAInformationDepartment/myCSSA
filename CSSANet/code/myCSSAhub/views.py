@@ -20,7 +20,7 @@ from django.contrib.auth.decorators import login_required
 from .models import Notification_DB, AccountMigration, DiscountMerchant
 from UserAuthAPI import models as UserModels
 from BlogAPI import models as BlogModels
-from UserAuthAPI.forms import BasicSiginInForm, UserInfoForm, MigrationForm, UserAcademicForm, UserProfileUpdateForm
+from UserAuthAPI.forms import BasicSiginInForm, UserInfoForm, MigrationForm, UserAcademicForm, UserProfileUpdateForm, EasyRegistrationForm
 from LegacyDataAPI import models as LegacyDataModels
 
 from CSSANet.settings import MEDIA_ROOT, MEDIA_URL
@@ -35,6 +35,8 @@ from urllib import parse
 from django.core.files import File
 
 import datetime
+
+from django.urls import reverse
 
 # Create your views here.
 
@@ -299,7 +301,7 @@ class Merchant_profile(LoginRequiredMixin, View):
                 if m_image != self.old_info.merchant_image:
                     self.old_info.merchant_image = m_image
                     is_change = True
-                
+
                 if is_change:
                   self.old_info.save()
                   have_update = True
@@ -351,9 +353,63 @@ class LoginPage(View):
         else:
             return JsonResponse(self.loginErrorMsg)
 
+class EasyRegistrationView(View):
+    template_name = 'myCSSAhub/easy_registration.html'
+    account_form = BasicSiginInForm
+    profile_form = EasyRegistrationForm
+
+    def get(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return HttpResponseRedirect("/hub/home/")
+        """Handle GET requests: instantiate a blank version of the form."""
+        id = self.kwargs.get('id')
+        legacy_data = None
+        if id:
+            try:
+                migration_record = AccountMigration.objects.filter(
+                    id=id).first()
+                legacy_data = LegacyDataModels.LegacyUsers.objects.get(
+                    Q(studentId=migration_record.studentId) & Q(
+                        membershipId=migration_record.membershipId)
+                )
+            except ObjectDoesNotExist:
+                print("Either the entry or blog doesn't exist.")
+
+        return render(request, self.template_name, {'LegacyData': legacy_data})
+
+    def post(self, request, *args, **kwargs):
+        account_form = BasicSiginInForm(data=request.POST)
+        profile_form = EasyRegistrationForm(data=request.POST)
+        academic_form = UserAcademicForm(data=request.POST)
+        if account_form.is_valid() and profile_form.is_valid() and academic_form.is_valid():
+            account_register = account_form.save(commit=False)
+            account_form.save()
+            profile = profile_form.save(commit=False)
+            profile.user = account_register
+            academic = academic_form.save(commit=False)
+            academic.userProfile = account_register
+            if profile.membershipId and profile.membershipId != '':
+                profile.isValid = True
+            profile.save()
+            academic.save()
+
+
+            # 完成信息保存以后，发送注册成功的邮件
+            target_email = account_register.email
+            send_emails('Register Successful','Howie Chen', 'shenhai0910@gmail.com', None)
+
+        else:
+            return JsonResponse({
+                'success': False,
+                'errors': [dict(account_form.errors.items()), dict(profile_form.errors.items()), dict(academic_form.errors.items())]
+            })
+        return HttpResponseRedirect(reverse('myCSSAhub:hub_regformConfirmation'))
+
+def EasyConfirmationPage(request):
+    return render(request,'myCSSAhub/easy_confirmation.html')
 
 class NewUserSignUpView(View):
-    template_name = 'myCSSAhub/registrationForm_step1.html'
+    template_name = 'myCSSAhub/registrationForm.html'
     account_form = BasicSiginInForm
     profile_form = UserInfoForm
 
@@ -532,7 +588,7 @@ def editBlog(request):
             for blogWrittenBy in blogWrittenBys:
                 if userAuthed and blogWrittenBy.userId == request.user:
                     wrote = True
-                
+
 
             # user没有写blog
             if wrote == False:
@@ -559,7 +615,7 @@ def editBlog(request):
     ViewBag["blogMainContent"] = blogMainContent
 
 
-    
+
     return render(request, 'myCSSAhub/blogeditpage.html', ViewBag)
 
 ############################# AJAX Page Resources #####################################
@@ -681,10 +737,10 @@ class UserLookup(LoginRequiredMixin, View):
                 'status': '400',
             })
 
-    
 
 
-        
+
+
 
 
 ################################# errors pages ########################################

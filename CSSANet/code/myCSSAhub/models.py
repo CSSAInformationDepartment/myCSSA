@@ -57,12 +57,11 @@ class EmailDB(models.Model):
         verbose_name="信息加入时间", default=timezone.now)
 
 class DiscountMerchant(models.Model):
-    merchant_id = models.AutoField(primary_key=True, editable=False) 
+    merchant_id = models.AutoField(primary_key=True, editable=False)
     merchant_name =  models.CharField(verbose_name="商家名", max_length=200, null=True)
     merchant_description =  models.CharField(verbose_name="商家介绍", max_length=200, null=True)
-    merchant_phone =  models.CharField(verbose_name="联系电话", max_length=200, null=True)
+    merchant_phone =  models.CharField(verbose_name="联系电话", max_length=200, null=True,blank=True)
     merchant_address =  models.CharField(verbose_name="商家地址", max_length=200, null=True)
-    merchant_link =  models.CharField(verbose_name="商家网站", max_length=200, null=True)
+    merchant_link =  models.CharField(verbose_name="商家网站", max_length=200, null=True,blank=True)
     merchant_add_date = models.DateTimeField(verbose_name="商户加入时间", default=timezone.now)
     merchant_image =  models.ImageField(upload_to = 'img/merchants/', default = 'img/merchants/noneImg.jpg')
-   

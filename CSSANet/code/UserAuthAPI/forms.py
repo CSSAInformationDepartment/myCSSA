@@ -80,3 +80,9 @@ class MigrationForm(forms.Form):
     dateOfBirth = forms.DateField(required=False)
     telNumber = forms.CharField(required=False)
     email = forms.EmailField(required=False)
+
+
+class EasyRegistrationForm(forms.ModelForm):
+    class Meta:
+        model = models.UserProfile
+        fields = ('gender','dateOfBirth','studentId','firstNameEN','lastNameEN','studentId','membershipId')

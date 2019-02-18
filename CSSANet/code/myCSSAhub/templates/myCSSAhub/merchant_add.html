@@ -61,20 +61,20 @@
 
     {% csrf_token %}
     <div class="form-group">
-        <label for="merchant_name">商户名：</label>
+        <label for="merchant_name">商户名：<span class="asteriskField">*</span></label>
         <input class="form-control" id="" name="m_name" style="width:100%" required/>
-        <label for="merchant_address">地址：</label>
+        <label for="merchant_address">地址：<span class="asteriskField">*</span></label>
         <input class="form-control" name="m_address" type="text" required />
         <label for="merchant_phone">联系电话：</label>
-        <input class="form-control" name="m_phone" type="phone" required />
+        <input class="form-control" name="m_phone" type="phone" />
         <label for="merchant_link">商家网站：</label>
-        <input class="form-control" name="m_link" type="link" required />
+        <input class="form-control" name="m_link" type="link" />
         <div class="form-group">
-            <label for="merchant_description">商家简介：</label>
+            <label for="merchant_description">商家简介：<span class="asteriskField">*</span></label>
             <textarea class="form-control" name="m_description" rows="11" required></textarea>
         </div>
         <div class="form-group">
-            <label for="merchant_pic">选择商家图片：</label>
+            <label for="merchant_pic">选择商家图片：<span class="asteriskField">*</span></label>
             <input id="input-b1" name="m_image" type="file" class="file" data-browse-on-zone-click="true">
         </div>
     </div>
