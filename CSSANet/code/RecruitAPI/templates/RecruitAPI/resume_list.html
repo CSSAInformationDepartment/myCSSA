@@ -7,7 +7,7 @@
 {% block pageContent %}
 <div class="row">
     <div class="col-6">
-        <p> 目前有{{a}}份未读简历</p>
+        <p> 您的部门目前有 <strong> {{new_resume_count}} </strong> 份未读简历</p>
     </div>
     {% if user.is_staff %}
     <div class="col-6">
@@ -74,6 +74,11 @@ $(document).ready(function() {
         "processing": true,
         "serverSide": true,
         "ajax": "{% url 'myCSSAhub:RecruitAPI:resume_jsonlist' %}",
+        "columnDefs": [{
+        "targets": 5,
+        "orderable": false
+        }],
+
     });
 });
 

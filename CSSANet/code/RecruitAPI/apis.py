@@ -5,7 +5,7 @@ from django.db.models import Q
 
 def GetResumesByDepartments(request_user):
     if request_user.is_authenticated and request_user.is_staff:
-        if request_user.is_superuser:
+        if request_user.is_superuser or request_user.has_perm('RecruitAPI.view_all_resumes'):
             return Resume.objects.filter(disabled=False).order_by('-timeOfCreate')
         else:
             committe_profile = CSSACommitteProfile.objects.filter(Q(is_active=True) & Q(member=request_user)).first()
@@ -18,7 +18,7 @@ def GetResumesByDepartments(request_user):
 
 def GetInterviewTimeByDepartments(request_user):
     if request_user.is_authenticated and request_user.is_staff:
-        if request_user.is_superuser:
+        if request_user.is_superuser or request_user.has_perm('RecruitAPI.view_all_resumes'):
             return InterviewTimetable.objects.filter(disabled=False).order_by('-timeOfCreate')
         else:
             committe_profile = CSSACommitteProfile.objects.filter(Q(is_active=True) & Q(member=request_user)).first()

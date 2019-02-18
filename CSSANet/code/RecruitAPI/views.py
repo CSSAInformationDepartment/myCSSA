@@ -35,7 +35,10 @@ class ResumeListView(LoginRequiredMixin, PermissionRequiredMixin, View):
     template_name='RecruitAPI/resume_list.html'
 
     def get(self, request, *args, **kwargs):
-        return render(request, self.template_name)
+        resumes = GetResumesByDepartments(request.user)
+        new_resume_count = resumes.filter(isOpened=False).count()
+
+        return render(request, self.template_name, {'new_resume_count':new_resume_count})
 
 
 class AddJobView(PermissionRequiredMixin, CreateView):
@@ -101,7 +104,7 @@ class ResumeListJsonView(LoginRequiredMixin, PermissionRequiredMixin, BaseDatata
 
     # define the columns that will be returned
     columns = ['CVId', 'user', 'jobRelated.dept.deptTitle',  'jobRelated.jobName', 'timeOfCreate', 'status']
-    order_columns = ['CVId', 'user', 'jobRelated.dept.deptTitle',  'jobRelated.jobName', 'timeOfCreate']
+    order_columns = ['CVId', 'user', 'jobRelated.dept.deptTitle',  'jobRelated.jobName', 'timeOfCreate','']
 
     max_display_length = 500
 

@@ -62,6 +62,11 @@ class Resume(models.Model):
     def get_absolute_url(self):
         return reverse("myCSSAhub:RecruitAPI:resume_detail", args=[str(self.CVId)])
 
+    class Meta:
+        permissions = (
+            ("view_all_resumes", "Can view all resumes"),
+        )
+
 class InterviewTimetable(models.Model):
     id = models.AutoField(primary_key=True, editable=False)
     resume = models.ForeignKey(Resume, on_delete=models.DO_NOTHING, default=None)
