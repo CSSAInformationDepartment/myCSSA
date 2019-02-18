@@ -27,6 +27,55 @@
           <input type="hidden" name="membershipId" value="{{LegacyData.membershipId}}"/>
 <fieldset>
           <h5 class="fs-title">请填写你的基本信息</h5>
+          <div class="row">
+            <div class="col-6 pr-0">
+                    <div id="name" class="form-label-group required">
+                      <label
+                        for="id_firstName"
+                        class="control-label  col-md-6  requiredField"
+                      >
+                        First Name<span class="asteriskField">*</span>
+                      </label>
+                      <div class="controls  col-md-6  ">
+                        <input
+                          required
+                          class="input-md  textinput textInput form-control"
+                          id="id_firstname"
+                          name="firstNameEN"
+                          placeholder="名（拼音）"
+                          type="text"
+                          data-parsley-pattern="^[a-zA-Z]+$"
+                          data-parsley-group="step2"
+                          value="{{ LegacyData.firstNameEN }}"
+                        />
+                      </div>
+                    </div>
+                    </div>
+                    <div class="col-6 pl-0">
+                    <div id="name" class="form-label-group required">
+                      <label
+                        for="id_lastName"
+                        class="control-label  col-md-6  requiredField"
+                      >
+                        Last Name<span class="asteriskField">*</span>
+                      </label>
+                      <div class="controls col-md-6 ">
+                        <input
+                          required
+                          class="input-md  textinput textInput form-control"
+                          id="id_lastname"
+                          name="lastNameEN"
+                          placeholder="姓（拼音）"
+                          type="text"
+                          data-parsley-pattern="^[a-zA-Z]+$"
+                          data-parsley-group="step2"
+                          value="{{ LegacyData.lastNameEN }}"
+                        />
+                      </div>
+                    </div>
+          </div>
+          </div>
+
           <div class="form-label-group required">
             <label class="control-label  col-md-6 requiredField"
               >E-mail<span class="asteriskField">*</span></label
@@ -112,7 +161,7 @@
               />
             </div>
           </div>
-          <div id="gender" class="form-group required">
+          <div id="gender" class="form-label-group required">
             <label
               for="id_gender"
               class="control-label  col-md-6 requiredField"
@@ -135,50 +184,7 @@
           </div>
           </div>
 
-          <div id="name" class="form-group required">
-            <label
-              for="id_firstName"
-              class="control-label  col-md-6  requiredField"
-            >
-              First Name<span class="asteriskField">*</span>
-            </label>
-            <div class="controls  col-md-12 ">
-              <input
-                required
-                class="input-md  textinput textInput form-control"
-                id="id_firstname"
-                name="firstNameEN"
-                placeholder="名（拼音）"
-                type="text"
-                data-parsley-pattern="^[a-zA-Z]+$"
-                data-parsley-group="step2"
-                value="{{ LegacyData.firstNameEN }}"
-              />
-            </div>
-          </div>
-          <div id="name" class="form-group required">
-            <label
-              for="id_lastName"
-              class="control-label  col-md-6  requiredField"
-            >
-              Last Name<span class="asteriskField">*</span>
-            </label>
-            <div class="controls  col-md-12 ">
-              <input
-                required
-                class="input-md  textinput textInput form-control"
-                id="id_lastname"
-                name="lastNameEN"
-                placeholder="姓（拼音）"
-                type="text"
-                data-parsley-pattern="^[a-zA-Z]+$"
-                data-parsley-group="step2"
-                value="{{ LegacyData.lastNameEN }}"
-              />
-            </div>
-          </div>
-
-          <div id="div_id_number" class="form-group required">
+          <div id="div_id_number" class="form-label-group required">
             <label
               for="id_number"
               class="control-label  col-md-6  requiredField"
@@ -187,7 +193,7 @@
             </label>
             <div class="controls  col-md-12 ">
               <div
-                class="controls  col-md-12 input-group date"
+                class="controls input-group date"
                 id="datetimepicker1"
                 data-target-input="nearest"
               >
@@ -213,7 +219,7 @@
             </div>
           </div>
 
-          <div class="form-group required">
+          <div class="form-label-group required">
             <label class="control-label  col-md-6 requiredField">
               Student ID<span class="asteriskField">*</span></label
             >
@@ -234,7 +240,7 @@
             </div>
           </div>
 
-          <div id="div_id_select" class="form-group required">
+          <div id="div_id_select" class="form-label-group required">
             <label
               for="degree"
               class="control-label  col-md-6  requiredField"
@@ -260,7 +266,7 @@
           </div>
           </div>
 
-        <div id="major" class="form-group required">
+        <div id="major" class="form-label-group required">
           <label for="major" class="control-label  col-md-6  requiredField">
             Major / 专业<span class="asteriskField">*</span>
           </label>
@@ -276,7 +282,7 @@
             </select>
           </div>
         </div>
-        <div class="form-group">
+        <div class="form-label-group">
           <div class="controls col-md-offset-5 col-md-12 text-center">
             <input
               type="submit"
