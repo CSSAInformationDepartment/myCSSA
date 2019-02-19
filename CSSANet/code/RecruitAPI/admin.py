@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Resume,JobList
+from .models import Resume,JobList,InterviewTimetable
 
 class JobListAdmin(admin.ModelAdmin):
     list_display = ('jobId', 'dept', 'timeOfCreate', 'jobName', 'dueDate')
@@ -18,3 +18,4 @@ class ResumeAdmin(admin.ModelAdmin):
 
 admin.site.register(JobList, JobListAdmin)
 admin.site.register(Resume, ResumeAdmin)
+admin.site.register(InterviewTimetable)

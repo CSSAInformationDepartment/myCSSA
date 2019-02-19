@@ -30,7 +30,10 @@ def GetDocViewData(instance, headers, user_info_required, attachments, **kwargs)
         print(attachments.name)
         name, extension = os.path.splitext(attachments.name)
         view_bag['file_name'] = os.path.basename(name)
-        view_bag['file_ext'] = extension[1:]
+        if extension[1:] == 'pdf':
+            view_bag['file_ext'] = 'pdf'
+        else:
+            view_bag['file_ext'] = 'office'
 
     return {'DocView': view_bag}
 

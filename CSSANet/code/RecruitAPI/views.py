@@ -17,7 +17,7 @@ from django.utils.html import escape
 
 from myCSSAhub.send_email import send_emails
 
-
+from pytz import timezone
 
 class JobListView(LoginRequiredMixin, PermissionRequiredMixin, View):
     login_url = '/hub/login/'
