@@ -65,33 +65,33 @@ class EventType(models.Model):
 # Event本身
 class Event (models.Model):
     eventID = models.UUIDField(primary_key = True, default = uuid.uuid4, editable = False)
-    eventName = models.CharField(max_length = 50)
-    eventInfo = models.CharField(max_length = 600)
+    eventName = models.CharField(verbose_name=_("活动名称"), max_length = 50, unique=True)
+    eventInfo = models.CharField(verbose_name=_("活动简介"), max_length = 600)
 
     eventStartTime = models.DateTimeField(auto_now_add=True)
-    eventSignUpTime = models.DateTimeField()
-    eventActualStTime = models.DateTimeField()
+    eventSignUpTime = models.DateTimeField(verbose_name=_("报名开始时间"))
+    eventActualStTime = models.DateTimeField(verbose_name=_("活动开始时间"))
 
-    mainVisual = models.ImageField(upload_to='uploads/usrImage/',default=None ,null=True)
+    mainVisual = models.ImageField(verbose_name=_("主视觉图"),upload_to='uploads/usrImage/eventMainVisual',default=None ,null=True)
     
-    hasMaxAttendent = models.BooleanField(default=False)
-    maxAttendent = models.IntegerField(default=0, blank=True, validators=[MaxValueValidator(1000),])
-    address = models.CharField(max_length=200, default=None, null=True)
-    venue = models.CharField(max_length=50, default=None, null=True)
+    hasMaxAttendent = models.BooleanField(verbose_name=_("是否有人数上限?"),default=False)
+    maxAttendent = models.IntegerField(verbose_name=_("人数上限"), default=0, blank=True, validators=[MaxValueValidator(1000),])
+    address = models.CharField(verbose_name=_("地址"), max_length=200, default=None, null=True)
+    venue = models.CharField(verbose_name=_("场馆名称"), max_length=50, default=None, null=True)
 
-    isMemberOnly = models.BooleanField(default=False)
+    isMemberOnly = models.BooleanField(verbose_name=_("是否为CSSA会员限定活动?"), default=False)
 
-    isFree = models.BooleanField(default=True)
-    price = models.DecimalField(max_digits=10, decimal_places=2, default=0.0)
+    isFree = models.BooleanField(verbose_name=_("是否为免费活动?"), default=True)
+    price = models.DecimalField(verbose_name=_("门票价格"), max_digits=10, decimal_places=2, default=0.0)
 
     # 活动主办方
-    eventBy = models.ForeignKey(EventUndertaker,on_delete=models.PROTECT)
+    eventBy = models.ForeignKey(EventUndertaker, verbose_name=_("活动主办方"),on_delete=models.PROTECT)
 
     # 活动类型
-    eventTypes = models.ForeignKey(EventType,on_delete=models.DO_NOTHING)
+    eventTypes = models.ForeignKey(EventType, verbose_name=_("活动类型"), on_delete=models.DO_NOTHING)
 
     # 相关推文
-    relatedArticles = models.ForeignKey(BlogModel.Blog,on_delete=models.PROTECT, default=None)
+    relatedArticles = models.ForeignKey(BlogModel.Blog, verbose_name=_("相关介绍文章"), on_delete=models.PROTECT, default=None)
 
     disabled = models.BooleanField(default=False)
 
