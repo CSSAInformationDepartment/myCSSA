@@ -1,5 +1,5 @@
 {% extends 'components/base_page.html' %}
-    
+
 {% block 'pg_body' %}
 
 <!-- bloc-12 -->
@@ -23,6 +23,7 @@
 			<div class="col">
 				<div id="event-highlight-caro" class="carousel slide" data-ride="carousel">
 					<ol class="carousel-indicators">
+
 						<li data-target="#event-highlight-caro" data-slide-to="0" class="active">
 						</li>
 						<li data-target="#event-highlight-caro" data-slide-to="1">
@@ -31,8 +32,10 @@
 						</li>
 					</ol>
 					<div class="carousel-inner">
+            <!-- {{% for event in eventDisplay %}} -->
+
 						<div class="carousel-item active">
-							<img class="d-inline-block w-100" alt="slide 1" src="img/placeholder-image-wide.png" />
+							<img class="d-inline-block w-100" alt="" src="{{event.}}" />
 							<div class="carousel-caption">
 								<h3 class="mg-md event-highlight-title">
 									Heading 3
@@ -71,22 +74,22 @@
 			</div>
 		</div>
 		<div class="row voffset">
-			<div class="align-self-center col-lg-3 col-md-6">
+      <div class="mt-3 col-lg-3 align-self-center col-md-6 mt-lg-0">
 				<div class="card">
 					<img src="img/lazyload-ph.png" data-src="img/placeholder-image.png" class="img-fluid mx-auto d-block lazyload" />
 					<div class="card-body">
 						<p>
-							Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor.
-						</p><a href="index.html" class="btn btn-block btn-blue-gray">报名<br></a>
+							Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor.&nbsp;
+							</p><a href="index.html" class="btn btn-block btn-blue-gray">报名<br></a>
 					</div>
 				</div>
 			</div>
-			<div class="mt-3 col-lg-3 col-md-6 mt-md-0">
+      <div class="mt-3 col-lg-3 align-self-center col-md-6 mt-lg-0">
 				<div class="card">
 					<img src="img/lazyload-ph.png" data-src="img/placeholder-image.png" class="img-fluid mx-auto d-block lazyload" />
 					<div class="card-body">
 						<p>
-							Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor.
+							Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor.&nbsp;
 						</p><a href="index.html" class="btn btn-block btn-amaranth">余位有限</a>
 					</div>
 				</div>
@@ -215,7 +218,7 @@
 
 </div>
 <!-- Main container END -->
-    
+
 
 
 <!-- Preloader -->

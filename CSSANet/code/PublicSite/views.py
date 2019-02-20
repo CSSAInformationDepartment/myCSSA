@@ -4,6 +4,7 @@ from PublicSite import models
 from UserAuthAPI import models as UserModels
 from BlogAPI import models as BlogModels
 from RecruitAPI import models as JobModels
+# from EventAPI import modesls as eventModels
 # Static Files Path Reference
 from CSSANet.settings import MEDIA_ROOT, MEDIA_URL
 from Library.SiteManagement import LoadPagetoRegister
@@ -84,7 +85,7 @@ class ResumeSubmissionView(LoginRequiredMixin,View):
     redirect_field_name = 'redirect_to'
 
     json_data={}
-    
+
     def get(self, request, *args, **kwargs):
         prev_submission = None
         jobId = self.kwargs.get('jobId')
@@ -92,7 +93,7 @@ class ResumeSubmissionView(LoginRequiredMixin,View):
         if checkDuplicateResume(jobId,request.user.id):
             prev_submission = JobModels.Resume.objects.filter(Q(disabled=False) & Q(user__id=request.user.id) & Q(jobRelated__jobId=jobId)).first()
         return render(request, 'PublicSite/jobapplication.html', {'job_data': job_data, 'prev_submission':prev_submission})
-    
+
     def post(self, request, *args, **kwargs):
         jobId = self.kwargs.get('jobId')
         if request.user.is_authenticated:
@@ -117,9 +118,12 @@ class ResumeSubmissionView(LoginRequiredMixin,View):
 
 class EventsListView(View):
     template_name = 'PublicSite/event.html'
-    
+    # eventDisplay=eventModels.Event.objects.all().order_by("eventStartTime")[:4]
     def get(self, request, *args, **kwargs):
         return render(request, self.template_name)
+
+def EventDetails(request):
+    return render(request,'myCSSAhub/eventDetails.html')
 
 def Blogs(request):
     # 找openToPublic为true的
