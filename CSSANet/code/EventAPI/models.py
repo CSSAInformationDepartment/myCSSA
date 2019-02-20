@@ -79,6 +79,8 @@ class Event (models.Model):
     address = models.CharField(max_length=200, default=None, null=True)
     venue = models.CharField(max_length=50, default=None, null=True)
 
+    isMemberOnly = models.BooleanField(default=False)
+
     isFree = models.BooleanField(default=True)
     price = models.DecimalField(max_digits=10, decimal_places=2, default=0.0)
 
