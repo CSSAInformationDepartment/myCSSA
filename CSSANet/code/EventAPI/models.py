@@ -18,6 +18,7 @@
 
 # Create your models here.
 from django.db import models
+from django.urls import reverse
 from django.core.validators import MaxValueValidator
 import uuid
 from django.utils.translation import ugettext_lazy as _
@@ -97,6 +98,9 @@ class Event (models.Model):
 
     def __str__(self):
         return self.eventName
+    
+    def get_absolute_url(self):
+        return reverse("myCSSAhub:EventAPI:update_event", args=[str(self.eventID)])
 
 # UserProfile 参加 Event 的多对多 association entity
 class AttendEvent (models.Model):

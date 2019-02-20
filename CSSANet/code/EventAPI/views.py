@@ -35,16 +35,35 @@ class AddEventView(LoginRequiredMixin, View):
     form_class = AddEventForm
     
     def get(self, request, *args, **kwargs):
-        print(self.form_class)
-        return render(request, self.template_name, {'form':self.form_class})
+        return render(request, self.template_name, {'form':self.form_class,'submit_url':reverse('myCSSAhub:EventAPI:add_event')})
 
     def post(self, request, *args, **kwargs):
-        form = AddEventForm(request.POST, request.FILES)
+        form = self.form_class(request.POST, request.FILES)
         if form.is_valid():
             form.save()
             return HttpResponseRedirect(reverse('myCSSAhub:EventAPI:event_list'))
-        print(form.errors)
-        return render(request, self.template_name, {'form':form})
+        return render(request, self.template_name, {'form':form, 'submit_url':reverse('myCSSAhub:EventAPI:add_event')})
+
+class UpdateEventView(LoginRequiredMixin, View):
+    login_url = '/hub/login/'
+    template_name = 'EventAPI/add_event.html'
+    form_class = AddEventForm
+    
+    def get(self, request, *args, **kwargs):
+        id = self.kwargs.get('id')
+        obj = get_object_or_404(Event, eventID=id)
+        form = self.form_class(instance=obj)
+        return render(request, self.template_name, {'form':form, 'submit_url':reverse('myCSSAhub:EventAPI:update_event', args=[str(id)])})
+
+    def post(self, request, *args, **kwargs):
+        id = self.kwargs.get('id')
+        obj = get_object_or_404(Event, eventID=id)
+        form = self.form_class(data=request.POST or None, files=request.FILES or None, instance=obj)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse('myCSSAhub:EventAPI:event_list'))
+        return render(request, self.template_name, {'form':form, 'submit_url':reverse('myCSSAhub:EventAPI:update_event', args=[str(id)])})
+
 
 
 

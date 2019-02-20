@@ -6,6 +6,7 @@ urlpatterns = [
     path('list/', EventListView.as_view(), name='event_list'),
     path('list/?attended=True', EventListView.as_view(), name='events_attended'),
     path('add_event/', AddEventView.as_view(), name='add_event'),
+    path('change/<str:id>/',UpdateEventView.as_view(), name='update_event')
 ]
 
 urlpatterns +=[
