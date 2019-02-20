@@ -23,6 +23,9 @@ class Blog (models.Model):
     # 阅读量
     blogReads = models.IntegerField(default=0)
 
+    def __str__(self):
+        return self.blogTitle
+
 class BlogOldContent (models.Model):
     blogId = models.ForeignKey(Blog, on_delete = models.CASCADE)
     blogOldContentId = models.AutoField(primary_key = True)

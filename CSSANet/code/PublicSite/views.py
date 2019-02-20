@@ -115,11 +115,11 @@ class ResumeSubmissionView(LoginRequiredMixin,View):
             self.json_data['error'] =  'You need to login first! '
         return JsonResponse(self.json_data)
 
-class EventsListView(LoginRequiredMixin ,View):
-    
+class EventsListView(View):
+    template_name = 'PublicSite/event.html'
     
     def get(self, request, *args, **kwargs):
-        return render(request, 'PublicSite/event.html')
+        return render(request, self.template_name)
 
 def Blogs(request):
     # 找openToPublic为true的
