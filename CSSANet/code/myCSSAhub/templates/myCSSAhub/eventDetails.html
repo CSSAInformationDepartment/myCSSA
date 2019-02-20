@@ -17,24 +17,7 @@
 
 <div class="container bloc-fill-screen">
   <div class="row justify-content-center">
-    <div class="align-self-left col-md-8">
-      <div class="card">
-        <div class="card-body">
-          <img src="" alt="{{event.eventName}}" class="img-thumbnail">
-          <h5 class="card-text"><strong>地址: </strong>{{event.address}}
-            <br><strong>简介: </strong>{{event.eventInfo}}</h5>
-            <hr/>
-            <div class="blogContentBox">
-              <hr />
-              <div class="blogFullContentBox" id="fullContent">
-              </div>
-            </div>
-            <br>
-          </div>
-        </div>
-      </div>
-
-      <div class="align-self-right col-md-4">
+      <div class=" col-md-4 sticky-top">
         <div class="card sticky-top">
           <div class="card-body">
             <h5 class="card-title"><strong>{{event.eventName}}</strong></h5>
@@ -69,6 +52,24 @@
           </div>
         </div>
       </div>
+      <div class="col-md-8">
+        <div class="card">
+          <div class="card-body">
+            <img src="" alt="{{event.eventName}}" class="img-thumbnail">
+            <h5 class="card-text"><strong>地址: </strong>{{event.address}}
+              <br><strong>简介: </strong>{{event.eventInfo}}</h5>
+              <hr/>
+              <div class="blogContentBox">
+                <hr />
+                <div class="blogFullContentBox" id="fullContent">
+                </div>
+              </div>
+              <br>
+            </div>
+          </div>
+
+        </div>
+
     </div>
   </div>
 
