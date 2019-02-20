@@ -14,5 +14,7 @@ urlpatterns = [
     path('blog/<int:blogId>/', Views.BlogContents, name='blogContent'),
     path('blogs/', Views.Blogs, name='blogs'),
     path('reviewblog/', Views.reviewBlogPublic.as_view(), name='reviewBlogPublic'),
-    path('events/', Views.EventsListView.as_view(), name='events')
+    path('events/', Views.EventsListView.as_view(), name='events'),
+    path('eventsDetails/', Views.EventDetails, name='eventsDetails')
+
 ]
