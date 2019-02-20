@@ -13,9 +13,15 @@ class ResumeAdmin(admin.ModelAdmin):
     search_fields = ('CVId',)
     list_per_page = 25
 
+class InterviewAdmin(admin.ModelAdmin):
+    list_display = ('id','resume', 'date', 'time', 'location', 'note', 'disabled')
+    list_display_links = ('id',)
+    search_fields = ('resume',)
+    list_per_page = 25
+
 
 # Register your models here.
 
 admin.site.register(JobList, JobListAdmin)
 admin.site.register(Resume, ResumeAdmin)
-admin.site.register(InterviewTimetable)
+admin.site.register(InterviewTimetable, InterviewAdmin)

@@ -76,6 +76,11 @@ class InterviewTimetable(models.Model):
     note = models.CharField(max_length=200, default=None, blank=True, null=True)
 
     disabled = models.BooleanField(default=False, blank=True,null=True)
+
+    class Meta:
+        permissions = (
+            ("manage_interview_timetable", "Can manage interview timetable"),
+        )
     
 
 # 可能以后要并入认识管理模块

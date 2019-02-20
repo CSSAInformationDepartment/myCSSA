@@ -4,11 +4,15 @@ from django.http import JsonResponse, HttpResponseRedirect, HttpResponse, Http40
 from django.contrib.auth.mixins import  LoginRequiredMixin, PermissionRequiredMixin
 from django.views import View
 from django.views.generic import ListView, DetailView, CreateView, UpdateView
+from django.utils.formats import localize
 
 from django_datatables_view.base_datatable_view import BaseDatatableView
 from django.utils.html import escape
 
 from FinanceAPI import models, forms
+
+from pytz import timezone
+from CSSANet.settings import TIME_ZONE
 
 
 class TransactionListView(LoginRequiredMixin, View):
@@ -51,7 +55,8 @@ class TransactionListJson(LoginRequiredMixin, PermissionRequiredMixin, BaseDatat
             else:
                 return escape('收入')
         elif column == 'time':
-            return escape(row.time.strftime('%Y/%m/%d %H:%M:%S'))
+            sys_tz = timezone(TIME_ZONE)
+            return localize(row.time.astimezone(sys_tz))
         elif column == 'amount':
             return escape('AUD $'+ str(row.amount))
         else:

@@ -9,15 +9,17 @@ from myCSSAhub.apis import GetDocViewData
 from UserAuthAPI.models import UserProfile
 from django.http import JsonResponse, HttpResponseRedirect, HttpResponse, Http404
 from django.contrib.auth.mixins import  LoginRequiredMixin, PermissionRequiredMixin
+from django.utils.formats import localize
 from django.views import View
 from django.views.generic import ListView, DetailView, CreateView, UpdateView
 from django_datatables_view.base_datatable_view import BaseDatatableView
 
 from django.utils.html import escape
+from pytz import timezone
+from CSSANet.settings import TIME_ZONE
 
 from myCSSAhub.send_email import send_emails
 
-from pytz import timezone
 
 class JobListView(LoginRequiredMixin, PermissionRequiredMixin, View):
     login_url = '/hub/login/'
@@ -111,7 +113,8 @@ class ResumeListJsonView(LoginRequiredMixin, PermissionRequiredMixin, BaseDatata
     def render_column(self, row, column):
         # Customer HTML column rendering
         if (column == 'timeOfCreate'):
-            return escape(row.timeOfCreate.strftime('%Y/%m/%d %H:%M:%S'))
+            sys_tz = timezone(TIME_ZONE)
+            return localize(row.timeOfCreate.astimezone(sys_tz))
         elif (column == 'user'):
             user_profile = UserProfile.objects.filter(user__id=row.user.id).first()
             if user_profile:
@@ -161,9 +164,11 @@ class JobListJsonView(LoginRequiredMixin, PermissionRequiredMixin, BaseDatatable
     def render_column(self, row, column):
         # Customer HTML column rendering
         if (column == 'timeOfCreate'):
-            return escape(row.timeOfCreate.strftime('%Y/%m/%d %H:%M:%S'))
+            sys_tz = timezone(TIME_ZONE)
+            return localize(row.timeOfCreate.astimezone(sys_tz))
         elif (column == 'dueDate'):
-            return escape(row.dueDate.strftime('%Y/%m/%d %H:%M:%S'))
+            sys_tz = timezone(TIME_ZONE)
+            return localize(row.dueDate.astimezone(sys_tz))
         else:
             return super(JobListJsonView, self).render_column(row, column)
 

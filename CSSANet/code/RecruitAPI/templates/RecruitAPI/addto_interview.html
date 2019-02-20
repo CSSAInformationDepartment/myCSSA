@@ -21,7 +21,7 @@
   <div class="card">
     <div class="card-header"><strong>添加面试安排 </strong></div>
     <div class="card-body">
-        
+        <div class="alert alert-warning" role="alert">注意！以下信息在确认提交后，系统会自动发送消息提醒受试者参加面试。请在提交前<strong>务必仔细核对所有信息！</strong></div>
         <form method="POST" action="{% url 'myCSSAhub:RecruitAPI:add_to_interview' id%}">
             {% csrf_token %}
             {% for hidden_field in form.hidden_fields %}
