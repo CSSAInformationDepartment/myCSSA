@@ -111,13 +111,14 @@ h3{
                 <a target="_blank" href="/blog/{{ blog.0.blogId }}/"><div class="cardImg"><img class="card-img-top customImg" src="{% static 'PublicSite/img/index-background.jpg' %}"></div></a>
                 {% endif %}
               <div class="card-body">
-                  <h5 class="card-title">{% if blog.1 %}{% for tag in blog.1 %}
-                    <a target="_blank" href="/blogs?page=1&tag={{ tag }}"><span class="badge badge-info">{{ tag }}</span></a>
-                    
-                    {% endfor %}
-                    {% else %}
-                    (无标签)
-                      {% endif %}</h5>
+                    <h5 class="card-title">{% if blog.1 %}{% for tag in blog.1 %}
+                        <a target="_blank" href="/blogs?page=1&tag={{ tag }}"><span class="badge badge-info">{{ tag }}</span></a>
+                        
+                        {% endfor %}
+                        {% else %}
+                            (无标签)
+                        {% endif %}
+                    </h5>
                   <a target="_blank" href="/blog/{{ blog.0.blogId }}/"><p class="card-text">{{ blog.0.blogTitle }}</p></a>
                 <p class="card-text"><small class="text-muted">创建于 {{ blog.0.createDate|date:"Y-m-d H:i:s" }}, 修改于 {{ blog.0.lastModifiedDate|date:"Y-m-d H:i:s" }}</small></p>
               </div>

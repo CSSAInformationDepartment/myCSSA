@@ -24,11 +24,9 @@
     .blogsLessContainer h2{
         margin: 23px 0px;
     }
-    
     .blogsLessContainer a{
 
     }
-    
     .blogsLessContainer button{
         margin: 0px 18px 0px 0px;
         float: right
@@ -47,7 +45,6 @@
     <ul class="list-group">
         {% for blog in blogs %}
         
-          
         <li class="list-group-item">
             {% if writtenOrReview %}
             <a href="/blog/{{ blog.blogId }}/" target="_blank">
@@ -87,10 +84,10 @@
     <script>
         let blogAjax = (blogId, isRem, reviewStatus) => {
             let url = '/hub/blog/ajax/deleteBlog?blogId=';
-            let confAlStr = "确认删除吗？"
+            let confAlStr = "确认要删除这篇文章吗？"
             if(!isRem){
                 url = '/hub/blog/ajax/reviewBlog?blogReviewStatus=' + reviewStatus +'&blogId=';
-                confAlStr = "确定吗？"
+                confAlStr = "确认要过审吗？"
                 
             }
             let confirmed = confirm(confAlStr);
@@ -109,6 +106,7 @@
                         
                     XMLobj.open("GET", url + blogId, true);
                     XMLobj.send();
+                    window.location.reload();
                 }
         }
     </script>

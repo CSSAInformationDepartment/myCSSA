@@ -119,7 +119,7 @@
                 </div>
 
                 <button class="btn btn-default navbar-btn handButton" id="display">保存（不公开）</button>
-                <button class="btn btn-default navbar-btn handButtonAnother" id="out">公开发布并重新审核</button>
+                <button class="btn btn-default navbar-btn handButtonAnother" id="out">提交发布前审核</button>
                 <button class="btn btn-default navbar-btn handButton" id="cancel">取消</button>
                 {% if blogId != -1 %}
                 <button class="btn btn-default navbar-btn handButtonOther" id="delete">删除</button>
@@ -306,6 +306,7 @@
                     }
 
                     XMLobj.open("GET", '/hub/blog/ajax/deleteBlog?blogId=' + blogId, true);
+                    XMLHttpRequest.setRequestHeader()
                     XMLobj.send();
                 }
 
