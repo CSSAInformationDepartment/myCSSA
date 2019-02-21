@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'PublicSite',
     'myCSSAhub',
     'BlogAPI',
+    'FlexForm',
 
     'rest_framework',
     'rest_framework.authtoken',

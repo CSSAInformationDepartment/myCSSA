@@ -66,30 +66,3 @@ class DiscountMerchant(models.Model):
     merchant_link =  models.CharField(verbose_name="商家网站", max_length=200, null=True,blank=True)
     merchant_add_date = models.DateTimeField(verbose_name="商户加入时间", default=timezone.now)
     merchant_image =  models.ImageField(upload_to = 'img/merchants/', default = 'img/merchants/noneImg.jpg')
-
-
-class FlexForm(models.Model):
-    id = models.UUIDField(primary_key = True, default = uuid.uuid4, editable = False)
-    name = models.CharField(max_length=100, unique=True)
-    disabled = models.BooleanField(default=False)
-
-class FlexFormField(models.Model):
-    typeChoice = (
-        ('text', 'text'),
-        ('digit', 'digit'),
-    )
-    id = models.UUIDField(primary_key = True, default = uuid.uuid4, editable = False)
-    form = models.ForeignKey(FlexForm, on_delete=models.CASCADE)
-    name = models.CharField(max_length=100, unique=True)
-    field_type = models.CharField(max_length=10, choices=typeChoice)
-    max_len = models.IntegerField(validators=[MaxValueValidator(2000),])
-    disabled = models.BooleanField(default=False)
-    
-
-class FlexFormData(models.Model):
-    id = models.UUIDField(primary_key = True, default = uuid.uuid4, editable = False)
-    timeOfCreate = models.DateTimeField(auto_now_add=True)
-    user = models.ForeignKey(userModels.User, on_delete=models.CASCADE)
-    field = models.ForeignKey(FlexFormField, on_delete=models.PROTECT)
-
-    value = models.CharField(max_length=2000)
