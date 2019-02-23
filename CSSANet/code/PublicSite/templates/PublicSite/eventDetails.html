@@ -1,5 +1,15 @@
 {% extends 'components/base_page.html' %}
 
+{% block 'extra_header' %}
+{% load static %}
+
+<link href="http://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+
+
+
+{% endblock 'extra_header' %}
+
+
 {% block 'pg_body' %}
 {% load static %}
 
@@ -8,7 +18,7 @@
     <div class="row">
       <div class="col bloc-0-margin-bottom">
         <h1 class="mg-md pg-title">
-          {{event.eventName}}活动报名
+          {{events.eventName}} 活动报名
         </h1>
       </div>
     </div>
@@ -17,74 +27,94 @@
 
 <div class="container bloc-fill-screen">
   <div class="row justify-content-center">
-      <div class=" col-md-4 sticky-top">
-        <div class="card sticky-top">
-          <div class="card-body">
-            <h5 class="card-title"><strong>{{event.eventName}}</strong></h5>
+    <div class=" col-md-4 sticky-top">
+      <div class="card sticky-top">
+        <div class="card-body">
+          <h5 class="card-title"><strong>{{events.eventName}}</strong></h5>
 
-            <p class="card-text"><strong>开始时间: </strong>{{event.eventActualStTime}}
-              <br>
+          <p class="card-text"><strong>开始时间: </strong>{{events.eventActualStTime}}
+            <br>
 
-              <strong>参加人数上限: </strong>
-              {% if hasMaxAttendent %}
-              {{event.maxAttendent}}
-              {% else %}
-              无参加人数上限
-              {% endif %}
-              <br>
+            <strong>参加人数上限: </strong>
+            {% if events.hasMaxAttendent %}
+            {{events.maxAttendent}}
+            {% else %}
+            无参加人数上限
+            {% endif %}
+            <br>
 
-              <strong>票价: </strong>
-              {% if isFree %}
-              免费活动
-              {% else %}
-              aud {{event.price}}
-              {% endif %}
-            </p>
+            <strong>票价: </strong>
+            {% if events.isFree %}
+            免费活动
+            {% else %}
+            aud {{events.price}}
+            {% endif %}
+          </p>
 
-            <div class="controls col-md-offset-5 col-md-12 text-center">
-              <input
-              type="submit"
-              value="报名此活动"
-              class="btn btn-primary btn btn-info"
-              id="event_submit"
-              />
-            </div>
+          <div class="controls col-md-offset-5 col-md-12 text-center">
+            <input
+            type="submit"
+            value="报名此活动"
+            class="btn btn-primary btn btn-info"
+            id="event_submit"
+            />
           </div>
         </div>
       </div>
-      <div class="col-md-8">
-        <div class="card">
-          <div class="card-body">
-            <img src="" alt="{{event.eventName}}" class="img-thumbnail">
-            <h5 class="card-text"><strong>地址: </strong>{{event.address}}
-              <br><strong>简介: </strong>{{event.eventInfo}}</h5>
-              <hr/>
+    </div>
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-body justify-content-center text-center">
+
+          <img src="{{events.mainVisual.url}}" alt="{{events.eventName}}" class="img-thumbnail rounded mx-auto d-bloc" style="max-height:350px">
+
+          <p class="card-text mt-3"><strong>地址: </strong>{{events.address}}
+            <br><strong>简介: </strong>{{events.eventInfo}}</p>
+            <hr/>
+            {% if events.DisplayArticleType == 'Blog' %}
+            <div class="container">
               <div class="blogContentBox">
-                <hr />
                 <div class="blogFullContentBox" id="fullContent">
                 </div>
               </div>
-              <br>
             </div>
-          </div>
+            {% else %}
+            <div class="embed-responsive embed-responsive-21by9">
+              <iframe class="embed-responsive-item" src="https://mp.weixin.qq.com/s/IRvjtGMyWuWFWiFYPuQNzw"></iframe>
+            </div>
+            {% endif %}
 
+
+            <br>
+          </div>
         </div>
 
+      </div>
     </div>
   </div>
 
-{% endblock 'pg_body' %}
 
-{% block 'extra_js' %}
 
+
+  {% endblock 'pg_body' %}
+
+  {% block 'extra_js' %}
+  <script src="http://cdn.quilljs.com/1.3.6/quill.min.js"></script>
+  <script src="{% static 'myCSSAhub/js/image-resize.min.js' %}"></script>
   <script>
 
-      let blogMainContent = '{{ blog.blogMainContent }}';
-      let blogId = '{{ blog.blogId }}';
+    let blogMainContent = '{{events.relatedArticles.blogMainContent}}';
 
-      var d = document.createElement('div');
-      d.innerHTML = blogMainContent;
-      blogMainContent = d.innerText || d.textContent
+    var d = document.createElement('div');
+    d.innerHTML = blogMainContent;
+    blogMainContent = d.innerText || d.textContent
 
-</script>
-{% endblock 'extra_js' %}
+    let editorAnother = new Quill("#fullContent", {
+      readOnly: true,
+      modules: {
+        imageResize: {},
+      }
+    });
+    editorAnother.setContents(JSON.parse(blogMainContent).ops);
+  </script>
+  {% endblock 'extra_js' %}

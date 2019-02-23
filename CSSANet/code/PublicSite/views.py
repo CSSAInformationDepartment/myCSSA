@@ -1,10 +1,10 @@
-from django.shortcuts import render,reverse
+from django.shortcuts import render,reverse, get_object_or_404
 from django.http import JsonResponse
 from PublicSite import models
 from UserAuthAPI import models as UserModels
 from BlogAPI import models as BlogModels
 from RecruitAPI import models as JobModels
-# from EventAPI import modesls as eventModels
+from EventAPI import models as eventModels
 # Static Files Path Reference
 from CSSANet.settings import MEDIA_ROOT, MEDIA_URL
 from Library.SiteManagement import LoadPagetoRegister
@@ -36,6 +36,8 @@ from UserAuthAPI.forms import BasicSiginInForm, UserInfoForm, MigrationForm, Use
 from RecruitAPI.forms import ResumeSubmissionForm
 from LegacyDataAPI import models as LegacyDataModels
 
+from django.utils import timezone
+
 from myCSSAhub import models as HubModels
 from myCSSAhub.send_email import send_emails
 
@@ -45,7 +47,10 @@ from myCSSAhub.send_email import send_emails
 ################################# View Controller ########################################
 #@cache_page(CACHE_TTL)
 def index(request):
-    return render(request, 'PublicSite/index.html')
+    now_time = timezone.now()
+    eventsPast=eventModels.Event.objects.filter(eventActualStTime__lt=now_time)
+    eventsFuture=eventModels.Event.objects.filter(eventActualStTime__gt=now_time)
+    return render(request, 'PublicSite/index.html',{'now_time':now_time,'eventsPast':eventsPast,'eventsFuture':eventsFuture})
 
 
 def ContactUs(request):
@@ -118,12 +123,18 @@ class ResumeSubmissionView(LoginRequiredMixin,View):
 
 class EventsListView(View):
     template_name = 'PublicSite/event.html'
-    # eventDisplay=eventModels.Event.objects.all().order_by("eventStartTime")[:4]
+    now_time = timezone.now()
+    events=eventModels.Event.objects.all().order_by("eventStartTime")
+    eventsFuture=eventModels.Event.objects.filter(eventActualStTime__gt=now_time)
+    eventsPast=eventModels.Event.objects.filter(eventActualStTime__lt=now_time)
     def get(self, request, *args, **kwargs):
-        return render(request, self.template_name)
+        return render(request, self.template_name, {'eventsFuture':self.eventsFuture, 'now_time':self.now_time,'events':self.events, 'eventsPast':self.eventsPast})
 
-def EventDetails(request):
-    return render(request,'myCSSAhub/eventDetails.html')
+
+def EventDetails(request, eventID):
+    event=get_object_or_404(eventModels.Event, pk=eventID)
+    return render(request,'PublicSite/eventDetails.html',{'events':event})
+
 
 def Blogs(request):
     # 找openToPublic为true的

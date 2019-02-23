@@ -4,7 +4,6 @@
 
 <link href="http://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
 
-
 <link href="{% static 'PublicSite/css/blogstyle.css' %}" rel="stylesheet" />
 <link href="{% static 'myCSSAhub/css/blogeditstyle.css' %}" rel="stylesheet" />
 
@@ -52,36 +51,36 @@
                 </div>
                 <br />
                 <hr />
-                
-                
+
+
                 {% if userIsAuthor %}
 
-                
+
                 <a href="/hub/blog/editbg?blogId={{ blog.blogId }}"><button class="btn btn-default navbar-btn handButtonAnother" id="out">编辑文章</button></a>
                 <button class="btn btn-default navbar-btn handButtonOther" id="delete">删除</button>
-                
+
                 {% endif %}
 
 
             </div>
-            
+
         </div>
     </div>
-    
+
 {% endblock 'pg_body' %}
 
 {% block 'extra_js' %}
 <script src="http://cdn.quilljs.com/1.3.6/quill.min.js"></script>
 <script src="{% static 'myCSSAhub/js/image-resize.min.js' %}"></script>
 <script>
-                
+
     let blogMainContent = '{{ blog.blogMainContent }}';
     let blogId = '{{ blog.blogId }}';
-    
+
     var d = document.createElement('div');
     d.innerHTML = blogMainContent;
     blogMainContent = d.innerText || d.textContent
-    
+
     let editorAnother = new Quill("#fullContent", {
         readOnly: true,
         modules: {
@@ -93,7 +92,7 @@
             let confirmed = confirm("确认删除吗？");
             if(confirmed){
                 let XMLobj = new XMLHttpRequest();
-                
+
                 XMLobj.onreadystatechange = () => {
                     if(XMLobj.readyState == XMLHttpRequest.DONE && XMLobj.status == 200){
                         let response = XMLobj.responseText;
@@ -101,19 +100,19 @@
                         alert(response.message);
                     }
                 }
-                
+
                 XMLobj.open("GET", '/hub/blog/ajax/deleteBlog?blogId=' + blogId, true);
                 XMLobj.send();
             }
         }
-        
+
         let rbutton = document.getElementById("delete")
         rbutton.onclick = deleteBlog
-    
+
     {% endif %}
     editorAnother.setContents(JSON.parse(blogMainContent).ops);
-    
-    
-                
+
+
+
 </script>
 {% endblock 'extra_js' %}
