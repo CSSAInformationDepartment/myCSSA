@@ -264,6 +264,9 @@
               <option value="PhD"> Doctor of Philosophy </option>
             </select>
           </div>
+          <div class="controls col">
+            <p class="text-muted"><small>注: 若选择Master或以上学位，也自愿同时加入CSSA Graduates社团</small></p>
+          </div>
           </div>
 
         <div id="major" class="form-label-group required">
@@ -282,6 +285,25 @@
             </select>
           </div>
         </div>
+
+        <div class="form-label-group">
+          <div class="controls col-md-offset-3  col-md-12 ">
+            <div id="div_id_terms" class="checkbox required">
+              <label for="id_terms" class=" requiredField">
+                <input
+                  required
+                  class="input-ms checkboxinput"
+                  id="id_terms"
+                  name="terms"
+                  type="checkbox"
+                  data-parsley-group="step3"
+                />
+                Agree with the terms and conditions
+              </label>
+            </div>
+          </div>
+        </div>
+
         <div class="form-label-group">
           <div class="controls col-md-offset-5 col-md-12 text-center">
             <input
