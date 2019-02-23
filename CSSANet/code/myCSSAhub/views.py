@@ -396,8 +396,8 @@ class EasyRegistrationView(View):
 
             # 完成信息保存以后，发送注册成功的邮件
             user_name = '%s %s' % (profile.lastNameEN, profile.firstNameEN)
-             target_email = account_register.email
-             send_emails('Register Successful', user_name, target_email, None)
+            target_email = account_register.email
+            send_emails('Register Successful', user_name, target_email, None)
 
         else:
             return JsonResponse({
