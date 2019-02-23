@@ -196,6 +196,21 @@ class EmailHistory(LoginRequiredMixin, View):
 
         return render(request, self.template_name, locals())
 
+
+class Inbox(LoginRequiredMixin, View):
+    login_url = '/hub/login/'
+    template_name = 'myCSSAhub/email_inbox.html'
+
+    def get(self, request):
+           
+        return render(request, self.template_name, locals())
+    
+    def post(self, request):
+        
+        return render(request, self.template_name)
+
+
+
 ################################# merchants ########################################
 
 
