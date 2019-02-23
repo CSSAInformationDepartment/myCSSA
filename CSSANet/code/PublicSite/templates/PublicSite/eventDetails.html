@@ -36,7 +36,7 @@
             <br>
 
             <strong>参加人数上限: </strong>
-            {% if hasMaxAttendent %}
+            {% if events.hasMaxAttendent %}
             {{events.maxAttendent}}
             {% else %}
             无参加人数上限
@@ -44,7 +44,7 @@
             <br>
 
             <strong>票价: </strong>
-            {% if isFree %}
+            {% if events.isFree %}
             免费活动
             {% else %}
             aud {{events.price}}
@@ -71,13 +71,18 @@
           <p class="card-text mt-3"><strong>地址: </strong>{{events.address}}
             <br><strong>简介: </strong>{{events.eventInfo}}</p>
             <hr/>
-
+            {% if events.DisplayArticleType == 'Blog' %}
             <div class="container">
               <div class="blogContentBox">
                 <div class="blogFullContentBox" id="fullContent">
                 </div>
               </div>
             </div>
+            {% else %}
+            <div class="embed-responsive embed-responsive-21by9">
+              <iframe class="embed-responsive-item" src="https://mp.weixin.qq.com/s/IRvjtGMyWuWFWiFYPuQNzw"></iframe>
+            </div>
+            {% endif %}
 
 
             <br>
