@@ -8,7 +8,7 @@
     <div class="row">
       <div class="col bloc-0-margin-bottom">
         <h1 class="mg-md pg-title">
-          {{event.eventName}}活动报名
+          {{events.eventName}}活动报名
         </h1>
       </div>
     </div>
@@ -20,14 +20,14 @@
       <div class=" col-md-4 sticky-top">
         <div class="card sticky-top">
           <div class="card-body">
-            <h5 class="card-title"><strong>{{event.eventName}}</strong></h5>
+            <h5 class="card-title"><strong>{{events.eventName}}</strong></h5>
 
-            <p class="card-text"><strong>开始时间: </strong>{{event.eventActualStTime}}
+            <p class="card-text"><strong>开始时间: </strong>{{events.eventActualStTime}}
               <br>
 
               <strong>参加人数上限: </strong>
               {% if hasMaxAttendent %}
-              {{event.maxAttendent}}
+              {{events.maxAttendent}}
               {% else %}
               无参加人数上限
               {% endif %}
@@ -37,7 +37,7 @@
               {% if isFree %}
               免费活动
               {% else %}
-              aud {{event.price}}
+              aud {{events.price}}
               {% endif %}
             </p>
 
@@ -54,16 +54,23 @@
       </div>
       <div class="col-md-8">
         <div class="card">
-          <div class="card-body">
-            <img src="" alt="{{event.eventName}}" class="img-thumbnail">
-            <h5 class="card-text"><strong>地址: </strong>{{event.address}}
-              <br><strong>简介: </strong>{{event.eventInfo}}</h5>
+          <div class="card-body justify-content-center">
+            <img src="{{events.mainVisual.url}}" alt="{{events.eventName}}" class="img-thumbnail rounded mx-auto d-bloc">
+
+            <h5 class="card-text mt-3"><strong>地址: </strong>{{events.address}}
+              <br><strong>简介: </strong>{{events.eventInfo}}</h5>
               <hr/>
               <div class="blogContentBox">
-                <hr />
                 <div class="blogFullContentBox" id="fullContent">
+                  {{events.relatedArticles}}
+                  <div class="text-right">
+                  <footer class="blockquote-footer">
+                    {{events.DisplayArticleType}}
+                    </footer>
+                    </div>
                 </div>
               </div>
+
               <br>
             </div>
           </div>
