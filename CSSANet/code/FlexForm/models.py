@@ -25,7 +25,7 @@ class FlexFormField(models.Model):
     )
     id = models.UUIDField(primary_key = True, default = uuid.uuid4, editable = False)
     form = models.ForeignKey(FlexForm, on_delete=models.CASCADE)
-    name = models.CharField(verbose_name=_("字段名称"), max_length=100, unique=True)
+    name = models.CharField(verbose_name=_("字段名称"), max_length=100)
     field_type = models.CharField(verbose_name=_("字段类型"), max_length=10, choices=typeChoice)
     max_len = models.IntegerField(verbose_name=_("字数上限"), validators=[MaxValueValidator(2000),])
     disabled = models.BooleanField(default=False)

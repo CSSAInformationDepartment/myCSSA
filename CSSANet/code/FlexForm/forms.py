@@ -3,6 +3,7 @@ from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 from UserAuthAPI import models
 from django.utils.safestring import mark_safe
+from django.db.models import Q
 import re
 
 from .models import *
@@ -26,3 +27,13 @@ class AddFlexFormFieldForm(forms.ModelForm):
         widgets = {
             'form': forms.HiddenInput,
         }
+
+    def clean(self):
+        super().clean()
+        name = self.cleaned_data.get('name')
+        form_id = self.cleaned_data.get('form')
+        check_duplicate_field_name = FlexFormField.objects.filter(Q(form=form_id)&Q(name=name))
+        if check_duplicate_field_name:
+            raise ValidationError(_(mark_safe('<li>字段名称不可重复</li>')), 
+            code='duplicated field name')
+        
