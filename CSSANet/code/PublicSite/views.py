@@ -47,7 +47,10 @@ from myCSSAhub.send_email import send_emails
 ################################# View Controller ########################################
 #@cache_page(CACHE_TTL)
 def index(request):
-    return render(request, 'PublicSite/index.html')
+    now_time = timezone.now()
+    eventsPast=eventModels.Event.objects.filter(eventActualStTime__lt=now_time)
+    eventsFuture=eventModels.Event.objects.filter(eventActualStTime__gt=now_time)
+    return render(request, 'PublicSite/index.html',{'now_time':now_time,'eventsPast':eventsPast,'eventsFuture':eventsFuture})
 
 
 def ContactUs(request):
