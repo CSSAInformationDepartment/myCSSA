@@ -74,11 +74,68 @@
             {% endfor %}
         </div>
         <div class='card-footer'>
-            <button class="btn btn-sm btn-success" type="submit"><i class="fa fa-dot-circle-o"></i>添加字段</button>
+            <button class="btn btn-sm btn-success" type="submit"><i class="fa fa-dot-circle-o"></i> 添加字段</button>
             <button class="btn btn-sm btn-danger" type="reset"><i class="fa fa-ban"></i> 取消 </button>
         </div>
-            
     </form>
+    </div>
+</div>
+
+<div class="col col-lg-10 col-md-12 col-sm-12">
+    <div class="card">
+    <form action="{{submit_url}}" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        {% for hidden_field in form.hidden_fields %}
+            {{ hidden_field }}
+        {% endfor %}
+        <div class="card-header">
+            <i class="fa fa-align-justify"></i> 绑定到活动
+        </div>
+        <div class="card-body">
+            <label>当前绑定活动：</label>
+                <ul class="list-group pb-2">
+                    {% if bind_events %}
+                        {% for eventlog in bind_events %}
+                            <li class="list-group-item">{{eventlog.event.eventName}}</li>
+                        {% endfor %}
+                    {% else %}
+                        <li class="list-group-item">此表未绑定任何活动</li>
+                    {% endif %}
+                </ul>
+            {% if event_bind_form.non_field_errors %}
+            <div class="alert alert-danger" role="alert">
+                {% for error in event_bind_form.non_field_errors %}
+                    {{ error }}
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            {% for field in event_bind_form.visible_fields %}
+                <div class="form-group">
+                    {{ field.label_tag }}
+                    {% if field.errors %}
+                        {% render_field field class="form-control is-invalid" %}
+                        {% for error in field.errors %}
+                            <div class="invalid-feedback">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        {% render_field field class="form-control" %}
+                    {% endif %}
+
+                    {% if field.help_text %}
+                        <small class="form-text text-muted">{{ field.help_text }}</small>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+        <div class='card-footer'>
+            <button class="btn btn-sm btn-success" type="submit"><i class="fa fa-dot-circle-o"></i> 绑定</button>
+            <button class="btn btn-sm btn-danger" type="reset"><i class="fa fa-ban"></i> 取消 </button>
+        </div>
+    </form>
+    </div>
 </div>
 
 {% endblock pageContent %}

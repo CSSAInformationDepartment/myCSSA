@@ -4,6 +4,7 @@ from django.shortcuts import render, get_object_or_404
 from django.db.models import Q, Count
 
 from .models import *
+from EventAPI.models import *
 from .forms import *
 from django.http import JsonResponse, HttpResponseRedirect, HttpResponse, Http404
 from django.contrib.auth.mixins import  LoginRequiredMixin, PermissionRequiredMixin
@@ -56,20 +57,36 @@ class AddFormFieldView(LoginRequiredMixin, View):
     template_name = 'FlexForm/form_field.html'
     form_class = AddFlexFormFieldForm
 
-    def get(self, request, *args, **kwargs):
+    def get_new_context(self, form=None, event_bind_form=None, *args, **kwargs):
         form_id = self.kwargs.get("formid")
+        print(form_id)
         fields = FlexFormField.objects.filter(form__id=form_id)
-        new_form = self.form_class(initial={'form':form_id})
-        return render(request, self.template_name, {'form':new_form, 'FormConfig':fields})
+        if not form:
+            new_form = self.form_class(initial={'form':form_id})
+        else:
+            new_form = form
+        
+        if not event_bind_form:
+            event_bind_form = AttachInfoCollectionForm(initial={'form':form_id})
+        else:
+            event_bind_form = event_bind_form
+
+        bind_events = EventAttendentInfoForm.objects.filter(form__id=form_id)
+        return {'form':new_form, 'FormConfig':fields, 'event_bind_form':event_bind_form, 'bind_events':bind_events}
+
+
+    def get(self, request, *args, **kwargs):
+        return render(request, self.template_name, self.get_new_context())
 
     def post(self, request, *args, **kwargs):
-        form = self.form_class(request.POST)
-        form_id = self.kwargs.get("formid")
-        fields = FlexFormField.objects.filter(form__id=form_id)
-        if form.is_valid():
-            form.save()
-            new_form = self.form_class
-            new_form = self.form_class(initial={'form':form_id})
-            return render(request, self.template_name, {'form':new_form, 'FormConfig':fields})
-        
-        return render(request, self.template_name, {'form':form, 'FormConfig':fields})
+        form = self.form_class(request.POST or None)
+        event_bind = AttachInfoCollectionForm(request.POST or None)
+        print(event_bind.errors)
+        if form.is_valid() or event_bind.is_valid():
+            if form.is_valid():
+                form.save()
+            if event_bind.is_valid():
+                event_bind.save()
+            return render(request, self.template_name, self.get_new_context())
+            
+        return render(request, self.template_name, self.get_new_context(form=form, event_bind_form=event_bind))

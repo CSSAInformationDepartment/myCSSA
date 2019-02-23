@@ -7,6 +7,7 @@ from django.db.models import Q
 import re
 
 from .models import *
+from EventAPI import models as EventModel
 
 class NewFlexForm(forms.ModelForm):
     class Meta:
@@ -37,3 +38,22 @@ class AddFlexFormFieldForm(forms.ModelForm):
             raise ValidationError(_(mark_safe('<li>字段名称不可重复</li>')), 
             code='duplicated field name')
         
+class AttachInfoCollectionForm(forms.ModelForm):
+    class Meta:
+        model= EventModel.EventAttendentInfoForm
+        fields='__all__'
+        widgets = {
+            'form': forms.HiddenInput,
+        }
+        help_texts = {
+            'event': _("绑定后，用户将会在确认报名时填写该表的信息"),
+        }
+
+    def clean(self):
+        super().clean()
+        event = self.cleaned_data.get('event')
+        form = self.cleaned_data.get('form')
+        check_duplicate_config = EventModel.EventAttendentInfoForm.objects.filter(Q(event=event)&Q(form=form))
+        if check_duplicate_config:
+            raise ValidationError(_(mark_safe('<li>此表单已与你选择的活动绑定</li>')), 
+            code='duplicated Flex Form Config')

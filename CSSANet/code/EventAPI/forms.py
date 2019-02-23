@@ -49,3 +49,9 @@ class AddEventForm(forms.ModelForm):
         
         if errors:
             raise ValidationError(errors)
+
+
+class AttendEventForm(forms.ModelForm):
+    class Meta:
+        model=AttendEvent
+        fields = '__all__'

@@ -101,7 +101,7 @@ class Event (models.Model):
     # 相关推文
     relatedArticles = models.ForeignKey(BlogModel.Blog, verbose_name=_("相关介绍文章"), on_delete=models.PROTECT, default=None, blank=True, null=True)
     # 相关微信推文（外链）
-    WechatArticleUrl = models.CharField(verbose_name=_("微信公众号文章链接"), max_length=200, default=None, null=True, blank=True)
+    WechatArticleUrl = models.CharField(verbose_name=_("微信公众号文章链接"), max_length=500, default=None, null=True, blank=True)
 
     disabled = models.BooleanField(default=False)
 
@@ -113,16 +113,23 @@ class Event (models.Model):
 
 # UserProfile 参加 Event 的多对多 association entity
 class AttendEvent(models.Model):
-
     attendedId = models.UUIDField(primary_key = True, default = uuid.uuid4, editable = False)
+
     attendedEventId = models.ForeignKey(Event, on_delete = models.CASCADE)
     attendedUserId = models.ForeignKey(adminModel.User, on_delete = models.DO_NOTHING)
 
-    # 交费及评价
-    paid = models.BooleanField
+    # 票据状态
+    paid = models.BooleanField(default=False)
+    token = models.TextField(default=None,blank=True)
+    token_used = models.BooleanField(default=False)
+
+    # 附言
     comment = models.CharField(max_length = 150)
+
+    disabled = models.BooleanField(default=False)
 
 class EventAttendentInfoForm(models.Model):
     id = models.AutoField(primary_key=True, editable=False)
-    event = models.ForeignKey(Event, on_delete=models.CASCADE)
+    event = models.ForeignKey(Event, on_delete=models.CASCADE, verbose_name=_("绑定新活动"))
     form = models.ForeignKey(FlexFormModel.FlexForm, on_delete=models.CASCADE)
+
