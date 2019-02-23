@@ -47,4 +47,5 @@ class AddEventForm(forms.ModelForm):
         if event_sign_up_time >= event_actualSt_time:
             errors.append(ValidationError(_(mark_safe('<li>报名开始时间不可晚于活动开始时间</li>')), code='late sign up time'))
         
-        raise ValidationError(errors)
+        if errors:
+            raise ValidationError(errors)

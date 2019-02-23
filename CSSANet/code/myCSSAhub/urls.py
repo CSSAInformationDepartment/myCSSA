@@ -6,6 +6,7 @@ from OrganisationMgr import  urls as OrgMgrUrls
 from BlogAPI import urls as BlogUrls
 from RecruitAPI import urls as RecruitUrls
 from EventAPI import urls as EventUrls
+from FlexForm import urls as FlexFormUrls
 
 app_name = "myCSSAhub"
 urlpatterns = [
@@ -43,6 +44,7 @@ urlpatterns += [
     path('blog/', include(BlogUrls, namespace="BlogAPI")),
     path('recruit/', include(RecruitUrls, namespace="RecruitAPI")),
     path('event/', include(EventUrls, namespace="EventAPI")),
+    path('flexform/', include(FlexFormUrls, namespace="FlexForm")),
 ]
 
 ## Internal AJAX path

@@ -1,5 +1,6 @@
 from django.http import JsonResponse
 
+
 class AjaxableResponseMixin:
     def form_invalid(self, form):
         response = super().form_invalid(form)
@@ -17,3 +18,4 @@ class AjaxableResponseMixin:
             return JsonResponse(data)
         else:
             return response
+
