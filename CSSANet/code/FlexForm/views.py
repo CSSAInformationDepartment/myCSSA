@@ -58,7 +58,6 @@ class AddFormFieldView(LoginRequiredMixin, View):
 
     def get(self, request, *args, **kwargs):
         form_id = self.kwargs.get("formid")
-        print("FORM ID: "+form_id)
         fields = FlexFormField.objects.filter(form__id=form_id)
         new_form = self.form_class(initial={'form':form_id})
         return render(request, self.template_name, {'form':new_form, 'FormConfig':fields})
