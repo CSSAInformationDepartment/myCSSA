@@ -38,7 +38,7 @@
             <li class="nav-title">myCSSA Committe</li>
               <li class="nav-item nav-dropdown">
                 <a class="nav-link nav-dropdown-toggle" href="#">
-                  <i class="nav-icon cui-star"></i>活动管理</a>
+                  <i class="nav-icon cui-star"></i>活动</a>
                   <ul class="nav-dropdown-items">
                     <li class="nav-item">
                       <a class="nav-link" href="{% url 'myCSSAhub:EventAPI:event_list' %}">
@@ -46,13 +46,18 @@
                     </li>
                     <li class="nav-item">
                       <a class="nav-link" href="{% url 'myCSSAhub:under-dev' %}">
+                        <i class="nav-icon cui-layers"></i> 活动信息收集表 </a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" href="{% url 'myCSSAhub:under-dev' %}">
                         <i class="nav-icon cui-tags"></i> 报名管理 </a>
                     </li>
                   </ul>
               </li>
+              {% if perms.myCSSAhub.change_blog %}
               <li class="nav-item nav-dropdown">
                 <a class="nav-link nav-dropdown-toggle" href="#">
-                  <i class="nav-icon cui-justify-center"></i>站点内容管理</a>
+                  <i class="nav-icon cui-justify-center"></i>站点内容</a>
                   <ul class="nav-dropdown-items">
                     <li class="nav-item">
                       <a class="nav-link" href="{% url 'myCSSAhub:BlogAPI:writtenBlogs' %}">
@@ -68,9 +73,10 @@
                     </li>
                   </ul>
               </li>
+              {% endif %}
               <li class="nav-item nav-dropdown">
                 <a class="nav-link nav-dropdown-toggle" href="#">
-                  <i class="nav-icon cui-people"></i>组织人事管理</a>
+                  <i class="nav-icon cui-people"></i>组织人事</a>
                   <ul class="nav-dropdown-items">
                     <li class="nav-item">
                       <a class="nav-link" href="{% url 'myCSSAhub:OrganisationMgr:dept_management' %}">
@@ -97,7 +103,7 @@
               </li>
               <li class="nav-item nav-dropdown">
                 <a class="nav-link nav-dropdown-toggle" href="#">
-                  <i class="nav-icon cui-dollar"></i>财务管理</a>
+                  <i class="nav-icon cui-dollar"></i>财务</a>
                   <ul class="nav-dropdown-items">
                     <li class="nav-item">
                       <a class="nav-link" href="{% url 'myCSSAhub:FinanceAPI:transaction_list' %}">
@@ -119,7 +125,7 @@
               </li>
               <li class="nav-item nav-dropdown">
                 <a class="nav-link nav-dropdown-toggle" href="#">
-                  <i class="nav-icon icon-puzzle"></i>会员管理</a>
+                  <i class="nav-icon icon-puzzle"></i>会员</a>
                   <ul class="nav-dropdown-items">
                     <li class="nav-item">
                       <a class="nav-link" href="{% url 'myCSSAhub:under-dev' %}">
@@ -138,7 +144,7 @@
               {% if perms.myCSSAhub.change_discountmerchant %}
                 <li class="nav-item nav-dropdown">
                   <a class="nav-link nav-dropdown-toggle" href="#">
-                    <i class="nav-icon fa fa-shopping-bag"></i>折扣商家管理</a>
+                    <i class="nav-icon fa fa-shopping-bag"></i>商家与合作机构</a>
                     <ul class="nav-dropdown-items">
                       <li class="nav-item">
                         <a class="nav-link" href="{% url 'myCSSAhub:merchants_list' %}">

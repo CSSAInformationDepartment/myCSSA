@@ -12,12 +12,16 @@
 	<link rel="stylesheet" type="text/css" href="{% static '/PublicSite/style.css' %}">
 	<link rel="stylesheet" type="text/css" href="{% static '/PublicSite/css/font-awesome.min.css'%}">
   <link rel="stylesheet" type="text/css" href="{% static '/myCSSAhub/css/login.css'%}">
+
+
+  <script src="{% static 'PublicSite/js/jquery-3.3.1.min.js'%}"></script>
+  <script src="{% static 'PublicSite/vendors/jquery-ui/jquery-ui.min.js'%}"></script>
+  <script src="{% static 'PublicSite/js/bootstrap.bundle.min.js'%}"></script>
+  <script src="{% static 'PublicSite/js/blocs.js'%}"></script>
+  <script src="{% static 'PublicSite/js/jquery.touchSwipe.min.js'%}" defer></script>
+  <script src="{% static 'PublicSite/js/lazysizes.min.js'%}" defer></script>
   
-	<script src="{% static 'PublicSite/js/jquery-3.3.1.min.js'%}"></script>
-	<script src="{% static 'PublicSite/js/bootstrap.bundle.min.js'%}"></script>
-	<script src="{% static 'PublicSite/js/blocs.js'%}"></script>
-	<script src="{% static 'PublicSite/js/jquery.touchSwipe.min.js'%}" defer></script>
-	<script src="{% static 'PublicSite/js/lazysizes.min.js'%}" defer></script>
+
   {% block 'extra_header' %}
   {% endblock 'extra_header' %}
 <!-- Analytics -->
@@ -38,6 +42,7 @@
 <!-- Preloader -->
 <!--div id="page-loading-blocs-notifaction" class="page-preloader"></div-->
 <!-- Preloader END -->
+
 
 <script>
 // DO NOT REMOVE THIS WHEN THE PAGE HAS ANY AJAX APPLET

@@ -31,48 +31,46 @@
 
             {% for field in form.visible_fields %}
                 <div class="form-group">
-                {{ field.label_tag }}
-                {% if field.errors %}
-                    {% if field.name == "eventSignUpTime" or field.name == "eventActualStTime" %}
-                        <div class="input-group date" id="id_{{field.name}}_picker" data-target-input="nearest">
-                            {% render_field field class="form-control is-invalid datetimepicker-input" %}
+                    {{ field.label_tag }}
+                    {% if field.errors %}
+                        {% if field.name == "eventSignUpTime" or field.name == "eventActualStTime" %}
+                            <div class="input-group date" id="id_{{field.name}}_picker" data-target-input="nearest">
+                                {% render_field field class="form-control is-invalid datetimepicker-input" %}
 
-                            <div class="input-group-append" data-target="#id_{{field.name}}_picker" data-toggle="datetimepicker">
-                                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                <div class="input-group-append" data-target="#id_{{field.name}}_picker" data-toggle="datetimepicker">
+                                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                </div>
+                                {% for error in field.errors %}
+                                <div class="invalid-feedback">
+                                    {{ error }}
+                                </div>
+                                {% endfor %}
                             </div>
+                        {% else %}
+                            {% render_field field class="form-control is-invalid" %}
                             {% for error in field.errors %}
-                            <div class="invalid-feedback">
-                                {{ error }}
-                            </div>
+                                <div class="invalid-feedback">
+                                    {{ error }}
+                                </div>
                             {% endfor %}
-                        </div>
+                        {% endif %}
+
                     {% else %}
-                        {% render_field field class="form-control is-invalid" %}
-                        {% for error in field.errors %}
-                            <div class="invalid-feedback">
-                                {{ error }}
+                        {% if field.name == "eventSignUpTime" or field.name == "eventActualStTime" %}
+                            <div class="input-group date" id="id_{{field.name}}_picker" data-target-input="nearest">
+                                {% render_field field class="form-control datetimepicker-input"%}
+                                <div class="input-group-append" data-target="#id_{{field.name}}_picker" data-toggle="datetimepicker">
+                                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                </div>
                             </div>
-                        {% endfor %}
+                        {% else %}
+                            {% render_field field class="form-control" %}
+                        {% endif %}
                     {% endif %}
 
-                {% else %}
-                    {% if field.name == "eventSignUpTime" or field.name == "eventActualStTime" %}
-                        <div class="input-group date" id="id_{{field.name}}_picker" data-target-input="nearest">
-                            {% render_field field class="form-control datetimepicker-input" %}
-                            <div class="input-group-append" data-target="#id_{{field.name}}_picker" data-toggle="datetimepicker">
-                                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                            </div>
-                        </div>
-                    {% else %}
-                        {% render_field field class="form-control" %}
+                    {% if field.help_text %}
+                        <small class="form-text text-muted">{{ field.help_text }}</small>
                     {% endif %}
-                {% endif %}
-
-                    
-                    
-                {% if field.help_text %}
-                    <small class="form-text text-muted">{{ field.help_text }}</small>
-                {% endif %}
                 </div>
             {% endfor %}
         </div>

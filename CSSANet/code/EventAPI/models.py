@@ -25,6 +25,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from UserAuthAPI import models as adminModel
 from BlogAPI import models as BlogModel
+from FlexForm import models as FlexFormModel
 
 # Create your models here.
 # 此为myCSSA活动管理模型
@@ -91,8 +92,16 @@ class Event (models.Model):
     # 活动类型
     eventTypes = models.ForeignKey(EventType, verbose_name=_("活动类型"), on_delete=models.DO_NOTHING)
 
+    ArticleSource = (
+        ('WeChat', 'WeChat'),
+        ('Blog', 'Blog'),
+    )
+
+    DisplayArticleType = models.CharField(verbose_name=_("文章显示来源"), choices=ArticleSource, max_length=30, default=None, null=True)
     # 相关推文
-    relatedArticles = models.ForeignKey(BlogModel.Blog, verbose_name=_("相关介绍文章"), on_delete=models.PROTECT, default=None)
+    relatedArticles = models.ForeignKey(BlogModel.Blog, verbose_name=_("相关介绍文章"), on_delete=models.PROTECT, default=None, blank=True, null=True)
+    # 相关微信推文（外链）
+    WechatArticleUrl = models.CharField(verbose_name=_("微信公众号文章链接"), max_length=200, default=None, null=True, blank=True)
 
     disabled = models.BooleanField(default=False)
 
@@ -103,7 +112,7 @@ class Event (models.Model):
         return reverse("myCSSAhub:EventAPI:update_event", args=[str(self.eventID)])
 
 # UserProfile 参加 Event 的多对多 association entity
-class AttendEvent (models.Model):
+class AttendEvent(models.Model):
 
     attendedId = models.UUIDField(primary_key = True, default = uuid.uuid4, editable = False)
     attendedEventId = models.ForeignKey(Event, on_delete = models.CASCADE)
@@ -112,3 +121,8 @@ class AttendEvent (models.Model):
     # 交费及评价
     paid = models.BooleanField
     comment = models.CharField(max_length = 150)
+
+class EventAttendentInfoForm(models.Model):
+    id = models.AutoField(primary_key=True, editable=False)
+    event = models.ForeignKey(Event, on_delete=models.CASCADE)
+    form = models.ForeignKey(FlexFormModel.FlexForm, on_delete=models.CASCADE)

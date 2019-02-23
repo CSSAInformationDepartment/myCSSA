@@ -1,26 +1,19 @@
 {% extends 'components/base_page.html' %}
+{% load static %}
 
+{% block 'extra_header' %}
+
+<link rel="stylesheet" type="text/css" href="{% static '/myCSSAhub/css/index.css'%}">
+
+{% endblock 'extra_header' %}
 
 {% block 'pg_body' %}
 
 {% include 'components/index/_hero.html' %}
-{% block 'extra_header' %}
-{% load static %}
-<link rel="stylesheet" type="text/css" href="{% static '/myCSSAhub/css/index.css'%}">
-{% endblock 'extra_header' %}
-
-{% load static %}
 
 <!-- bloc-2 -->
 <div class="bloc l-bloc" id="bloc-2">
-	<div class="container bloc-lg">
-		<div class="row">
-			<div class="col" style="text-align:center;">
-				<h3>我们正在对CSSA站点做一次系统性更新<br>
-					<small class="text-muted">网站目前处于限制开放模式，后续公测信息请留意CSSA各社交媒体平台公告</small>
-				</h3>
-			</div>
-		</div>
+	<div class="container bloc-sm">
 
 		<section class="bg-light" id="portfolio">
 		    <div class="container">
@@ -146,7 +139,6 @@
 					<img src="{% static 'PublicSite/img/icon/weibo.png'%}" height="64px" width="64px" alt="..." class="mx-auto d-block">
 				<h4>微博</h4>
 				<div style="padding: 5px">
-     			<iframe id="weibo" style="width:370px; height:300px;" frameborder="0" src="http://v.t.sina.com.cn/widget/widget_blog.php?uid=2117111293"></iframe>
 				</div>
 				</a>
 			</div>
