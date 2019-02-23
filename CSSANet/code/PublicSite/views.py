@@ -125,8 +125,7 @@ class EventsListView(View):
     eventsFuture=eventModels.Event.objects.filter(eventActualStTime__gt=now_time)
     eventsPast=eventModels.Event.objects.filter(eventActualStTime__lt=now_time)
     def get(self, request, *args, **kwargs):
-        return render(request, self.template_name, {'eventsFuture':self.eventsFuture, 'now_time':self.now_time,
-        'events':self.events, 'indicatorRange': range(0,len(self.events)),'eventsPast':self.eventsPast})
+        return render(request, self.template_name, {'eventsFuture':self.eventsFuture, 'now_time':self.now_time,'events':self.events, 'eventsPast':self.eventsPast})
 
 
 def EventDetails(request, eventID):
