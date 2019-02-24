@@ -48,8 +48,8 @@ from myCSSAhub.send_email import send_emails
 #@cache_page(CACHE_TTL)
 def index(request):
     now_time = timezone.now()
-    eventsPast=eventModels.Event.objects.filter(eventActualStTime__lt=now_time)
-    eventsFuture=eventModels.Event.objects.filter(eventActualStTime__gt=now_time)
+    eventsPast=eventModels.Event.objects.filter(eventActualStTime__lt=now_time).order_by("eventActualStTime")
+    eventsFuture=eventModels.Event.objects.filter(eventActualStTime__gt=now_time).order_by("eventActualStTime")
     return render(request, 'PublicSite/index.html',{'now_time':now_time,'eventsPast':eventsPast,'eventsFuture':eventsFuture})
 
 

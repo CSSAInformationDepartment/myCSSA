@@ -41,14 +41,13 @@
               </div>
             </div>
 						<div class="card-img">
-            <img class="img-fluid" src="{{event.mainVisual.url}}" style="min-height:200px;">
+            <img class="img-fluid" src="{{event.mainVisual.url}}" style="min-height:200px; max-height:200px; width:100%">
 						</div>
           </a>
-          <div class="portfolio-caption">
-						<div class="portfolio-caption">
+          <div class="portfolio-caption" style="max-height:200px; height:100%">
             <h4>{{event.eventName}}</h4>
-              <p class="text-muted mt-2" style="max-height:50px; overflow:scroll;">{{event.eventInfo}}</p>
-          </div>
+              <p class="text-muted mt-3" style="max-height:80px; overflow:scroll;">{{event.eventInfo}}</p>
+
         </div>
 				</div>
 				{% empty %}
