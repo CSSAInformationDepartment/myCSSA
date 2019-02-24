@@ -57,3 +57,8 @@ class AttachInfoCollectionForm(forms.ModelForm):
         if check_duplicate_config:
             raise ValidationError(_(mark_safe('<li>此表单已与你选择的活动绑定</li>')), 
             code='duplicated Flex Form Config')
+
+class UserWriteInForm(forms.ModelForm):
+    class Meta:
+        model = FlexFormData
+        fields = '__all__'

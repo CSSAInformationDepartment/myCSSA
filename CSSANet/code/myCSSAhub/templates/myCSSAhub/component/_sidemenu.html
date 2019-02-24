@@ -25,13 +25,16 @@
                 <i class="nav-icon icon-puzzle"></i>myCSSA应用</a>
                 <ul class="nav-dropdown-items">
                   <li class="nav-item">
-                    <a class="nav-link" href="{% url 'myCSSAhub:EventAPI:events_attended' %}">
+                    <a class="nav-link" href="{% url 'myCSSAhub:EventAPI:user_ticket_list' %}">
                       <i class="nav-icon cui-star"></i>活动报名</a>
                   </li>
+                  {% if user.is_superuser %}
                   <li class="nav-item">
                     <a class="nav-link" href="{% url 'myCSSAhub:under-dev' %}">
                       <i class="nav-icon cui-people"></i>求职招聘</a>
                   </li>
+                  {% endif %}
+
                 </ul>
             </li>
             {% if user.is_superuser or user.is_staff %}

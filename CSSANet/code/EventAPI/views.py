@@ -19,6 +19,8 @@ from pytz import timezone
 from CSSANet.settings import TIME_ZONE
 
 from myCSSAhub.send_email import send_emails
+from FlexForm.apis import flexform_user_write_in
+from EventAPI.apis import get_ticket
 
 
 # Create your views here.
@@ -68,27 +70,45 @@ class ConfirmEventOrderView(LoginRequiredMixin,View):
     login_url = '/hub/login/'
     template_name = 'EventAPI/confirm_order.html'
 
-    def get(self, request, *args, **kwargs):
+    def get_info_collection_form_field(self, *args, **kwargs):
         id = self.kwargs.get('id')
-        event = get_object_or_404(Event, pk=id)
         info_collection_form = EventAttendentInfoForm.objects.filter(event__pk=id).first()
         if info_collection_form:
-            print(info_collection_form.id)
             info_form_field = FlexFormModel.FlexFormField.objects.filter(form__id=info_collection_form.form.id)
         else:
             info_form_field = None
-        return render(request, self.template_name, {'event':event, 'info_form_field':info_form_field})    
+        return info_form_field
 
-class EnrollEventPOSTView(LoginRequiredMixin,View):
-    login_url = '/hub/login/'
-    template_name = 'EventAPI/confirm_order.html'
+    def get_context_data(self, *args, **kwargs):
+        id = self.kwargs.get('id')
+        event = get_object_or_404(Event, pk=id)
+        return {'event':event, 'info_form_field':self.get_info_collection_form_field()}
+
 
     def get(self, request, *args, **kwargs):
-        return Http404()
-
+        return render(request, self.template_name, self.get_context_data())  
+    
     def post(self, request, *args, **kwargs):
-        pass
+        event_id = self.kwargs.get('id')
+        fields = self.get_info_collection_form_field()
+        field_data = {}
+        for field in fields:
+            # print(field.id)
+            # print(request.POST.get(str(field.id)))
+            field_data[field.id]=request.POST.get(str(field.id))
+        if flexform_user_write_in(request.user, field_data):
+            get_ticket(request.user.id, event_id)
+            return HttpResponseRedirect(reverse(''))
+        
 
+        return render(request, self.template_name, self.get_context_data()) 
+
+class UserTicketListView(LoginRequiredMixin, View):
+    login_url = '/hub/login/'
+    template_name = 'EventAPI/user_ticket_list.html'
+
+    def get(self, request, *args, **kwargs):
+        return render(request, self.template_name)
 
 class EventListJsonView(LoginRequiredMixin, PermissionRequiredMixin, BaseDatatableView):
     login_url = '/hub/login/'

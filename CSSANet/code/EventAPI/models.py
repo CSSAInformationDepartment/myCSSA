@@ -124,7 +124,7 @@ class AttendEvent(models.Model):
     token_used = models.BooleanField(default=False)
 
     # 附言
-    comment = models.CharField(max_length = 150)
+    comment = models.CharField(max_length = 150, default=None, null=True, blank=True)
 
     disabled = models.BooleanField(default=False)
 
