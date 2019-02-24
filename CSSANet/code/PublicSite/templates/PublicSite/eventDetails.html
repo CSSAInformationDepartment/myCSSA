@@ -52,12 +52,10 @@
           </p>
 
           <div class="controls col-md-offset-5 col-md-12 text-center">
-            <input
-            type="submit"
-            value="报名此活动"
+            <button
+            onclick="location.href='{% url 'myCSSAhub:EventAPI:confirm_order' events.eventID %}'"
             class="btn btn-primary btn btn-info"
-            id="event_submit"
-            />
+            >报名此活动</button>
           </div>
         </div>
       </div>

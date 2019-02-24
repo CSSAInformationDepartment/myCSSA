@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, Http404
 from django.db.models import Q
 
 from .models import *
@@ -46,7 +46,7 @@ class AddEventView(LoginRequiredMixin, View):
 
 class UpdateEventView(LoginRequiredMixin, View):
     login_url = '/hub/login/'
-    template_name = 'EventAPI/add_event.html'
+    template_name = 'EventAPI/confirm_order.html'
     form_class = AddEventForm
     
     def get(self, request, *args, **kwargs):
@@ -64,7 +64,30 @@ class UpdateEventView(LoginRequiredMixin, View):
             return HttpResponseRedirect(reverse('myCSSAhub:EventAPI:event_list'))
         return render(request, self.template_name, {'form':form, 'submit_url':reverse('myCSSAhub:EventAPI:update_event', args=[str(id)])})
 
+class ConfirmEventOrderView(LoginRequiredMixin,View):
+    login_url = '/hub/login/'
+    template_name = 'EventAPI/confirm_order.html'
 
+    def get(self, request, *args, **kwargs):
+        id = self.kwargs.get('id')
+        event = get_object_or_404(Event, pk=id)
+        info_collection_form = EventAttendentInfoForm.objects.filter(event__pk=id).first()
+        if info_collection_form:
+            print(info_collection_form.id)
+            info_form_field = FlexFormModel.FlexFormField.objects.filter(form__id=info_collection_form.form.id)
+        else:
+            info_form_field = None
+        return render(request, self.template_name, {'event':event, 'info_form_field':info_form_field})    
+
+class EnrollEventPOSTView(LoginRequiredMixin,View):
+    login_url = '/hub/login/'
+    template_name = 'EventAPI/confirm_order.html'
+
+    def get(self, request, *args, **kwargs):
+        return Http404()
+
+    def post(self, request, *args, **kwargs):
+        pass
 
 
 class EventListJsonView(LoginRequiredMixin, PermissionRequiredMixin, BaseDatatableView):
