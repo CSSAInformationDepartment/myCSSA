@@ -52,10 +52,14 @@
           </p>
 
           <div class="controls col-md-offset-5 col-md-12 text-center">
-            <button
-            onclick="location.href='{% url 'myCSSAhub:EventAPI:confirm_order' events.eventID %}'"
-            class="btn btn-primary btn btn-info"
-            >报名此活动</button>
+            {% if event.isMemberOnly %}
+						<a href="#" class="btn btn-block btn-mustard mt-3">CSSA会员专享</a>
+						{% elif events.eventSignUpTime >  now_time %}
+						<a href="#" class="btn btn-block btn-light-gray mt-3">报名尚未开始</a>
+						{% else %}
+						<a href="{% url 'myCSSAhub:EventAPI:confirm_order' events.eventID %}" class="btn btn-block btn-blue-gray mt-3">报名<br></a>
+						{% endif %}
+            {{events.eventSignUpTime}}
           </div>
         </div>
       </div>

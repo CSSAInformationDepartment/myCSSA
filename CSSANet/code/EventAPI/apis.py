@@ -2,16 +2,13 @@ import secrets
 from .forms import *
 from .models import *
 
-def get_ticket(user_id, event_id, is_paid=False):
+def get_ticket(user, event_id, is_paid=False):
     '''
     Create Ticket for event attendent
     '''
-    if user and event:
-        ticket = AttendEventForm
-        ticket.attendedEventId = event_id
-        ticket.attendUserId = user_id
-        _token = None
+    if user and event_id:
         event = Event.objects.get(pk=event_id)
+        _token = None
         if event.isFree:
             while not _token:
                 _token = secrets.token_urlsafe(256)
@@ -20,8 +17,8 @@ def get_ticket(user_id, event_id, is_paid=False):
                     _token = None
                 else:
                     new_ticket = AttendEvent(
-                        attendedEventId = event_id,
-                        attendedUserId = user_id,
+                        attendedEventId = event,
+                        attendedUserId = user,
                         paid = is_paid,
                         token = _token,
                     )
@@ -29,8 +26,8 @@ def get_ticket(user_id, event_id, is_paid=False):
                     return instance
         else:
             new_ticket = AttendEvent(
-                attendedEventId = event_id,
-                attendedUserId = user_id,
+                attendedEventId = event,
+                attendedUserId = user,
                 paid = is_paid,
             )
             instance = new_ticket.save()

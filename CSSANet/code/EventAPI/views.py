@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404, Http404
 from django.db.models import Q
 
+
 from .models import *
 from .forms import *
 
@@ -21,6 +22,7 @@ from CSSANet.settings import TIME_ZONE
 from myCSSAhub.send_email import send_emails
 from FlexForm.apis import flexform_user_write_in
 from EventAPI.apis import get_ticket
+from django.utils import timezone
 
 
 # Create your views here.
@@ -48,7 +50,7 @@ class AddEventView(LoginRequiredMixin, View):
 
 class UpdateEventView(LoginRequiredMixin, View):
     login_url = '/hub/login/'
-    template_name = 'EventAPI/confirm_order.html'
+    template_name = 'EventAPI/add_event.html'
     form_class = AddEventForm
     
     def get(self, request, *args, **kwargs):
@@ -69,6 +71,7 @@ class UpdateEventView(LoginRequiredMixin, View):
 class ConfirmEventOrderView(LoginRequiredMixin,View):
     login_url = '/hub/login/'
     template_name = 'EventAPI/confirm_order.html'
+    
 
     def get_info_collection_form_field(self, *args, **kwargs):
         id = self.kwargs.get('id')
@@ -82,10 +85,16 @@ class ConfirmEventOrderView(LoginRequiredMixin,View):
     def get_context_data(self, *args, **kwargs):
         id = self.kwargs.get('id')
         event = get_object_or_404(Event, pk=id)
-        return {'event':event, 'info_form_field':self.get_info_collection_form_field()}
+        now_time = timezone.now()
+        return {'event':event, 'info_form_field':self.get_info_collection_form_field(), 'now_time':now_time}
 
 
     def get(self, request, *args, **kwargs):
+        id = self.kwargs.get('id')
+        event = get_object_or_404(Event, pk=id)
+        now_time = timezone.now()
+        if event.eventSignUpTime > now_time:
+            raise Http404("Event is not open for enrollment yet.")
         return render(request, self.template_name, self.get_context_data())  
     
     def post(self, request, *args, **kwargs):
@@ -97,10 +106,9 @@ class ConfirmEventOrderView(LoginRequiredMixin,View):
             # print(request.POST.get(str(field.id)))
             field_data[field.id]=request.POST.get(str(field.id))
         if flexform_user_write_in(request.user, field_data):
-            get_ticket(request.user.id, event_id)
-            return HttpResponseRedirect(reverse(''))
+            get_ticket(request.user, event_id)
+            return HttpResponseRedirect(reverse('myCSSAhub:EventAPI:user_ticket_list'))
         
-
         return render(request, self.template_name, self.get_context_data()) 
 
 class UserTicketListView(LoginRequiredMixin, View):
@@ -108,7 +116,8 @@ class UserTicketListView(LoginRequiredMixin, View):
     template_name = 'EventAPI/user_ticket_list.html'
 
     def get(self, request, *args, **kwargs):
-        return render(request, self.template_name)
+        tickets = AttendEvent.objects.all().order_by("-attendedEventId__eventActualStTime")
+        return render(request, self.template_name, {'tickets':tickets})
 
 class EventListJsonView(LoginRequiredMixin, PermissionRequiredMixin, BaseDatatableView):
     login_url = '/hub/login/'
@@ -124,9 +133,9 @@ class EventListJsonView(LoginRequiredMixin, PermissionRequiredMixin, BaseDatatab
     def render_column(self, row, column):
         # Customer HTML column rendering
         if (column == 'eventSignUpTime'):
-            return localize(row.eventSignUpTime)
+            return row.eventSignUpTime.strftime('%Y-%m-%d %H:%M')
         elif (column == 'eventActualStTime'):
-            return localize(row.eventActualStTime)
+            return row.eventActualStTime.strftime('%Y-%m-%d %H:%M')
         else:
             return super(EventListJsonView, self).render_column(row, column)
 

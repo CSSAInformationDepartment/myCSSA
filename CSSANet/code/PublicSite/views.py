@@ -133,7 +133,10 @@ class EventsListView(View):
 
 def EventDetails(request, eventID):
     event=get_object_or_404(eventModels.Event, pk=eventID)
-    return render(request,'PublicSite/eventDetails.html',{'events':event})
+    now_time = timezone.now()
+    print(now_time)
+    print(event.eventSignUpTime)
+    return render(request,'PublicSite/eventDetails.html',{'events':event, 'now_time':now_time})
 
 
 def Blogs(request):

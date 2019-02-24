@@ -1,6 +1,70 @@
 {% extends 'myCSSAhub/component/_layout.html' %}
 
+{% block ExtraHeader %}
 
-{% block PageContent %}
+<style media="screen">
 
-{% endblock PageContent %}
+	.card-img {
+		padding-bottom: 70%;
+		position: relative;
+	}
+	.card-img > img {
+		position: absolute;
+		max-width: 100%;
+		max-height: 100%;
+	}
+	.carousel-inner > .carousel-item {
+  height: 100vh;
+}
+
+.carousel-inner > .carousel-item > img {
+  position: absolute;
+  /* top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%); */
+  max-height: 800px;
+  width: auto;
+}
+
+</style>
+{% endblock ExtraHeader %}
+
+
+
+{% block pageContent %}
+		<div class="row">
+			<div class="col">
+				<h3 class="mg-md text-center">
+					活动入场券
+				</h3>
+			</div>
+		</div>
+
+		<div class="row voffset justify-content-center" >
+			{% for ticket in tickets %}
+			<div class="mt-3 col-lg-3 align-self-center col-md-6 mt-lg-0" >
+				<div class="card h-100">
+					<div class="card-img">
+						<img src="{{ticket.attendedEventId.mainVisual.url}}" data-src="{{ticket.attendedEventId.mainVisual.url}}" class="card-img-top h-100 w-100"/>
+					</div>
+					<div class="card-body" >
+						<h5 class="card-title" style="min-height:50px">{{ticket.attendedEventId.eventName}}</h5>
+						<p class="card-text" style="min-height:50px">
+							{{ticket.attendedEventId.eventInfo}}
+						</p>
+						<a href="{% url 'PublicSite:eventsDetails' ticket.attendedEventId.eventID %}" class="btn btn-block btn-blue-gray mt-3">查看活动详情<br></a>
+					</div>
+				</div>
+			</div>
+
+
+			{% empty %}
+
+			<h4 class="mg-md text-center">
+				您还没有参加任何活动
+			</h4>
+			{% endfor %}
+		</div>
+{% endblock pageContent %}
