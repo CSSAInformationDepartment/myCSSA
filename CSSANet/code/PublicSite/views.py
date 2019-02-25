@@ -125,8 +125,8 @@ class EventsListView(View):
     template_name = 'PublicSite/event.html'
     now_time = timezone.now()
     events=eventModels.Event.objects.all().order_by("eventStartTime")
-    eventsFuture=eventModels.Event.objects.filter(eventActualStTime__gt=now_time)
-    eventsPast=eventModels.Event.objects.filter(eventActualStTime__lt=now_time)
+    eventsFuture=eventModels.Event.objects.filter(eventActualStTime__gt=now_time).order_by("eventActualStTime")
+    eventsPast=eventModels.Event.objects.filter(eventActualStTime__lt=now_time).order_by("eventActualStTime")
     def get(self, request, *args, **kwargs):
         return render(request, self.template_name, {'eventsFuture':self.eventsFuture, 'now_time':self.now_time,'events':self.events, 'eventsPast':self.eventsPast})
 

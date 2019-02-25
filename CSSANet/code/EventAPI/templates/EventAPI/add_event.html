@@ -16,7 +16,7 @@
             <i class="fa fa-align-justify"></i> 添加新活动
         </div>
         <div class="card-body">
-            
+
             {% for hidden_field in form.hidden_fields %}
                 {{ hidden_field }}
             {% endfor %}
@@ -78,7 +78,7 @@
             <button class="btn btn-sm btn-success" type="submit"><i class="fa fa-dot-circle-o"></i> 发布活动</button>
             <button class="btn btn-sm btn-danger" type="reset"><i class="fa fa-ban"></i> 取消 </button>
         </div>
-            
+
     </form>
 </div>
 {% endblock %}
@@ -102,7 +102,7 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.5.1/themes/fa/theme.min.js"></script>
 <script>
-    $('#id_mainVisual').fileinput({
+    $('#id_mainVisual, #id_WechatQRcode').fileinput({
 			theme: "fa",
 	        allowedFileExtensions: ['jpeg','jpg', 'png'],
 	        overwriteInitial: false,
@@ -117,11 +117,11 @@
 						{% if prev_submission.attachment %}
 								"{{ prev_submission.attachment.url }}"
 						{% endif %}
-						,		
+						,
 					],
-					initialPreviewAsData: true, 
+					initialPreviewAsData: true,
 					{% endif %}
-	    }); 
+	    });
     $('#id_eventSignUpTime_picker').datetimepicker({
         format: 'Y-M-D HH:mm'
     })
@@ -130,4 +130,4 @@
     })
 </script>
 
-{% endblock %}   
+{% endblock %}

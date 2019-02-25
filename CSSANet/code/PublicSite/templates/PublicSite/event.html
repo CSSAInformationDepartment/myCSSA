@@ -1,7 +1,6 @@
 {% extends 'components/base_page.html' %}
 
 
-
 {% block 'extra_header' %}
 
 <style media="screen">
@@ -30,6 +29,14 @@
   width: auto;
 }
 
+.bg-white{
+	background:#ffffff !important;
+
+}
+
+.bg-light {
+	background-color: #f8f9fa!important;
+}
 
 </style>
 {% endblock 'extra_header' %}
@@ -105,7 +112,7 @@
 <!-- bloc-13 END -->
 
 <!-- bloc-14 -->
-<div class="bloc l-bloc" id="bloc-14" style="min-height:25vh;">
+<div class="bloc l-bloc bg-light" id="bloc-14" style="min-height:25vh;">
 	<div class="container bloc-md">
 		<div class="row">
 			<div class="col bloc-bloc-1-margin-bottom">
@@ -120,14 +127,14 @@
 
 		<div class="row voffset justify-content-center" >
 			{% for event in eventsFuture %}
-			<div class="mt-3 col-lg-3 align-self-center col-md-6 mt-lg-0" >
+			<div class="mt-3 col-lg-3 align-self-center col-md-6 mt-lg-3">
 				<div class="card h-100">
 					<div class="card-img">
 						<img src="{{event.mainVisual.url}}" data-src="{{event.mainVisual.url}}" class="card-img-top h-100 w-100"/>
 					</div>
 					<div class="card-body" >
 						<h5 class="card-title" style="min-height:50px">{{event.eventName}}</h5>
-						<p class="card-text" style="min-height:50px">
+						<p class="card-text" style="min-height:50px;max-height:80px; overflow:auto;">
 							{{event.eventInfo}}
 						</p>
 						{% if event.isMemberOnly %}
@@ -188,7 +195,7 @@ Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula 
 <!-- bloc-14 END -->
 
 <!-- bloc-15 -->
-<div class="bloc l-bloc" id="bloc-15" style="min-height:25vh;">
+<div class="bloc l-bloc bg-light" id="bloc-15" style="min-height:25vh;">
 	<div class="container bloc-sm">
 		<div class="row">
 			<div class="col bloc-bloc-1-margin-bottom">
@@ -200,18 +207,20 @@ Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula 
 				</p>
 			</div>
 		</div>
-		<div class="row voffset justify-content-center">
+		<div class=" row voffset justify-content-center">
 			{% for event in eventsPast %}
-			<div class="col-lg-3 col-md-6">
-				<a href="#" data-lightbox="{{event.mainVisual.url}}" data-gallery-id="gallery-1"><img src="{{event.mainVisual.url}}" data-src="{{event.mainVisual.url}}" class="img-fluid mx-auto d-block lazyload" /></a>
-				<h4 class="mg-md">
+			<div class="col-lg-3 col-md-6 mt-1 mt-md-4 mt-lg-0 mb-3">
+				<div class="bg-white">
+				<a href="#" data-lightbox="{{event.mainVisual.url}}" data-gallery-id="gallery-1"><img src="{{event.mainVisual.url}}" data-src="{{event.mainVisual.url}}" class="img-fluid mx-auto d-block lazyload w-100 h-100"  style="min-height:100px;max-height:240px;"/></a>
+
+				<h4 class="mg-md pt-3 text-center">
 					{{event.eventName}}
 				</h4>
-				<p>
+				<p class="text-center pb-3">
 					{{event.eventInfo}}
 				</p>
-			</div>
-
+				</div>
+</div>
 			{% empty %}
 			<h4 class="mg-md text-center">
 				目前没有过往活动，敬请期待
