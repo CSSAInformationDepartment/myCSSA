@@ -198,6 +198,57 @@ class EmailHistory(LoginRequiredMixin, View):
 
         return render(request, self.template_name, locals())
 
+
+class Inbox(LoginRequiredMixin, View):
+    login_url = '/hub/login/'
+    template_name = 'myCSSAhub/email_inbox.html'
+
+    def get(self, request):
+           
+        return render(request, self.template_name, locals())
+    
+    def post(self, request):
+        
+        return render(request, self.template_name)
+
+class Email_Message(LoginRequiredMixin, View):
+    login_url = '/hub/login/'
+    template_name = 'myCSSAhub/email_message.html'
+
+    def get(self, request):
+           
+        return render(request, self.template_name, locals())
+    
+    def post(self, request):
+        
+        return render(request, self.template_name)
+
+class Email_Compose(LoginRequiredMixin, View):
+    login_url = '/hub/login/'
+    template_name = 'myCSSAhub/email_compose.html' 
+
+    def get(self, request):
+           
+        return render(request, self.template_name, locals())
+    
+    def post(self, request):
+        
+        return render(request, self.template_name)
+
+################################# calendar ########################################
+class Calendar(LoginRequiredMixin, View):
+    login_url = '/hub/login/'
+    template_name = 'myCSSAhub/calendar.html' 
+
+    def get(self, request):
+           
+        return render(request, self.template_name, locals())
+    
+    def post(self, request):
+        
+        return render(request, self.template_name)
+
+
 ################################# merchants ########################################
 
 

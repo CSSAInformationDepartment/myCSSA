@@ -34,7 +34,10 @@ urlpatterns = [
     path('reset-password/', Views.UpdatePasswordView.as_view(), name="update-password"),
     path('merchants_list/', Views.Merchants_list.as_view(), name="merchants_list"),
     path('merchant_add/', Views.Merchant_add.as_view(), name="merchants_add"),
-    path('merchant_profile/<str:id>/', Views.Merchant_profile.as_view(), name="merchant_profile")
+    path('merchant_profile/<str:id>/', Views.Merchant_profile.as_view(), name="merchant_profile"),
+    path('inbox/', Views.Inbox.as_view(), name="email_inbox"),
+    path('email_message/', Views.Email_Message.as_view(), name="email_message"),
+    path('calendar/', Views.Calendar.as_view(), name="calendar"),
 ]
 
 ## Admin system app directory
