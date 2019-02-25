@@ -75,7 +75,6 @@ class Event (models.Model):
     eventActualStTime = models.DateTimeField(verbose_name=_("活动开始时间"))
 
     mainVisual = models.ImageField(verbose_name=_("主视觉图"),upload_to='uploads/usrImage/eventMainVisual',default=None ,null=True)
-    WechatQRcode = models.ImageField(verbose_name=_("微信二维码"),upload_to='uploads/usrImage/eventWechatQRcode',default=None ,null=True)
 
     hasMaxAttendent = models.BooleanField(verbose_name=_("是否有人数上限?"),default=False)
     maxAttendent = models.IntegerField(verbose_name=_("人数上限"), default=0, blank=True, validators=[MaxValueValidator(1000),])
@@ -103,6 +102,7 @@ class Event (models.Model):
     relatedArticles = models.ForeignKey(BlogModel.Blog, verbose_name=_("相关介绍文章"), on_delete=models.PROTECT, default=None, blank=True, null=True)
     # 相关微信推文（外链）
     WechatArticleUrl = models.CharField(verbose_name=_("微信公众号文章链接"), max_length=500, default=None, null=True, blank=True)
+        WechatQRcode = models.ImageField(verbose_name=_("微信二维码"),upload_to='uploads/usrImage/eventWechatQRcode',default=None ,null=True)
 
     disabled = models.BooleanField(default=False)
 
