@@ -1,0 +1,458 @@
+{% extends 'myCSSAhub/component/_layout.html' %}
+{% block pageTitle %}
+Inbox
+{% endblock %}
+{% block pageContent %}
+{% block ExtraHeader %}
+<style>
+    .container-fluid {
+        padding: 0 5px;
+        width: 100%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    /* .fadeIn{
+        animation-name: fadeIn;
+    } */
+
+    .email-app {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+        height: 100%;
+        border: 1px solid #c8ced3;
+    }
+
+    /* 左边导航栏 */
+    nav.nav_inbox {
+        background-color: white;
+        width: 200px;
+        padding: 1rem;
+        flex: 0 0 200px;
+        border-right: 1px solid #c8ced3;
+        /* display: block; */
+    }
+
+    /* New Email 按钮 */
+    .btn-block {
+        margin-bottom: 15px;
+        display: block;
+        width: 100%;
+        cursor: pointer;
+    }
+
+    .btn-danger {
+        color: #fff;
+        background-color: #f86c6b;
+        border-color: #f86c6b;
+        user-select: none;
+    }
+
+    /* New Email 按钮下面的list菜单 */
+
+    li {
+        display: list-item;
+        text-align: -webkit-match-parent;
+    }
+
+    ul.nav {
+        flex-direction: column;
+        display: flex;
+        flex-wrap: wrap;
+        padding-left: 0;
+        margin-bottom: 0;
+        list-style-type: none;
+        list-style-position: initial;
+        list-style-image: initial;
+    }
+
+    /* li标签 */
+    .email-app nav .nav-item {
+        position: relative;
+    }
+
+    /* li标签下的a标签    */
+    .email-app nav .nav-link {
+        color: #23282c;
+        border-bottom: 1px solid #c8ced3;
+    }
+
+    .nav-link {
+        display: block;
+        padding: .5rem 1rem;
+    }
+
+    /* li标签下的 a 标签下的 i 标签    */
+    .email-app nav .nav-link i {
+        width: 20px;
+        margin: 0 10px 0 0;
+        font-size: 14px;
+        text-align: center;
+    }
+
+    .fa {
+        display: inline-block;
+        font: normal normal normal 14px/1 FontAwesome;
+        font-size: inherit;
+        text-rendering: auto;
+        -webkit-font-smoothing: antialiased;
+    }
+
+    /* a 标签中的 span */
+
+    .email-app nav .nav-link .badge {
+        float: right;
+        margin-top: 4px;
+        margin-left: 10px;
+    }
+
+    .badge-danger {
+        color: #fff;
+        background-color: #f86c6b;
+    }
+
+    .badge {
+        display: inline-block;
+        padding: .25em .4em;
+        font-size: 75%;
+        font-weight: 700;
+        line-height: 1;
+        text-align: center;
+        white-space: nowrap;
+        vertical-align: baseline;
+        border-radius: .25rem;
+    }
+
+    /* ********************** 以上是左边导航栏的css设置 *****************/
+    /* ********************** 现在开始右边信息栏的css设置 *****************/
+
+    .email-app main.email_message {
+        flex: 1;
+        min-width: 0;
+        padding: 1rem;
+        background-color: white;
+    }
+
+
+    /* toolbar  */
+
+    .email-app .email_message .toolbar {
+        padding-bottom: 1rem;
+        border-bottom: 1px solid #c8ced3;
+    }
+
+    .btn-group {
+        position: relative;
+        display: inline-flex;
+        vertical-align: middle;
+    }
+
+    .btn-light {
+        color: #23282c;
+        background-color: #f0f3f5;
+        border-color: #f0f3f5;
+    }
+
+    /* toolbar 下面的消息和文件栏  */
+    .email-app .email_message .details .title {
+        padding: 1rem 0;
+        font-weight: 700;
+    }
+
+    /* 标题 */
+    .email-app .email_message .details .header {
+        display: -ms-flexbox;
+        display: flex;
+        padding: 1rem 0;
+        margin: 1rem 0;
+        border-top: 1px solid #c8ced3;
+        border-bottom: 1px solid #c8ced3;
+    }
+
+    /* 头像 */
+    .email-app .email_message .details .header .avatar {
+        width: 40px;
+        height: 40px;
+        margin-right: 1rem;
+    }
+
+    .avatar {
+        position: relative;
+        display: inline-block;
+        width: 36px;
+        height: 36px;
+    }
+
+    img {
+        vertical-align: middle;
+        border-style: none;
+    }
+
+    /* 来自（作者） */
+    .email-app .email_message .details .header .from {
+        -ms-flex-item-align: center;
+        align-self: center;
+        font-size: 12px;
+        color: #73818f;
+    }
+
+    .email-app .email_message .details .header .from span {
+        display: block;
+        font-weight: 700;
+    }
+
+    /* 时间 */
+    .email-app .email_message .details .header .date {
+        margin-left: auto;
+    }
+
+    /* 信息，标签p */
+    p {
+        margin-top: 0;
+        margin-bottom: 1rem;
+    }
+
+    blockquote {
+        margin: 0 0 1rem;
+    }
+
+    /* 附件 */
+    .email-app .email_message .details .attachments {
+        padding: 1rem 0;
+        margin-bottom: 1rem;
+        border-top: 3px solid #f0f3f5;
+        border-bottom: 3px solid #f0f3f5;
+    }
+
+    .email-app .email_message .details .attachments .attachment {
+        display: flex;
+        align-self: center;
+        margin: .5rem 0;
+        font-size: 12px;
+    }
+
+    .email-app .email_message .details .attachments .attachment .badge {
+        margin: 0 .5rem;
+        line-height: inherit;
+    }
+
+    b,
+    strong {
+        font-weight: bolder;
+    }
+
+    .email-app .email_message .details .attachments .attachment .menu {
+        margin-left: auto;
+    }
+
+    .email-app .email_message .details .attachments .attachment .menu a {
+        padding: 0 .5rem;
+        font-size: 14px;
+        color: #c8ced3;
+    }
+
+    /* 消息回复栏 */
+    .form-group {
+        margin-bottom: 1rem;
+    }
+
+    textarea.form-control {
+        height: auto;
+    }
+
+    .form-control {
+        display: block;
+        width: 100%;
+        padding: .375rem .75rem;
+        font-size: .875rem;
+        line-height: 1.5;
+        color: #5c6873;
+        background-color: #fff;
+        background-clip: padding-box;
+        border: 1px solid #e4e7ea;
+        border-radius: .25rem;
+        transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+    }
+
+    textarea {
+        overflow: auto;
+        resize: vertical;
+        font-family: inherit;
+    }
+
+    .btn-success {
+        color: #fff;
+        background-color: #4dbd74;
+        border-color: #4dbd74;
+    }
+</style>
+{% endblock ExtraHeader %}
+
+<div id="ui-view">
+    <div>
+        <div class="animated fadeIn">
+            <div class="email-app mb-4">
+                <nav class="nav_inbox">
+                    <a class="btn btn-danger btn-block" href="page-inbox-compose.html">New Email</a>
+                    <ul class="nav">
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">
+                                <i class="fa fa-inbox"></i> Inbox
+                                <span class="badge badge-danger">4</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">
+                                <i class="fa fa-star"></i> Stared</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">
+                                <i class="fa fa-rocket"></i> Sent</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">
+                                <i class="fa fa-trash-o"></i> Trash</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">
+                                <i class="fa fa-bookmark"></i> Important
+                                <span class="badge badge-info">5</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">
+                                <i class="fa fa-inbox"></i> Inbox
+                                <span class="badge badge-danger">4</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+                <main class="email_message">
+                    <div class="toolbar">
+                        <div class="btn-group">
+                            <button class="btn btn-light" type="button">
+                                <span class="fa fa-envelope"></span>
+                            </button>
+                            <button class="btn btn-light" type="button">
+                                <span class="fa fa-star"></span>
+                            </button>
+                            <button class="btn btn-light" type="button">
+                                <span class="fa fa-star-o"></span>
+                            </button>
+                            <button class="btn btn-light" type="button">
+                                <span class="fa fa-bookmark-o"></span>
+                            </button>
+                        </div>
+                        <div class="btn-group">
+                            <button class="btn btn-light" type="button">
+                                <span class="fa fa-mail-reply"></span>
+                            </button>
+                            <button class="btn btn-light" type="button">
+                                <span class="fa fa-mail-reply-all"></span>
+                            </button>
+                            <button class="btn btn-light" type="button">
+                                <span class="fa fa-mail-forward"></span>
+                            </button>
+                        </div>
+                        <button class="btn btn-light" type="button">
+                            <span class="fa fa-trash-o"></span>
+                        </button>
+                        <div class="btn-group">
+                            <button class="btn btn-light dropdown-toggle" type="button" data-toggle="dropdown">
+                                <span class="fa fa-tags"></span>
+                                <span class="caret"></span>
+                            </button>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="#">add label
+                                    <span class="badge badge-danger"> Home</span>
+                                </a>
+                                <a class="dropdown-item" href="#">add label
+                                    <span class="badge badge-info"> Job</span>
+                                </a>
+                                <a class="dropdown-item" href="#">add label
+                                    <span class="badge badge-success"> Clients</span>
+                                </a>
+                                <a class="dropdown-item" href="#">add label
+                                    <span class="badge badge-warning"> News</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="details">
+                        <div class="title">Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur,
+                            adipisci velit.</div>
+                        <div class="header">
+                            <img class="avatar" src="img/avatars/7.jpg">
+                            <div class="from">
+                                <span>Lukasz Holeczek</span> lukasz@bootstrapmaster.com</div>
+                            <div class="date">Today,
+                                <b>3:47 PM</b>
+                            </div>
+                        </div>
+                        <div class="content">
+                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
+                                incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
+                                exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute
+                                irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+                                pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia
+                                deserunt mollit anim id est laborum.</p>
+                            <blockquote>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
+                                incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
+                                exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute
+                                irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+                                pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia
+                                deserunt mollit anim id est laborum.</blockquote>
+                        </div>
+                        <div class="attachments">
+                            <div class="attachment">
+                                <span class="badge badge-danger">zip</span>
+                                <b>bootstrap.zip</b>
+                                <i>(2,5MB)</i>
+                                <span class="menu">
+                                    <a class="fa fa-search" href="#"></a>
+                                    <a class="fa fa-share" href="#"></a>
+                                    <a class="fa fa-cloud-download" href="#"></a>
+                                </span>
+                            </div>
+                            <div class="attachment">
+                                <span class="badge badge-info">txt</span>
+                                <b>readme.txt</b>
+                                <i>(7KB)</i>
+                                <span class="menu">
+                                    <a class="fa fa-search" href="#"></a>
+                                    <a class="fa fa-share" href="#"></a>
+                                    <a class="fa fa-cloud-download" href="#"></a>
+                                </span>
+                            </div>
+                            <div class="attachment">
+                                <span class="badge badge-success">xls</span>
+                                <b>spreadsheet.xls</b>
+                                <i>(984KB)</i>
+                                <span class="menu">
+                                    <a class="fa fa-search" href="#"></a>
+                                    <a class="fa fa-share" href="#"></a>
+                                    <a class="fa fa-cloud-download" href="#"></a>
+                                </span>
+                            </div>
+                        </div>
+                        <form method="post" action="">
+                            <div class="form-group">
+                                <textarea class="form-control" id="message" name="body" rows="12"
+                                    placeholder="Click here to reply"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <button class="btn btn-success" tabindex="3" type="submit">Send message</button>
+                            </div>
+                        </form>
+                    </div>
+                </main>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+{% endblock%}
