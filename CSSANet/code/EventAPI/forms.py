@@ -19,6 +19,8 @@ class AddEventForm(forms.ModelForm):
             'DisplayArticleType': _("选择活动介绍所要显示的文章来源"),
             'relatedArticles': _("若文章来源选择为Blog，则此项必填"),
             'WechatArticleUrl': _("若文章来源选择为WeChat，则此项必填"),
+            'WechatQRcode': _("若文章来源选择为WeChat，则此项必填"),
+
 
         }
         widgets = {
@@ -38,15 +40,16 @@ class AddEventForm(forms.ModelForm):
         wechat_article_url = self.cleaned_data.get('WechatArticleUrl')
         related_articles = self.cleaned_data.get('relatedArticles')
         display_article_type = self.cleaned_data.get('DisplayArticleType')
-        
-        if (display_article_type == 'WeChat' and wechat_article_url == None) or (display_article_type == 'Blog' and related_articles == None):
+        wechat_qr_code = self.cleaned_data.get('WechatQRcode')
+
+        if (display_article_type == 'WeChat' and (wechat_article_url == None or wechat_qr_code == None)) or (display_article_type == 'Blog' and related_articles == None):
             errors.append(ValidationError(_(mark_safe('<li>文章显示设置不正确，请检查相关设置项</li>')), code='invalid article display setting'))
 
         event_actualSt_time = self.cleaned_data.get("eventActualStTime")
         event_sign_up_time = self.cleaned_data.get("eventSignUpTime")
         if event_sign_up_time >= event_actualSt_time:
             errors.append(ValidationError(_(mark_safe('<li>报名开始时间不可晚于活动开始时间</li>')), code='late sign up time'))
-        
+
         if errors:
             raise ValidationError(errors)
 
