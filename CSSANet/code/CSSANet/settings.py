@@ -27,10 +27,11 @@ SITE_ID = 1
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# DEBUG = True
+DEBUG = False
 if DEBUG == False:
     SECRET_KEY = env_dist.get('DJANGOKEYPD')
-    ALLOWED_HOSTS = ['cssanet','localhost','cssaunimelb.com','192.168.0.2']
+    ALLOWED_HOSTS = ['cssanet','localhost','cssaunimelb.com','192.168.0.2', '0.0.0.0']
     CSRF_COOKIE_SECURE = True
 #   SESSION_COOKIE_SECURE = True ## <- Activate in HTTPS envrioment only
     SECURE_CONTENT_TYPE_NOSNIFF = True

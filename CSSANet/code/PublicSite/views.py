@@ -240,9 +240,14 @@ def BlogContents(request, blogId):
     users= BlogModels.BlogWrittenBy.objects.filter(blogId=blogSingle)
     ViewBag["users"] = []
     for user in users:
+        userProfile = None
+        try:
+            userProfile = UserModels.UserProfile.objects.filter(user=user.userId)[0]
+        except:
+            pass
         ViewBag["users"].append({
             "user": user.userId,
-            "userProfile": UserModels.UserProfile.objects.filter(user=user.userId)[0]
+            "userProfile": userProfile
         })
 
     curBlogTags = BlogModels.BlogInTag.objects.filter(blogId=blogSingle)
@@ -294,9 +299,14 @@ class reviewBlogPublic(LoginRequiredMixin, PermissionRequiredMixin, View):
         users= BlogModels.BlogWrittenBy.objects.filter(blogId=blogSingle)
         ViewBag["users"] = []
         for user in users:
+            userProfile = None
+            try:
+                userProfile = UserModels.UserProfile.objects.filter(user=user.userId)[0]
+            except:
+                pass
             ViewBag["users"].append({
                 "user": user.userId,
-                "userProfile": UserModels.UserProfile.objects.filter(user=user.userId)[0]
+                "userProfile": userProfile
             })
 
         curBlogTags = BlogModels.BlogInTag.objects.filter(blogId=blogSingle)
