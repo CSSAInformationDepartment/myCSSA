@@ -26,7 +26,7 @@ import base64
 import io
 import hashlib
 
-from urllib import parse
+import urllib.parse
 
 from django.core.files import File
 
@@ -142,6 +142,20 @@ class saveBlog (LoginRequiredMixin, PermissionRequiredMixin, View):
     permission_required = ("BlogAPI.add_blog", "BlogAPI.change_blog", "BlogAPI.delete_blog", 
     )
 
+    def decodeSuckString(self, suckString):
+        commaReplace = "(ffffhhhhccccc)"
+        andReplace = "(andandand)"
+
+        resultStr = suckString
+        resultStr = resultStr.replace(commaReplace, ";")
+        resultStr = resultStr.replace(andReplace, "&")
+        resultStr = resultStr.replace(" ", "+")
+        
+        return resultStr
+
+
+
+
     def storeToBlogOldContent(self, oldBlog):
         MAX_HIST = 5
         oldBlogs = BlogModels.BlogOldContent.objects.filter(blogId = oldBlog).order_by("writtenDate")
@@ -186,7 +200,10 @@ class saveBlog (LoginRequiredMixin, PermissionRequiredMixin, View):
             newBlogInTag.save()
 
     def getContent(self, blogMainContent):
-        dicContent = json.loads(blogMainContent.replace("(ffffhhhhccccc)", ";").replace(" ", "+"))
+        print(blogMainContent)
+        blogMainContent = urllib.parse.unquote(blogMainContent)
+        blogMainContent = self.decodeSuckString(blogMainContent)
+        dicContent = json.loads(blogMainContent)
         gotFirstPic = False
         picExt = ""
         
@@ -284,6 +301,7 @@ class saveBlog (LoginRequiredMixin, PermissionRequiredMixin, View):
                 
                 blog = BlogModels.Blog.objects.get(blogId=blogId)
                 self.storeToBlogOldContent(blog)
+                print(request.POST["blogTitle"][:100].replace("(ffffhhhhccccc)", ";"))
                 contented = self.getContent(request.POST["blogMainContent"])
                 blogMainContent = contented[0]
                 blogOpen = request.POST["openOrNot"]
@@ -298,7 +316,7 @@ class saveBlog (LoginRequiredMixin, PermissionRequiredMixin, View):
                     })
                 blog = BlogModels.Blog(
                     blogId=blogId,
-                    blogTitle=request.POST["blogTitle"][:100],
+                    blogTitle=self.decodeSuckString(urllib.parse.unquote(request.POST["blogTitle"][:100])),
                     createDate=blog.createDate,
                     lastModifiedDate=datetime.datetime.now(),
                     blogReviewed = 0,
@@ -310,7 +328,7 @@ class saveBlog (LoginRequiredMixin, PermissionRequiredMixin, View):
                 blog.save()
                 print(contented[1])
 
-                blogTags = json.loads(request.POST["tag"].replace("(ffffhhhhccccc)", ";"))
+                blogTags = json.loads(self.decodeSuckString(request.POST["tag"]))
                 self.addTagsToBlog(blog, blogTags)
                 print(blogId)
 
@@ -332,7 +350,8 @@ class saveBlog (LoginRequiredMixin, PermissionRequiredMixin, View):
         else:
             if userAuthed:
 
-                print(request.POST["blogMainContent"])
+                # print(request.POST["blogMainContent"])
+                print(request.POST["blogTitle"][:100].replace("(ffffhhhhccccc)", ";"))
                 contented = self.getContent(request.POST["blogMainContent"])
                 blogMainContent = contented[0]
                 blogOpen = request.POST["openOrNot"]
@@ -347,7 +366,7 @@ class saveBlog (LoginRequiredMixin, PermissionRequiredMixin, View):
                     })
                 print(type(blogOpen) == bool)
                 blog = BlogModels.Blog(
-                    blogTitle=request.POST["blogTitle"][:100],
+                    blogTitle=self.decodeSuckString(urllib.parse.unquote(request.POST["blogTitle"][:100])),
                     lastModifiedDate=datetime.datetime.now(),
                     createDate=datetime.datetime.now(),
                     blogReviewed = 0,
@@ -365,7 +384,7 @@ class saveBlog (LoginRequiredMixin, PermissionRequiredMixin, View):
                 )
                 blogWrittenBy.save()
 
-                blogTags = json.loads(request.POST["tag"].replace("(ffffhhhhccccc)", ";"))
+                blogTags = json.loads(self.decodeSuckString(request.POST["tag"]))
                 self.addTagsToBlog(blog, blogTags)
 
                 return JsonResponse({
