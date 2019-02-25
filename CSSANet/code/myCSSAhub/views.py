@@ -687,8 +687,10 @@ def CheckStudentIdIntegrity(request):
     return JsonResponse(data)
 
 
-class UserLookup(LoginRequiredMixin, View):
+class UserLookup(LoginRequiredMixin, PermissionRequiredMixin ,View):
     login_url = '/hub/login/'
+    permission_required = ()
+
 
     def get(self, request, *args, **kwargs):
         return JsonResponse({
@@ -699,13 +701,12 @@ class UserLookup(LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs):
         if request.user.is_authenticated:
             search = request.POST.get('search', "")
-            print(search)
             db_lookup = UserModels.UserProfile.objects.filter(
                 Q(firstNameEN__istartswith=search) | Q(lastNameEN__istartswith=search) |
                 Q(firstNameCN__istartswith=search) | Q(lastNameCN__istartswith=search) |
                 Q(studentId__istartswith=search) |
                 Q(user__email__istartswith=search) |
-                Q(user__telNumber__istartswith=search)
+                Q(user__telNumber__icontains=search)
             )
             if db_lookup:
                 result_set = []
