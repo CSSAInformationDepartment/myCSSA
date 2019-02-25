@@ -31,7 +31,7 @@ urlpatterns = [
     path('merchant_profile/<str:id>/', Views.Merchant_profile.as_view(), name="merchant_profile"),
     path('inbox/', Views.Inbox.as_view(), name="email_inbox"),
     path('email_message/', Views.Email_Message.as_view(), name="email_message"),
-    path('email_compose/', Views.Email_Compose.as_view(), name="email_compose")
+    path('calendar/', Views.Calendar.as_view(), name="calendar"),
 ]
 
 ## Admin system app directory
