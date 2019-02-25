@@ -221,6 +221,19 @@ class Email_Message(LoginRequiredMixin, View):
         
         return render(request, self.template_name)
 
+class Email_Compose(LoginRequiredMixin, View):
+    login_url = '/hub/login/'
+    template_name = 'myCSSAhub/email_compose.html'
+
+    def get(self, request):
+           
+        return render(request, self.template_name, locals())
+    
+    def post(self, request):
+        
+        return render(request, self.template_name)
+
+
 
 ################################# merchants ########################################
 

@@ -30,7 +30,8 @@ urlpatterns = [
     path('merchant_add/', Views.Merchant_add.as_view(), name="merchants_add"),
     path('merchant_profile/<str:id>/', Views.Merchant_profile.as_view(), name="merchant_profile"),
     path('inbox/', Views.Inbox.as_view(), name="email_inbox"),
-    path('email_message/', Views.Email_Message.as_view(), name="email_message")
+    path('email_message/', Views.Email_Message.as_view(), name="email_message"),
+    path('email_compose/', Views.Email_Compose.as_view(), name="email_compose")
 ]
 
 ## Admin system app directory
