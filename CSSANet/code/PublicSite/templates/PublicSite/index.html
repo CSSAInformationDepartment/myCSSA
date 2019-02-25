@@ -34,7 +34,7 @@
 						{% for event in eventsFuture|slice:":4" %}
 
         <div class="col-md-3 portfolio-item ">
-          <a class="portfolio-link" data-toggle="modal" href="#model{{loop.index}}">
+          <a class="portfolio-link" data-toggle="modal" href="#model{{event.eventID}}">
             <div class="portfolio-hover">
               <div class="portfolio-hover-content">
                 <i class="fa fa-plus fa-3x"></i>
@@ -69,7 +69,7 @@
 								<div class="row justify-content-center">
 									{% for event in eventsPast|slice:":4" %}
 							<div class="col-md-3 portfolio-item">
-								<a class="portfolio-link" data-toggle="modal" href="#model2{{loop.index}}">
+								<a class="portfolio-link" data-toggle="modal" href="#model2{{event.eventID}}">
 									<div class="portfolio-hover">
 										<div class="portfolio-hover-content">
 											<i class="fa fa-plus fa-3x"></i>
@@ -146,7 +146,7 @@
 
  <!-- Portfolio Modals -->
  {% for event in eventsFuture|slice:":4" %}
-					 <div class="portfolio-modal modal fade" id="model{{loop.index}}" tabindex="-1" role="dialog" aria-hidden="true">
+					 <div class="portfolio-modal modal fade" id="model{{event.eventID}}" tabindex="-1" role="dialog" aria-hidden="true">
 					     <div class="modal-dialog">
 					       <div class="modal-content">
 					         <div class="close-modal" data-dismiss="modal">
@@ -160,18 +160,18 @@
 					               <div class="modal-body">
 					                 <!-- Project Details Go Here -->
 					                 <h2 class="text-uppercase">{{event.eventName}}</h2>
-					                 <p class="item-intro text-muted">{{event.eventBy}}</p>
+					                 <p class="item-intro text-muted">活动主办方: {{event.eventBy}}</p>
 					                 <img class="img-fluid d-block mx-auto" src="{{event.mainVisual.url}}" style="max-height:300px">
 													 <p>{{event.eventInfo}}</p>
 					                 <ul class="list-inline">
 					                   <li>地址: {{event.address}}</li>
 					                   <li>时间: {{event.eventActualStTime}}</li>
 														 <li>报名开始时间: {{event.eventStartTime}}</li>
-
 					                 </ul>
+													 <p><a href="{% url 'PublicSite:eventsDetails' event.eventID %}"><u>查看详情以及报名</u></a></p>
 					                 <button class="btn btn-primary" data-dismiss="modal" type="button">
 					                   <i class="fa fa-times"></i>
-					                   Close Project</button>
+					                   Close</button>
 					               </div>
 					             </div>
 					           </div>
@@ -184,7 +184,7 @@
 
 <!-- Portfolio Modals -->
 {% for event in eventsPast|slice:":4" %}
-					<div class="portfolio-modal modal fade" id="model2{{loop.index}}" tabindex="-1" role="dialog" aria-hidden="true">
+					<div class="portfolio-modal modal fade" id="model2{{event.eventID}}" tabindex="-1" role="dialog" aria-hidden="true">
 							<div class="modal-dialog">
 								<div class="modal-content">
 									<div class="close-modal" data-dismiss="modal">
@@ -207,6 +207,7 @@
 														<li>报名开始时间: {{event.eventStartTime}}</li>
 
 													</ul>
+													 <p><a href="{% url 'PublicSite:eventsDetails' event.eventID %}"><u>查看详情</u></a></p>
 													<button class="btn btn-primary" data-dismiss="modal" type="button">
 														<i class="fa fa-times"></i>
 														Close Project</button>
