@@ -56,6 +56,10 @@
 						<a href="#" class="btn btn-block btn-mustard mt-3">CSSA会员专享</a>
 						{% elif events.eventSignUpTime >  now_time %}
 						<a href="#" class="btn btn-block btn-light-gray mt-3">报名尚未开始</a>
+            {% elif events.eventSignUpTime <  now_time and events.eventActualStTime > now_time %}
+						<a href="#" class="btn btn-block btn-light-gray mt-3">报名已截止</a>
+            {% elif events.eventActualStTime < now_time %}
+            <a href="#" class="btn btn-block btn-light-gray mt-3">活动已截止</a>
 						{% else %}
 						<a href="{% url 'myCSSAhub:EventAPI:confirm_order' events.eventID %}" class="btn btn-block btn-blue-gray mt-3">报名<br></a>
 						{% endif %}
