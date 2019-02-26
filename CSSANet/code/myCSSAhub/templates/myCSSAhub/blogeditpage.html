@@ -257,9 +257,7 @@
             let csrf = $('input[name="csrfmiddlewaretoken"]').val();
             let pa = "blogId=" + blogId;
             pa = pa + "&blogTitle=" + encodeURI(blogTitle);
-            alert(encodeURI(blogTitle));
             pa = pa + "&blogMainContent=" + encodeURI(blogMainContent);
-            alert(encodeURI(blogMainContent));
             pa = pa + "&openOrNot=" + openOrNot;
             pa = pa + "&csrfmiddlewaretoken=" + csrf;
             pa = pa + "&tag=" + blogTags;
