@@ -36,7 +36,6 @@ def issue_token_for_ticket(ticket):
     Issue token for a ticket, which also make the ticket able to use
     '''
 
-    print(ticket)
     _token = None
     
     while not _token:

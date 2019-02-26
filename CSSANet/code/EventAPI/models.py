@@ -114,6 +114,14 @@ class Event (models.Model):
     def get_absolute_url(self):
         return reverse("myCSSAhub:EventAPI:update_event", args=[str(self.eventID)])
 
+    def get_estimate_remaining_factor(self):
+        if self.hasMaxAttendent:
+            current_attendent = AttendEvent.objects.filter(attendedEventId = self).count()
+            return (current_attendent/self.maxAttendent)
+        else:
+            return 0
+
+
 
 # UserProfile 参加 Event 的多对多 association entity
 class AttendEvent(models.Model):

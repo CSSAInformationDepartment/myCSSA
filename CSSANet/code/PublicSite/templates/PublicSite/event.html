@@ -143,6 +143,10 @@
 						<a href="{% url 'PublicSite:eventsDetails' event.eventID %}" class="btn btn-block btn-light-gray mt-3">报名将于 {{events.eventSignUpTime}} 开始</a>
 						{% elif events.eventActualStTime < now_time %}
 						<a href="{% url 'PublicSite:eventsDetails' event.eventID %}" class="btn btn-block btn-light-gray mt-3">活动已结束</a>
+						{% elif events.get_estimate_remaining_factor > 0.6 %}
+            			<a href="{% url 'PublicSite:eventsDetails' events.eventID %}" class="btn btn-block btn-warning mt-3">余位有限</a>
+						{% elif events.get_estimate_remaining_factor >= 1 %}
+						<a href="#" class="btn btn-block btn-danger mt-3" disabled="disabled">名额已满</a>
 						{% else %}
 						<a href="{% url 'PublicSite:eventsDetails' event.eventID %}" class="btn btn-block btn-blue-gray mt-3">查看详情<br></a>
 						{% endif %}						
