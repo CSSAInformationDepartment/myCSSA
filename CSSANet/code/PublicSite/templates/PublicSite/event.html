@@ -132,8 +132,8 @@
 					</div>
 					<div class="card-body" >
 						<h5 class="card-title" style="min-height:50px">{{event.eventName}}</h5>
-						<p class="card-text" style="min-height:50px;max-height:80px; overflow:auto;">
-							{{event.eventInfo}}
+						<p class="card-text overflow-auto" style="min-height:50px; max-height:80px;">
+							{{ event.eventInfo }}
 						</p>
 						{% if event.isMemberOnly %}
 						<a href="{% url 'PublicSite:eventsDetails' event.eventID %}" class="btn btn-block btn-mustard mt-3">CSSA会员专享</a>
@@ -147,7 +147,7 @@
 						<a href="#" class="btn btn-block btn-danger mt-3" disabled="disabled">名额已满</a>
 						{% else %}
 						<a href="{% url 'PublicSite:eventsDetails' event.eventID %}" class="btn btn-block btn-blue-gray mt-3">查看详情<br></a>
-						{% endif %}						
+						{% endif %}
 					</div>
 				</div>
 			</div>
@@ -163,38 +163,6 @@
 		</div>
 	</div>
 </div>
-
-<!-- <div class="mt-3 col-lg-3 align-self-center col-md-6 mt-lg-0">
-<div class="card">
-<img src="img/lazyload-ph.png" data-src="img/placeholder-image.png" class="img-fluid mx-auto d-block lazyload" />
-<div class="card-body">
-<p>
-Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor.&nbsp;
-</p><a href="index.html" class="btn btn-block btn-amaranth">余位有限</a>
-</div>
-</div>
-</div>
-<div class="mt-3 col-lg-3 align-self-center col-md-6 mt-lg-0">
-<div class="card">
-<img src="img/lazyload-ph.png" data-src="img/placeholder-image.png" class="img-fluid mx-auto d-block lazyload" />
-<div class="card-body">
-<p>
-Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor.&nbsp;
-</p><a href="index.html" class="btn btn-block btn-mustard">CSSA会员专享</a>
-</div>
-</div>
-</div>
-<div class="mt-3 col-lg-3 align-self-center col-md-6 mt-lg-0">
-<div class="card">
-<img src="img/lazyload-ph.png" data-src="img/placeholder-image.png" class="img-fluid mx-auto d-block lazyload" />
-<div class="card-body">
-<p>
-Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor.&nbsp;
-</p><a href="index.html" class="btn btn-block btn-light-gray">报名尚未开始</a>
-</div>
-</div>
-</div> -->
-
 
 <!-- bloc-14 END -->
 
@@ -230,71 +198,6 @@ Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula 
 				目前没有过往活动，敬请期待
 			</h4>
 			{% endfor %}
-			<!--	<div class="col-lg-3 col-md-6 mt-1 mt-md-0">
-			<a href="#" data-lightbox="img/placeholder-image.png" data-gallery-id="gallery-1"><img src="img/lazyload-ph.png" data-src="img/placeholder-image.png" class="img-fluid mx-auto d-block lazyload" /></a>
-			<h4 class="mg-md">
-			Title here
-		</h4>
-		<p>
-		Lorem ipsum dolor sit amet, elit Aenean commodo ligula eget.
-	</p>
-</div>
-<div class="col-lg-3 col-md-6 mt-1 mt-md-4 mt-lg-0">
-<a href="#" data-lightbox="img/placeholder-image.png" data-gallery-id="gallery-1"><img src="img/lazyload-ph.png" data-src="img/placeholder-image.png" class="img-fluid mx-auto d-block lazyload" /></a>
-<h4 class="mg-md">
-Title here
-</h4>
-<p>
-Lorem ipsum dolor sit amet, elit Aenean commodo ligula eget.
-</p>
-</div>
-<div class="col-lg-3 col-md-6 mt-1 mt-md-4 mt-lg-0">
-<a href="#" data-lightbox="img/placeholder-image.png" data-gallery-id="gallery-1"><img src="img/lazyload-ph.png" data-src="img/placeholder-image.png" class="img-fluid mx-auto d-block lazyload" /></a>
-<h4 class="mg-md">
-Title here
-</h4>
-<p>
-Lorem ipsum dolor sit amet, elit Aenean commodo ligula eget.
-</p>
-</div>
-</div>
-<div class="row voffset">
-<div class="col-lg-3 col-md-6">
-<a href="#" data-lightbox="img/placeholder-image.png" data-gallery-id="gallery-1"><img src="img/lazyload-ph.png" data-src="img/placeholder-image.png" class="img-fluid mx-auto d-block lazyload" /></a>
-<h4 class="mg-md">
-Title here
-</h4>
-<p>
-Lorem ipsum dolor sit amet, elit Aenean commodo ligula eget.
-</p>
-</div>
-<div class="col-lg-3 col-md-6 mt-1 mt-md-0">
-<a href="#" data-lightbox="img/placeholder-image.png" data-gallery-id="gallery-1"><img src="img/lazyload-ph.png" data-src="img/placeholder-image.png" class="img-fluid mx-auto d-block lazyload" /></a>
-<h4 class="mg-md">
-Title here
-</h4>
-<p>
-Lorem ipsum dolor sit amet, elit Aenean commodo ligula eget.
-</p>
-</div>
-<div class="col-lg-3 col-md-6 mt-1 mt-md-4 mt-lg-0">
-<a href="#" data-lightbox="img/placeholder-image.png" data-gallery-id="gallery-1"><img src="img/lazyload-ph.png" data-src="img/placeholder-image.png" class="img-fluid mx-auto d-block lazyload" /></a>
-<h4 class="mg-md">
-Title here
-</h4>
-<p>
-Lorem ipsum dolor sit amet, elit Aenean commodo ligula eget.
-</p>
-</div>
-<div class="col-lg-3 col-md-6 mt-1 mt-md-4 mt-lg-0">
-<a href="#" data-lightbox="img/placeholder-image.png" data-gallery-id="gallery-1"><img src="img/lazyload-ph.png" data-src="img/placeholder-image.png" class="img-fluid mx-auto d-block lazyload" /></a>
-<h4 class="mg-md">
-Title here
-</h4>
-<p>
-Lorem ipsum dolor sit amet, elit Aenean commodo ligula eget.
-</p>
-</div> -->
 </div>
 </div>
 </div>
