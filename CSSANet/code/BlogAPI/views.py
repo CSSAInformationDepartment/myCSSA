@@ -34,32 +34,31 @@ import datetime
 
 # Create your views here.
 
+# View for blog edit page
 class editBlog (LoginRequiredMixin, PermissionRequiredMixin, View):
     login_url = "/hub/login/"
     permission_required = ("BlogAPI.add_blog", "BlogAPI.change_blog", "BlogAPI.delete_blog", 
     )
 
     def get(self, request, *args, **kwargs):
-    # 需要判断contentId
-    # avatar没有的时候会报错
 
         NEW_BLOG = -1
 
         CR_BLOG = "创建Blog"
         CH_BLOG = "更改Blog"
+
+        # check if blogId exists, and check if the blogId we got is a valid number
         blogId = request.GET["blogId"]
         try:
             blogId = int(blogId)
         except:
             return bad_request(request)
 
-        print(blogId)
         ViewBag = {}
 
         userAuthed = request.user.is_authenticated
 
-
-        print(request.user.email)
+        # if user hasnt logged in
         if not userAuthed:
             return bad_request(request)
 

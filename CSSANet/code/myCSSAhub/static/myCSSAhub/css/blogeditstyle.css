@@ -12,8 +12,9 @@
 
 #blogEdit, #blogEditAnother{
     min-height: 300px;
-    height: auto;
+    max-height: 500px;
     margin-bottom: 10px;
+    overflow: scroll;
 
 }
 
