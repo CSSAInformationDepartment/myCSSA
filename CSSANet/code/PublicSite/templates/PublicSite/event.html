@@ -138,7 +138,7 @@
 						{% if event.isMemberOnly %}
 						<a href="{% url 'PublicSite:eventsDetails' event.eventID %}" class="btn btn-block btn-mustard mt-3">CSSA会员专享</a>
 						{% elif event.eventSignUpTime >  now_time %}
-						<a href="{% url 'PublicSite:eventsDetails' event.eventID %}" class="btn btn-block btn-light-gray mt-3">报名将于 {{events.eventSignUpTime}} 开始</a>
+						<a href="{% url 'PublicSite:eventsDetails' event.eventID %}" class="btn btn-block btn-light-gray mt-3">报名将于 {{ event.eventSignUpTime|date:"SHORT_DATE_FORMAT" }} 开始</a>
 						{% elif event.eventActualStTime < now_time %}
 						<a href="{% url 'PublicSite:eventsDetails' event.eventID %}" class="btn btn-block btn-light-gray mt-3">活动已结束</a>
 						{% elif event.get_estimate_remaining_factor > 0.6 %}
