@@ -28,7 +28,7 @@ SITE_ID = 1
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = True
-DEBUG = False
+DEBUG = True
 if DEBUG == False:
     SECRET_KEY = env_dist.get('DJANGOKEYPD')
     ALLOWED_HOSTS = ['cssanet','localhost','cssaunimelb.com','192.168.0.2', '0.0.0.0']

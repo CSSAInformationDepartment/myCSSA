@@ -19,7 +19,7 @@ class AddEventForm(forms.ModelForm):
             'DisplayArticleType': _("选择活动介绍所要显示的文章来源"),
             'relatedArticles': _("若文章来源选择为Blog，则此项必填"),
             'WechatArticleUrl': _("若文章来源选择为WeChat，则此项必填"),
-            'WechatQRcode': _("若文章来源选择为WeChat，则此项必填"),
+            'WechatQRcode': _("若文章来源选择为WeChat，则必须提供文章对应的微信公众号"),
 
 
         }

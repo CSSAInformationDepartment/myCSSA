@@ -27,6 +27,8 @@ from UserAuthAPI import models as adminModel
 from BlogAPI import models as BlogModel
 from FlexForm import models as FlexFormModel
 
+#from .apis import check_availability
+
 # Create your models here.
 # 此为myCSSA活动管理模型
 
@@ -112,6 +114,7 @@ class Event (models.Model):
     def get_absolute_url(self):
         return reverse("myCSSAhub:EventAPI:update_event", args=[str(self.eventID)])
 
+
 # UserProfile 参加 Event 的多对多 association entity
 class AttendEvent(models.Model):
     attendedId = models.UUIDField(primary_key = True, default = uuid.uuid4, editable = False)
@@ -121,7 +124,7 @@ class AttendEvent(models.Model):
 
     # 票据状态
     paid = models.BooleanField(default=False)
-    token = models.TextField(default=None,blank=True)
+    token = models.TextField(default=None,blank=True,null=True)
     token_used = models.BooleanField(default=False)
 
     # 附言
