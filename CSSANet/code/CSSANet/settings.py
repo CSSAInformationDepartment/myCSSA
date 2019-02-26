@@ -19,8 +19,6 @@ BASE_DIR = os.path.dirname(PROJECT_DIR)
 
 SITE_ID = 1
 
-#Comment out the TIME_ZONE Setting if you running the project on Windows
-TIME_ZONE = 'Australia/Melbourne'
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
@@ -29,10 +27,11 @@ TIME_ZONE = 'Australia/Melbourne'
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
+# DEBUG = True
 DEBUG = True
 if DEBUG == False:
     SECRET_KEY = env_dist.get('DJANGOKEYPD')
-    ALLOWED_HOSTS = ['cssanet','localhost','cssaunimelb.com','192.168.0.2']
+    ALLOWED_HOSTS = ['cssanet','localhost','cssaunimelb.com','192.168.0.2', '0.0.0.0']
     CSRF_COOKIE_SECURE = True
 #   SESSION_COOKIE_SECURE = True ## <- Activate in HTTPS envrioment only
     SECURE_CONTENT_TYPE_NOSNIFF = True
@@ -88,8 +87,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django.middleware.cache.UpdateCacheMiddleware',
-    'django.middleware.cache.FetchFromCacheMiddleware',
+#    'django.middleware.cache.UpdateCacheMiddleware',
+#    'django.middleware.cache.FetchFromCacheMiddleware', # Disable cache temporarily to test the DB I/O
 ]
 
 ROOT_URLCONF = 'CSSANet.urls'
@@ -174,22 +173,22 @@ DATABASES = {
     }
 }
 
-CACHES = {
- 'default': {
-  'BACKEND': 'django.core.cache.backends.dummy.DummyCache',  # 缓存后台使用的引擎
-  'TIMEOUT': 0,            # 缓存超时时间（默认300秒，None表示永不过期，0表示立即过期）
-  'OPTIONS':{
-   'MAX_ENTRIES': 300,          # 最大缓存记录的数量（默认300）
-   'CULL_FREQUENCY': 3,          # 缓存到达最大个数之后，剔除缓存个数的比例，即：1/CULL_FREQUENCY（默认3）
-  },
- }
-}
+# CACHES = {
+#  'default': {
+#   'BACKEND': 'django.core.cache.backends.dummy.DummyCache',  # 缓存后台使用的引擎
+#   'TIMEOUT': 0,            # 缓存超时时间（默认300秒，None表示永不过期，0表示立即过期）
+#   'OPTIONS':{
+#    'MAX_ENTRIES': 300,          # 最大缓存记录的数量（默认300）
+#    'CULL_FREQUENCY': 3,          # 缓存到达最大个数之后，剔除缓存个数的比例，即：1/CULL_FREQUENCY（默认3）
+#   },
+#  }
+# }
 
-# Cache time to live is 1 minutes.
-CACHE_TTL = 1 * 1
-# Cahce ENV Setup
-#SESSION_ENGINE = "django.contrib.sessions.backends.cache"
-#SESSION_CACHE_ALIAS = "default"
+# # Cache time to live is 1 minutes.
+# CACHE_TTL = 1 * 1
+# # Cahce ENV Setup
+# #SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+# #SESSION_CACHE_ALIAS = "default"
 
 
 # Password validation

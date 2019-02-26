@@ -127,6 +127,7 @@ class EventsListView(View):
     events=eventModels.Event.objects.all().order_by("eventStartTime")
     eventsFuture=eventModels.Event.objects.filter(eventActualStTime__gt=now_time).order_by("eventActualStTime")
     eventsPast=eventModels.Event.objects.filter(eventActualStTime__lt=now_time).order_by("eventActualStTime")
+    
     def get(self, request, *args, **kwargs):
         return render(request, self.template_name, {'eventsFuture':self.eventsFuture, 'now_time':self.now_time,'events':self.events, 'eventsPast':self.eventsPast})
 
@@ -134,8 +135,7 @@ class EventsListView(View):
 def EventDetails(request, eventID):
     event=get_object_or_404(eventModels.Event, pk=eventID)
     now_time = timezone.now()
-    print(now_time)
-    print(event.eventSignUpTime)
+
     return render(request,'PublicSite/eventDetails.html',{'events':event, 'now_time':now_time})
 
 
@@ -240,9 +240,14 @@ def BlogContents(request, blogId):
     users= BlogModels.BlogWrittenBy.objects.filter(blogId=blogSingle)
     ViewBag["users"] = []
     for user in users:
+        userProfile = None
+        try:
+            userProfile = UserModels.UserProfile.objects.filter(user=user.userId)[0]
+        except:
+            pass
         ViewBag["users"].append({
             "user": user.userId,
-            "userProfile": UserModels.UserProfile.objects.filter(user=user.userId)[0]
+            "userProfile": userProfile
         })
 
     curBlogTags = BlogModels.BlogInTag.objects.filter(blogId=blogSingle)
@@ -294,9 +299,14 @@ class reviewBlogPublic(LoginRequiredMixin, PermissionRequiredMixin, View):
         users= BlogModels.BlogWrittenBy.objects.filter(blogId=blogSingle)
         ViewBag["users"] = []
         for user in users:
+            userProfile = None
+            try:
+                userProfile = UserModels.UserProfile.objects.filter(user=user.userId)[0]
+            except:
+                pass
             ViewBag["users"].append({
                 "user": user.userId,
-                "userProfile": UserModels.UserProfile.objects.filter(user=user.userId)[0]
+                "userProfile": userProfile
             })
 
         curBlogTags = BlogModels.BlogInTag.objects.filter(blogId=blogSingle)

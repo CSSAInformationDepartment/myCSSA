@@ -21,7 +21,7 @@ from CSSANet.settings import TIME_ZONE
 
 from myCSSAhub.send_email import send_emails
 from FlexForm.apis import flexform_user_write_in
-from EventAPI.apis import get_ticket
+from EventAPI.apis import get_ticket,check_availability
 from django.utils import timezone
 
 
@@ -100,14 +100,17 @@ class ConfirmEventOrderView(LoginRequiredMixin,View):
     def post(self, request, *args, **kwargs):
         event_id = self.kwargs.get('id')
         fields = self.get_info_collection_form_field()
-        field_data = {}
-        for field in fields:
-            # print(field.id)
-            # print(request.POST.get(str(field.id)))
-            field_data[field.id]=request.POST.get(str(field.id))
-        if flexform_user_write_in(request.user, field_data):
-            get_ticket(request.user, event_id)
+        
+        if fields:
+            field_data = {}
+            for field in fields:
+                field_data[field.id]=request.POST.get(str(field.id))
+            flexform_user_write_in(request.user, field_data)
+       
+        if get_ticket(request.user, event_id):
             return HttpResponseRedirect(reverse('myCSSAhub:EventAPI:user_ticket_list'))
+        else:
+            raise Http404("Ticket cannot be issued. Please contact the event manager")
         
         return render(request, self.template_name, self.get_context_data()) 
 
@@ -116,7 +119,7 @@ class UserTicketListView(LoginRequiredMixin, View):
     template_name = 'EventAPI/user_ticket_list.html'
 
     def get(self, request, *args, **kwargs):
-        tickets = AttendEvent.objects.all().order_by("-attendedEventId__eventActualStTime")
+        tickets = AttendEvent.objects.filter(attendedUserId=request.user).order_by("-attendedEventId__eventActualStTime")
         return render(request, self.template_name, {'tickets':tickets})
 
 class EventListJsonView(LoginRequiredMixin, PermissionRequiredMixin, BaseDatatableView):

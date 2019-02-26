@@ -27,6 +27,8 @@ from UserAuthAPI import models as adminModel
 from BlogAPI import models as BlogModel
 from FlexForm import models as FlexFormModel
 
+#from .apis import check_availability
+
 # Create your models here.
 # 此为myCSSA活动管理模型
 
@@ -66,6 +68,9 @@ class EventType(models.Model):
 
 # Event本身
 class Event (models.Model):
+    '''
+    Event Data Model
+    '''
     eventID = models.UUIDField(primary_key = True, default = uuid.uuid4, editable = False)
     eventName = models.CharField(verbose_name=_("活动名称"), max_length = 50, unique=True)
     eventInfo = models.CharField(verbose_name=_("活动简介"), max_length = 600)
@@ -112,8 +117,20 @@ class Event (models.Model):
     def get_absolute_url(self):
         return reverse("myCSSAhub:EventAPI:update_event", args=[str(self.eventID)])
 
+    def get_estimate_remaining_factor(self):
+        if self.hasMaxAttendent:
+            current_attendent = AttendEvent.objects.filter(attendedEventId = self).count()
+            return (current_attendent/self.maxAttendent)
+        else:
+            return 0
+
+
+
 # UserProfile 参加 Event 的多对多 association entity
 class AttendEvent(models.Model):
+    '''
+    Recording Event attendance information and ticket data
+    '''
     attendedId = models.UUIDField(primary_key = True, default = uuid.uuid4, editable = False)
 
     attendedEventId = models.ForeignKey(Event, on_delete = models.CASCADE)
@@ -121,7 +138,7 @@ class AttendEvent(models.Model):
 
     # 票据状态
     paid = models.BooleanField(default=False)
-    token = models.TextField(default=None,blank=True)
+    token = models.TextField(default=None,blank=True,null=True)
     token_used = models.BooleanField(default=False)
 
     # 附言
@@ -130,6 +147,9 @@ class AttendEvent(models.Model):
     disabled = models.BooleanField(default=False)
 
 class EventAttendentInfoForm(models.Model):
+    '''
+    Relational binding betweeen Event Model and 
+    '''
     id = models.AutoField(primary_key=True, editable=False)
     event = models.ForeignKey(Event, on_delete=models.CASCADE, verbose_name=_("绑定新活动"))
     form = models.ForeignKey(FlexFormModel.FlexForm, on_delete=models.CASCADE)

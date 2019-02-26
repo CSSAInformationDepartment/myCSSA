@@ -66,19 +66,17 @@
 			<div class="col">
 				<div id="event-highlight-caro" class="carousel slide" data-ride="carousel">
 					<ol class="carousel-indicators">
-
 						{% for event in events|slice:":|5" %}
-						{% if forloop.first %}
-						<li data-target="#event-highlight-caro" data-slide-to="{{forloop.counter0}}" class="active">
-						</li>
-						{% else %}
-						<li data-target="#event-highlight-caro" data-slide-to="{{forloop.counter0}}">
-						</li>
-						{% endif %}
+							{% if forloop.first %}
+								<li data-target="#event-highlight-caro" data-slide-to="{{forloop.counter0}}" class="active">
+								</li>
+							{% else %}
+								<li data-target="#event-highlight-caro" data-slide-to="{{forloop.counter0}}">
+								</li>
+							{% endif %}
 						{% endfor %}
 
 					</ol>
-
 					<div class="carousel-inner" style=" width:100%; height: 420px ;">
 						{% for event in events|slice:":|5" %}
 						{% if forloop.first %}
@@ -140,10 +138,16 @@
 						{% if event.isMemberOnly %}
 						<a href="{% url 'PublicSite:eventsDetails' event.eventID %}" class="btn btn-block btn-mustard mt-3">CSSA会员专享</a>
 						{% elif event.eventSignUpTime >  now_time %}
-						<a href="{% url 'PublicSite:eventsDetails' event.eventID %}" class="btn btn-block btn-light-gray mt-3">报名尚未开始</a>
+						<a href="{% url 'PublicSite:eventsDetails' event.eventID %}" class="btn btn-block btn-light-gray mt-3">报名将于 {{events.eventSignUpTime}} 开始</a>
+						{% elif event.eventActualStTime < now_time %}
+						<a href="{% url 'PublicSite:eventsDetails' event.eventID %}" class="btn btn-block btn-light-gray mt-3">活动已结束</a>
+						{% elif event.get_estimate_remaining_factor > 0.6 %}
+            			<a href="{% url 'PublicSite:eventsDetails' event.eventID %}" class="btn btn-block btn-warning mt-3">余位有限</a>
+						{% elif event.get_estimate_remaining_factor >= 1 %}
+						<a href="#" class="btn btn-block btn-danger mt-3" disabled="disabled">名额已满</a>
 						{% else %}
-						<a href="{% url 'PublicSite:eventsDetails' event.eventID %}" class="btn btn-block btn-blue-gray mt-3">报名<br></a>
-						{% endif %}
+						<a href="{% url 'PublicSite:eventsDetails' event.eventID %}" class="btn btn-block btn-blue-gray mt-3">查看详情<br></a>
+						{% endif %}						
 					</div>
 				</div>
 			</div>

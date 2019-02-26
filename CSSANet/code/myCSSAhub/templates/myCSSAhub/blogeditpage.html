@@ -13,6 +13,12 @@
 <link href="{% static 'myCSSAhub/css/blogeditstyle.css' %}" rel="stylesheet" />
 <link href="{% static 'PublicSite/css/blogstyle.css' %}" rel="stylesheet" />
 
+<!-- prohibit cache -->
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Cache-Control" content="no-store, must-revalidate">
+<meta http-equiv="Expires" content="Wed, 26 Feb 1997 08:21:57 GMT">
+<meta HTTP-EQUIV="expires" CONTENT="0">
+
 {% endblock ExtraHeader %}
 
 
@@ -115,6 +121,8 @@
                 {% endif %}
 
                 <h4>文章内容</h4>
+                <h5>注意！图片传进来之后最好重新调整大小</h5>
+                <h5>注意！link需要选中一部分文字之后点击添加！</h5>
                 <div id="blogEdit">
                 </div>
 
@@ -226,13 +234,32 @@
         }
         return true;
     }
+    
+    let dealWithSpecialChar = (suckStr) => {
+        
+        const commaReplace = "(ffffhhhhccccc)";
+        const andReplace = "(andandand)";
+        
+        let resultStr = suckStr;
+        resultStr = resultStr.replace(/;/g, commaReplace);
+        resultStr = resultStr.replace(/&/g, andReplace);
+        
+        return resultStr;
+    }
 
     let uploadClick = (blogId, blogMainContent, blogTitle, openOrNot, blogTags) => {
         if (checkPa(blogId, blogMainContent, blogTitle, openOrNot)){
+            
+            blogMainContent = dealWithSpecialChar(JSON.stringify(blogMainContent));
+            blogTitle = dealWithSpecialChar(blogTitle);
+            blogTags = dealWithSpecialChar(JSON.stringify(blogTags))
+            
             let csrf = $('input[name="csrfmiddlewaretoken"]').val();
             let pa = "blogId=" + blogId;
-            pa = pa + "&blogTitle=" + blogTitle;
-            pa = pa + "&blogMainContent=" + blogMainContent;
+            pa = pa + "&blogTitle=" + encodeURI(blogTitle);
+            alert(encodeURI(blogTitle));
+            pa = pa + "&blogMainContent=" + encodeURI(blogMainContent);
+            alert(encodeURI(blogMainContent));
             pa = pa + "&openOrNot=" + openOrNot;
             pa = pa + "&csrfmiddlewaretoken=" + csrf;
             pa = pa + "&tag=" + blogTags;
@@ -257,6 +284,7 @@
 
     }
 
+    // option of toolbar for quilljs
     let toolbarOpt = [
         [
             {size: [ 'small', "medium", 'large', 'huge' ]},
@@ -281,6 +309,7 @@
         ],
     ];
 
+    // overall option for quilljs
     let options = {
         modules: {
             toolbar: toolbarOpt,
@@ -291,6 +320,8 @@
         theme: "snow"
     };
 
+    
+    // delete
     let deleteBlog = () => {
         if(blogId != NEW){
             let confirmed = confirm("确认删除吗？");
@@ -321,20 +352,23 @@
     let editor = new Quill("#blogEdit", options);
     let editorAnother = new Quill("#blogEditAnother");
 
+    // cancelButton
     cancelButton.onclick = () => {
         let conf = confirm("所有更改不不会被保存，确定吗？")
         if (conf){
             window.location = "/hub/blog/writtenBlogs";
         }
     }
+    
+    
 
     displayButton.onclick = () => {
-        uploadClick(blogId, JSON.stringify(editor.getContents()).replace(/;/g, "(ffffhhhhccccc)"), title.value, false, JSON.stringify(blogTag).replace(/;/g, "(ffffhhhhccccc)"));
+        uploadClick(blogId, editor.getContents(), title.value, false, blogTag);
         window.location = "/hub/blog/writtenBlogs"
     };
 
     outButton.onclick = () => {
-        uploadClick(blogId, JSON.stringify(editor.getContents()).replace(/;/g, "(ffffhhhhccccc)"), title.value, true, JSON.stringify(blogTag).replace(/;/g, "(ffffhhhhccccc)"));
+        uploadClick(blogId, editor.getContents(), title.value, true, blogTag);
         window.location = "/hub/blog/writtenBlogs"
     }
 
