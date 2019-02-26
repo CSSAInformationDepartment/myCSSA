@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import F
 from django.db.models.signals import post_save
 from django.urls import reverse
 from UserAuthAPI.models import User
