@@ -66,19 +66,17 @@
 			<div class="col">
 				<div id="event-highlight-caro" class="carousel slide" data-ride="carousel">
 					<ol class="carousel-indicators">
-
 						{% for event in events|slice:":|5" %}
-						{% if forloop.first %}
-						<li data-target="#event-highlight-caro" data-slide-to="{{forloop.counter0}}" class="active">
-						</li>
-						{% else %}
-						<li data-target="#event-highlight-caro" data-slide-to="{{forloop.counter0}}">
-						</li>
-						{% endif %}
+							{% if forloop.first %}
+								<li data-target="#event-highlight-caro" data-slide-to="{{forloop.counter0}}" class="active">
+								</li>
+							{% else %}
+								<li data-target="#event-highlight-caro" data-slide-to="{{forloop.counter0}}">
+								</li>
+							{% endif %}
 						{% endfor %}
 
 					</ol>
-
 					<div class="carousel-inner" style=" width:100%; height: 420px ;">
 						{% for event in events|slice:":|5" %}
 						{% if forloop.first %}
