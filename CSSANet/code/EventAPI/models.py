@@ -68,6 +68,9 @@ class EventType(models.Model):
 
 # Event本身
 class Event (models.Model):
+    '''
+    Event Data Model
+    '''
     eventID = models.UUIDField(primary_key = True, default = uuid.uuid4, editable = False)
     eventName = models.CharField(verbose_name=_("活动名称"), max_length = 50, unique=True)
     eventInfo = models.CharField(verbose_name=_("活动简介"), max_length = 600)
@@ -125,6 +128,9 @@ class Event (models.Model):
 
 # UserProfile 参加 Event 的多对多 association entity
 class AttendEvent(models.Model):
+    '''
+    Recording Event attendance information and ticket data
+    '''
     attendedId = models.UUIDField(primary_key = True, default = uuid.uuid4, editable = False)
 
     attendedEventId = models.ForeignKey(Event, on_delete = models.CASCADE)
@@ -141,6 +147,9 @@ class AttendEvent(models.Model):
     disabled = models.BooleanField(default=False)
 
 class EventAttendentInfoForm(models.Model):
+    '''
+    Relational binding betweeen Event Model and 
+    '''
     id = models.AutoField(primary_key=True, editable=False)
     event = models.ForeignKey(Event, on_delete=models.CASCADE, verbose_name=_("绑定新活动"))
     form = models.ForeignKey(FlexFormModel.FlexForm, on_delete=models.CASCADE)
