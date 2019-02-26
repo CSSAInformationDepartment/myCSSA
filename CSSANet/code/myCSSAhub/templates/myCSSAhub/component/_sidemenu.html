@@ -133,18 +133,22 @@
                 <a class="nav-link nav-dropdown-toggle" href="#">
                   <i class="nav-icon icon-puzzle"></i>会员</a>
                   <ul class="nav-dropdown-items">
+                    {% if perms.UserAuthAPI.activate_membership  %}
+                    <li class="nav-item">
+                      <a class="nav-link" href="{% url 'myCSSAhub:OrganisationMgr:new_member' %}">
+                        <i class="nav-icon icon-puzzle"></i> 会员卡激活 </a>
+                    </li>
+                    {% endif %}
+                    {% if  user.is_superuser %}
                     <li class="nav-item">
                       <a class="nav-link" href="{% url 'myCSSAhub:under-dev' %}">
                         <i class="nav-icon icon-puzzle"></i> 会员信息查询 </a>
                     </li>
                     <li class="nav-item">
                       <a class="nav-link" href="{% url 'myCSSAhub:under-dev' %}">
-                        <i class="nav-icon icon-puzzle"></i> 会员卡激活 </a>
-                    </li>
-                    <li class="nav-item">
-                      <a class="nav-link" href="{% url 'myCSSAhub:under-dev' %}">
                         <i class="nav-icon icon-puzzle"></i> 会员信息变更 </a>
                     </li>
+                    {% endif %}
                   </ul>
               </li>
               {% if perms.myCSSAhub.change_discountmerchant %}

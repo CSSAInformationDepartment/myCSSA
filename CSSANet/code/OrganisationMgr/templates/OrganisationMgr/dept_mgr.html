@@ -12,27 +12,23 @@
 {% csrf_token %}
 {% load static %}
 <div class="row">
-    <div class="col-12">
+    <div class="col col-8">
         <div class="card">
-          <div class="card-header"><strong>成员信息</strong>beta</div>
-            <div class="card-body">
-            </div>
-        </div>
-    </div>
-    <div class="col-12">
-        <div class="card">
-            <div class="card-header"><strong>添加新成员</strong>beta</div>
+            <div class="card-header"><strong>查找用户</strong>beta</div>
                 <div class="card-body">
                   <form method="POST" id="membership-check" action="">
+                  {% csrf_token %}
                       <div class="form-group col-sm-12">
-                          <label for="notification_user">成员查询: (可使用姓名（拼音）、邮箱、电话等任意信息查询)</label>
+                          <label for="notification_user">可使用学生证号、邮箱、电话信息查询</label>
                           <select class="form-control" id="userlookup" name="lookUPId" style="width:100%"></select>
                       </div>
-                      <button class="btn btn-sm btn-success" type="submit" form="membership-check">
-                          <i class="fa fa-dot-circle-o"></i> 查询
-                      </button>
-                  </form>
+                      
                 </div>
+                <div class="card-footer">
+                    <button class="btn btn-sm btn-success" type="submit"><i class="fa fa-dot-circle-o"></i> 查询</button>
+                    <button class="btn btn-sm btn-danger" type="reset" onclick="window.location.reload();"><i class="fa fa-ban"></i> 重置</button>
+                </div>
+                </form>
             </div>
         </div>
     </div>
@@ -46,6 +42,7 @@
 
 <script> //注意！！！ 此部分代码含服务器端渲染标签，不可移入单独的.js文件
     $("#userlookup").select2({
+        allowClear:true,
         // tags: true,  
         // tokenSeparators: [',', ' '],
         ajax: {
@@ -86,7 +83,8 @@
         minimumInputLength: 2,
         maximumSelectionLength: 1,
         templateResult: formatRepo,  
-        templateSelection: formatRepoSelection
+        templateSelection: formatRepoSelection,
+        
     });
   
     function formatRepo(repo) {
@@ -94,11 +92,11 @@
             return repo.text;
         }
 
-        var markup = "<span><div class='select2-result-repository__title'> ";
+        var markup = "<span><div id='" + repo.id +"' class='select2-result-repository__title'> ";
         if (repo.avatar) { //有头像显示头像，没头像显示placeholder
-            markup += "<img src='" + repo.avatar + "'class='img-flag' hight='35px' width='35px' style='margin-right:20px' />"
+            markup += "<img src='" + repo.avatar + "'class='img-avatar' hight='35px' width='35px' style='margin-right:20px' />"
         } else {
-            markup += "<img src= '{% static '/myCSSAhub/img/avatar_placeholder.png'%}' class='img-flag' hight='35px' width='35px' style='margin-right:20px'/>"
+            markup += "<img src= '{% static '/myCSSAhub/img/avatar_placeholder.png'%}' class='img-avatar' hight='35px' width='35px' style='margin-right:20px'/>"
         }
         if (repo.full_name_cn && repo.full_name_cn!="None None") {
             markup += "中文名：" + repo.full_name_cn +";"
@@ -111,12 +109,10 @@
     }
       
     function formatRepoSelection(repo) {
-
         // console.log(repo)
-        
         return repo.email;
-      
     }
+
 
 </script>
 {% endblock ExtraJS %}

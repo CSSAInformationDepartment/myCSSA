@@ -34,7 +34,6 @@ class AddEventForm(forms.ModelForm):
         }
 
     def clean(self, *args, **kwargs):
-        errors =[]
 
         super().clean()
         wechat_article_url = self.cleaned_data.get('WechatArticleUrl')

@@ -125,6 +125,7 @@ class User(AbstractUser):
         verbose_name = _('user')
         verbose_name_plural = _('users')
 
+
     def __str__(self):
         return '%s' % (self.email)
 
@@ -199,6 +200,11 @@ class UserProfile (models.Model):
     address = models.CharField(verbose_name="地址",max_length=150, null=True, blank=True)
     postcode = models.CharField(verbose_name="邮编",max_length=4, null=True, blank=True)
     originate = models.CharField(verbose_name="籍贯",max_length=50, null=True,blank=True)
+
+    class Meta:
+        permissions = (
+            ("activate_membership", "Can activate new membership"),
+        )
 
 
 
