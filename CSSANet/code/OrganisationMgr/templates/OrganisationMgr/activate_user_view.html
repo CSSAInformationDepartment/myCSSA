@@ -1,8 +1,22 @@
 {% extends 'myCSSAhub/component/_layout.html' %} 
 
-{% block pageContent %}
-{% load widget_tweaks %}
+{% block pageTitle %}
+    {{PageHeader}} 
+{% endblock %} 
 
+
+{% block BreadcrumbPath %}
+    <li class="breadcrumb-item">会员管理</li>
+    <li class="breadcrumb-item"><a href="{% url 'myCSSAhub:OrganisationMgr:member_list' %}">新会员激活</a></li>
+    <li class="breadcrumb-item">{{usr_id}}</li>
+    <li class="breadcrumb-item active">
+        <a href="{% url 'myCSSAhub:OrganisationMgr:new_member_activation' usr_id %}">{{PageHeader}}</a>
+    </li>
+{% endblock BreadcrumbPath %}
+
+{% block pageContent %}
+{% load static %}
+{% load widget_tweaks %}
 <form action="" method="POST" enctype="multipart/form-data">
     {% csrf_token %}
     <div class="card">
@@ -71,7 +85,7 @@
                                     </div>
                                 {% endfor %}
                             {% else %}
-                                {% render_field field class="form-control" style="font-size:24px;"%}
+                                {% render_field field class="form-control" style="font-size:24px;" %}
                             {% endif %}
 
                             {% if field.help_text %}

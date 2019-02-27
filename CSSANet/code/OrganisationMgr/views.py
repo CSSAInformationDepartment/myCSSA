@@ -9,6 +9,7 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView
 from django_datatables_view.base_datatable_view import BaseDatatableView
 from django.urls import reverse
 from django.utils.html import escape
+from django.utils.translation import ugettext_lazy as _
 
 from UserAuthAPI import models as UserModels
 from FinanceAPI.apis import lodge_sys_gen_transaction
@@ -17,6 +18,7 @@ from .forms import *
 
 # Create your views here.
 
+# ============================  Committee 管理 =============================
 class DepartmentManagementView(LoginRequiredMixin, UserPassesTestMixin, View):
     login_url = '/hub/login/'
     template_name = 'OrganisationMgr/dept_mgr.html'
@@ -34,7 +36,6 @@ class DepartmentManagementView(LoginRequiredMixin, UserPassesTestMixin, View):
 
     def post(self, request, *args, **kwargs):
         return HttpResponseRedirect("")
-
 
 
 class GetCommitteeDetail(LoginRequiredMixin,PermissionRequiredMixin, View):
@@ -58,13 +59,16 @@ class GetCommitteeDetail(LoginRequiredMixin,PermissionRequiredMixin, View):
                 'status': '400',
             })
 
+# ============================  新会员激活    =============================
 class MemberSearchView(LoginRequiredMixin, PermissionRequiredMixin, View):
     login_url = '/hub/login/'
     permission_required = ('UserAuthAPI.activate_membership')
     template_name = 'OrganisationMgr/dept_mgr.html'
 
     def get(self, request, *args, **kwargs):
-        return render(request, self.template_name)
+        ViewBag = {}
+        ViewBag['PageHeader'] = _("查找新会员")
+        return render(request, self.template_name, ViewBag)
 
     def post(self, request, *args, **kwargs):
         id = request.POST.get('lookUPId')
@@ -74,24 +78,86 @@ class MembershipActivationView(LoginRequiredMixin, PermissionRequiredMixin, View
     login_url = '/hub/login/'
     permission_required = ('UserAuthAPI.activate_membership')
     template_name = 'OrganisationMgr/activate_user_view.html'
+    ViewBag = {}
+    ViewBag['PageHeader'] = _("新会员身份信息核查")
 
     def get(self, request, *args, **kwargs):
+        
         usr_id = self.kwargs.get('id')
         user_profile = get_object_or_404(UserModels.UserProfile, user__pk=usr_id)
         form = BindingMembershipCardForm(initial={'user': usr_id})
-        return render(request, self.template_name, {'user_profile':user_profile, 'form':form})
+        self.ViewBag['usr_id'] = usr_id
+        self.ViewBag['user_profile'] = user_profile
+        self.ViewBag['form'] = form
+        return render(request, self.template_name, self.ViewBag)
 
     def post(self, request, *args, **kwargs):
         usr_id = self.kwargs.get('id')
         user_profile = get_object_or_404(UserModels.UserProfile, user__pk=usr_id)
         form = BindingMembershipCardForm(data = request.POST or None, instance=user_profile)
+        self.ViewBag['usr_id'] = usr_id
+        self.ViewBag['user_profile'] = user_profile
+        self.ViewBag['form'] = form
         if form.is_valid():
-            print("FORM VALID")
             instance = form.save()
             lodge_sys_gen_transaction(user_profile.user,type='New Member Activation', amount=5.00, 
                 note='Card No.' + str(instance.membershipId))
             return HttpResponseRedirect(reverse('myCSSAhub:OrganisationMgr:confirm_activation', args=[str(usr_id)]))
-        return render(request, self.template_name, {'user_profile':user_profile, 'form':form})
+        return render(request, self.template_name, self.ViewBag)
+
+# ============================   会员管理   =============================
+class MemberListView(LoginRequiredMixin, PermissionRequiredMixin, View):
+    login_url = '/hub/login/'
+    permission_required = ('UserAuthAPI.change_indentity_data')
+    template_name = 'OrganisationMgr/dept_mgr.html'
+    ViewBag = {}
+    ViewBag['PageHeader'] = _("会员信息管理")
+
+    def get(self, request, *args, **kwargs):
+        return render(request, self.template_name, self.ViewBag)
+
+    def post(self, request, *args, **kwargs):
+        id = request.POST.get('lookUPId')
+        return HttpResponseRedirect(reverse('myCSSAhub:OrganisationMgr:update_member', args=[str(id)]))
+
+class UserProfileEditView(LoginRequiredMixin, PermissionRequiredMixin, View):
+    login_url = '/hub/login/'
+    permission_required = ('UserAuthAPI.change_indentity_data')
+    template_name = 'OrganisationMgr/update_user_profile.html'
+    ViewBag = {}
+    ViewBag['PageHeader'] = _("修改会员信息")
+    ViewBag['left_form_header'] = _("用户信息表")
+    ViewBag['right_form_header'] = _("账户信息表")
+
+    def get(self, request, *args, **kwargs):
+        usr_id = self.kwargs.get('id')
+        user_profile = get_object_or_404(UserModels.UserProfile, user__pk=usr_id)
+        user = get_object_or_404(UserModels.User, pk=usr_id)
+        self.ViewBag['usr_id'] = usr_id
+        self.ViewBag['form_left'] = UserProfileEditForm(instance=user_profile)
+        self.ViewBag['form_right'] = UserEditForm(instance=user)
+        return render(request, self.template_name, self.ViewBag)
+
+    def post(self, request, *args, **kwargs):
+        usr_id = self.kwargs.get('id')
+        user_profile = get_object_or_404(UserModels.UserProfile, user__pk=usr_id)
+        user = get_object_or_404(UserModels.User, pk=usr_id) 
+        self.ViewBag['successful_message'] = {}
+        self.ViewBag['usr_id'] = usr_id
+        self.ViewBag['form_left'] = UserProfileEditForm(data = request.POST or None, instance=user_profile)
+        self.ViewBag['form_right'] = UserEditForm(data = request.POST or None, instance=user)
+        
+        if self.ViewBag['form_left'].is_valid():
+            self.ViewBag['form_left'].save()
+            self.ViewBag['form_right'] = UserEditForm(instance=user)
+            self.ViewBag['successful_message']['left'] = True
+        
+        if self.ViewBag['form_right'].is_valid():
+            self.ViewBag['form_right'].save()
+            self.ViewBag['form_left'] = UserProfileEditForm(instance=user_profile)
+            self.ViewBag['successful_message']['right'] = True
+
+        return render(request, self.template_name, self.ViewBag)
 
 class ConfirmActivationView(LoginRequiredMixin, PermissionRequiredMixin, View):
     login_url = '/hub/login/'

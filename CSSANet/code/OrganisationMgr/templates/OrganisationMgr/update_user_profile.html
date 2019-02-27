@@ -1,0 +1,132 @@
+{% extends 'myCSSAhub/component/_layout.html' %} 
+
+{% block ExtraHeader %}
+<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
+{% endblock ExtraHeader %}
+
+{% block BreadcrumbPath %}
+    <li class="breadcrumb-item">会员管理</li>
+    <li class="breadcrumb-item"><a href="{% url 'myCSSAhub:OrganisationMgr:member_list' %}">会员信息管理</a></li>
+    <li class="breadcrumb-item">{{usr_id}}</li>
+    <li class="breadcrumb-item active">
+        <a href="{% url 'myCSSAhub:OrganisationMgr:update_member' usr_id %}">{{PageHeader}}</a>
+    </li>
+{% endblock BreadcrumbPath %}
+
+{% block pageContent %}
+{% load widget_tweaks %}
+<div class="row">
+    <div class="col mb-5" id="msg_area">
+
+
+    </div>
+</div>
+<div class="row">
+    <div class="col col-md-6 col-sm-12">
+        <form method="POST" action="" enctype="multipart/form-data" id="form_left">
+            <div class="card">
+                <div class="card-header">
+                    {{left_form_header}}
+                </div>
+                <div class="card-body">
+                    {% csrf_token %}
+                    {% for hidden_field in form_left.hidden_fields %}
+                        {{ hidden_field }}
+                    {% endfor %}
+
+                    {% if form_left.non_field_errors %}
+                        <div class="alert alert-danger" role="alert">
+                            {% for error in form_left.non_field_errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                    {% for field in form_left.visible_fields %}
+                        <div class="form-group">
+                            {{ field.label_tag }}
+                            {% if field.errors %}
+                                {% render_field field class="form-control is-invalid" %}
+                                {% for error in field.errors %}
+                                    <div class="invalid-feedback">
+                                        {{ error }}
+                                    </div>
+                                {% endfor %}
+                            {% else %}
+                                {% render_field field class="form-control" %}
+                            {% endif %}
+
+                            {% if field.help_text %}
+                                <small class="form-text text-muted">{{ field.help_text }}</small>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="card-footer">
+                    <button class="btn btn-sm btn-success" for="form_left" type="submit"><i class="fa fa-dot-circle-o"></i> 更新{{left_form_header}}</button>
+                    <button class="btn btn-sm btn-danger" type="reset" onclick="window.history.back();"><i class="fa fa-ban"></i> 返回</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="col col-md-6 col-sm-12">
+        <form method="POST" action="" enctype="multipart/form-data" id="form_right">
+            <div class="card">
+                <div class="card-header">
+                    {{right_form_header}}
+                </div>
+                <div class="card-body">
+                    {% csrf_token %}
+                    {% for hidden_field in form_right.hidden_fields %}
+                        {{ hidden_field }}
+                    {% endfor %}
+
+                    {% if form_right.non_field_errors %}
+                        <div class="alert alert-danger" role="alert">
+                            {% for error in form_right.non_field_errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                    {% for field in form_right.visible_fields %}
+                        <div class="form-group">
+                            {{ field.label_tag }}
+                            {% if field.errors %}
+                                {% render_field field class="form-control is-invalid" %}
+                                {% for error in field.errors %}
+                                    <div class="invalid-feedback">
+                                        {{ error }}
+                                    </div>
+                                {% endfor %}
+                            {% else %}
+                                {% render_field field class="form-control" %}
+                            {% endif %}
+
+                            {% if field.help_text %}
+                                <small class="form-text text-muted">{{ field.help_text }}</small>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="card-footer">
+                    <button class="btn btn-sm btn-success" for="form_right" type="submit"><i class="fa fa-dot-circle-o"></i> 更新{{right_form_header}}</button>
+                    <button class="btn btn-sm btn-danger" type="reset" onclick="window.history.back();"><i class="fa fa-ban"></i> 返回</button>
+                </div>
+            </div>
+        </form>       
+    </div>
+</div>
+{% endblock pageContent %}
+
+{% block ExtraJS %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+<script>
+    {% if successful_message.left  %}
+        toastr.success('用户信息表数据已更新', '更新成功')
+    {% endif %}
+    
+    {% if successful_message.right  %}
+        toastr.success('账户信息表数据已更新', '更新成功')
+    {% endif %} 
+
+</script>
+{% endblock ExtraJS %}

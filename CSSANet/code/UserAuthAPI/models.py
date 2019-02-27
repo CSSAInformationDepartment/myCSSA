@@ -204,6 +204,7 @@ class UserProfile (models.Model):
     class Meta:
         permissions = (
             ("activate_membership", "Can activate new membership"),
+            ("change_indentity_data", "Can change identity_data"),
         )
 
 

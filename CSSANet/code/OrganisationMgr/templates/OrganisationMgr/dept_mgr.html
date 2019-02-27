@@ -1,12 +1,20 @@
 {% extends 'myCSSAhub/component/_layout.html' %} 
 
 {% block pageTitle %}
-部门成员管理 
+    {{PageHeader}} 
 {% endblock %} 
 
 {% block ExtraHeader %} 
 <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
 {% endblock ExtraHeader %}
+
+{% block BreadcrumbPath %}
+    <li class="breadcrumb-item">会员管理</li>
+    <li class="breadcrumb-item active">
+        <a href="">{{PageHeader}}</a>
+    </li>
+{% endblock BreadcrumbPath %}
+
 
 {% block pageContent %}
 {% csrf_token %}
@@ -94,9 +102,9 @@
 
         var markup = "<span><div id='" + repo.id +"' class='select2-result-repository__title'> ";
         if (repo.avatar) { //有头像显示头像，没头像显示placeholder
-            markup += "<img src='" + repo.avatar + "'class='img-avatar' hight='35px' width='35px' style='margin-right:20px' />"
+            markup += "<img src='" + repo.avatar + "'class='img-avatar' height='35px' width='35px' style='margin-right:20px' />"
         } else {
-            markup += "<img src= '{% static '/myCSSAhub/img/avatar_placeholder.png'%}' class='img-avatar' hight='35px' width='35px' style='margin-right:20px'/>"
+            markup += "<img src= '{% static '/myCSSAhub/img/avatar_placeholder.png'%}' class='img-avatar' height='35px' width='35px' style='margin-right:20px'/>"
         }
         if (repo.full_name_cn && repo.full_name_cn!="None None") {
             markup += "中文名：" + repo.full_name_cn +";"

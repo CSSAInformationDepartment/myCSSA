@@ -89,9 +89,9 @@
                         <i class="nav-icon cui-credit-card"></i> 会员卡激活 </a>
                     </li>
                     {% endif %}
-                    {% if  user.is_superuser %}
+                    {% if  perms.UserAuthAPI.change_indentity_data %}
                     <li class="nav-item">
-                      <a class="nav-link" href="{% url 'myCSSAhub:under-dev' %}">
+                      <a class="nav-link" href="{% url 'myCSSAhub:OrganisationMgr:member_list' %}">
                         <i class="nav-icon cui-magnifying-glass"></i> 会员信息管理 </a>
                     </li>
                     {% endif %}
