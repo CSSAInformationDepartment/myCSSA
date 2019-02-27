@@ -3,23 +3,29 @@
 <head>
     <meta charset="utf-8">
     <meta name="keywords" content="Home 首页">
-    <meta name="description" content="墨尔本大学中国学生会">
+    <meta name="description" content="墨尔本大学中国学生会 Chinese Student and Scholars Association, University of Melbourne">
+    <meta name="keywords" content="墨尔本大学中国学生会 Chinese Student and Scholars Association, University of Melbourne">
+    <meta name="author" content="CSSA Department of Information Technology">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <!--link rel="shortcut icon" type="image/png" href="favicon.png"-->
     <title>墨尔本大学中国学生会 Chinese Students and Scholars Association University of Melbourne</title>
-	{% load static %}
-	<link rel="stylesheet" type="text/css" href="{% static '/PublicSite/css/bootstrap-bootswatch.css' %}">
-	<link rel="stylesheet" type="text/css" href="{% static '/PublicSite/style.css' %}">
-	<link rel="stylesheet" type="text/css" href="{% static '/PublicSite/css/font-awesome.min.css'%}">
-  <link rel="stylesheet" type="text/css" href="{% static '/myCSSAhub/css/login.css'%}">
+    {% load static %}
 
+    <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootswatch/4.3.1/lumen/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="{% static '/PublicSite/style.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static '/myCSSAhub/css/login.css'%}"> 
+    
+    
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 
-  <script src="{% static 'PublicSite/js/jquery-3.3.1.min.js'%}"></script>
-  <script src="{% static 'PublicSite/vendors/jquery-ui/jquery-ui.min.js'%}"></script>
-  <script src="{% static 'PublicSite/js/bootstrap.bundle.min.js'%}"></script>
-  <script src="{% static 'PublicSite/js/blocs.js'%}"></script>
-  <script src="{% static 'PublicSite/js/jquery.touchSwipe.min.js'%}" defer></script>
-  <script src="{% static 'PublicSite/js/lazysizes.min.js'%}" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
+    <script src="{% static 'PublicSite/js/blocs.js'%}"></script>
+    <script src="{% static 'PublicSite/js/jquery.touchSwipe.min.js'%}" defer></script>
+    <script src="{% static 'PublicSite/js/lazysizes.min.js'%}" defer></script>
   
 
   {% block 'extra_header' %}
@@ -27,24 +33,30 @@
 <!-- Analytics -->
 
 <!-- Analytics END -->
-
 </head>
+
 <body>
 <!-- Main container -->
 <div class="page-container">
-{% include 'components/vertical_navbar.html' %}
-{% block 'pg_body' %}
+  {% include 'components/vertical_navbar.html' %}
+  {% block 'pg_body' %}
 
 
-{% endblock  %}
-{% include 'components/footbar.html'%}
+  {% endblock  %}
+
+  <!-- ScrollToTop Button -->
+  <a class="bloc-button btn btn-d scrollToTop" onclick="scrollToTarget('1',this)"><span class="fa fa-chevron-up"></span></a>
+  <!-- ScrollToTop Button END-->
+
+  <!-- Preloader -->
+  <div id="page-loading-blocs-notifaction" class="page-preloader"></div>
+  <!-- Preloader END -->
+  {% include 'components/footbar.html'%}
 </div>
-<!-- Preloader -->
-<!--div id="page-loading-blocs-notifaction" class="page-preloader"></div-->
-<!-- Preloader END -->
 
 
-<script>
+
+  <script>
 // DO NOT REMOVE THIS WHEN THE PAGE HAS ANY AJAX APPLET
   var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
 
@@ -60,7 +72,7 @@
       }
   });
 
-</script>
+  </script>
   {% block 'extra_js' %}
   {% endblock 'extra_js' %}
 </body>
