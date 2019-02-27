@@ -128,14 +128,18 @@
                 <a class="nav-link nav-dropdown-toggle" href="#">
                   <i class="nav-icon cui-dollar"></i>财务</a>
                   <ul class="nav-dropdown-items">
+                  {% if perms.FinanceAPI.view_transaction %}
                     <li class="nav-item">
                       <a class="nav-link" href="{% url 'myCSSAhub:FinanceAPI:transaction_list' %}">
-                        <i class="nav-icon icon-list"></i> 财务流水</a>
+                        <i class="nav-icon icon-list"></i> 交易流水 </a>
                     </li>
+                  {% endif %}
+
                     <li class="nav-item">
                       <a class="nav-link" href="{% url 'myCSSAhub:FinanceAPI:invoice_lodge' %}">
                         <i class="nav-icon cui-inbox"></i> 公务报销申请</a>
                     </li>
+                    {% if user.is_superuser %}
                     <li class="nav-item">
                       <a class="nav-link" href="{% url 'myCSSAhub:under-dev' %}">
                         <i class="nav-icon icon-check"></i> 收款核查</a>
@@ -144,6 +148,8 @@
                       <a class="nav-link" href="{% url 'myCSSAhub:under-dev' %}">
                         <i class="nav-icon cui-magnifying-glass"></i> 报销核查 </a>
                     </li>
+                    {% endif %}
+
                   </ul>
               </li>
 
