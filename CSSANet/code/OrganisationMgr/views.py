@@ -22,6 +22,11 @@ from .forms import *
 class DepartmentManagementView(LoginRequiredMixin, UserPassesTestMixin, View):
     login_url = '/hub/login/'
     template_name = 'OrganisationMgr/dept_mgr.html'
+    ViewBag = {}
+    ViewBag['PageHeader'] = _("会员信息管理")
+    ViewBag['total_user_count']  = UserProfile.objects.all().count()
+    ViewBag['activated_member_count']  = UserProfile.objects.exclude(membershipId=None).count()
+
     def test_func(self):
         if self.request.user.is_superuser:
             return True
@@ -64,11 +69,13 @@ class MemberSearchView(LoginRequiredMixin, PermissionRequiredMixin, View):
     login_url = '/hub/login/'
     permission_required = ('UserAuthAPI.activate_membership')
     template_name = 'OrganisationMgr/dept_mgr.html'
+    ViewBag = {}
+    ViewBag['PageHeader'] = _("查找新会员")
+    ViewBag['total_user_count']  = UserProfile.objects.all().count()
+    ViewBag['activated_member_count']  = UserProfile.objects.exclude(membershipId=None).count()
 
     def get(self, request, *args, **kwargs):
-        ViewBag = {}
-        ViewBag['PageHeader'] = _("查找新会员")
-        return render(request, self.template_name, ViewBag)
+        return render(request, self.template_name, self.ViewBag)
 
     def post(self, request, *args, **kwargs):
         id = request.POST.get('lookUPId')
@@ -112,6 +119,8 @@ class MemberListView(LoginRequiredMixin, PermissionRequiredMixin, View):
     template_name = 'OrganisationMgr/dept_mgr.html'
     ViewBag = {}
     ViewBag['PageHeader'] = _("会员信息管理")
+    ViewBag['total_user_count']  = UserProfile.objects.all().count()
+    ViewBag['activated_member_count']  = UserProfile.objects.exclude(membershipId=None).count()
 
     def get(self, request, *args, **kwargs):
         return render(request, self.template_name, self.ViewBag)
