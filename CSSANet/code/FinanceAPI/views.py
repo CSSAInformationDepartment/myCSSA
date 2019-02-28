@@ -29,7 +29,7 @@ class TransactionListView(LoginRequiredMixin, View):
 
     #请求处理函数 （get）
     def get(self, request, *args, **kwargs):
-        transaction_today = models.Transaction.objects.filter(time__date=sys_timezone.now().date())
+        transaction_today = models.Transaction.objects.filter(time__date__gte=sys_timezone.now().date())
         self.ViewBag['incoming_transaction_count'] = transaction_today.filter(is_expense=False).count()
         self.ViewBag['incoming_transaction_sum'] = transaction_today.filter(is_expense=False).aggregate(Sum('amount'))['amount__sum']
         self.ViewBag['outcoming_transaction_count'] = transaction_today.filter(is_expense=True).count()

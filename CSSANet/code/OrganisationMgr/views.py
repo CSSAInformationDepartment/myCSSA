@@ -24,8 +24,6 @@ class DepartmentManagementView(LoginRequiredMixin, UserPassesTestMixin, View):
     template_name = 'OrganisationMgr/dept_mgr.html'
     ViewBag = {}
     ViewBag['PageHeader'] = _("会员信息管理")
-    ViewBag['total_user_count']  = UserProfile.objects.all().count()
-    ViewBag['activated_member_count']  = UserProfile.objects.exclude(membershipId=None).count()
 
     def test_func(self):
         if self.request.user.is_superuser:
@@ -37,6 +35,8 @@ class DepartmentManagementView(LoginRequiredMixin, UserPassesTestMixin, View):
 
     #请求处理函数 （get）
     def get(self, request, *args, **kwargs):
+        self.ViewBag['total_user_count']  = UserProfile.objects.all().count()
+        self.ViewBag['activated_member_count']  = UserProfile.objects.exclude(membershipId=None).count()
         return render(request, self.template_name)
 
     def post(self, request, *args, **kwargs):
@@ -71,10 +71,11 @@ class MemberSearchView(LoginRequiredMixin, PermissionRequiredMixin, View):
     template_name = 'OrganisationMgr/dept_mgr.html'
     ViewBag = {}
     ViewBag['PageHeader'] = _("查找新会员")
-    ViewBag['total_user_count']  = UserProfile.objects.all().count()
-    ViewBag['activated_member_count']  = UserProfile.objects.exclude(membershipId=None).count()
+
 
     def get(self, request, *args, **kwargs):
+        self.ViewBag['total_user_count']  = UserProfile.objects.all().count()
+        self.ViewBag['activated_member_count']  = UserProfile.objects.exclude(membershipId=None).count()
         return render(request, self.template_name, self.ViewBag)
 
     def post(self, request, *args, **kwargs):
@@ -119,10 +120,11 @@ class MemberListView(LoginRequiredMixin, PermissionRequiredMixin, View):
     template_name = 'OrganisationMgr/dept_mgr.html'
     ViewBag = {}
     ViewBag['PageHeader'] = _("会员信息管理")
-    ViewBag['total_user_count']  = UserProfile.objects.all().count()
-    ViewBag['activated_member_count']  = UserProfile.objects.exclude(membershipId=None).count()
+
 
     def get(self, request, *args, **kwargs):
+        self.ViewBag['total_user_count']  = UserProfile.objects.all().count()
+        self.ViewBag['activated_member_count']  = UserProfile.objects.exclude(membershipId=None).count()
         return render(request, self.template_name, self.ViewBag)
 
     def post(self, request, *args, **kwargs):
