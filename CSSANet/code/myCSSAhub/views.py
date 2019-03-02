@@ -104,13 +104,6 @@ class Merchant_add(PermissionRequiredMixin, LoginRequiredMixin, View):
                 m_description = form.cleaned_data['m_description']
                 m_image = form.cleaned_data['m_image']
 
-                # print("name", m_name)
-                # print("address", m_address)
-                # print("phone", m_phone)
-                # print("link", m_link)
-                # print("description", m_description)
-                # print("image", m_image)
-
                 new_merchant = DiscountMerchant(merchant_name=m_name, merchant_description=m_description,
                                                 merchant_phone=m_phone, merchant_address=m_address, merchant_link=m_link, merchant_image=m_image)
 
@@ -199,8 +192,14 @@ class LoginPage(View):
 
     # 请求处理函数（post）
     def post(self, request, *args, **kwargs):
-        email = request.POST['email']
+        email = request.POST['email'].lower()
         userQuery = self.model.objects.filter(email__iexact=email).first()
+        # Patch, clean email with capitalisation
+        if any(c.isupper for c in userQuery.email):
+            _email_convert = userQuery.email.lower()
+            userQuery.email = _email_convert
+            userQuery.save()
+
         redirect_to = request.GET.get('redirect_to')
         if userQuery is None:
             return JsonResponse(self.loginErrorMsg)
@@ -238,7 +237,7 @@ class EasyRegistrationView(View):
                         membershipId=migration_record.membershipId)
                 )
             except ObjectDoesNotExist:
-                print("Either the entry or blog doesn't exist.")
+                print("The user is not registered successfully.")
 
         return render(request, self.template_name, {'LegacyData': legacy_data})
 

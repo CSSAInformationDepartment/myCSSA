@@ -50,6 +50,7 @@ class BasicSiginInForm(forms.ModelForm):
 
     def save(self, commit=True):
         user = super(BasicSiginInForm, self).save(commit=False)
+        user.email = user.email.lower()
         user.set_password(self.cleaned_data["password"])
         if commit:
             user.save()
