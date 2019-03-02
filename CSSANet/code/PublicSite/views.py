@@ -107,7 +107,6 @@ class ResumeSubmissionView(LoginRequiredMixin,View):
                 self.json_data['error'] = "Duplicated Submission! 您已经提交过该岗位的申请"
             else:
                 form = ResumeSubmissionForm(data=request.POST, files=request.FILES)
-                print(form)
                 form.user = request.user
                 if form.is_valid():
                     instance = form.save()
