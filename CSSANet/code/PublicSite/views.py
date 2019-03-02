@@ -39,7 +39,7 @@ from LegacyDataAPI import models as LegacyDataModels
 from django.utils import timezone
 
 from myCSSAhub import models as HubModels
-from myCSSAhub.send_email import send_emails
+from CommunicateManager.send_email import send_emails
 
 # Create your views here.
 

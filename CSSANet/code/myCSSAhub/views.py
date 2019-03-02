@@ -1,4 +1,4 @@
-from myCSSAhub.send_email import send_emails, queryEmailContent, queryEmailContent, queryEmailList
+from CommunicateManager.send_email import send_emails, queryEmailContent, queryEmailContent, queryEmailList
 from django.shortcuts import get_object_or_404
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .notification import insertDB, queryMessagesList, queryMessageContent

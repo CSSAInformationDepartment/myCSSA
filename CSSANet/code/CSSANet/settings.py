@@ -45,6 +45,7 @@ else:
 # Application definition
 INSTALLED_APPS = [
     'EventAPI',
+    'CommunicateManager',
     'LegacyDataAPI',
     'RecruitAPI',
     'UserAuthAPI',

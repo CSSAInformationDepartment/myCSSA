@@ -19,7 +19,7 @@ from django.utils.html import escape
 from pytz import timezone
 from CSSANet.settings import TIME_ZONE
 
-from myCSSAhub.send_email import send_emails
+from CommunicateManager.send_email import send_emails
 from FlexForm.apis import flexform_user_write_in
 from EventAPI.apis import get_ticket,check_availability
 from django.utils import timezone

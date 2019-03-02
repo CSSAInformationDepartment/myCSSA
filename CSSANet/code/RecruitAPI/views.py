@@ -18,7 +18,7 @@ from django.utils.html import escape
 from pytz import timezone
 from CSSANet.settings import TIME_ZONE
 
-from myCSSAhub.send_email import send_emails
+from CommunicateManager.send_email import send_emails
 
 
 class JobListView(LoginRequiredMixin, PermissionRequiredMixin, View):
