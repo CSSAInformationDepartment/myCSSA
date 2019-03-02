@@ -20,6 +20,7 @@ from UserAuthAPI import models as UserModels
 from BlogAPI import models as BlogModels
 from UserAuthAPI.forms import BasicSiginInForm, UserInfoForm, MigrationForm, UserAcademicForm, UserProfileUpdateForm, EasyRegistrationForm
 from LegacyDataAPI import models as LegacyDataModels
+from CommunicateManager.send_email import send_emails
 
 from CSSANet.settings import MEDIA_ROOT, MEDIA_URL
 import json
@@ -204,7 +205,6 @@ class LoginPage(View):
         if userQuery is None:
             return JsonResponse(self.loginErrorMsg)
         password = request.POST['password']
-        # print(email,password,username)
         user = authenticate(request, email=email, password=password)
         if user is not None:
             login(request, user)
@@ -293,7 +293,7 @@ class NewUserSignUpView(View):
                         membershipId=migration_record.membershipId)
                 )
             except ObjectDoesNotExist:
-                print("Either the entry or blog doesn't exist.")
+                print("The user record doesn't exist.")
 
         return render(request, self.template_name, {'LegacyData': legacy_data})
 
@@ -336,7 +336,6 @@ class migrationView(View):
     def post(self, request, *args, **kwargs):
         migration_request = MigrationForm(data=request.POST)
         if migration_request.is_valid():
-            print(migration_request['studentId'].value())
             try:
                 legacy_record = LegacyDataModels.LegacyUsers.objects.get(
                     Q(studentId=migration_request['studentId'].value()) & Q(
@@ -400,7 +399,6 @@ class UpdateUserProfileView(LoginRequiredMixin, View):
             return HttpResponseRedirect('/hub/home')
         else:
             messages.error(request, 'Please double-check your input.')
-            print(dict(form.errors))
         return render(request, self.template_name, {'form': form, 'data': current_data})
 
 
@@ -427,7 +425,6 @@ def editBlog(request):
     except:
         return bad_request(request)
 
-    print(blogId)
     ViewBag = {}
 
     userAuthed = request.user.is_authenticated
@@ -504,8 +501,7 @@ def CheckEmailIntegrity(request):
     data = {}
     if request.method == 'POST':
         email = request.POST['value']
-        print(email)
-        userQuery = UserModels.User.objects.filter(email=email).first()
+        userQuery = UserModels.User.objects.filter(email_iexact=email).first()
         if userQuery is None:
             data['result'] = 'Valid'
         else:
@@ -514,7 +510,6 @@ def CheckEmailIntegrity(request):
         data = {
             'status': '400', 'reason': 'Bad Requests!'
         }
-    print(data)
     return JsonResponse(data)
 
 
