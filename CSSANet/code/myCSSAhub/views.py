@@ -212,7 +212,7 @@ class LoginPage(View):
             if redirect_to:
                 self.loginSuccessful['redirect'] = redirect_to
             else:
-                self.loginSuccessful['redirect'] = '/hub/home/'
+                self.loginSuccessful['redirect'] = reverse('PublicSite:index')
             return JsonResponse(self.loginSuccessful)
         else:
             return JsonResponse(self.loginErrorMsg)
