@@ -501,7 +501,7 @@ def CheckEmailIntegrity(request):
     data = {}
     if request.method == 'POST':
         email = request.POST['value']
-        userQuery = UserModels.User.objects.filter(email_iexact=email).first()
+        userQuery = UserModels.User.objects.filter(email__iexact=email).first()
         if userQuery is None:
             data['result'] = 'Valid'
         else:
