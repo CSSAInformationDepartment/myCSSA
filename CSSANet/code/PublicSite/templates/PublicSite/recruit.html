@@ -24,30 +24,30 @@
 	<div class="container bloc-md" style="min-height:100%">
 		<div class="row">
 			<div class="col-12">
-						<div class="row">
-							<div class="col-12">
-								<ul class="list-unstyled">
-									{% for job in job_list %}
-									<li class="bloc-4298-margin-bottom">
-										<div class="row bgc-light-gray">
-											<div class="col-lg-12 align-self-center text-left">
-												<h5 class="mg-md">
-													 {{ job.dept.deptTitle}}
-												</h5>
-												<!-- <h3 class="mg-md text-lg-center">
-													{{岗位名称}}
-												</h3> -->
-											</div>
-											<div class="col align-self-center" style="margin-top:10px">
-												<p>
-													{{ job.description}}
-												</p>
-												<a href="{% url 'PublicSite:resumes' job.jobId %}" class="btn  btn-primary float-lg-right btn-margin-left" style="margin-top:10px">申请加入</a>
-											</div>
-										</div>
-									</li>
-									{% endfor %}
-								</ul>
+				<div class="row">
+					<div class="col-12">
+						<ul class="list-unstyled">
+							{% for job in job_list %}
+							<li class="bloc-4298-margin-bottom">
+								<div class="row bgc-light-gray">
+									<div class="col-lg-12 align-self-center text-left">
+										<h5 class="mg-md">
+											{{ job.dept.deptTitle}}
+										</h5>
+
+									</div>
+									<div class="col align-self-center" style="margin-top:10px">
+										<p>
+											{{ job.description}}
+										</p>
+										<a href="{% url 'PublicSite:resumes' job.jobId %}"
+											class="btn  btn-primary float-lg-right btn-margin-left"
+											style="margin-top:10px">申请加入</a>
+									</div>
+								</div>
+							</li>
+							{% endfor %}
+						</ul>
 					</div>
 				</div>
 			</div>
@@ -59,13 +59,5 @@
 </div>
 <!-- bloc-21 END -->
 
-<!-- ScrollToTop Button -->
-<a class="bloc-button btn btn-d scrollToTop" onclick="scrollToTarget('1',this)"><span class="fa fa-chevron-up"></span></a>
-<!-- ScrollToTop Button END-->
-
 
 {% endblock 'pg_body' %}
-{% block ExtraJS %}
-<script src="./js/scrollFX.js?8235"></script>
-
-{% endblock ExtraJS %}
