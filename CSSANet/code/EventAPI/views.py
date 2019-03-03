@@ -4,6 +4,7 @@ from django.db.models import Q
 
 from .models import *
 from .forms import *
+from .apis import is_duplicated_purchase
 
 from myCSSAhub.apis import GetDocViewData
 from UserAuthAPI.models import UserProfile
@@ -23,7 +24,6 @@ from CommunicateManager.send_email import send_emails
 from FlexForm.apis import flexform_user_write_in
 from EventAPI.apis import get_ticket,check_availability
 from django.utils import timezone
-
 
 # Create your views here.
 class EventListView(LoginRequiredMixin, View):
@@ -82,11 +82,15 @@ class ConfirmEventOrderView(LoginRequiredMixin,View):
             info_form_field = None
         return info_form_field
 
-    def get_context_data(self, *args, **kwargs):
+    def get_context_data(self,user, *args, **kwargs):
         id = self.kwargs.get('id')
         event = get_object_or_404(Event, pk=id)
         now_time = timezone.now()
-        return {'event':event, 'info_form_field':self.get_info_collection_form_field(), 'now_time':now_time}
+        if is_duplicated_purchase(user,event):
+            return {'event':event, 'now_time':now_time, 'duplicated_purchase':True}
+        else:
+            return {'event':event, 'info_form_field':self.get_info_collection_form_field(), 'now_time':now_time}
+
 
 
     def get(self, request, *args, **kwargs):
@@ -95,7 +99,7 @@ class ConfirmEventOrderView(LoginRequiredMixin,View):
         now_time = timezone.now()
         if event.eventSignUpTime > now_time:
             raise Http404("Event is not open for enrollment yet.")
-        return render(request, self.template_name, self.get_context_data())  
+        return render(request, self.template_name, self.get_context_data(user=request.user))  
     
     def post(self, request, *args, **kwargs):
         event_id = self.kwargs.get('id')

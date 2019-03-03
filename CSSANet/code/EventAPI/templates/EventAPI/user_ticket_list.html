@@ -1,59 +1,55 @@
 {% extends 'myCSSAhub/component/_layout.html' %}
 
-{% block ExtraHeader %}
+{% block pageTitle %}
+我参与的活动
+{% endblock pageTitle %}
 
-<style media="screen">
-
+{% block extraHeader %}
 	.card-img {
 		padding-bottom: 70%;
 		position: relative;
 	}
 	.card-img > img {
 		position: absolute;
-		max-width: 100%;
-		max-height: 100%;
+		object-fit: none; /* Do not scale the image */
+		object-position: center; /* Center the image within the element */
+		width: 100%;
+		max-height: 100px;
+		margin-bottom: 1rem;
 	}
-	.carousel-inner > .carousel-item {
-  height: 100vh;
-}
+{% endblock extraHeader %}
 
-.carousel-inner > .carousel-item > img {
-  position: absolute;
-  /* top: 50%;
-  left: 50%;
-  -webkit-transform: translate(-50%, -50%);
-  -ms-transform: translate(-50%, -50%);
-  transform: translate(-50%, -50%); */
-  max-height: 800px;
-  width: auto;
-}
+{% block BreadcrumbPath %}
+    <li class="breadcrumb-item">活动票务</li>
+    <li class="breadcrumb-item"><a href="{% url 'myCSSAhub:EventAPI:user_ticket_list' %}">我参与的活动</a></li>
 
-</style>
-{% endblock ExtraHeader %}
-
-
+{% endblock BreadcrumbPath %}
 
 {% block pageContent %}
 		<div class="row">
-			<div class="col">
-				<h3 class="mg-md text-center">
-					活动入场券
-				</h3>
-			</div>
+
 		</div>
 
-		<div class="row voffset justify-content-center" >
+		<div class="row voffset" >
 			{% for ticket in tickets %}
-			<div class="mt-3 col-lg-3 align-self-center col-md-6 mt-lg-0" >
-				<div class="card h-100">
+			<div class="mt-3 col-lg-3 col-md-3 col-sm-6" >
+				<div class="card h-100" >
 					<div class="card-img">
 						<img src="{{ticket.attendedEventId.mainVisual.url}}" data-src="{{ticket.attendedEventId.mainVisual.url}}" class="card-img-top h-100 w-100"/>
 					</div>
-					<div class="card-body" >
-						<h5 class="card-title" style="min-height:50px">{{ticket.attendedEventId.eventName}}</h5>
-						<p class="card-text" style="min-height:50px">
-							{{ticket.attendedEventId.eventInfo}}
-						</p>
+					<div class="card-body">
+						<div class="card-text" style="height:100px; overflow:auto;">
+							<h5>{{ticket.attendedEventId.eventName}}</h5>
+							<p>
+								<ul class="list-unstyled">
+									<li>入场时间：{{ticket.attendedEventId.eventActualStTime|date:"SHORT_DATETIME_FORMAT" }}</li>
+									<li>活动场馆：{{ticket.attendedEventId.venue}}</li>
+								</ul>
+							</p>
+						</div>
+						
+					</div>
+					<div class="card-footer">
 						<a href="{% url 'PublicSite:eventsDetails' ticket.attendedEventId.eventID %}" class="btn btn-block btn-blue-gray mt-3">查看活动详情<br></a>
 					</div>
 				</div>

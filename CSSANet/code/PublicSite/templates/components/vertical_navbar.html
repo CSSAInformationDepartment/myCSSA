@@ -14,6 +14,9 @@
 				<a class="nav-link" href="/">{%trans "首页" %} <span class="sr-only">(current)</span></a>
 			</li>
 			<li class="nav-item">
+				<a class="nav-link" href="{% url 'PublicSite:events' %}">{%trans "活动消息 " %}</a>
+			</li>
+			<li class="nav-item">
 				<a class="nav-link" href="{% url 'PublicSite:blogs' %}?page=1">{%trans "新闻公告" %}</a>
 			</li>
 			<li class="nav-item">
@@ -23,9 +26,6 @@
 				<a class="nav-link" href="{% url 'PublicSite:contact' %}">{%trans "联系我们" %}</a>
 			</li>
 			{% if user.is_staff %}
-			<li class="nav-item">
-				<a class="nav-link" href="{% url 'PublicSite:events' %}">{%trans "活动消息 " %}</a>
-			</li>
 			<li class="nav-item dropdown">
 				<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 				{%trans "部门构成" %}

@@ -2,6 +2,7 @@ import secrets
 
 from django.db.models import F, Q
 from django.db import transaction
+from django.http import HttpResponseRedirect
 
 from .models import *
 
@@ -73,7 +74,6 @@ def get_ticket(user, event_id, ticket_id=None ,is_paid=False):
                 return issue_token_for_ticket(new_ticket)
             else:
                 return new_ticket.save()
-    
     return False
 
 
