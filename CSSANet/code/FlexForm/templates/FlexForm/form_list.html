@@ -3,6 +3,18 @@
 {% block ExtraHeader %}
 {% endblock ExtraHeader %}
 
+{% block pageTitle %}
+信息收集表配置
+{% endblock pageTitle %}
+
+{% block BreadcrumbPath %}
+  <li class="breadcrumb-item">活动信息收集表</li>
+  <li class="breadcrumb-item">
+    <a href="{% url 'myCSSAhub:EventAPI:event_list' %}">表配置</a>
+  </li>
+{% endblock BreadcrumbPath %}
+
+
 {% block pageContent %}
 <div class="row mb-3">
   <div class="col-6">

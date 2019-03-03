@@ -26,9 +26,14 @@
 {% endblock BreadcrumbPath %}
 
 {% block pageContent %}
-		<div class="row">
-
+		<div class="row mb-3">
+			<div class="col-6">
+				{% if event_attended_count %}
+					<p>目前您报名了{{event_attended_count}}个活动</p>
+				{% endif %}
+			</div>
 		</div>
+
 
 		<div class="row voffset" >
 			{% for ticket in tickets %}

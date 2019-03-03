@@ -5,13 +5,13 @@
 {% endblock ExtraHeader %}
 
 {% block pageTitle %}
-活动计划
+活动报名管理
 {% endblock pageTitle %}
 
 {% block BreadcrumbPath %}
   <li class="breadcrumb-item">活动管理</li>
   <li class="breadcrumb-item">
-    <a href="{% url 'myCSSAhub:EventAPI:event_list' %}">活动计划</a>
+    <a href="{% url 'myCSSAhub:EventAPI:event_list' %}">活动报名管理</a>
   </li>
 {% endblock BreadcrumbPath %}
 
@@ -19,7 +19,7 @@
 <div class="row mb-3">
   <div class="col-6">
   {% if event_attended_count %}
-      <p>目前您报名了{{event_attended_count}}个活动</p>
+      <p>目前有{{event_attended_count}}个活动正在接受报名</p>
   {% endif %}
   </div>
   
@@ -52,8 +52,8 @@
                   <th>ID</th>
                   <th>活动名称</th>
                   <th>报名开始时间</th>
-                  <th>活动开始时间</th>
-                  <th>活动场馆</th>
+                  <th>当前报名人数</th>
+                  <th>填充率（0为无人报名或没有人数上限） </th>
                 </tr>
               {% endif %}
 
@@ -74,11 +74,7 @@ $(document).ready(function() {
         "responsive": true,
         "processing": true,
         "serverSide": true,
-        {% if event_attended_count %}
-          "ajax": "",
-        {% else %}
-          "ajax": "{% url 'myCSSAhub:EventAPI:events_json' %}",
-        {% endif %}
+        "ajax": "{% url 'myCSSAhub:EventAPI:event_stat_list' %}",
     });
 });
 </script>

@@ -26,12 +26,22 @@ from EventAPI.apis import get_ticket,check_availability
 from django.utils import timezone
 
 # Create your views here.
-class EventListView(LoginRequiredMixin, View):
+class EventListView(LoginRequiredMixin, PermissionRequiredMixin, View):
     login_url = '/hub/login/'
+    permission_required = ('EventAPI.add_event',)
     template_name = 'EventAPI/event_list.html'
     
     def get(self, request, *args, **kwargs):
         return render(request, self.template_name)
+
+class EventStatView(LoginRequiredMixin, PermissionRequiredMixin, View):
+    login_url = '/hub/login/'
+    permission_required = ('EventAPI.view_event',)
+    template_name = 'EventAPI/event_stat.html'
+    
+    def get(self, request, *args, **kwargs):
+        return render(request, self.template_name)
+
 
 class AddEventView(LoginRequiredMixin, View):
     login_url = '/hub/login/'
@@ -92,7 +102,6 @@ class ConfirmEventOrderView(LoginRequiredMixin,View):
             return {'event':event, 'info_form_field':self.get_info_collection_form_field(), 'now_time':now_time}
 
 
-
     def get(self, request, *args, **kwargs):
         id = self.kwargs.get('id')
         event = get_object_or_404(Event, pk=id)
@@ -101,6 +110,7 @@ class ConfirmEventOrderView(LoginRequiredMixin,View):
             raise Http404("Event is not open for enrollment yet.")
         return render(request, self.template_name, self.get_context_data(user=request.user))  
     
+
     def post(self, request, *args, **kwargs):
         event_id = self.kwargs.get('id')
         fields = self.get_info_collection_form_field()
@@ -128,7 +138,7 @@ class UserTicketListView(LoginRequiredMixin, View):
 
 class EventListJsonView(LoginRequiredMixin, PermissionRequiredMixin, BaseDatatableView):
     login_url = '/hub/login/'
-    permission_required = ('EventAPI.view_event',)
+    permission_required = ('EventAPI.add_event',)
     model = Event
 
     # define the columns that will be returned
@@ -150,6 +160,41 @@ class EventListJsonView(LoginRequiredMixin, PermissionRequiredMixin, BaseDatatab
         if not self.model:
             raise NotImplementedError("Need to provide a model or implement get_initial_queryset!")
         return self.model.objects.filter(disabled=False).order_by('-eventStartTime')
+
+    def filter_queryset(self, qs):
+        # DO NOT CHANGE THIS LINE
+        search = self.request.GET.get('search[value]', None)
+
+        if search:
+            qs = qs.filter(Q(eventName__istartswith=search))
+        return qs
+
+class EventStatJsonView(LoginRequiredMixin, PermissionRequiredMixin, BaseDatatableView):
+    login_url = '/hub/login/'
+    permission_required = ('EventAPI.view_event',)
+    model = Event
+
+    # define the columns that will be returned
+    columns = ['eventID', 'eventName', 'eventActualStTime','get_attendant_sum', 'get_estimate_remaining_factor']
+    order_columns = ['eventID', 'eventName', '-eventActualStTime','get_attendant_sum', 'get_estimate_remaining_factor']
+
+    max_display_length = 500
+
+    def render_column(self, row, column):
+        # Customer HTML column rendering
+        if (column == 'eventActualStTime'):
+            return row.eventActualStTime.strftime('%Y-%m-%d %H:%M')
+        elif (column == 'get_attendant_sum'):
+            return row.get_attendant_sum()
+        elif (column == 'get_estimate_remaining_factor'):
+            return row.get_estimate_remaining_factor()
+        else:
+            return super(EventStatJsonView, self).render_column(row, column)
+
+    def get_initial_queryset(self):
+        if not self.model:
+            raise NotImplementedError("Need to provide a model or implement get_initial_queryset!")
+        return self.model.objects.filter(disabled=False).order_by('-eventActualStTime')
 
     def filter_queryset(self, qs):
         # DO NOT CHANGE THIS LINE

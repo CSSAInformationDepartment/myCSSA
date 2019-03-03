@@ -43,6 +43,7 @@
                 <a class="nav-link nav-dropdown-toggle" href="#">
                   <i class="nav-icon cui-star"></i>活动</a>
                   <ul class="nav-dropdown-items">
+                  {% if perms.EventAPI.add_event %}
                     <li class="nav-item">
                       <a class="nav-link" href="{% url 'myCSSAhub:EventAPI:event_list' %}">
                         <i class="nav-icon cui-calendar"></i> 活动计划 </a>
@@ -51,10 +52,14 @@
                       <a class="nav-link" href="{% url 'myCSSAhub:FlexForm:formlist' %}">
                         <i class="nav-icon cui-layers"></i> 活动信息收集表 </a>
                     </li>
+                  {% endif %}
+                  {% if perms.EventAPI.view_event %}
                     <li class="nav-item">
-                      <a class="nav-link" href="{% url 'myCSSAhub:under-dev' %}">
+                      <a class="nav-link" href="{% url 'myCSSAhub:EventAPI:event_stat' %}">
                         <i class="nav-icon cui-tags"></i> 报名管理 </a>
                     </li>
+                  {% endif %}
+
                   </ul>
               </li>
               {% if perms.BlogAPI.change_blog %}

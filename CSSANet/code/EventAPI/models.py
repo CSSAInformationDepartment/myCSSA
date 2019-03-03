@@ -124,6 +124,10 @@ class Event (models.Model):
         else:
             return 0
 
+    def get_attendant_sum(self):
+        attendant = AttendEvent.objects.filter(attendedEventId=self.eventID)
+        return attendant.count()
+    
 
 
 # UserProfile 参加 Event 的多对多 association entity
