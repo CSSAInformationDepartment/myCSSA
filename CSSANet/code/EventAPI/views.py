@@ -1,7 +1,6 @@
 from django.shortcuts import render, get_object_or_404, Http404
 from django.db.models import Q
 
-
 from .models import *
 from .forms import *
 from .apis import is_duplicated_purchase
@@ -43,7 +42,6 @@ class EventStatView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     queryset = Event.objects.filter(disabled=False)
 
 
-    
 
 class AttendantListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     login_url = '/hub/login/'
@@ -98,7 +96,6 @@ class ConfirmEventOrderView(LoginRequiredMixin,View):
     login_url = '/hub/login/'
     template_name = 'EventAPI/confirm_order.html'
     
-
     def get_info_collection_form_field(self, *args, **kwargs):
         id = self.kwargs.get('id')
         info_collection_form = EventAttendentInfoForm.objects.filter(event__pk=id).first()
@@ -116,7 +113,6 @@ class ConfirmEventOrderView(LoginRequiredMixin,View):
             return {'event':event, 'now_time':now_time, 'duplicated_purchase':True}
         else:
             return {'event':event, 'info_form_field':self.get_info_collection_form_field(), 'now_time':now_time}
-
 
     def get(self, request, *args, **kwargs):
         id = self.kwargs.get('id')

@@ -22,6 +22,11 @@ gunicorn
 
 django-braces
 
+xlwt
+
+django-filter
+
+
 
 ### For Development purpose only
 pylint
