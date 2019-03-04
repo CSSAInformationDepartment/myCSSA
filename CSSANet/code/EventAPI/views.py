@@ -39,7 +39,7 @@ class EventStatView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     permission_required = ('EventAPI.view_event',)
     template_name = 'EventAPI/event_stat.html'
     context_object_name = 'events'
-    paginate_by = 25
+    paginate_by = 15
     queryset = Event.objects.filter(disabled=False)
 
 
@@ -50,13 +50,13 @@ class AttendantListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     permission_required = ('EventAPI.view_event',)
     template_name = 'EventAPI/attendant_list.html'
     context_object_name = 'attendants'
-    paginate_by = 25
-    queryset = AttendEvent.objects.filter(disabled=False)
-
+    paginate_by = 15
+    model = AttendEvent
+    
     def get_queryset(self, *args, **kwargs):
         id = self.kwargs.get('id')
-        self.queryset.filter(attendedEventId__eventID=id)
-        return super().get_queryset()
+        qs = self.model.objects.filter(Q(attendedEventId__eventID=id) & Q(disabled=False))
+        return qs
 
 
 class AddEventView(LoginRequiredMixin, View):
