@@ -133,7 +133,7 @@ class User(AbstractUser):
         '''
         Returns the first_name plus the last_name, with a space in between.
         '''
-        Profile = UserProfile.objects.get(user=self.id)
+        Profile = UserProfile.objects.get(user=self)
         if Profile.lastNameCN and Profile.firstNameCN:
             full_name = '%s %s' % (Profile.lastNameCN, Profile.firstNameCN)
             return full_name.strip()
@@ -144,7 +144,7 @@ class User(AbstractUser):
         '''
         Returns the first_name plus the last_name, with a space in between.
         '''
-        Profile = UserProfile.objects.get(user=self.id)
+        Profile = UserProfile.objects.get(user=self)
         if Profile.lastNameEN and Profile.firstNameEN:
             full_name = '%s %s' % (Profile.firstNameEN, Profile.lastNameEN)
             return full_name.strip()
@@ -157,12 +157,6 @@ class User(AbstractUser):
         except:
             return False
 
-
-#    def email_user(self, subject, message, from_email=None, **kwargs):
-#        '''
-#        Sends an email to this User.
-#        '''
-#        send_mail(subject, message, from_email, [self.email], **kwargs)
 
 
 #用户信息主体 （继承自标准admin model，参照： https://www.zmrenwu.com/post/31/）

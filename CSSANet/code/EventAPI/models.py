@@ -127,6 +127,9 @@ class Event (models.Model):
     def get_attendant_sum(self):
         attendant = AttendEvent.objects.filter(attendedEventId=self.eventID)
         return attendant.count()
+
+    def get_attendant_list_url(self):
+        return reverse("myCSSAhub:EventAPI:attendant_list", args=[str(self.eventID)])
     
 
 

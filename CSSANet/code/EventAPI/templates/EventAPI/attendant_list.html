@@ -5,7 +5,7 @@
 {% endblock ExtraHeader %}
 
 {% block pageTitle %}
-活动报名管理
+报名人列表
 {% endblock pageTitle %}
 
 {% block BreadcrumbPath %}
@@ -13,14 +13,13 @@
   <li class="breadcrumb-item">
     <a href="{% url 'myCSSAhub:EventAPI:event_list' %}">活动报名管理</a>
   </li>
+  <li class="breadcrumb-item active">报名人员列表</li>
 {% endblock BreadcrumbPath %}
 
 {% block pageContent %}
 <div class="row mb-3">
   <div class="col-6">
-  {% if event_attended_count %}
-      <p>目前有{{event_attended_count}}个活动正在接受报名</p>
-  {% endif %}
+
   </div>
   
   {% if user.is_staff %}
@@ -41,22 +40,29 @@
           <table id="main-datatable" class="table table-responsive-md"  style="width:100%" >
               <thead>
                 <tr>
-                  <th>活动名称</th>
-                  <th>报名开始时间</th>
-                  <th>当前报名人数</th>
-                  <th>填充率（%） </th>
+                  <th>姓名</th>
+                  <th>邮箱</th>
+                  <th>电话号码</th>
+                  <th>出票情况</th>
+                  <th>入场情况</th>
                 </tr>
               </thead>
               <tbody>
-                {% for event in events %}
+                {% for attendant in attendants %}
                   <tr>
-                    <td><a href="{{event.get_attendant_list_url}}">{{event.eventName}}</a></td>
-                    <td>{{event.eventActualStTime}}</td>
-                    <td>{{event.get_attendant_sum}}</td>
-                    {% if event.hasMaxAttendent %}
-                      <td>{{event.get_estimate_remaining_factor}}</td>
+                    <td>{{attendant.attendedUserId.get_full_EN_name}}</td>
+                    <td>{{attendant.attendedUserId.email}}</td>
+                    <td>{{attendant.attendedUserId.telNumber}}</td>
+                    {% if attendant.token %}
+                      <td>已出票</td>
                     {% else %}
-                      <td>此活动无报名上限</td>
+                      <td> --- </td>
+                    {% endif %}
+
+                    {% if attendant.token_used %}
+                      <td>已入场</td>
+                    {% else %}
+                      <td>尚未入场</td>
                     {% endif %}
                   </tr>
                 {% endfor %}

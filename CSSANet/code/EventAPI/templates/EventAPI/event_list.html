@@ -18,9 +18,7 @@
 {% block pageContent %}
 <div class="row mb-3">
   <div class="col-6">
-  {% if event_attended_count %}
-      <p>目前您报名了{{event_attended_count}}个活动</p>
-  {% endif %}
+
   </div>
   
   {% if user.is_staff %}
@@ -40,23 +38,13 @@
       <div class="card-body">
           <table id="main-datatable" class="table table-responsive-md"  style="width:100%" >
           <thead>
-              {% if event_attended_count %}
-                <tr>
-                  <th></th>
-                  <th></th>
-                  <th></th>
-                  <th></th>
-                </tr>
-              {% else %}
-                <tr>
-                  <th>ID</th>
-                  <th>活动名称</th>
-                  <th>报名开始时间</th>
-                  <th>活动开始时间</th>
-                  <th>活动场馆</th>
-                </tr>
-              {% endif %}
-
+              <tr>
+                <th>ID</th>
+                <th>活动名称</th>
+                <th>报名开始时间</th>
+                <th>活动开始时间</th>
+                <th>活动场馆</th>
+              </tr>
           </thead>
           </table>
       </div>
