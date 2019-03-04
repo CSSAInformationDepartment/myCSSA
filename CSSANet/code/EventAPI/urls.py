@@ -13,5 +13,4 @@ urlpatterns = [
 
 urlpatterns +=[
     path('api/list/', EventListJsonView.as_view(), name="events_json"),
-    path('api/event_stat_list/',EventStatJsonView.as_view(), name="event_stat_list")
 ]

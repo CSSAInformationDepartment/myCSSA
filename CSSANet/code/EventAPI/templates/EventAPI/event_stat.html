@@ -26,7 +26,7 @@
   {% if user.is_staff %}
   <div class="col-6">
       <div class="btn-group float-right" role="group">
-          <a class="btn btn-pill btn-block btn-primary" role="button" href="{% url 'myCSSAhub:EventAPI:add_event' %}">添加新活动信息</a>
+         
       </div>
   </div>
   {% endif %}
@@ -35,30 +35,56 @@
   <div class="col-md-12">
     <div class="card" >
       <div class="card-header">
-        活动列表
+        报名情况统计
       </div>
       <div class="card-body">
           <table id="main-datatable" class="table table-responsive-md"  style="width:100%" >
-          <thead>
-              {% if event_attended_count %}
-                <tr>
-                  <th></th>
-                  <th></th>
-                  <th></th>
-                  <th></th>
-                </tr>
-              {% else %}
+              <thead>
                 <tr>
                   <th>ID</th>
                   <th>活动名称</th>
                   <th>报名开始时间</th>
                   <th>当前报名人数</th>
-                  <th>填充率（0为无人报名或没有人数上限） </th>
+                  <th>填充率（%） </th>
                 </tr>
-              {% endif %}
-
-          </thead>
+              </thead>
+              <tbody>
+                {% for event in events %}
+                  <tr>
+                    <td>{{event.eventID}}</td>
+                    <td>{{event.eventName}}</td>
+                    <td>{{event.eventActualStTime}}</td>
+                    <td>{{event.get_attendant_sum}}</td>
+                    {% if event.hasMaxAttendent %}
+                      <td>{{event.get_estimate_remaining_factor}}</td>
+                    {% else %}
+                      <td>此活动无报名上限</td>
+                    {% endif %}
+                  </tr>
+                {% endfor %}
+              </tbody>
           </table>
+          {% if is_paginated %}
+            <ul class="pagination">
+              {% if page_obj.has_previous %}
+                <li><a href="?page={{ page_obj.previous_page_number }}">&laquo;</a></li>
+              {% else %}
+                <li class="disabled"><span>&laquo;</span></li>
+              {% endif %}
+              {% for i in paginator.page_range %}
+                {% if page_obj.number == i %}
+                  <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+                {% else %}
+                  <li><a href="?page={{ i }}">{{ i }}</a></li>
+                {% endif %}
+              {% endfor %}
+              {% if page_obj.has_next %}
+                <li><a href="?page={{ page_obj.next_page_number }}">&raquo;</a></li>
+              {% else %}
+                <li class="disabled"><span>&raquo;</span></li>
+              {% endif %}
+            </ul>
+          {% endif %}
       </div>
     </div>
   </div>
@@ -67,16 +93,5 @@
 
 {% block ExtraJS %}
 
-<script src="{% static '/myCSSAhub/vendors/DataTables/datatables.js'%}"></script>
-<script>
-$(document).ready(function() {
-    var oTable = $('#main-datatable').dataTable({
-        "responsive": true,
-        "processing": true,
-        "serverSide": true,
-        "ajax": "{% url 'myCSSAhub:EventAPI:event_stat_list' %}",
-    });
-});
-</script>
 
 {% endblock ExtraJS %}

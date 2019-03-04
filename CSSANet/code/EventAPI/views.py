@@ -34,13 +34,14 @@ class EventListView(LoginRequiredMixin, PermissionRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         return render(request, self.template_name)
 
-class EventStatView(LoginRequiredMixin, PermissionRequiredMixin, View):
+class EventStatView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     login_url = '/hub/login/'
     permission_required = ('EventAPI.view_event',)
     template_name = 'EventAPI/event_stat.html'
+    context_object_name = 'events'
+    paginate_by = 25
+    queryset = Event.objects.filter(disabled=False)
     
-    def get(self, request, *args, **kwargs):
-        return render(request, self.template_name)
 
 
 class AddEventView(LoginRequiredMixin, View):
@@ -160,41 +161,6 @@ class EventListJsonView(LoginRequiredMixin, PermissionRequiredMixin, BaseDatatab
         if not self.model:
             raise NotImplementedError("Need to provide a model or implement get_initial_queryset!")
         return self.model.objects.filter(disabled=False).order_by('-eventStartTime')
-
-    def filter_queryset(self, qs):
-        # DO NOT CHANGE THIS LINE
-        search = self.request.GET.get('search[value]', None)
-
-        if search:
-            qs = qs.filter(Q(eventName__istartswith=search))
-        return qs
-
-class EventStatJsonView(LoginRequiredMixin, PermissionRequiredMixin, BaseDatatableView):
-    login_url = '/hub/login/'
-    permission_required = ('EventAPI.view_event',)
-    model = Event
-
-    # define the columns that will be returned
-    columns = ['eventID', 'eventName', 'eventActualStTime','get_attendant_sum', 'get_estimate_remaining_factor']
-    order_columns = ['eventID', 'eventName', '-eventActualStTime','get_attendant_sum', 'get_estimate_remaining_factor']
-
-    max_display_length = 500
-
-    def render_column(self, row, column):
-        # Customer HTML column rendering
-        if (column == 'eventActualStTime'):
-            return row.eventActualStTime.strftime('%Y-%m-%d %H:%M')
-        elif (column == 'get_attendant_sum'):
-            return row.get_attendant_sum()
-        elif (column == 'get_estimate_remaining_factor'):
-            return row.get_estimate_remaining_factor()
-        else:
-            return super(EventStatJsonView, self).render_column(row, column)
-
-    def get_initial_queryset(self):
-        if not self.model:
-            raise NotImplementedError("Need to provide a model or implement get_initial_queryset!")
-        return self.model.objects.filter(disabled=False).order_by('-eventActualStTime')
 
     def filter_queryset(self, qs):
         # DO NOT CHANGE THIS LINE
