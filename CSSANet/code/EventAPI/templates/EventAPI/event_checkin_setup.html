@@ -1,0 +1,36 @@
+{% extends 'myCSSAhub/component/_layout.html' %}
+
+{% block pageTitle %}
+活动签到设置
+{% endblock pageTitle %}
+
+{% block BreadcrumbPath %}
+  <li class="breadcrumb-item">活动管理</li>
+  <li class="breadcrumb-item active">
+    <a href="{% url 'myCSSAhub:EventAPI:check-in' %}">活动签到设置</a>
+  </li>
+  
+{% endblock BreadcrumbPath %}
+
+{% block pageContent %}
+<div class="row">
+    <div class="col col-lg-8 col-md-12 col-sm-12">
+        <div class="card">
+            <div class="card-header">
+                今日开放签到的活动
+            </div>
+            <div class="card-body">
+                <div class="list-group">
+                    {% if events %}
+                        {% for event in events %}
+                            <a class="list-group-item list-group-item-action" href="{% url 'myCSSAhub:EventAPI:user-check-in' event.eventID %}"> {{event.eventName}} </a>
+                        {% endfor %}
+                    {% else %}
+                        <a class="list-group-item list-group-item-action disabled" href="#"> 今日无活动举办 </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock pageContent%}

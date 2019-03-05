@@ -54,7 +54,17 @@
                     <td>{{event.eventActualStTime}}</td>
                     <td>{{event.get_attendant_sum}}</td>
                     {% if event.hasMaxAttendent %}
-                      <td>{{event.get_estimate_remaining_factor}}</td>
+                      <td> 
+                          <div class="clearfix">
+                            <div class="float-left">
+                            <strong>{{event.get_estimate_remaining_factor }}</strong>
+                            </div>
+                          </div>
+                      <div class="progress progress-xs">
+                        <div class="progress-bar bg-success" role="progressbar" style="width: {{event.get_estimate_remaining_factor }}%" aria-valuenow="{{event.get_estimate_remaining_factor }}" aria-valuemin="0" aria-valuemax="100"></div>
+                      </div>
+                      
+                      </td>
                     {% else %}
                       <td>此活动无报名上限</td>
                     {% endif %}

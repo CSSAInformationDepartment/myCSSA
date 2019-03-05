@@ -1,10 +1,9 @@
 {% extends 'myCSSAhub/component/_layout.html' %}
 
-{% block pageTitle %}
-我参与的活动
-{% endblock pageTitle %}
 
-{% block extraHeader %}
+
+{% block ExtraHeader %}
+<style>
 	.card-img {
 		padding-bottom: 70%;
 		position: relative;
@@ -17,7 +16,12 @@
 		max-height: 100px;
 		margin-bottom: 1rem;
 	}
-{% endblock extraHeader %}
+</style>
+{% endblock ExtraHeader %}
+
+{% block pageTitle %}
+我参与的活动
+{% endblock pageTitle %}
 
 {% block BreadcrumbPath %}
     <li class="breadcrumb-item">活动票务</li>

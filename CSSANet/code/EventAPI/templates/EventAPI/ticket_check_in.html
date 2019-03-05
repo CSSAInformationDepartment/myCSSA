@@ -1,0 +1,86 @@
+{% extends 'myCSSAhub/component/_layout.html' %}
+
+{% block pageTitle %}
+访客签到
+{% endblock pageTitle %}
+
+{% block BreadcrumbPath %}
+  <li class="breadcrumb-item">活动管理</li>
+  <li class="breadcrumb-item">
+    活动签到设置
+  </li>
+  <li class="breadcrumb-item active">
+    <a href="{% url 'myCSSAhub:EventAPI:check-in' %}">访客签到</a>
+  </li>
+{% endblock BreadcrumbPath %}
+
+{% block ExtraHeader %}
+<style>
+.flex-list-clickable {
+    height: 25vw;
+}
+</style>
+{% endblock ExtraHeader %}
+
+{% block pageContent %}
+<div class="row">
+    <div class="col col-lg-8 col-md-12 col-sm-12">
+        <div class="card">
+            <div class="card-body">
+                <ul class="list-group">
+                    <div class="list-group-item flex-list-clickable">
+                        <button class="btn btn-ghost-primary btn-lg btn-block h-100" data-toggle="modal" data-target="#manual-check-in">
+                            <p class="h3"><i class="fa fa-id-card fa-lg mr-3" /></i>自助签到</p>
+                            <p class="small text-center text-muted">可用手机号、学生卡号或会员卡号签到</p>
+                        </button>
+                    </div>
+                    <div class="list-group-item flex-list-clickable">
+                        <button class="btn btn-ghost-primary btn-lg btn-block h-100">
+                            <p class="h3"><i class="fa fa-qrcode fa-lg mr-3" /></i>扫码签到</p>
+                            <p class="small text-center text-muted">扫描电子票二维码即可签到</p>
+                        </button>
+                    </div>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="manual-check-in" tabindex="-1" role="dialog" aria-labelledby="manualCheckIn">
+    <div class="modal-dialog modal-primary modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title"><i class="fa fa-id-card mr-3" /></i>自助签到</h4>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="step-1-form">
+                    <form id="manual-checkin-form">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="identity-check" class="col-form-label">请输入您的手机号(国内请先输入+86)、学生卡号或会员卡号:</label>
+                            <input type="tel" class="form-control" id="identity-check" name="identity-check">
+                        </div>
+                    </form>
+                </div>
+                <div class="step-1-fail">
+
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">关闭</button>
+                <button class="btn btn-primary" type="button">下一步</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock pageContent %}
+
+{% block ExtraJs %}
+
+{% endblock ExtraJs %}

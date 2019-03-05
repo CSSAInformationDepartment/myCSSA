@@ -22,10 +22,14 @@ from CSSANet.settings import TIME_ZONE
 from CommunicateManager.send_email import send_emails
 from FlexForm.apis import flexform_user_write_in
 from EventAPI.apis import get_ticket,check_availability
-from django.utils import timezone
+from django.utils import timezone as sys_time
 
 # Create your views here.
 class EventListView(LoginRequiredMixin, PermissionRequiredMixin, View):
+    '''
+    Provide a list of event that is currently registered in the system
+    '''
+
     login_url = '/hub/login/'
     permission_required = ('EventAPI.add_event',)
     template_name = 'EventAPI/event_list.html'
@@ -33,17 +37,24 @@ class EventListView(LoginRequiredMixin, PermissionRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         return render(request, self.template_name)
 
+
 class EventStatView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
+    '''
+    Provide the statistical data for event that has been open for enrolling
+    '''
+
     login_url = '/hub/login/'
     permission_required = ('EventAPI.view_event',)
     template_name = 'EventAPI/event_stat.html'
     context_object_name = 'events'
     paginate_by = 15
-    queryset = Event.objects.filter(disabled=False)
-
+    queryset = Event.objects.filter(disabled=False).order_by("-eventActualStTime")
 
 
 class AttendantListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
+    '''
+    List out all the attendants for a given event
+    '''
     login_url = '/hub/login/'
     permission_required = ('EventAPI.view_event',)
     template_name = 'EventAPI/attendant_list.html'
@@ -58,6 +69,9 @@ class AttendantListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
 
 
 class AddEventView(LoginRequiredMixin, View):
+    '''
+    Adding a new event to the system
+    '''
     login_url = '/hub/login/'
     template_name = 'EventAPI/add_event.html'
     form_class = AddEventForm
@@ -71,6 +85,7 @@ class AddEventView(LoginRequiredMixin, View):
             form.save()
             return HttpResponseRedirect(reverse('myCSSAhub:EventAPI:event_list'))
         return render(request, self.template_name, {'form':form, 'submit_url':reverse('myCSSAhub:EventAPI:add_event')})
+
 
 class UpdateEventView(LoginRequiredMixin, View):
     login_url = '/hub/login/'
@@ -122,7 +137,6 @@ class ConfirmEventOrderView(LoginRequiredMixin,View):
             raise Http404("Event is not open for enrollment yet.")
         return render(request, self.template_name, self.get_context_data(user=request.user))  
     
-
     def post(self, request, *args, **kwargs):
         event_id = self.kwargs.get('id')
         fields = self.get_info_collection_form_field()
@@ -139,6 +153,38 @@ class ConfirmEventOrderView(LoginRequiredMixin,View):
             raise Http404("Ticket cannot be issued. Please contact the event manager")
         
         return render(request, self.template_name, self.get_context_data()) 
+
+class EventCheckInSetupView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
+    '''
+    The view to setup for attendant to check-in their tickets
+    '''
+    login_url = '/hub/login/'
+    permission_required = ('EventAPI.view_event',)
+    template_name ='EventAPI/event_checkin_setup.html'
+    context_object_name ='events'
+    model = Event 
+
+    def get_queryset(self, *args, **kwargs):
+        melb_date=sys_time.localdate(sys_time.now())
+        
+        print(melb_date)
+        qs = self.model.objects.filter(Q(eventActualStTime__date=melb_date) & Q(disabled=False))
+        return qs
+
+class TicketCheckInView(LoginRequiredMixin, PermissionRequiredMixin, View):
+    '''
+    The view to setup for attendant to check-in their tickets
+    '''
+    login_url = '/hub/login/'
+    permission_required = ('EventAPI.view_event',)
+    template_name ='EventAPI/ticket_check_in.html'
+    model = AttendEvent 
+
+    def get(self, request, *args, **kwargs):
+        event_id = self.kwargs.get('event_id')
+        melb_date=sys_time.localdate(sys_time.now())
+        
+        return render(request, self.template_name)
 
 class UserTicketListView(LoginRequiredMixin, View):
     login_url = '/hub/login/'

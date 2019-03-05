@@ -120,7 +120,7 @@ class Event (models.Model):
     def get_estimate_remaining_factor(self):
         if self.hasMaxAttendent:
             current_attendent = AttendEvent.objects.filter(attendedEventId = self).count()
-            return (current_attendent/self.maxAttendent)
+            return (round(current_attendent/self.maxAttendent * 100, 2))
         else:
             return 0
 
@@ -155,7 +155,7 @@ class AttendEvent(models.Model):
 
 class EventAttendentInfoForm(models.Model):
     '''
-    Relational binding betweeen Event Model and 
+    Relational binding betweeen Event Model and FlexForm
     '''
     id = models.AutoField(primary_key=True, editable=False)
     event = models.ForeignKey(Event, on_delete=models.CASCADE, verbose_name=_("绑定新活动"))
