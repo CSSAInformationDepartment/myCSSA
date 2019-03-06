@@ -37,4 +37,4 @@ class DiscountMerchant(models.Model):
     ('折扣商家', '折扣商家'),
     ('赞助商家', '赞助商家'),
 )
-    merchant_type = models.CharField(max_length=10,choices= merchantType,null=True)
+    merchant_type = models.CharField(verbose_name="商户类型",max_length=10,choices= merchantType,null=True,default='折扣商家')

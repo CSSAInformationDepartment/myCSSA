@@ -99,7 +99,7 @@ class Merchant_add(PermissionRequiredMixin, LoginRequiredMixin, View):
             #标注：所有跟表单相关的保存操作，用ModelForm绑定，不要手写model field，容易出错
             form.save()
             have_update = True
-        return render(request, self.template_name, {'update': have_update})
+        # return render(request, self.template_name, {'update': have_update})
 
         return render(request, self.template_name, {'update': have_update, 'form':form})
 
@@ -142,7 +142,7 @@ class Merchant_profile(LoginRequiredMixin, View):
                     is_change = True
                 if m_type != self.old_info.merchant_type:
                     self.old_info.merchant_type = m_type
-                    is_change = True 
+                    is_change = True
                 if m_address != self.old_info.merchant_address:
                     self.old_info.merchant_address = m_address
                     is_change = True
