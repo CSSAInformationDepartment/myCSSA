@@ -38,3 +38,6 @@ class DiscountMerchant(models.Model):
     ('赞助商家', '赞助商家'),
 )
     merchant_type = models.CharField(max_length=10,choices= merchantType,null=True)
+
+    def __str__(self):
+        return self.merchant_name
