@@ -34,10 +34,11 @@ class DiscountMerchant(models.Model):
     merchant_add_date = models.DateTimeField(verbose_name="商户加入时间", default=timezone.now)
     merchant_image =  models.ImageField(upload_to = 'img/merchants/', default = 'img/merchants/noneImg.jpg')
     merchantType = (
-    ('折扣商家', '折扣商家'),
-    ('赞助商家', '赞助商家'),
-)
-    merchant_type = models.CharField(max_length=10,choices= merchantType,null=True)
+        ('折扣商家', '折扣商家'),
+        ('赞助商家', '赞助商家'),
+    )
+    merchant_type = models.CharField(verbose_name="商户类型",max_length=10,choices= merchantType,null=True,default='折扣商家')
 
     def __str__(self):
         return self.merchant_name
+    

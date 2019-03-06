@@ -26,6 +26,7 @@
 
 
 {% block pageContent %}
+{% load widget_tweaks %}
 <form method="post" id="form" enctype="multipart/form-data">
     {% for error in form.non_field_errors %}
     <div class="alert alert-danger">
@@ -68,11 +69,11 @@
     <div class="form-group">
         <label for="merchant_name">商户名：<span class="asteriskField">*</span></label>
         <input class="form-control" id="" name="merchant_name" style="width:100%" required/>
-        <label for="merchant_type">商户类型：<span class="asteriskField">*</span></label>
-        <select class="form-control" name="merchant_type" required>
-        <option value="折扣商家">折扣商家</option>
-  <option value="赞助商家">赞助商家</option>
-  </select>
+
+
+        {{ form.merchant_type.label_tag }}<span class="asteriskField">*</span>
+        {% render_field form.merchant_type class="form-control" %}
+
         <label for="merchant_address">地址：<span class="asteriskField">*</span></label>
         <input class="form-control" name="merchant_address" type="text" required />
         <label for="merchant_phone">联系电话：</label>
