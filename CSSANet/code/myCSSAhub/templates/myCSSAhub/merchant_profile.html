@@ -25,6 +25,7 @@
 
 {% endblock ExtraHeader %}
 {% block pageContent %}
+{% load widget_tweaks %}
 
 
 <div>商家原图片</div>
@@ -83,7 +84,7 @@
         <label for="merchant_name">商户名：</label>
         <input class="form-control" id="m_name" name="m_name" style="width:100%" required/>
 
-        {{ form.merchant_type.label_tag }}<span class="asteriskField">*</span>
+        {{ form.merchant_type.label_tag }}
         {% render_field form.merchant_type class="form-control" %}
 
         <label for="merchant_address">地址：</label>
@@ -127,10 +128,11 @@
 <script type="text/javascript">
 
     document.getElementById("m_name").value = '{{infos.merchant_name}}'
+    document.getElementById("m_type").value = '{{infos.merchant_type}}'
     document.getElementById("m_address").value = '{{infos.merchant_address}}'
     document.getElementById("m_phone").value = '{{infos.merchant_phone}}'
     document.getElementById("m_link").value = '{{infos.merchant_link}}'
     document.getElementById("m_description").value = '{{infos.merchant_description}}'
-    //document.getElementById("input-b1").value = '{{infos.merchant_image}}'
+    document.getElementById("input-b1").value = '{{infos.merchant_image}}'
 </script>
 {% endblock ExtraJS %}
