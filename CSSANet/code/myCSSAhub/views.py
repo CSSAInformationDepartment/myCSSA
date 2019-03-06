@@ -202,48 +202,52 @@ class Inbox(LoginRequiredMixin, View):
     template_name = 'myCSSAhub/email_inbox.html'
 
     def get(self, request):
-           
+
         return render(request, self.template_name, locals())
-    
+
     def post(self, request):
-        
+
         return render(request, self.template_name)
+
 
 class Email_Message(LoginRequiredMixin, View):
     login_url = '/hub/login/'
     template_name = 'myCSSAhub/email_message.html'
 
     def get(self, request):
-           
+
         return render(request, self.template_name, locals())
-    
+
     def post(self, request):
-        
+
         return render(request, self.template_name)
+
 
 class Email_Compose(LoginRequiredMixin, View):
     login_url = '/hub/login/'
-    template_name = 'myCSSAhub/email_compose.html' 
+    template_name = 'myCSSAhub/email_compose.html'
 
     def get(self, request):
-           
+
         return render(request, self.template_name, locals())
-    
+
     def post(self, request):
-        
+
         return render(request, self.template_name)
 
 ################################# calendar ########################################
+
+
 class Calendar(LoginRequiredMixin, View):
     login_url = '/hub/login/'
-    template_name = 'myCSSAhub/calendar.html' 
+    template_name = 'myCSSAhub/calendar.html'
 
     def get(self, request):
-           
+
         return render(request, self.template_name, locals())
-    
+
     def post(self, request):
-        
+
         return render(request, self.template_name)
 
 
@@ -276,27 +280,27 @@ class Merchant_add(LoginRequiredMixin, View):
         have_update = False
         # 从表单获取图片并上传
         if request.user.is_authenticated:
-            form = MerchantsForm(request.POST, request.FILES)
+            form = MerchantsForm(data=request.POST)
             if form.is_valid():
 
-                m_name = form.cleaned_data['m_name']
-                m_address = form.cleaned_data['m_address']
-                m_phone = form.cleaned_data['m_phone']
-                m_link = form.cleaned_data['m_link']
-                m_description = form.cleaned_data['m_description']
-                m_image = form.cleaned_data['m_image']
+                # m_name = form.cleaned_data['m_name']
+                # m_address = form.cleaned_data['m_address']
+                # m_phone = form.cleaned_data['m_phone']
+                # m_link = form.cleaned_data['m_link']
+                # m_description = form.cleaned_data['m_description']
+                # m_image = form.cleaned_data['m_image']
 
-                # print("name", m_name)
-                # print("address", m_address)
-                # print("phone", m_phone)
-                # print("link", m_link)
-                # print("description", m_description)
-                # print("image", m_image)
+                # # print("name", m_name)
+                # # print("address", m_address)
+                # # print("phone", m_phone)
+                # # print("link", m_link)
+                # # print("description", m_description)
+                # # print("image", m_image)
 
-                new_merchant = DiscountMerchant(merchant_name=m_name, merchant_description=m_description,
-                                                merchant_phone=m_phone, merchant_address=m_address, merchant_link=m_link, merchant_image=m_image)
+                # new_merchant = DiscountMerchant(merchant_name=m_name, merchant_description=m_description,
+                #                                 merchant_phone=m_phone, merchant_address=m_address, merchant_link=m_link, merchant_image=m_image)
 
-                new_merchant.save()
+                form.save()
                 have_update = True
 
         return render(request, self.template_name, {'update': have_update})
@@ -312,7 +316,7 @@ class Merchant_profile(LoginRequiredMixin, View):
     def get(self, request,  *args, **kwargs):
         profileID = self.kwargs.get('id')
         # 获取id相关的信息
-        infos = DiscountMerchant.objects.get(id=profileID)
+        infos = DiscountMerchant.objects.get(merchant_id=profileID)
         self.old_info = infos
         return render(request, self.template_name, locals())
 
@@ -320,7 +324,7 @@ class Merchant_profile(LoginRequiredMixin, View):
         have_update = False
         # 从表单获取更新信息
         if request.user.is_authenticated:
-            form = MerchantsForm(request.POST, request.FILES)
+            form = MerchantsForm(data=request.POST)
             if form.is_valid():
                 is_change = False
                 m_name = form.cleaned_data['m_name']
@@ -348,10 +352,10 @@ class Merchant_profile(LoginRequiredMixin, View):
                 if m_image != self.old_info.merchant_image:
                     self.old_info.merchant_image = m_image
                     is_change = True
-                
+
                 if is_change:
-                  self.old_info.save()
-                  have_update = True
+                    self.old_info.save()
+                    have_update = True
 
         return render(request, self.template_name, {'update': have_update})
 
@@ -438,8 +442,8 @@ class NewUserSignUpView(View):
 
             # 完成信息保存以后，发送注册成功的邮件
             target_email = account_form.email
-            userName = profile_form.firstNameEN + " " +profile_form.lastNameEN
-            send_emails('Register Successful', userName , target_email, None)
+            userName = profile_form.firstNameEN + " " + profile_form.lastNameEN
+            send_emails('Register Successful', userName, target_email, None)
 
         else:
             return JsonResponse({
@@ -536,6 +540,7 @@ class MembershipCardView(LoginRequiredMixin, View):
 
 ############################# blog ####################################################
 
+
 def editBlog(request):
     # 需要判断contentId
     # avatar没有的时候会报错
@@ -568,7 +573,6 @@ def editBlog(request):
     blogTitle = ""
     blogMainContent = ""
 
-
     if blogId != NEW_BLOG:
         blogWrittenBys = BlogModels.BlogWrittenBy.objects.filter(blogId=blogId)
         wrote = False
@@ -576,7 +580,6 @@ def editBlog(request):
             for blogWrittenBy in blogWrittenBys:
                 if userAuthed and blogWrittenBy.userId == request.user:
                     wrote = True
-                
 
             # user没有写blog
             if wrote == False:
@@ -589,7 +592,8 @@ def editBlog(request):
         blogMainContent = blogContentSingle.blogMainContent
         ViewBag["toolTitle"] = CH_BLOG
         curBlogTag = BlogModels.BlogInTag.objects.filter(blogId=blog[0])
-        blogTag = json.dumps([x.tagId.tagName for x in curBlogTag]).replace("\\", "\\\\")
+        blogTag = json.dumps(
+            [x.tagId.tagName for x in curBlogTag]).replace("\\", "\\\\")
 
         ViewBag["blogTag"] = blogTag
     else:
@@ -602,8 +606,6 @@ def editBlog(request):
     ViewBag["blogTitle"] = blogTitle
     ViewBag["blogMainContent"] = blogMainContent
 
-
-    
     return render(request, 'myCSSAhub/blogeditpage.html', ViewBag)
 
 ############################# AJAX Page Resources #####################################
@@ -724,11 +726,6 @@ class UserLookup(LoginRequiredMixin, View):
                 'success': False,
                 'status': '400',
             })
-
-    
-
-
-        
 
 
 ################################# errors pages ########################################

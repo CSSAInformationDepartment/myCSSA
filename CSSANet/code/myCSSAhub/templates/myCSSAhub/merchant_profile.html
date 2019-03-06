@@ -16,22 +16,17 @@
 <!-- <script src="https://code.jquery.com/jquery-3.3.1.min.js" crossorigin="anonymous"></script> -->
 <!-- piexif.min.js is needed for auto orienting image files OR when restoring exif data in resized images and when you
     wish to resize images before upload. This must be loaded before fileinput.min.js -->
-
 </style> -->
+
 {% endblock ExtraHeader %}
 {% block pageContent %}
-<script type="text/javascript">
-    
-    document.getElementById("m_name").val() = '{{infos.merchant_name}}'
-    document.getElementById("m_address").val() = '{{infos.merchant_address}}'
-    document.getElementById("m_phone").val() = '{{infos.merchant_phone}}'
-    document.getElementById("m_link").val() = '{{infos.merchant_link}}'
-    document.getElementById("m_description").val() = '{{infos.merchant_description}}'
-    
-</script>
+
 
 <div>商家原图片</div>
-<center><img id="m_img" src="{{infos.merchant_image}}" alt="{{infos.merchant_name}}" width="350" height="170"></center>
+<center><img id="m_img" src="/media/{{infos.merchant_image}}" alt="{{infos.merchant_name}}" width="250" height="170"></center>
+
+
+
 <form method="post" id="form" enctype="multipart/form-data">
     {% comment %} {% for error in form.non_field_errors %}
     <div class="alert alert-danger">
@@ -79,13 +74,13 @@
         <label for="merchant_phone">联系电话：</label>
         <input class="form-control" id="m_phone" name="m_phone" type="phone" required />
         <label for="merchant_link">商家网站：</label>
-        <input class="form-control" id="m_link" name="m_link" type="link" required />
+        <input class="form-control" id="m_link" name="m_link" type="link" />
         <div class="form-group">
             <label for="merchant_description">商家简介：</label>
             <textarea class="form-control" id="m_description" name="m_description" rows="11" required></textarea>
         </div>
         <div class="form-group">
-            <label for="merchant_pic">选择商家图片：</label>
+            <label for="merchant_pic">选择新的商家图片：</label>
             <input id="input-b1" name="m_image" type="file" class="file" data-browse-on-zone-click="true">
         </div>
     </div>
@@ -97,6 +92,17 @@
 
 {% endblock%}
 {% block ExtraJS %}
+
+<script type="text/javascript">
+    
+    document.getElementById("m_name").value = '{{infos.merchant_name}}'
+    document.getElementById("m_address").value = '{{infos.merchant_address}}'
+    document.getElementById("m_phone").value = '{{infos.merchant_phone}}'
+    document.getElementById("m_link").value = '{{infos.merchant_link}}'
+    document.getElementById("m_description").value = '{{infos.merchant_description}}'
+    
+</script>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.5.1/js/plugins/piexif.min.js" type="text/javascript"></script>
 <!-- sortable.min.js is only needed if you wish to sort / rearrange files in initial preview. 
     This must be loaded before fileinput.min.js -->
