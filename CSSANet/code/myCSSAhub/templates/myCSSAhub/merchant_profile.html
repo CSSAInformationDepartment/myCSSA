@@ -82,6 +82,11 @@
     <div class="form-group">
         <label for="merchant_name">商户名：</label>
         <input class="form-control" id="m_name" name="m_name" style="width:100%" required/>
+        <label for="merchant_type">商户类型：<span class="asteriskField">*</span></label>
+        <select class="form-control" id="m_type" name="m_type" required>
+        <option value="折扣商家">折扣商家</option>
+  <option value="赞助商家">赞助商家</option>
+  </select>
         <label for="merchant_address">地址：</label>
         <input class="form-control" id="m_address" name="m_address" type="text" required />
         <label for="merchant_phone">联系电话：</label>
@@ -121,7 +126,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.5.1/js/locales/LANG.js"></script>
 
 <script type="text/javascript">
-    
+
     document.getElementById("m_name").value = '{{infos.merchant_name}}'
     document.getElementById("m_address").value = '{{infos.merchant_address}}'
     document.getElementById("m_phone").value = '{{infos.merchant_phone}}'

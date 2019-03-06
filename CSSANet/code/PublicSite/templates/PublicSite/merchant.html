@@ -5,13 +5,17 @@
         <div class="container bloc-fill-screen">
 
       <!-- Page Heading -->
-      <h1 class="my-4 text-left">合作折扣商家
+      <h1 class="my-4 text-left">
+
+        合作折扣商家
         <small> 感谢以下商家的大力支持:)</small>
+
       </h1>
 
 
       <div class="row justify-content-center">
        {% for info in infos %}
+       {% if info.merchant_type == "折扣商家" %}
         <div class="col-lg-4 col-sm-6 portfolio-item mt-2">
           <div class="card" style="border: none; width:280px;">
             <a href="{{info.merchant_link}}"><img alt="{{info.merchant_name}}" class="card-img-top img-fluid" src="/media/{{info.merchant_image}}" style="height:180px; width:100%"></a>
@@ -23,6 +27,7 @@
             </div>
           </div>
         </div>
+          {% endif %}
         {% endfor %}
       </div>
       <!-- /.row -->

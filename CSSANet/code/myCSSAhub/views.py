@@ -53,14 +53,14 @@ def home(request):
 ################################# calendar ########################################
 class Calendar(LoginRequiredMixin, View):
     login_url = '/hub/login/'
-    template_name = 'Communication/calendar.html' 
+    template_name = 'Communication/calendar.html'
 
     def get(self, request):
-           
+
         return render(request, self.template_name, locals())
-    
+
     def post(self, request):
-        
+
         return render(request, self.template_name)
 
 
@@ -100,10 +100,10 @@ class Merchant_add(PermissionRequiredMixin, LoginRequiredMixin, View):
             form.save()
             have_update = True
         return render(request, self.template_name, {'update': have_update})
-        
+
         return render(request, self.template_name, {'update': have_update, 'form':form})
 
-# 
+#
 
 
 class Merchant_profile(LoginRequiredMixin, View):
@@ -135,10 +135,14 @@ class Merchant_profile(LoginRequiredMixin, View):
                 m_link = form.cleaned_data['m_link']
                 m_description = form.cleaned_data['m_description']
                 m_image = form.cleaned_data['m_image']
+                m_type=form.cleaned_data['m_type']
 
                 if m_name != self.old_info.merchant_name:
                     self.old_info.merchant_name = m_name
                     is_change = True
+                if m_type != self.old_info.merchant_type:
+                    self.old_info.merchant_type = m_type
+                    is_change = True 
                 if m_address != self.old_info.merchant_address:
                     self.old_info.merchant_address = m_address
                     is_change = True
