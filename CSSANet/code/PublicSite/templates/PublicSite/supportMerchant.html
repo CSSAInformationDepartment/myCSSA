@@ -6,19 +6,31 @@
 
       <!-- Page Heading -->
       <h1 class="my-4 text-left">特别鸣谢
-        <small> 特别感谢以下合作商家</small>
+        <br><small class="lead"> 特别感谢以下合作商家</small>
       </h1>
 
 
       <div class="row justify-content-center">
         {% for info in infos %}
-        {% if info.merchant_type == "合作商家" %}
+        {% if info.merchant_type == "赞助商家" %}
          <div class="col-lg-2 col-sm-6 portfolio-item mt-2">
            <div class="card" style="border: none; width:280px;">
-             <a href="{{info.merchant_link}}"><img alt="{{info.merchant_name}}" class="card-img-top img-fluid" src="/media/{{info.merchant_image}}" style="height:180px; width:100%"></a>
+             {% if info.merchant_link %}
+             <a href="{{info.merchant_link}}">
+               {% else %}
+               <a href=#>
+               {% endif %}
+             <img alt="{{info.merchant_name}}" class="card-img-top img-fluid" src="/media/{{info.merchant_image}}" style="height:250px; width:100%"></a>
              <div class="card-body">
-               <h1 class="card-title">
-                 <a href="{{info.merchant_link}}"><strong>{{info.merchant_name}}</strong></a>
+               <h1 class="card-title text-center">
+                 {% if info.merchant_link %}
+                 <a href="{{info.merchant_link}}" class="h1">
+                 {% else %}
+                 <a href=# class="h1">
+                   {% endif %}
+                   <strong>{{info.merchant_name}}</strong></a>
+
+
                </h1>
              </div>
            </div>
