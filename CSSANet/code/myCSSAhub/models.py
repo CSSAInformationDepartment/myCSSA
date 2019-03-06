@@ -27,7 +27,7 @@ class AccountMigration(models.Model):
 class DiscountMerchant(models.Model):
     merchant_id = models.AutoField(primary_key=True, editable=False)
     merchant_name =  models.CharField(verbose_name="商家名", max_length=200, null=True)
-    merchant_description =  models.CharField(verbose_name="商家介绍", max_length=200, null=True)
+    merchant_description =  models.TextField(verbose_name="商家介绍", null=True, blank=True, default=None)
     merchant_phone =  models.CharField(verbose_name="联系电话", max_length=200, null=True,blank=True)
     merchant_address =  models.CharField(verbose_name="商家地址", max_length=200, null=True)
     merchant_link =  models.CharField(verbose_name="商家网站", max_length=200, null=True,blank=True)
@@ -37,7 +37,7 @@ class DiscountMerchant(models.Model):
         ('折扣商家', '折扣商家'),
         ('赞助商家', '赞助商家'),
     )
-    merchant_type = models.CharField(verbose_name="商户类型",max_length=10,choices= merchantType,null=True,default='折扣商家')
+    merchant_type = models.CharField(verbose_name="商户类型", max_length=10, choices= merchantType, null=True, default='折扣商家')
 
     def __str__(self):
         return self.merchant_name

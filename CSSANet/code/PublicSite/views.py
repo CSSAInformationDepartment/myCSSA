@@ -328,7 +328,7 @@ def Merchants(request):
     return render(request,'PublicSite/merchant.html', locals())
 
 def SupportMerchants(request):
-    infos = HubModels.DiscountMerchant.objects.all().order_by("merchant_add_date").values()
+    infos = HubModels.DiscountMerchant.objects.all().order_by("merchant_add_date")
     return render(request,'PublicSite/supportMerchant.html', {'infos':infos})
 
 ################################# errors pages ########################################
