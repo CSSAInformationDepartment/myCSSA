@@ -82,9 +82,9 @@
     <div class="form-group">
         <label for="merchant_name">商户名：</label>
         <input class="form-control" id="m_name" name="m_name" style="width:100%" required/>
-      
-       {{ form.merchant_type.label_tag }}
-       {{ form.merchant_type }}
+
+        {{ form.merchant_type.label_tag }}<span class="asteriskField">*</span>
+        {% render_field form.merchant_type class="form-control" %}
 
         <label for="merchant_address">地址：</label>
         <input class="form-control" id="m_address" name="m_address" type="text" required />

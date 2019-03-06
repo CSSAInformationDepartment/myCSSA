@@ -126,7 +126,7 @@ class EventsListView(View):
     events=eventModels.Event.objects.all().order_by("eventStartTime")
     eventsFuture=eventModels.Event.objects.filter(eventActualStTime__gt=now_time).order_by("eventActualStTime")
     eventsPast=eventModels.Event.objects.filter(eventActualStTime__lt=now_time).order_by("eventActualStTime")
-    
+
     def get(self, request, *args, **kwargs):
         return render(request, self.template_name, {'eventsFuture':self.eventsFuture, 'now_time':self.now_time,'events':self.events, 'eventsPast':self.eventsPast})
 
@@ -326,6 +326,10 @@ def Merchants(request):
     infos = HubModels.DiscountMerchant.objects.all().order_by("merchant_add_date").values()
 
     return render(request,'PublicSite/merchant.html', locals())
+
+def SupportMerchants(request):
+    infos = HubModels.DiscountMerchant.objects.all().order_by("merchant_add_date").values()
+    return render(request,'PublicSite/supportMerchant.html', {'infos':infos})
 
 ################################# errors pages ########################################
 from django.shortcuts import render

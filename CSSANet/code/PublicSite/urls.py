@@ -11,6 +11,7 @@ urlpatterns = [
     path('recruitment/', Views.Recruitments, name='recruitment'),
     path('resumes/<str:jobId>/', Views.ResumeSubmissionView.as_view(), name='resumes'),
     path('merchants/', Views.Merchants, name='merchants'),
+    path('support_merchants/', Views.SupportMerchants, name='supportMerchants'),
     path('blog/<int:blogId>/', Views.BlogContents, name='blogContent'),
     path('blogs/', Views.Blogs, name='blogs'),
     path('reviewblog/', Views.reviewBlogPublic.as_view(), name='reviewBlogPublic'),
