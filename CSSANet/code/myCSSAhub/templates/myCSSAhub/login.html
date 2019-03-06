@@ -57,7 +57,6 @@ function bs_alert_popup(){
 $('#main-login-form').on('submit', function(event){
     event.preventDefault();
     function create_post() {
-      console.log("create post is working!") // sanity check
       $.ajax({
         url : window.location.href, // the endpoint
         type : "POST", // http method

@@ -86,37 +86,31 @@ class Merchant_add(PermissionRequiredMixin, LoginRequiredMixin, View):
     login_url = '/hub/login/'
     template_name = 'myCSSAhub/merchant_add.html'
     permission_required = ('myCSSAhub.change_discountmerchant')
+    form_class = MerchantsForm
 
-    def get(self, request):
+    def get(self, request, *args, **kwargs):
+        return render(request, self.template_name, {'form':self.form_class})
 
-        return render(request, self.template_name)
-
-    def post(self, request):
+    def post(self, request, *args, **kwargs):
         have_update = False
         # 从表单获取图片并上传
-        if request.user.is_authenticated:
-            form = MerchantsForm(request.POST, request.FILES)
-            if form.is_valid():
-
-                m_name = form.cleaned_data['m_name']
-                m_address = form.cleaned_data['m_address']
-                m_phone = form.cleaned_data['m_phone']
-                m_link = form.cleaned_data['m_link']
-                m_description = form.cleaned_data['m_description']
-                m_image = form.cleaned_data['m_image']
-
-                new_merchant = DiscountMerchant(merchant_name=m_name, merchant_description=m_description,
-                                                merchant_phone=m_phone, merchant_address=m_address, merchant_link=m_link, merchant_image=m_image)
-
-                new_merchant.save()
-                have_update = True
-
+        form = self.form_class(request.POST, request.FILES)
+        if form.is_valid():
+            #标注：所有跟表单相关的保存操作，用ModelForm绑定，不要手写model field，容易出错
+            form.save()
+            have_update = True
         return render(request, self.template_name, {'update': have_update})
+        
+        return render(request, self.template_name, {'update': have_update, 'form':form})
 
-# 这个页面主要是加载已经加入商家的信息，并更新
+# 
 
 
 class Merchant_profile(LoginRequiredMixin, View):
+    '''
+    加载已经加入商家的信息，并更新
+    '''
+
     login_url = '/hub/login/'
     template_name = 'myCSSAhub/merchant_profile.html'
     old_info = []

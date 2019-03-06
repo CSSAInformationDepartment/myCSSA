@@ -186,6 +186,38 @@ class TicketCheckInView(LoginRequiredMixin, PermissionRequiredMixin, View):
         
         return render(request, self.template_name)
 
+    def post(self, request, *args, **kwagrs):
+        event_id = self.kwargs.get('event_id')
+        manual_check_input = request.POST.get('identity-check')
+        qr_code = request.POST.get('qr-decoded')
+
+        if manual_check_input:
+            user = UserProfile.objects.filter(Q(studentId=manual_check_input)
+                | Q(membershipId=manual_check_input)
+                | Q(user__telNumber=manual_check_input)).first()
+            if user:
+                ticket = AttendEvent.objects.filter(Q(attendedEventId__pk=event_id) 
+                    & Q(attendedUserId=user.user) & Q(token_used=False)).first()
+                if ticket:
+                    ticket.token_used=True
+                    ticket.save()
+                    return JsonResponse(
+                        {'success': True,
+                        'type':0,
+                        'message':"Check-in Successful"}
+                    )
+            return JsonResponse(
+                        {'success': False,
+                        'type':1,
+                        'message':"No valid ticket for this event"}
+                    )
+        return JsonResponse(
+                        {'success': False,
+                        'type':0,
+                        'message':"Empty Request"}
+                    )
+
+
 class UserTicketListView(LoginRequiredMixin, View):
     login_url = '/hub/login/'
     template_name = 'EventAPI/user_ticket_list.html'
