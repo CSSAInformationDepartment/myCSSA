@@ -1,0 +1,414 @@
+{% extends 'components/base_page.html' %}
+{% block 'extra_header' %}
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static '/myCSSAhub/css/registrationForm.css'%}">
+<link rel="stylesheet" type="text/css" href="{% static '/myCSSAhub/vendors/jquery-ui/jquery-ui.min.css'%}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.0-alpha14/css/tempusdominus-bootstrap-4.min.css"/>
+{% endblock 'extra_header' %}
+
+{% block 'pg_body' %}
+{% load static %}
+
+<style>
+  #bloc-1 {
+    background-image: url("{% static '/myCSSAhub/img/bg_Register.jpg' %}");
+    background-color: rgba(255, 255, 255, 0.4);
+    background-blend-mode: lighten;
+  }
+</style>
+
+<div class="bloc none l-bloc" id="bloc-1">
+  <div class="container bloc-fill-screen">
+    <div class="row justify-content-md-center">
+      <div id="loginbox" class="col-sm-9 col-md-7 col-lg-5 mx-auto">
+        <form id="msform" class="form-horizontal col" autocomplete="off" action="{% url 'myCSSAhub:hub_userinfo_create' %}" method="POST">
+
+          {% csrf_token %}
+          <input type="hidden" name="membershipId" value="{{LegacyData.membershipId}}"/>
+<fieldset>
+          <h5 class="fs-title">请填写你的基本信息</h5>
+          <div class="row">
+            <div class="col-6 pr-0">
+                    <div id="name" class="form-label-group col required">
+                      <label
+                        for="id_firstName"
+                        class="control-label requiredField"
+                      >
+                        First Name<span class="asteriskField">*</span>
+                      </label>
+                      <div class="controls">
+                        <input
+                          required
+                          class="input-md  textinput textInput form-control"
+                          id="id_firstname"
+                          name="firstNameEN"
+                          placeholder="名（拼音）"
+                          type="text"
+                          data-parsley-pattern="^[a-zA-Z]+$"
+                          data-parsley-group="step2"
+                          value="{{ LegacyData.firstNameEN }}"
+                        />
+                      </div>
+                    </div>
+                    </div>
+                    <div class="col-6 pl-0">
+                    <div id="name" class="form-label-group col required">
+                      <label
+                        for="id_lastName"
+                        class="control-label requiredField"
+                      >
+                        Last Name<span class="asteriskField">*</span>
+                      </label>
+                      <div class="controls">
+                        <input
+                          required
+                          class="input-md  textinput textInput form-control"
+                          id="id_lastname"
+                          name="lastNameEN"
+                          placeholder="姓（拼音）"
+                          type="text"
+                          data-parsley-pattern="^[a-zA-Z]+$"
+                          data-parsley-group="step2"
+                          value="{{ LegacyData.lastNameEN }}"
+                        />
+                      </div>
+                    </div>
+          </div>
+          </div>
+
+          <div class="form-label-group required">
+            <label class="control-label  col-md-6 requiredField"
+              >E-mail<span class="asteriskField">*</span></label
+            >
+            <div class="controls col-md-12">
+              <input
+                required
+                class="input-md textinput textInput form-control"
+                id="id_email"
+                name="email"
+                placeholder="邮箱"
+                type="text"
+                data-parsley-group="step1"
+                data-parsley-type="email"
+                data-parsley-database-Check="email"
+                value="{{ LegacyData.email }}"
+                autocomplete="off"
+              />
+            </div>
+          </div>
+          <div id="div_id_number" class="form-label-group required">
+            <label
+              for="id_number"
+              class="control-label col-md-6  requiredField"
+            >
+              Contact Number<span class="asteriskField">*</span>
+            </label>
+            <div class="controls col-md-12 ">
+              <input
+                required
+                class="input-md textinput textInput form-control"
+                id="id_telNumber"
+                name="telNumber"
+                placeholder="澳洲或者中国电话号码"
+                type="text"
+                data-parsley-tel-Number-Check="1"
+                data-parsley-database-check="telNumber"
+                data-parsley-group="step1"
+                value="{{ LegacyData.telNumber }}"
+                autocomplete="off"
+              />
+            </div>
+          </div>
+          <div id="password1" class="form-label-group required">
+            <label
+              for="id_password1"
+              class="control-label col-md-6 requiredField"
+            >
+              Password<span class="asteriskField">*</span>
+            </label>
+            <div class="controls col-md-12 ">
+              <input
+                required
+                class="input-md textinput textInput form-control"
+                id="id_password"
+                name="password"
+                placeholder="密码"
+                type="password"
+                data-parsley-group="step1"
+                autocomplete="off"
+              />
+              <div id="progress-container" style="padding-top:10px"></div>
+            </div>
+          </div>
+          <div id="password2" class="form-label-group required">
+            <label
+              for="id_password1"
+              class="control-label col-md-8 requiredField"
+            >
+              Confirm Password<span class="asteriskField">*</span>
+            </label>
+            <div class="controls col-md-12 ">
+              <input
+                required
+                class="input-md textinput textInput form-control"
+                id="id_confirmPassword"
+                name="confirmPassword"
+                placeholder="重新输入密码"
+                type="password"
+                data-parsley-group="step1"
+                data-parsley-equalto="#id_password"
+                autocomplete="off"
+              />
+            </div>
+          </div>
+          <div id="gender" class="form-label-group required">
+            <label
+              for="id_gender"
+              class="control-label  col-md-6 requiredField"
+            >
+              Gender<span class="asteriskField">*</span>
+            </label>
+          <div class="controls  col-md-12 ">
+            <select
+            required
+              class="selectpicker form-control"
+              id="id_gender"
+              name="gender"
+              data-parsley-group="step2"
+            >
+              <option value=""> --- Please Choose --- </option>
+              <option value="Female"> Female/女 </option>
+              <option value="Male"> Male / 男 </option>
+              <option value="Other"> Other / 其他</option>
+            </select>
+          </div>
+          </div>
+
+          <div id="div_id_number" class="form-label-group required">
+            <label
+              for="id_number"
+              class="control-label  col-md-6  requiredField"
+            >
+              Date of Birth<span class="asteriskField">*</span>
+            </label>
+            <div class="controls  col-md-12 ">
+              <div
+                class="controls input-group date"
+                id="datetimepicker1"
+                data-target-input="nearest"
+              >
+              <div
+                class="input-group-append"
+                data-target="#datetimepicker1"
+                data-toggle="datetimepicker"
+              >
+                <div class="input-group-text">
+                  <i class="fa fa-calendar"></i>
+                </div>
+              </div>
+                <input
+                  required
+                  class="input-md textinput textInput form-control datetimepicker-input"
+                  name="dateOfBirth"
+                  placeholder="MM/DD/YYYY"
+                  type="text"
+                  data-target="#datetimepicker1"
+                  data-parsley-group="step2"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="form-label-group required">
+            <label class="control-label  col-md-6 requiredField">
+              Student ID<span class="asteriskField">*</span></label
+            >
+            <div class="controls  col-md-12">
+              <input
+                required
+                class="input-md textinput textInput form-control"
+                id="id_studentId"
+                name="studentId"
+                placeholder="请输入你的学生卡号"
+                type="text"
+                data-parsley-minlength="6"
+                data-parsley-maxlength="7"
+                data-parsley-database-check="studentId"
+                data-parsley-group="step3"
+                value="{{ LegacyData.studentId }}"
+              />
+            </div>
+          </div>
+
+          <div id="div_id_select" class="form-label-group required">
+            <label
+              for="degree"
+              class="control-label  col-md-6  requiredField"
+            >
+              Degree / 在读学位 <span class="asteriskField">*</span>
+            </label>
+          <div class="controls  col-md-12 ">
+            <select
+              class="selectpicker form-control"
+              id="degree"
+              name="degree"
+              data-parsley-group="step3"
+            >
+              <option value="BA"> Bachelor </option>
+              <option value="MA"> Master </option>
+              <option value="CR"> Certificate </option>
+              <option value="DP"> Diploma </option>
+              <option value="FN"> Foundation </option>
+              <option value="JD"> Jurum Doctor </option>
+              <option value="MD"> Medical Doctor </option>
+              <option value="PhD"> Doctor of Philosophy </option>
+            </select>
+          </div>
+          <div class="controls col">
+            <p class="text-muted"><small>注: 若选择Master或以上学位，也自愿同时加入CSSA Graduates社团</small></p>
+          </div>
+          </div>
+
+        <div id="major" class="form-label-group required">
+          <label for="major" class="control-label  col-md-6  requiredField">
+            Major / 专业<span class="asteriskField">*</span>
+          </label>
+          <div class="controls  col-md-12 ">
+            <select
+              required
+              class="selectpicker form-control"
+              id="id_major"
+              name="uniMajor"
+              placeholder="选择你的专业所在的分类"
+              data-parsley-group="step3"
+            >
+            </select>
+          </div>
+        </div>
+
+        <div class="form-label-group">
+          <div class="controls col-md-offset-3  col-md-12 ">
+            <div id="div_id_terms" class="checkbox required">
+              <label for="id_terms" class=" requiredField">
+                <input
+                  required
+                  class="input-ms checkboxinput"
+                  id="id_terms"
+                  name="terms"
+                  type="checkbox"
+                  data-parsley-group="step3"
+                />
+                Agree with the terms and conditions
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-label-group">
+          <div class="controls col-md-offset-5 col-md-12 text-center">
+            <input
+              type="submit"
+              value="Submit"
+              class="btn btn-primary btn btn-info"
+              id="easy_submit"
+            />
+          </div>
+        </div>
+
+        </fieldset>
+      </form>
+    </div>
+  </div>
+</div>
+</div>
+{% endblock 'pg_body' %}
+
+
+{% block 'extra_js' %}
+        <script
+          type="text/javascript"
+          src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.23.0/moment.min.js"
+        ></script>
+        <script
+          type="text/javascript"
+          src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.0-alpha14/js/tempusdominus-bootstrap-4.min.js"
+        ></script>
+        <script type="text/javascript" src="{% static 'myCSSAhub/js/parsley.min.js' %}"></script>
+        <script type="text/javascript" src="{% static '/myCSSAhub/js/custom_validators.js'%}"></script>
+
+        <script type="text/javascript" src="{% static 'myCSSAhub/js/Password/bootstrap-strength-meter.js' %}"></script>
+        <script type="text/javascript" src="{% static 'myCSSAhub/js/Password/password-score.js' %}"></script>
+        <script type="text/javascript" src="{% static 'myCSSAhub/js/Password/password-score-options.js' %}"></script>
+        <script src="{% static '/myCSSAhub/vendors/jquery-ui/jquery-ui.min.js'%}"></script>
+        <script type="text/javascript">
+          //Password Strength Indicator
+          $(document).ready(function() {
+            $('#id_password').strengthMeter('progressBar', {
+              container: $('#progress-container'),
+              base: 80,
+              hierarchy: {
+                '0': 'progress-bar-danger',
+                '25': 'progress-bar-warning',
+                '50': 'progress-bar-success'
+              },
+              passwordScore: {
+                options: [],
+                append: true
+              }
+            });
+          });
+
+         //Major dropdown Handler
+         let dropdown = document.getElementById('id_major');
+          dropdown.length = 0;
+
+          let defaultOption = document.createElement('option');
+
+          dropdown.add(defaultOption);
+          dropdown.selectedIndex = 0;
+
+          const url = "{% static '/myCSSAhub/js/unimelb-major-picker.js' %}";
+
+          const request = new XMLHttpRequest();
+          request.open('GET', url, true);
+
+          request.onload = function() {
+            if (request.status === 200) {
+              const data = JSON.parse(request.responseText);
+              let option;
+              for (let i = 0; i < data.length; i++) {
+                option = document.createElement('option');
+                option.text = data[i].name;
+                option.value = data[i].abbreviation;
+                dropdown.add(option);
+              }
+            } else {
+              // Reached the server, but it returned an error
+            }
+          }
+          request.onerror = function() {
+            console.error('An error occurred fetching the JSON from ' + url);
+          };
+
+          request.send();
+
+          $("#msform").parsley({
+            errorClass: "is-invalid",
+            successClass: "is-valid",
+            errorsWrapper: '<span class="form-text text-danger"></span>',
+            errorTemplate: "<span></span>",
+            trigger: "blur"
+          });
+
+          $(function() {
+            $("#datetimepicker1").datetimepicker({
+              format: "L"
+            });
+          });
+
+
+        </script>
+
+
+
+        {% endblock 'extra_js' %}

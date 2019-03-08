@@ -1,8 +1,6 @@
-from myCSSAhub.send_email import send_emails, queryEmailContent, queryEmailContent, queryEmailList
 from django.shortcuts import get_object_or_404
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from .notification import insertDB, queryMessagesList, queryMessageContent
-from .forms import NotificationForm, MerchantsForm
+from .forms import MerchantsForm
 from django.shortcuts import render
 from django.http import JsonResponse, HttpResponseRedirect, HttpResponse
 from django.contrib import messages
@@ -17,14 +15,14 @@ from django.db.models import Q
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import JsonResponse, HttpResponseRedirect, HttpResponse, Http404
 from django.contrib.auth.decorators import login_required
-from .models import Notification_DB, AccountMigration, DiscountMerchant
+from .models import AccountMigration, DiscountMerchant
 from UserAuthAPI import models as UserModels
 from BlogAPI import models as BlogModels
-from UserAuthAPI.forms import BasicSiginInForm, UserInfoForm, MigrationForm, UserAcademicForm, UserProfileUpdateForm
+from UserAuthAPI.forms import BasicSiginInForm, UserInfoForm, MigrationForm, UserAcademicForm, UserProfileUpdateForm, EasyRegistrationForm
 from LegacyDataAPI import models as LegacyDataModels
+from CommunicateManager.send_email import send_emails
 
 from CSSANet.settings import MEDIA_ROOT, MEDIA_URL
-from Library.Mixins import AjaxableResponseMixin
 import json
 import base64
 import io
@@ -35,6 +33,8 @@ from urllib import parse
 from django.core.files import File
 
 import datetime
+
+from django.urls import reverse
 
 # Create your views here.
 
@@ -50,156 +50,10 @@ def home(request):
     return render(request, 'myCSSAhub/home.html')
 
 
-@login_required(login_url='/hub/login/')
-def message(request):
-    return render(request, 'myCSSAhub/message.html')
-
-
-###### 站内信 -- Start ##########
-
-# 获取站内信列表
-class NotificationsList(LoginRequiredMixin, View):
+################################# calendar ########################################
+class Calendar(LoginRequiredMixin, View):
     login_url = '/hub/login/'
-    template_name = 'myCSSAhub/notification/notifications_list.html'
-    paginate_by = 10
-    context_object_name = 'infos'
-
-    def get(self, request):
-        if request.user.is_authenticated:
-            # 获取当前用户id
-            currentUserID = request.user.id
-
-            # 将查询到的内容发送到前端
-            infos = queryMessagesList(currentUserID)
-
-            email_infos = queryEmailList(currentUserID)
-            # 设置当前页面没有缓存
-            # tmp.setdefault('Cache-Control', 'no-store')
-            # tmp.setdefault('Expires', 0)
-            # tmp.setdefault('Pragma', 'no-cache')
-
-            return render(request, self.template_name, locals())
-
-    def post(self, request):
-        # if request.user.is_authenticated:
-        #     # 先获取当前用户的id以便查询
-        #     currentUserID=request.user.id
-        return render(request, self.template_name)
-
-# 展示站内信
-
-
-class NotificationsDisplay(LoginRequiredMixin, View):
-    login_url = '/hub/login/'
-    template_name = 'myCSSAhub/notification/notifications_display.html'
-
-    def get(self, request, *args, **kwargs):
-        contentId = self.kwargs.get('id')
-        # print("usersfsdf", userId)
-    #    将需要的id传入数据库已得到内容
-        content, sender, receiver = queryMessageContent(contentId)
-
-        return render(request, self.template_name, locals())
-
-    def post(self, request):
-
-        return render(request, self.template_name)
-
-# 发送站内信
-
-
-class NotificationForm(LoginRequiredMixin, View):
-    login_url = '/hub/login/'
-    template_name = 'myCSSAhub/notification/notifications_form.html'
-
-    def get(self, request):
-        return render(request, self.template_name)
-
-    def post(self, request):
-        flag = False
-        if request.user.is_authenticated:
-            # 如果form通过POST方法发送数据
-            # 发送的目标用户id
-            targetUserId = request.POST.getlist('recID')
-            # print("recID", targetUserId)
-            # 当前用户id
-            currentID = request.user.id
-
-            form = NotificationForm(request.POST)
-
-            flag, message = insertDB(form, targetUserId, currentID)
-
-            # 测试返回结果
-            if flag == False:
-                print(message)
-
-            return render(request, self.template_name, {'back_end_flag': flag})
-
-
-################################# Email ########################################
-
-
-class Email(LoginRequiredMixin, View):
-    login_url = '/hub/login/'
-    template_name = 'myCSSAhub/email.html'
-
-    def get(self, request):
-        return render(request, self.template_name)
-
-    def post(self, request):
-        flag = False
-        if request.user.is_authenticated:
-            targetUserId = request.POST.getlist('recID')
-            title = request.POST['title']
-            content = request.POST['content']
-            # 当前用户id
-            currentID = request.user.id
-
-            print("title", title)
-            print("targetUserId", targetUserId)
-            print("content", content)
-
-            if targetUserId is not None:
-                flag = True
-
-            # if targetUserId is not None:
-
-            #   flag = send_emails(title, content, targetUserId, currentID)
-            # else:
-            #     raise Exception
-
-        return render(request, self.template_name, {'back_end_flag': flag})
-
-
-class EmailHistory(LoginRequiredMixin, View):
-    login_url = '/hub/login/'
-    template_name = 'myCSSAhub/email_history.html'
-
-    def get(self, request, *args, **kwargs):
-
-        contentId = self.kwargs.get('id')
-        # print("usersfsdf", userId)
-        #    将需要的id传入数据库已得到内容
-        content, sender, receiver = queryEmailContent(contentId)
-
-        return render(request, self.template_name, locals())
-
-    def post(self, request):
-
-        # if request.user.is_authenticated:
-        #     # 获取当前用户id
-        #     currentUserID = request.user.id
-
-        #     print("currentId")
-
-        #     infos = queryEmailContent(currentUserID)
-
-        return render(request, self.template_name, locals())
-
-
-class Inbox(LoginRequiredMixin, View):
-    login_url = '/hub/login/'
-    template_name = 'myCSSAhub/email_inbox.html'
+    template_name = 'Communication/calendar.html'
 
     def get(self, request):
 
@@ -254,9 +108,10 @@ class Calendar(LoginRequiredMixin, View):
 ################################# merchants ########################################
 
 
-class Merchants_list(LoginRequiredMixin, View):
+class Merchants_list(PermissionRequiredMixin, LoginRequiredMixin, View):
     login_url = '/hub/login/'
     template_name = 'myCSSAhub/merchants_list.html'
+    permission_required = ('myCSSAhub.change_discountmerchant')
 
     def get(self, request):
         if request.user.is_authenticated:
@@ -268,97 +123,60 @@ class Merchants_list(LoginRequiredMixin, View):
         return render(request, self.template_name)
 
 
-class Merchant_add(LoginRequiredMixin, View):
+class Merchant_add(PermissionRequiredMixin, LoginRequiredMixin, View):
     login_url = '/hub/login/'
     template_name = 'myCSSAhub/merchant_add.html'
+    permission_required = ('myCSSAhub.change_discountmerchant')
+    form_class = MerchantsForm
 
-    def get(self, request):
+    def get(self, request, *args, **kwargs):
+        return render(request, self.template_name, {'form': self.form_class})
 
-        return render(request, self.template_name)
-
-    def post(self, request):
+    def post(self, request, *args, **kwargs):
         have_update = False
         # 从表单获取图片并上传
-        if request.user.is_authenticated:
-            form = MerchantsForm(data=request.POST)
-            if form.is_valid():
+        form = self.form_class(request.POST, request.FILES)
+        if form.is_valid():
+            # 标注：所有跟表单相关的保存操作，用ModelForm绑定，不要手写model field，容易出错
+            form.save()
+            have_update = True
+        # return render(request, self.template_name, {'update': have_update})
 
-                # m_name = form.cleaned_data['m_name']
-                # m_address = form.cleaned_data['m_address']
-                # m_phone = form.cleaned_data['m_phone']
-                # m_link = form.cleaned_data['m_link']
-                # m_description = form.cleaned_data['m_description']
-                # m_image = form.cleaned_data['m_image']
+        return render(request, self.template_name, {'update': have_update, 'form': form})
 
-                # # print("name", m_name)
-                # # print("address", m_address)
-                # # print("phone", m_phone)
-                # # print("link", m_link)
-                # # print("description", m_description)
-                # # print("image", m_image)
-
-                # new_merchant = DiscountMerchant(merchant_name=m_name, merchant_description=m_description,
-                #                                 merchant_phone=m_phone, merchant_address=m_address, merchant_link=m_link, merchant_image=m_image)
-
-                form.save()
-                have_update = True
-
-        return render(request, self.template_name, {'update': have_update})
-
-# 这个页面主要是加载已经加入商家的信息，并更新
+#
 
 
 class Merchant_profile(LoginRequiredMixin, View):
+    '''
+    加载已经加入商家的信息，并更新
+    '''
+
     login_url = '/hub/login/'
     template_name = 'myCSSAhub/merchant_profile.html'
-    old_info = []
+    form_class = MerchantsForm
 
     def get(self, request,  *args, **kwargs):
+
         profileID = self.kwargs.get('id')
-        # 获取id相关的信息
-        infos = DiscountMerchant.objects.get(merchant_id=profileID)
-        self.old_info = infos
-        return render(request, self.template_name, locals())
+        obj = get_object_or_404(DiscountMerchant, merchant_id=profileID)
+        form = self.form_class(instance=obj)
 
-    def post(self, request):
+        return render(request, self.template_name, {'form':form, 'submit_url':reverse('myCSSAhub:merchant_profile', args=[str(profileID)])})
+   
+    
+    def post(self, request,  *args, **kwargs):
         have_update = False
-        # 从表单获取更新信息
-        if request.user.is_authenticated:
-            form = MerchantsForm(data=request.POST)
-            if form.is_valid():
-                is_change = False
-                m_name = form.cleaned_data['m_name']
-                m_address = form.cleaned_data['m_address']
-                m_phone = form.cleaned_data['m_phone']
-                m_link = form.cleaned_data['m_link']
-                m_description = form.cleaned_data['m_description']
-                m_image = form.cleaned_data['m_image']
+        profileID = self.kwargs.get('id')    
+        obj = get_object_or_404(DiscountMerchant, merchant_id=profileID)
+        form = self.form_class(data=request.POST or None, files=request.FILES or None, instance=obj)
+        if form.is_valid():
+            form.save() 
+            have_update = True
 
-                if m_name != self.old_info.merchant_name:
-                    self.old_info.merchant_name = m_name
-                    is_change = True
-                if m_address != self.old_info.merchant_address:
-                    self.old_info.merchant_address = m_address
-                    is_change = True
-                if m_phone != self.old_info.merchant_phone:
-                    self.old_info.merchant_phone = m_phone
-                    is_change = True
-                if m_link != self.old_info.merchant_link:
-                    self.old_info.merchant_link = m_link
-                    is_change = True
-                if m_description != self.old_info.merchant_description:
-                    self.old_info.merchant_description = m_description
-                    is_change = True
-                if m_image != self.old_info.merchant_image:
-                    self.old_info.merchant_image = m_image
-                    is_change = True
 
-                if is_change:
-                    self.old_info.save()
-                    have_update = True
-
-        return render(request, self.template_name, {'update': have_update})
-
+        return render(request, self.template_name, {'update': have_update, 'form':form, 'submit_url':reverse('myCSSAhub:merchant_profile', args=[str(profileID)])})
+      
 
 ###### logout page ##########
 
@@ -385,23 +203,90 @@ class LoginPage(View):
 
     # 请求处理函数（post）
     def post(self, request, *args, **kwargs):
-        email = request.POST['email']
-        userQuery = self.model.objects.filter(email=email).first()
+        email = request.POST['email'].lower()
+        userQuery = self.model.objects.filter(email__iexact=email).first()
+        # Patch, clean email with capitalisation
+        if any(c.isupper for c in userQuery.email):
+            _email_convert = userQuery.email.lower()
+            userQuery.email = _email_convert
+            userQuery.save()
+
+        redirect_to = request.GET.get('redirect_to')
         if userQuery is None:
             return JsonResponse(self.loginErrorMsg)
         password = request.POST['password']
-        # print(email,password,username)
         user = authenticate(request, email=email, password=password)
         if user is not None:
             login(request, user)
             update_last_login(None, user)
+            if redirect_to:
+                self.loginSuccessful['redirect'] = redirect_to
+            else:
+                self.loginSuccessful['redirect'] = reverse('PublicSite:index')
             return JsonResponse(self.loginSuccessful)
         else:
             return JsonResponse(self.loginErrorMsg)
 
 
+class EasyRegistrationView(View):
+    template_name = 'myCSSAhub/easy_registration.html'
+    account_form = BasicSiginInForm
+    profile_form = EasyRegistrationForm
+
+    def get(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return HttpResponseRedirect("/hub/home/")
+        """Handle GET requests: instantiate a blank version of the form."""
+        id = self.kwargs.get('id')
+        legacy_data = None
+        if id:
+            try:
+                migration_record = AccountMigration.objects.filter(
+                    id=id).first()
+                legacy_data = LegacyDataModels.LegacyUsers.objects.get(
+                    Q(studentId=migration_record.studentId) & Q(
+                        membershipId=migration_record.membershipId)
+                )
+            except ObjectDoesNotExist:
+                print("The user is not registered successfully.")
+
+        return render(request, self.template_name, {'LegacyData': legacy_data})
+
+    def post(self, request, *args, **kwargs):
+        account_form = BasicSiginInForm(data=request.POST)
+        profile_form = EasyRegistrationForm(data=request.POST)
+        academic_form = UserAcademicForm(data=request.POST)
+        if account_form.is_valid() and profile_form.is_valid() and academic_form.is_valid():
+            account_register = account_form.save(commit=False)
+            account_form.save()
+            profile = profile_form.save(commit=False)
+            profile.user = account_register
+            academic = academic_form.save(commit=False)
+            academic.userProfile = account_register
+            if profile.membershipId and profile.membershipId != '':
+                profile.isValid = True
+            profile.save()
+            academic.save()
+
+            # 完成信息保存以后，发送注册成功的邮件
+            user_name = '%s %s' % (profile.lastNameEN, profile.firstNameEN)
+            target_email = account_register.email
+            send_emails('Register Successful', user_name, target_email, None)
+
+        else:
+            return JsonResponse({
+                'success': False,
+                'errors': [dict(account_form.errors.items()), dict(profile_form.errors.items()), dict(academic_form.errors.items())]
+            })
+        return HttpResponseRedirect(reverse('myCSSAhub:hub_regformConfirmation'))
+
+
+def EasyConfirmationPage(request):
+    return render(request, 'myCSSAhub/easy_confirmation.html')
+
+
 class NewUserSignUpView(View):
-    template_name = 'myCSSAhub/registrationForm_step1.html'
+    template_name = 'myCSSAhub/registrationForm.html'
     account_form = BasicSiginInForm
     profile_form = UserInfoForm
 
@@ -420,7 +305,7 @@ class NewUserSignUpView(View):
                         membershipId=migration_record.membershipId)
                 )
             except ObjectDoesNotExist:
-                print("Either the entry or blog doesn't exist.")
+                print("The user record doesn't exist.")
 
         return render(request, self.template_name, {'LegacyData': legacy_data})
 
@@ -463,7 +348,6 @@ class migrationView(View):
     def post(self, request, *args, **kwargs):
         migration_request = MigrationForm(data=request.POST)
         if migration_request.is_valid():
-            print(migration_request['studentId'].value())
             try:
                 legacy_record = LegacyDataModels.LegacyUsers.objects.get(
                     Q(studentId=migration_request['studentId'].value()) & Q(
@@ -527,7 +411,6 @@ class UpdateUserProfileView(LoginRequiredMixin, View):
             return HttpResponseRedirect('/hub/home')
         else:
             messages.error(request, 'Please double-check your input.')
-            print(dict(form.errors))
         return render(request, self.template_name, {'form': form, 'data': current_data})
 
 
@@ -555,7 +438,6 @@ def editBlog(request):
     except:
         return bad_request(request)
 
-    print(blogId)
     ViewBag = {}
 
     userAuthed = request.user.is_authenticated
@@ -629,8 +511,7 @@ def CheckEmailIntegrity(request):
     data = {}
     if request.method == 'POST':
         email = request.POST['value']
-        print(email)
-        userQuery = UserModels.User.objects.filter(email=email).first()
+        userQuery = UserModels.User.objects.filter(email__iexact=email).first()
         if userQuery is None:
             data['result'] = 'Valid'
         else:
@@ -639,7 +520,6 @@ def CheckEmailIntegrity(request):
         data = {
             'status': '400', 'reason': 'Bad Requests!'
         }
-    print(data)
     return JsonResponse(data)
 
 
@@ -676,8 +556,9 @@ def CheckStudentIdIntegrity(request):
     return JsonResponse(data)
 
 
-class UserLookup(LoginRequiredMixin, View):
+class UserLookup(LoginRequiredMixin, PermissionRequiredMixin, View):
     login_url = '/hub/login/'
+    permission_required = ()
 
     def get(self, request, *args, **kwargs):
         return JsonResponse({
@@ -688,13 +569,12 @@ class UserLookup(LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs):
         if request.user.is_authenticated:
             search = request.POST.get('search', "")
-            print(search)
             db_lookup = UserModels.UserProfile.objects.filter(
                 Q(firstNameEN__istartswith=search) | Q(lastNameEN__istartswith=search) |
                 Q(firstNameCN__istartswith=search) | Q(lastNameCN__istartswith=search) |
                 Q(studentId__istartswith=search) |
                 Q(user__email__istartswith=search) |
-                Q(user__telNumber__istartswith=search)
+                Q(user__telNumber__icontains=search)
             )
             if db_lookup:
                 result_set = []

@@ -1,0 +1,26 @@
+{% extends 'myCSSAhub/component/_layout.html' %} 
+
+{% block BreadcrumbPath %}
+    <li class="breadcrumb-item">会员管理</li>
+    <li class="breadcrumb-item">新会员激活</li>
+    <li class="breadcrumb-item active">
+        <a href="{% url 'myCSSAhub:OrganisationMgr:new_member' %}">激活成功</a>
+    </li>
+{% endblock BreadcrumbPath %}
+
+{% block pageContent %}
+<div class="col-sm-6 col-md-4">
+    <div class="card text-white bg-success">
+        <div class="card-header">新会员激活成功</div>
+            <div class="card-body"> 
+                用户<strong> {{user_profile.user.get_full_EN_name}} </strong> 已与卡 <strong> {{user_profile.membershipId}}</strong> 绑定
+                <br>
+                <div class="mt-5">
+                    <button class="btn btn-lg btn-warning" type="button" onclick="window.location.href='{% url 'myCSSAhub:OrganisationMgr:new_member'%}'"> 
+                        开始下一个激活 
+                    </button>
+                </div>
+            </div>
+    </div>
+</div>
+{% endblock pageContent %}

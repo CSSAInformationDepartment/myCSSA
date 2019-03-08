@@ -1,12 +1,17 @@
 {% extends 'components/base_page.html' %}
 {% block 'extra_header' %}
 {% load static %}
-<script src="http://cdn.quilljs.com/1.3.6/quill.min.js"></script>
+
 <link href="http://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
-<script src="{% static 'PublicSite/js/image-resize.min.js' %}"></script>
 
 <link href="{% static 'PublicSite/css/blogstyle.css' %}" rel="stylesheet" />
-<link href="{% static 'PublicSite/css/blogeditstyle.css' %}" rel="stylesheet" />
+<link href="{% static 'myCSSAhub/css/blogeditstyle.css' %}" rel="stylesheet" />
+
+<!-- prohibit cache -->
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Cache-Control" content="no-store, must-revalidate">
+<meta http-equiv="Expires" content="Wed, 26 Feb 1997 08:21:57 GMT">
+<meta HTTP-EQUIV="expires" CONTENT="0">
 
 {% endblock 'extra_header' %}
 
@@ -27,7 +32,7 @@
                         <div class="blogAuthorBox">
                             <img class="avatar" src="{{ user.userProfile.avatar.url }}">
                             <div class="blogAuthorInfoBox">
-                                <a><h5><em>{{ user.userProfile.lastNameCN }} {{ user.userProfile.firstNameCN }}</em></h5></a>
+                                <a><h5><em>{{ user.userProfile.lastNameEN }} {{ user.userProfile.firstNameEN }}</em></h5></a>
                                 <h5>{{ user.user.username }}</h5>
                             </div>
                         </div>
@@ -52,81 +57,68 @@
                 </div>
                 <br />
                 <hr />
-                
-                
+
+
                 {% if userIsAuthor %}
 
-                
+
                 <a href="/hub/blog/editbg?blogId={{ blog.blogId }}"><button class="btn btn-default navbar-btn handButtonAnother" id="out">编辑文章</button></a>
                 <button class="btn btn-default navbar-btn handButtonOther" id="delete">删除</button>
-                
+
                 {% endif %}
 
 
             </div>
-            
-            <script>
-                
-                let blogMainContent = '{{ blog.blogMainContent }}';
-                let blogId = '{{ blog.blogId }}';
-                
-                var d = document.createElement('div');
-                d.innerHTML = blogMainContent;
-                blogMainContent = d.innerText || d.textContent
-                
-                // blogMainContent = blogMainContent.replace(/\n/g, "\\n");
-                
-                /* let display = (editor, opts) => {
-                    editor.deleteText(0, editor.getLength())
-                    let index = 0;
-                    for (let opt of opts){
-                        let isEmbedded = typeof(opt.insert) == "object";
-                        if (isEmbedded){
-                            editor.insertEmbed(index, Object.keys(opt.insert)[0], opt.insert[Object.keys(opt.insert)[0]], formats = opt.attributes ? opt.attributes: {});
-                            index += 1;
-                        }else{
-                            editor.insertText(index, opt.insert, opt.attributes ? opt.attributes: {});
-                            index += opt.insert.length;
-                        }
-                    }
-                } */
-                
-                let editorAnother = new Quill("#fullContent", {
-                    readOnly: true,
-                    modules: {
-                        imageResize: {}
-                    }
-                });
-                
-                let deleteBlog = () => {
-                    let confirmed = confirm("确认删除吗？");
-                    if(confirmed){
-                        let XMLobj = new XMLHttpRequest();
-                        
-                        XMLobj.onreadystatechange = () => {
-                            if(XMLobj.readyState == XMLHttpRequest.DONE && XMLobj.status == 200){
-                                let response = XMLobj.responseText;
-                                response = JSON.parse(XMLobj.responseText);
-                                alert(response.message);
-                            }
-                        }
-                        
-                        XMLobj.open("GET", '/hub/blog/ajax/deleteBlog?blogId=' + blogId, true);
-                        XMLobj.send();
-                    }
-                }
-                
-                let rbutton = document.getElementById("delete")
-                rbutton.onclick = deleteBlog
-                
-                // display(editorAnother, JSON.parse(blogMainContent).ops);
-                
-                editorAnother.setContents(JSON.parse(blogMainContent).ops);
-                
-                
-                
-            </script>
+
         </div>
     </div>
-    
+
 {% endblock 'pg_body' %}
+
+{% block 'extra_js' %}
+<script src="http://cdn.quilljs.com/1.3.6/quill.min.js"></script>
+<script src="{% static 'myCSSAhub/js/image-resize.min.js' %}"></script>
+<script>
+
+    let blogMainContent = '{{ blog.blogMainContent }}';
+    let blogId = '{{ blog.blogId }}';
+
+    var d = document.createElement('div');
+    d.innerHTML = blogMainContent;
+    blogMainContent = d.innerText || d.textContent
+
+    let editorAnother = new Quill("#fullContent", {
+        readOnly: true,
+        modules: {
+            imageResize: {},
+        }
+    });
+    {% if userIsAuthor %}
+        let deleteBlog = () => {
+            let confirmed = confirm("确认删除吗？");
+            if(confirmed){
+                let XMLobj = new XMLHttpRequest();
+
+                XMLobj.onreadystatechange = () => {
+                    if(XMLobj.readyState == XMLHttpRequest.DONE && XMLobj.status == 200){
+                        let response = XMLobj.responseText;
+                        response = JSON.parse(XMLobj.responseText);
+                        alert(response.message);
+                    }
+                }
+
+                XMLobj.open("GET", '/hub/blog/ajax/deleteBlog?blogId=' + blogId, true);
+                XMLobj.send();
+            }
+        }
+
+        let rbutton = document.getElementById("delete")
+        rbutton.onclick = deleteBlog
+
+    {% endif %}
+    editorAnother.setContents(JSON.parse(blogMainContent).ops);
+
+
+
+</script>
+{% endblock 'extra_js' %}

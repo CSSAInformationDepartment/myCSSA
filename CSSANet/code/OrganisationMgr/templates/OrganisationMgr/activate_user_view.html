@@ -1,0 +1,109 @@
+{% extends 'myCSSAhub/component/_layout.html' %} 
+
+{% block pageTitle %}
+    {{PageHeader}} 
+{% endblock %} 
+
+
+{% block BreadcrumbPath %}
+    <li class="breadcrumb-item">会员管理</li>
+    <li class="breadcrumb-item"><a href="{% url 'myCSSAhub:OrganisationMgr:member_list' %}">新会员激活</a></li>
+    <li class="breadcrumb-item">{{usr_id}}</li>
+    <li class="breadcrumb-item active">
+        <a href="{% url 'myCSSAhub:OrganisationMgr:new_member_activation' usr_id %}">{{PageHeader}}</a>
+    </li>
+{% endblock BreadcrumbPath %}
+
+{% block pageContent %}
+{% load static %}
+{% load widget_tweaks %}
+<form action="" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="card">
+        <div class="card-header">
+            <strong>会员信息</strong>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col col-8">
+                    {% for hidden_field in form.hidden_fields %}
+                        {{ hidden_field }}
+                    {% endfor %}
+
+                    {% if form.non_field_errors %}
+                    <div class="alert alert-danger" role="alert">
+                        {% for error in form.non_field_errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col col-4">
+                    <span class="align-text-bottom">
+                        <h1>{{user_profile.user.get_full_EN_name}}</h1>
+                    </span>
+                </div>
+                <div class="col col-8">
+                    {% load static %}
+                    {% if user_profile.avatar %}
+                        <img class="img-avatar float-right" src="{{user_profile.avatar.url}}" style="height:70px;width:70px;">
+                    {% else %}
+                        <img class="img-avatar float-right" src="{% static '/myCSSAhub/img/avatar_placeholder.png' %}" style="height:70px;width:70px;">
+                    {% endif %}                    
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="col col-4">
+                    <h5>学生证号: {{user_profile.studentId}}</h5>
+                </div>
+                <div class="col col-4">
+                    <h5>电话号码: {{user_profile.user.telNumber}}</h5>
+                </div>
+            </div>
+    {% if user_profile.membershipId and not form.non_field_errors  %}
+            <div class="alert alert-danger" role="alert"> 此用户已拥有卡号为<strong> {{ user_profile.membershipId }} </strong>的会员卡</div>
+        </div>
+        <div class="card-footer w-10">
+            <button class="btn btn-sm btn-danger" type="reset" onclick="window.history.back();"><i class="fa fa-ban"></i> 返回</button>
+        </div>
+    </div>            
+    {% else %}
+            <div class="row mt-3">
+                <div class="col col-7">
+                    <p>若以上信息确认无误，请在下方输入新会员的会员卡号</p>
+                    {% for field in form.visible_fields %}
+                        <div class="form-group">
+                            {{ field.label_tag }}
+                            {% if field.errors %}
+                                {% render_field field class="form-control is-invalid" %}
+                                {% for error in field.errors %}
+                                    <div class="invalid-feedback">
+                                        {{ error }}
+                                    </div>
+                                {% endfor %}
+                            {% else %}
+                                {% render_field field class="form-control" style="font-size:24px;" %}
+                            {% endif %}
+
+                            {% if field.help_text %}
+                                <small class="form-text text-muted">{{ field.help_text }}</small>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="card-footer w-10">
+            <button class="btn btn-sm btn-success" type="submit"><i class="fa fa-dot-circle-o"></i> 确认激活</button>
+            <button class="btn btn-sm btn-danger" type="reset" onclick="window.history.back();"><i class="fa fa-ban"></i> 返回</button>
+        </div>
+    </div>
+
+    {% endif %}
+        
+
+</form>
+{% endblock pageContent %}

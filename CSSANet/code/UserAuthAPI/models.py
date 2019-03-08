@@ -87,7 +87,7 @@ class CSSADept (models.Model):
     deptTitleEN = models.CharField(max_length=50, verbose_name="Name of the Department")
     brief = models.CharField(max_length=200, null=True, blank=True, default=None)
     description = models.TextField(blank=True ,null=True, default=None)
-    head_image = models.ImageField(verbose_name="头像", upload_to='public/department/',
+    head_image = models.ImageField(verbose_name="部门图", upload_to='public/department/',
         height_field=None, width_field=None, max_length=None, null=True, blank=True)
 
     def __str__(self):
@@ -125,6 +125,7 @@ class User(AbstractUser):
         verbose_name = _('user')
         verbose_name_plural = _('users')
 
+
     def __str__(self):
         return '%s' % (self.email)
 
@@ -132,7 +133,7 @@ class User(AbstractUser):
         '''
         Returns the first_name plus the last_name, with a space in between.
         '''
-        Profile = UserProfile.objects.get(user=self.id)
+        Profile = UserProfile.objects.get(user=self)
         if Profile.lastNameCN and Profile.firstNameCN:
             full_name = '%s %s' % (Profile.lastNameCN, Profile.firstNameCN)
             return full_name.strip()
@@ -143,7 +144,7 @@ class User(AbstractUser):
         '''
         Returns the first_name plus the last_name, with a space in between.
         '''
-        Profile = UserProfile.objects.get(user=self.id)
+        Profile = UserProfile.objects.get(user=self)
         if Profile.lastNameEN and Profile.firstNameEN:
             full_name = '%s %s' % (Profile.firstNameEN, Profile.lastNameEN)
             return full_name.strip()
@@ -156,12 +157,6 @@ class User(AbstractUser):
         except:
             return False
 
-
-#    def email_user(self, subject, message, from_email=None, **kwargs):
-#        '''
-#        Sends an email to this User.
-#        '''
-#        send_mail(subject, message, from_email, [self.email], **kwargs)
 
 
 #用户信息主体 （继承自标准admin model，参照： https://www.zmrenwu.com/post/31/）
@@ -200,6 +195,12 @@ class UserProfile (models.Model):
     postcode = models.CharField(verbose_name="邮编",max_length=4, null=True, blank=True)
     originate = models.CharField(verbose_name="籍贯",max_length=50, null=True,blank=True)
 
+    class Meta:
+        permissions = (
+            ("activate_membership", "Can activate new membership"),
+            ("change_indentity_data", "Can change identity_data"),
+        )
+
 
 
 class CSSACommitteProfile(models.Model):
@@ -209,6 +210,7 @@ class CSSACommitteProfile(models.Model):
     is_active = models.BooleanField(default=False)
     CommenceDate = models.DateTimeField(auto_now_add=True)
     Department = models.ForeignKey(CSSADept, on_delete=models.DO_NOTHING)
+    role = models.ForeignKey(CSSARole, on_delete=models.DO_NOTHING, default=None, null=True, blank=True)
 
 
 

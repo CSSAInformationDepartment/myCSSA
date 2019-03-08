@@ -14,14 +14,22 @@ class Blog (models.Model):
     blogMainContent = models.TextField(default=None)
     createDate = models.DateTimeField()
     lastModifiedDate = models.DateTimeField(auto_now=True)
-    blogReviewed = models.SmallIntegerField(default=0)
 
+    blogReviewed = models.SmallIntegerField(default=0)
+    # blogReviewed 取值说明
+    # 0 ->  未审核
+    # 1 ->  审核不通过
+    # 2 ->  审核通过
+    
     blogOpen = models.BooleanField(default=True)
 
     blogTopPic = models.CharField(max_length=95)
 
     # 阅读量
     blogReads = models.IntegerField(default=0)
+
+    def __str__(self):
+        return self.blogTitle
 
 class BlogOldContent (models.Model):
     blogId = models.ForeignKey(Blog, on_delete = models.CASCADE)

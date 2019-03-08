@@ -1,0 +1,149 @@
+{% extends 'myCSSAhub/component/_layout.html' %}
+
+{% block pageTitle %}
+访客签到
+{% endblock pageTitle %}
+
+{% block BreadcrumbPath %}
+  <li class="breadcrumb-item">活动管理</li>
+  <li class="breadcrumb-item">
+    活动签到设置
+  </li>
+  <li class="breadcrumb-item active">
+    <a href="{% url 'myCSSAhub:EventAPI:check-in' %}">访客签到</a>
+  </li>
+{% endblock BreadcrumbPath %}
+
+{% block ExtraHeader %}
+<style>
+.flex-list-clickable {
+    height: 25vw;
+}
+</style>
+{% endblock ExtraHeader %}
+
+{% block pageContent %}
+<div class="row">
+    <div class="col col-lg-8 col-md-12 col-sm-12">
+        <div class="card">
+            <div class="card-body">
+                <ul class="list-group">
+                    <div class="list-group-item flex-list-clickable">
+                        <button class="btn btn-ghost-primary btn-lg btn-block h-100" data-toggle="modal" data-target="#manual-check-in">
+                            <p class="h3"><i class="fa fa-id-card fa-lg mr-3" /></i>自助签到</p>
+                            <p class="small text-center text-muted">可用手机号、学生卡号或会员卡号签到</p>
+                        </button>
+                    </div>
+                    <div class="list-group-item flex-list-clickable">
+                        <button class="btn btn-ghost-primary btn-lg btn-block h-100">
+                            <p class="h3"><i class="fa fa-qrcode fa-lg mr-3" /></i>扫码签到</p>
+                            <p class="small text-center text-muted">扫描电子票二维码即可签到</p>
+                        </button>
+                    </div>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="manual-check-in" tabindex="-1" role="dialog" aria-labelledby="manualCheckIn">
+    <div class="modal-dialog modal-primary modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title"><i class="fa fa-id-card mr-3" /></i>自助签到</h4>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close" onclick="window.location.reload();">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="step-1-form">
+                    <form id="manual-checkin-form">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="identity-check" class="col-form-label">请输入您的手机号(国内请先输入+86)、学生卡号或会员卡号:</label>
+                            <input type="tel" class="form-control" id="identity-check" name="identity-check" pattern="\d*">
+                        </div>
+
+                    </form>
+                </div>
+                <div id="step-1-fail" style="display:none;">
+                    <div class="row">
+                        <div class="col text-center mb-25">
+                            <p class="h1 text-warning"><i class="fa fa-exclamation-triangle fa-lg"></i></p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col text-center">
+                            <p class="h5">您未持有该活动的有效入场券<br>如有疑问请向现场工作人员咨询</br></p>
+                        </div>
+                    </div>
+                </div>
+                <div id="step-1-success" style="display:none;">
+                    <div class="row">
+                        <div class="col text-center mb-25">
+                            <p class="h1 text-success"><i class="fa fa-check-circle fa-lg"></i></p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col text-center">
+                            <p class="h5">签到成功，玩得开心～！</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" type="button" onclick="readform();" id="next-btn">下一步</button>
+                <button class="btn btn-secondary" type="button" data-dismiss="modal" onclick="window.location.reload();">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock pageContent %}
+
+{% block ExtraJS %}
+
+<script>
+
+    var $htmlOrBody = $('html, body'), // scrollTop works on <body> for some browsers, <html> for others
+    scrollTopPadding = 8;
+
+    $('#manual-check-in').focus(function() {
+        // get textarea's offset top position
+        var modalTop = $(this).offset().top;
+        // scroll to the textarea
+        $htmlOrBody.scrollTop(modalTop - scrollTopPadding);
+    });
+
+    function readform(){
+        $.ajax({
+            url : window.location.href, // the endpoint
+            type : "POST", // http method
+            data : $('#manual-checkin-form').serialize(),// data sent with the post request
+            // handle a successful response
+            success : function(json) {
+                console.log(json)
+                if (json["success"]) {
+                    $('#identity-check').val('');
+                    $('#step-1-form').hide();
+                    $('#step-1-success').fadeIn();
+                    $('#next-btn').fadeOut();
+                } else if (json["type"]==1){
+                    $('#identity-check').val('');
+                    $('#step-1-form').hide();
+                    $('#step-1-fail').fadeIn();
+                    $('#next-btn').fadeOut();
+                }
+            },
+            // handle a non-successful response
+            error : function(xhr,errmsg,err) {
+            $('#ErrMsgArea').html('<div id="login-fail-alert" class="alert alert-dismissible alert-warning fade show" role="alert"><button type="button" class="close" data-dismiss="alert">&times;</button><h4 class="alert-heading">服务器故障</h4><p class="mb-0">'+errmsg+'</p></div>')
+            console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
+            }
+        });
+    }
+</script>
+
+{% endblock ExtraJS %}

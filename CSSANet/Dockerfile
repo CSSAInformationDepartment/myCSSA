@@ -2,6 +2,7 @@
 FROM python:3.6.8-alpine3.8
 
 # Set environment varibles
+
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
@@ -13,6 +14,7 @@ RUN apk add --update netcat-openbsd
 RUN apk update && apk add postgresql-dev gcc python3-dev musl-dev
 RUN apk add jpeg-dev zlib-dev
 RUN rm -rf /var/cache/apk/*
+
 
 RUN mkdir /code
 WORKDIR /code

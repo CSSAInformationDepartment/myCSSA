@@ -1,0 +1,115 @@
+{% extends 'myCSSAhub/component/_layout.html' %}
+
+{% block pageTitle %}
+报名确认
+{% endblock pageTitle %}
+
+{% block BreadcrumbPath %}
+    <li class="breadcrumb-item">活动票务</li>
+    <li class="breadcrumb-item"><a href="{% url 'myCSSAhub:EventAPI:user_ticket_list' %}">我参与的活动</a></li>
+    <li class="breadcrumb-item">{{ event.eventName }}</li>
+    <li class="breadcrumb-item active">
+        <a href="{% url 'myCSSAhub:EventAPI:confirm_order' event.eventID %}">报名确认</a>
+    </li>
+{% endblock BreadcrumbPath %}
+
+{% block pageContent %}
+{% if duplicated_purchase %}
+<div class="row">
+    <div class="col-lg-6 col-md-12 col-sm-12">
+        <div class="card card-accent-info">
+            <div class="card-header">
+                <i class="fa fa-exclamation-triangle" style="color:orange;"></i> <strong>您已报名此活动</strong>
+            </div>
+            <div class="card-body text-center">
+                <h5>{{event.eventName}}</h5>
+                <p>
+                    <ul class="list-unstyled">
+                        <li>入场时间：{{event.eventActualStTime}}</li>
+                        <li>活动场馆：{{event.venue}}</li>
+                    </ul>
+                </p>
+                <a href="{% url 'PublicSite:eventsDetails' event.eventID %}" class="btn btn-block btn-blue-gray mt-3">查看活动详情<br></a>
+            </div>
+        </div>
+    </div>
+</div>
+{% else %}
+<div class="row">
+    <div class="col-lg-6 col-md-12 col-sm-12">
+        <div class="card">
+            <div class="card-header">
+                <i class="fa fa-align-justify"></i> 确认活动订单
+            </div>
+            <form action="{% url 'myCSSAhub:EventAPI:confirm_order' event.eventID %}" method="POST">
+                {% csrf_token %}
+                <div class="card-body">
+                    <div class="list-group">
+                        <div class="list-group-item">
+                            <div class="d-felx w-100 justify-content-between">
+                                <h5 class="mb-1">活动名称</h5>
+                            </div>
+                            <p class="mb-1">
+                                {{event.eventName}}
+                            </p>
+                        </div>
+                        <div class="list-group-item">
+                            <div class="d-felx w-100 justify-content-between">
+                                <h5 class="mb-1">活动开始时间</h5>
+                            </div>
+                            <p class="mb-1">
+                                {{event.eventActualStTime}}
+                            </p>
+                        </div>
+                        <div class="list-group-item">
+                            <div class="d-felx w-100 justify-content-between">
+                                <h5 class="mb-1">地址</h5>
+                            </div>
+                            <p class="mb-1">
+                                {{event.address}}
+                            </p>
+                        </div>
+                        <div class="list-group-item">
+                            <div class="d-felx w-100 justify-content-between">
+                                <h5 class="mb-1">场馆</h5>
+                            </div>
+                            <p class="mb-1">
+                                {{event.venue}}
+                            </p>
+                        </div>
+                        {% if not event.isFree %}
+                        <div class="list-group-item">
+                            <div class="d-felx w-100 justify-content-between">
+                                <h5 class="mb-1">票价</h5>
+                            </div>
+                            <p class="mb-1">
+                                {{event.price}}
+                            </p>
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class='mt-2'>
+                        {% if info_form_field %}
+                        <strong>以下信息为活动主办方要求收集的数据，请于报名时填写</strong>
+                        {% for field in info_form_field %}
+                        <div class="form-group">
+                            <label for="{{field.id}}">{{field.name}}</label>
+                            <input required class="form-control" name="{{field.id}}" />
+                        </div>
+                        {% endfor %}
+                        {% endif %}
+
+                    </div>
+                </div>
+                <div class='card-footer'>
+                    <button class="btn btn-sm btn-success" type="submit"><i class="fa fa-dot-circle-o"></i> 确认报名
+                    </button>
+                    <button class="btn btn-sm btn-danger" type="reset"><i class="fa fa-ban"></i> 取消 </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endif %}
+    
+{% endblock %}

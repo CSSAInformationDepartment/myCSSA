@@ -50,6 +50,7 @@ class BasicSiginInForm(forms.ModelForm):
 
     def save(self, commit=True):
         user = super(BasicSiginInForm, self).save(commit=False)
+        user.email = user.email.lower()
         user.set_password(self.cleaned_data["password"])
         if commit:
             user.save()
@@ -80,3 +81,9 @@ class MigrationForm(forms.Form):
     dateOfBirth = forms.DateField(required=False)
     telNumber = forms.CharField(required=False)
     email = forms.EmailField(required=False)
+
+
+class EasyRegistrationForm(forms.ModelForm):
+    class Meta:
+        model = models.UserProfile
+        fields = ('gender','dateOfBirth','studentId','firstNameEN','lastNameEN','studentId','membershipId')

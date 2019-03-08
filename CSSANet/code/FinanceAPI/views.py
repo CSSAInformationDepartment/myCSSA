@@ -1,23 +1,43 @@
 from django.shortcuts import render, get_object_or_404
-from django.db.models import Q
+from django.db.models import Q, Sum
 from django.http import JsonResponse, HttpResponseRedirect, HttpResponse, Http404
 from django.contrib.auth.mixins import  LoginRequiredMixin, PermissionRequiredMixin
 from django.views import View
 from django.views.generic import ListView, DetailView, CreateView, UpdateView
+from django.utils.formats import localize
+from django.utils.translation import gettext_lazy as _
 
 from django_datatables_view.base_datatable_view import BaseDatatableView
 from django.utils.html import escape
 
 from FinanceAPI import models, forms
 
+from django.utils import timezone as sys_timezone
+
+from pytz import timezone
+
+from CSSANet.settings import TIME_ZONE
+
+import datetime
+
 
 class TransactionListView(LoginRequiredMixin, View):
     login_url = '/hub/login/'
     template_name = 'FinanceAPI/transaction_list.html'
+    ViewBag = {}
+    ViewBag['PageHeader'] = _("交易流水")
 
     #请求处理函数 （get）
     def get(self, request, *args, **kwargs):
-        return render(request, self.template_name)
+        transaction_today = models.Transaction.objects.filter(time__date__gte=sys_timezone.now().date())
+        self.ViewBag['incoming_transaction_count'] = transaction_today.filter(is_expense=False).count()
+        self.ViewBag['incoming_transaction_sum'] = transaction_today.filter(is_expense=False).aggregate(Sum('amount'))['amount__sum']
+        self.ViewBag['outcoming_transaction_count'] = transaction_today.filter(is_expense=True).count()
+        self.ViewBag['outcoming_transaction_sum'] = transaction_today.filter(is_expense=True).aggregate(Sum('amount'))['amount__sum']
+        self.ViewBag['now_date'] = localize(sys_timezone.now().date())
+
+        
+        return render(request, self.template_name, self.ViewBag)
 
 class TransactionListJson(LoginRequiredMixin, PermissionRequiredMixin, BaseDatatableView):
     login_url = '/hub/login/'
@@ -31,12 +51,12 @@ class TransactionListJson(LoginRequiredMixin, PermissionRequiredMixin, BaseDatat
     # order is important and should be same as order of columns
     # displayed by datatables. For non sortable columns use empty
     # value like ''
-    order_columns = columns
+    order_columns = ['time','time','transaction_type','related_user', 'is_expense', 'amount', 'is_effective']
     # define the columns that will be returned
 
     # set max limit of records returned, this is used to protect our site if someone tries to attack our site
     # and make it return huge amount of data
-    max_display_length = 500
+    max_display_length = 200
 
     def render_column(self, row, column):
         # Customer HTML column rendering
@@ -51,7 +71,8 @@ class TransactionListJson(LoginRequiredMixin, PermissionRequiredMixin, BaseDatat
             else:
                 return escape('收入')
         elif column == 'time':
-            return escape(row.time.strftime('%Y/%m/%d %H:%M:%S'))
+            sys_tz = timezone(TIME_ZONE)
+            return localize(row.time.astimezone(sys_tz))
         elif column == 'amount':
             return escape('AUD $'+ str(row.amount))
         else:

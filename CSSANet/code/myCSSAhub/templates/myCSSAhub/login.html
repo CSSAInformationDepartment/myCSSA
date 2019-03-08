@@ -57,15 +57,18 @@ function bs_alert_popup(){
 $('#main-login-form').on('submit', function(event){
     event.preventDefault();
     function create_post() {
-      console.log("create post is working!") // sanity check
       $.ajax({
-        url : "{% url 'myCSSAhub:hub_login' %}", // the endpoint
+        url : window.location.href, // the endpoint
         type : "POST", // http method
         data : $('#main-login-form').serialize(),// data sent with the post request
         // handle a successful response
         success : function(json) {
           if (json["result"] == "Login Successful!") {
-            window.location.href = "{% url 'myCSSAhub:home' %}"
+            if (json['redirect']) {
+              window.location.href =  json['redirect']
+            } else {
+              window.location.href = "{% url 'myCSSAhub:home' %}"
+            }
           } else {
             bs_alert_popup();
             console.log(json);
@@ -73,8 +76,7 @@ $('#main-login-form').on('submit', function(event){
         },
         // handle a non-successful response
         error : function(xhr,errmsg,err) {
-          $('#results').html('<div class="alert alert-dismissible alert-warning fade show" role="alert">Oops! We have encountered an error: '+errmsg+
-          " <a href='#' class='close'>&times;</a></div>"); // add the error to the dom
+          $('#ErrMsgArea').html('<div id="login-fail-alert" class="alert alert-dismissible alert-warning fade show" role="alert"><button type="button" class="close" data-dismiss="alert">&times;</button><h4 class="alert-heading">服务器故障</h4><p class="mb-0">'+errmsg+'</p></div>')
           console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
           }
       });

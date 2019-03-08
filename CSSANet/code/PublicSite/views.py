@@ -1,9 +1,10 @@
-from django.shortcuts import render,reverse
+from django.shortcuts import render,reverse, get_object_or_404
 from django.http import JsonResponse
 from PublicSite import models
 from UserAuthAPI import models as UserModels
 from BlogAPI import models as BlogModels
 from RecruitAPI import models as JobModels
+from EventAPI import models as eventModels
 # Static Files Path Reference
 from CSSANet.settings import MEDIA_ROOT, MEDIA_URL
 from Library.SiteManagement import LoadPagetoRegister
@@ -20,6 +21,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.forms import SetPasswordForm, PasswordChangeForm
+from RecruitAPI.resume_mgr import checkDuplicateResume
 
 from django.views import View
 from django.views.generic import CreateView, UpdateView, FormView
@@ -34,8 +36,10 @@ from UserAuthAPI.forms import BasicSiginInForm, UserInfoForm, MigrationForm, Use
 from RecruitAPI.forms import ResumeSubmissionForm
 from LegacyDataAPI import models as LegacyDataModels
 
+from django.utils import timezone
+
 from myCSSAhub import models as HubModels
-from myCSSAhub.send_email import send_emails
+from CommunicateManager.send_email import send_emails
 
 # Create your views here.
 
@@ -43,12 +47,11 @@ from myCSSAhub.send_email import send_emails
 ################################# View Controller ########################################
 #@cache_page(CACHE_TTL)
 def index(request):
+    now_time = timezone.now()
+    eventsPast=eventModels.Event.objects.filter(eventActualStTime__lt=now_time).order_by("eventActualStTime")
+    eventsFuture=eventModels.Event.objects.filter(eventActualStTime__gt=now_time).order_by("eventActualStTime")
+    return render(request, 'PublicSite/index.html',{'now_time':now_time,'eventsPast':eventsPast,'eventsFuture':eventsFuture})
 
-    return render(request, 'PublicSite/index.html')
-
-#@cache_page(CACHE_TTL)
-def News(request):
-    return render(request, 'PublicSite/News.html')
 
 def ContactUs(request):
     return render(request, 'PublicSite/contact_us.html')
@@ -82,32 +85,57 @@ def Recruitments(request):
     job_list = JobModels.JobList.objects.all()
     return render(request, 'PublicSite/recruit.html', {'job_list': job_list})
 
-class ResumeSubmissionView(View):
+class ResumeSubmissionView(LoginRequiredMixin,View):
+    login_url = "/hub/login/"
+    redirect_field_name = 'redirect_to'
+
     json_data={}
-    
+
     def get(self, request, *args, **kwargs):
+        prev_submission = None
         jobId = self.kwargs.get('jobId')
         job_data = JobModels.JobList.objects.get(jobId=jobId)
-        return render(request, 'PublicSite/jobapplication.html', {'job_data': job_data})
-    
+        if checkDuplicateResume(jobId,request.user.id):
+            prev_submission = JobModels.Resume.objects.filter(Q(disabled=False) & Q(user__id=request.user.id) & Q(jobRelated__jobId=jobId)).first()
+        return render(request, 'PublicSite/jobapplication.html', {'job_data': job_data, 'prev_submission':prev_submission})
+
     def post(self, request, *args, **kwargs):
         jobId = self.kwargs.get('jobId')
-        job_data = JobModels.JobList.objects.get(jobId=jobId)
         if request.user.is_authenticated:
-            form = ResumeSubmissionForm(data=request.POST)
-            form.user = request.user
-            if form.is_valid:
-                instance = form.save()
-                self.json_data['result'] = True
-
-                send_emails("CV Submitted", instance, request.user.email, None)
-         #       return JsonResponse(self.json_data)
-            else:
+            if checkDuplicateResume(jobId,request.user.id):
                 self.json_data['result'] = False
-                self.json_data['error'] = form.error_class
-                
+                self.json_data['error'] = "Duplicated Submission! 您已经提交过该岗位的申请"
+            else:
+                form = ResumeSubmissionForm(data=request.POST, files=request.FILES)
+                form.user = request.user
+                if form.is_valid():
+                    instance = form.save()
+                    self.json_data['result'] = True
+                    send_emails("CV Submitted", instance, request.user.email, None)
+                else:
+                    self.json_data['result'] = False
+                    self.json_data['error'] = form.error_class
+        else:
+            self.json_data['result'] = False
+            self.json_data['error'] =  'You need to login first! '
         return JsonResponse(self.json_data)
-        #return render(request, 'PublicSite/jobapplication.html', {'job_data': job_data, 'form':form})
+
+class EventsListView(View):
+    template_name = 'PublicSite/event.html'
+    now_time = timezone.now()
+    events=eventModels.Event.objects.all().order_by("eventStartTime")
+    eventsFuture=eventModels.Event.objects.filter(eventActualStTime__gt=now_time).order_by("eventActualStTime")
+    eventsPast=eventModels.Event.objects.filter(eventActualStTime__lt=now_time).order_by("eventActualStTime")
+
+    def get(self, request, *args, **kwargs):
+        return render(request, self.template_name, {'eventsFuture':self.eventsFuture, 'now_time':self.now_time,'events':self.events, 'eventsPast':self.eventsPast})
+
+
+def EventDetails(request, eventID):
+    event=get_object_or_404(eventModels.Event, pk=eventID)
+    now_time = timezone.now()
+
+    return render(request,'PublicSite/eventDetails.html',{'events':event, 'now_time':now_time})
 
 
 def Blogs(request):
@@ -175,7 +203,7 @@ def Blogs(request):
     if page != numPage:
         nextPrev["ne"] = page + 1
     ViewBag["hasNextPrev"] = nextPrev
-
+    print("GET HERE !!")
     return render(request, "PublicSite/blogbref.html", ViewBag)
 
     pass
@@ -211,9 +239,14 @@ def BlogContents(request, blogId):
     users= BlogModels.BlogWrittenBy.objects.filter(blogId=blogSingle)
     ViewBag["users"] = []
     for user in users:
+        userProfile = None
+        try:
+            userProfile = UserModels.UserProfile.objects.filter(user=user.userId)[0]
+        except:
+            pass
         ViewBag["users"].append({
             "user": user.userId,
-            "userProfile": UserModels.UserProfile.objects.filter(user=user.userId)[0]
+            "userProfile": userProfile
         })
 
     curBlogTags = BlogModels.BlogInTag.objects.filter(blogId=blogSingle)
@@ -265,9 +298,14 @@ class reviewBlogPublic(LoginRequiredMixin, PermissionRequiredMixin, View):
         users= BlogModels.BlogWrittenBy.objects.filter(blogId=blogSingle)
         ViewBag["users"] = []
         for user in users:
+            userProfile = None
+            try:
+                userProfile = UserModels.UserProfile.objects.filter(user=user.userId)[0]
+            except:
+                pass
             ViewBag["users"].append({
                 "user": user.userId,
-                "userProfile": UserModels.UserProfile.objects.filter(user=user.userId)[0]
+                "userProfile": userProfile
             })
 
         curBlogTags = BlogModels.BlogInTag.objects.filter(blogId=blogSingle)
@@ -288,6 +326,10 @@ def Merchants(request):
     infos = HubModels.DiscountMerchant.objects.all().order_by("merchant_add_date").values()
 
     return render(request,'PublicSite/merchant.html', locals())
+
+def SupportMerchants(request):
+    infos = HubModels.DiscountMerchant.objects.all().order_by("merchant_add_date").values()
+    return render(request,'PublicSite/supportMerchant.html', {'infos':infos})
 
 ################################# errors pages ########################################
 from django.shortcuts import render

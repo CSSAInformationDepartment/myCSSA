@@ -5,23 +5,25 @@
        myCSSAhub 会员中心 - {% block pageTitle %} {% endblock %}
     </title>
     {% load static %}
-    <base href="{% static '/myCSSAhub/'%}"> <!--This is the root of static files for imgs in dev mode-->
+    <!--base href="{% static '/myCSSAhub/'%}"--> <!--This is the root of static files for imgs in dev mode-->
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <meta name="author" content="CSSA Department of Information Technology">
     <!-- Icons-->
     <link href="{% static '/myCSSAhub/vendors/@coreui/icons/css/coreui-icons.min.css'%}" rel="stylesheet">
-    <link href="{% static '/myCSSAhub/vendors/flag-icon-css/css/flag-icon.min.css'%}" rel="stylesheet">
-    <link href="{% static '/myCSSAhub/vendors/font-awesome/css/font-awesome.min.css'%}" rel="stylesheet">
-    <link href="{% static '/myCSSAhub/vendors/simple-line-icons/css/simple-line-icons.css'%}" rel="stylesheet">
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.3.0/css/flag-icon.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/simple-line-icons/2.4.1/css/simple-line-icons.min.css" rel="stylesheet">
+    <link href="{% static '/myCSSAhub/vendors/pace-progress/css/pace.min.css' %}" rel="stylesheet">
     <!-- Main styles for this application-->
     <link href="{% static '/myCSSAhub/css/style.css'%}" rel="stylesheet">
-    <link href="{% static '/myCSSAhub/vendors/pace-progress/css/pace.min.css'%}" rel="stylesheet">
-    <!-- Global site tag (gtag.js) - Google Analytics-->
-    <script async="" src="https://www.googletagmanager.com/gtag/js?id=UA-118965717-3"></script>
     {% block ExtraHeader %}
     {% endblock ExtraHeader %}
+    <!-- Global site tag (gtag.js) - Google Analytics-->
+    <script async="" src="https://www.googletagmanager.com/gtag/js?id=UA-118965717-3"></script>
+
     <script>
       window.dataLayer = window.dataLayer || [];
 
@@ -43,15 +45,14 @@
             <main class="main">
               <!-- Breadcrumb-->
               <ol class="breadcrumb">
-                <li class="breadcrumb-item">Home</li>
-                <li class="breadcrumb-item">
-                  <a href="#">Admin</a>
-                </li>
-                <li class="breadcrumb-item active"> Dashboard</li>
+                {% block BreadcrumbPath %}
+                
+                {% endblock BreadcrumbPath %}
+
                 <!-- Breadcrumb Menu-->
                 <li class="breadcrumb-menu d-md-down-none">
                   <div class="btn-group" role="group" aria-label="Button group">
-                    <a class="btn" href="{% url 'myCSSAhub:notifications_list' %}">
+                    <a class="btn" href="{% url 'myCSSAhub:Comm:notifications_list' %}">
                       <i class="icon-speech"> 通知中心 </i>
                     </a>
                     <a class="btn" href="{% url 'myCSSAhub:home' %}"> 
@@ -72,10 +73,10 @@
     </div>
 
     <!-- CoreUI and necessary plugins-->
-    <script src="{% static '/myCSSAhub/vendors/jquery/js/jquery.min.js'%}"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.0.2/pace.min.js"></script>
     <script src="{% static '/myCSSAhub/vendors/popper.js/js/popper.min.js'%}"></script>
-    <script src="{% static '/myCSSAhub/vendors/bootstrap/js/bootstrap.min.js'%}"></script>
-    <script src="{% static '/myCSSAhub/vendors/pace-progress/js/pace.min.js'%}"></script>
     <script src="{% static '/myCSSAhub/vendors/perfect-scrollbar/js/perfect-scrollbar.min.js'%}"></script>
     <script src="{% static '/myCSSAhub/vendors/@coreui/coreui/js/coreui.min.js'%}"></script>
 
