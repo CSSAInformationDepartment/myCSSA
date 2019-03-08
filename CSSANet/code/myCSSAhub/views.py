@@ -164,7 +164,7 @@ class Merchant_profile(LoginRequiredMixin, View):
 
         return render(request, self.template_name, {'form':form, 'submit_url':reverse('myCSSAhub:merchant_profile', args=[str(profileID)])})
    
-    
+      
     def post(self, request,  *args, **kwargs):
         have_update = False
         profileID = self.kwargs.get('id')    
