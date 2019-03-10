@@ -114,27 +114,15 @@
 {% block ExtraJS %}
 
 <script type="text/javascript">
-<<<<<<< HEAD
 
-    document.getElementById("m_name").value = '{{infos.merchant_name}}'
-    document.getElementById("m_type").value = '{{infos.merchant_type}}'
-    document.getElementById("m_address").value = '{{infos.merchant_address}}'
-    document.getElementById("m_phone").value = '{{infos.merchant_phone}}'
-    document.getElementById("m_link").value = '{{infos.merchant_link}}'
-    document.getElementById("m_description").value = '{{infos.merchant_description}}'
-    document.getElementById("input-b1").value = '{{infos.merchant_image}}'
-</script>
-=======
-    
     document.getElementById("m_name").value = '{{form.merchant_name.value}}'
     document.getElementById("m_address").value = '{{form.merchant_address.value}}'
     document.getElementById("m_phone").value = '{{form.merchant_phone.value}}'
     document.getElementById("m_link").value = '{{form.merchant_link.value}}'
     document.getElementById("m_description").value = '{{form.merchant_description.value}}'
-    
+
 </script>
 
->>>>>>> origin/HowieC
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.5.1/js/plugins/piexif.min.js" type="text/javascript"></script>
 <!-- sortable.min.js is only needed if you wish to sort / rearrange files in initial preview.
     This must be loaded before fileinput.min.js -->
