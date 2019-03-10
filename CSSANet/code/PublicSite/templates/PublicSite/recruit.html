@@ -3,6 +3,7 @@
 {% block 'pg_body' %}
 {% load static %}
 
+<div class="container bloc-fill-screen">
 <!-- bloc-20 -->
 <div class="bloc l-bloc" id="bloc-20">
 	<div class="container bloc-md">
@@ -46,6 +47,10 @@
 									</div>
 								</div>
 							</li>
+							{% empty %}
+							<h1 class="mg-md text-center">
+								目前没有岗位发布，请关注下学期招新
+							</h1>
 							{% endfor %}
 						</ul>
 					</div>
@@ -58,6 +63,6 @@
 	</div>
 </div>
 <!-- bloc-21 END -->
-
+</div>
 
 {% endblock 'pg_body' %}

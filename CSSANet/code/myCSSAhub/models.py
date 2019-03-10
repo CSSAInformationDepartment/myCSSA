@@ -41,4 +41,3 @@ class DiscountMerchant(models.Model):
 
     def __str__(self):
         return self.merchant_name
-    
