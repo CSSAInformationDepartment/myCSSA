@@ -19,6 +19,9 @@
 			<li class="nav-item">
 				<a class="nav-link" href="{% url 'PublicSite:blogs' %}?page=1"><i class="fa fa-newspaper-o mr-1"></i>{%trans "新闻公告" %}</a>
 			</li>
+			<li class="nav-item" >
+				<a class="nav-link" href="{% url 'PublicSite:merchants' %}"><i class="fa fa-ticket mr-1"></i>{%trans "折扣商家 " %}</a>
+			</li>
 			<li class="nav-item">
 				<a class="nav-link" href="{% url 'PublicSite:recruitment' %}"><i class="fa fa-group mr-1"></i>加入CSSA理事</a>
 			</li>
@@ -42,9 +45,7 @@
 			<li class="nav-item" >
 				<a class="nav-link" href="{% url 'PublicSite:supportMerchants' %}">{%trans "特别鸣谢 " %}</a>
 			</li>
-			<li class="nav-item" >
-				<a class="nav-link" href="{% url 'PublicSite:merchants' %}"><i class="fa fa-ticket mr-1"></i>{%trans "折扣商家 " %}</a>
-			</li>
+
 
 			{% endif %}
 		</ul>
