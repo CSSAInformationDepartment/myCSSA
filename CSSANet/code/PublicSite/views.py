@@ -82,7 +82,7 @@ def Departments(request,dept):
     return render(request, 'PublicSite/dept.html', ViewBag)
 
 def Recruitments(request):
-    job_list = JobModels.JobList.objects.all()
+    job_list = JobModels.JobList.objects.filter(disabled=False)
     return render(request, 'PublicSite/recruit.html', {'job_list': job_list})
 
 class ResumeSubmissionView(LoginRequiredMixin,View):
@@ -315,10 +315,6 @@ class reviewBlogPublic(LoginRequiredMixin, PermissionRequiredMixin, View):
         print(ViewBag)
         return render(request, 'PublicSite/blogs.html', ViewBag)
 
-
-#@cache_page(CACHE_TTL)
-#def Events(requests):
-#    return
 
 ################################# sponsor pages ########################################
 def Merchants(request):
