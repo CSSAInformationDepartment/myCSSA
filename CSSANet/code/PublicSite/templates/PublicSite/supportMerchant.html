@@ -13,7 +13,7 @@
       <div class="row justify-content-center">
         {% for info in infos %}
         {% if info.merchant_type == "赞助商家" %}
-         <div class="col-lg-2 col-sm-6 portfolio-item mt-2">
+         <div class="col-md-6 portfolio-item">
            <div class="card" style="border: none; width:280px;">
              {% if info.merchant_link %}
              <a href="{{info.merchant_link}}">
@@ -29,8 +29,6 @@
                  <a href=# class="h1">
                    {% endif %}
                    <strong>{{info.merchant_name}}</strong></a>
-
-
                </h1>
              </div>
            </div>
