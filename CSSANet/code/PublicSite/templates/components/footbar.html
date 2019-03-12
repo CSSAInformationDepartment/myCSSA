@@ -7,60 +7,79 @@
 			<div class="col-md-3 col-sm-6">
 				<h4 class="mg-md text-sm-left text-center tc-white">
 					Affiliate with 
-				</h4><a href="index.html" class="a-btn a-block footer-link">The Team</a><a href="index.html" class="a-btn a-block footer-link">Contact Us</a>
+					<div class="row mt-3 d-block img-logo-style">
+						<a href="https://umsu.unimelb.edu.au/">
+							<img src="{% static 'PublicSite/img/umsuLogo.png'%}"  class="img-fluid"/>
+						</a>
+					</div>
+					<div class="row mt-3 d-block img-logo-style" >
+						<a href="https://gsa.unimelb.edu.au/">
+							<img src="{% static 'PublicSite/img/gsaLogo.png'%}" class="img-fluid"/>
+						</a>
+					</div>
 			</div>
 
 			<div class="col-md-3 col-sm-6">
 				<h4 class="mg-md text-sm-left text-center tc-white">
-					联系我们
-				</h4><a href="index.html" class="a-btn a-block footer-link">The Team</a><a href="index.html" class="a-btn a-block footer-link">Contact Us</a>
+					Quick Links
+				</h4>
+					<div class="text-sm-left text-center">
+						<a class="tc-gray" href="https://www.unimelb.edu.au/">University of Melbourne Homepage</a>
+					</div>
+					<div class="text-sm-left text-center"> 
+						<a class="tc-gray" href="https://students.unimelb.edu.au/">Student information</a>
+					</div>
+					<div class="text-sm-left text-center">
+						<a class="tc-gray" href="https://auth.unimelb.edu.au/login/pages/login.jsp">MyUnimelb Student Portal</a>
+					</div>
+					<div class="text-sm-left text-center">
+						<a class="tc-gray" href="https://library.unimelb.edu.au/">Library</a>
+					</div>	
 			</div>
 
-			<div class="col-md-3 col-sm-6">
+			<div class="col-md-4 col-sm-6">
+				<h4 class="mg-md text-sm-left text-center tc-white">
+					Contact Mailbox
+				</h4>
+				<ul class="mg-md text-sm-left text-center">
+					<li><strong>President: </strong>president@cssaunimelb.com</li>
+					<li><strong>Liasion: </strong>pr@cssaunimelb.com </li>
+					<li><strong>Event: </strong>activity@cssaunimelb.com </li>
+					<li><strong>Publicity: </strong>publicity@cssaunimelb.com </li>
+					<li><strong>IT & Dev Team: </strong>information@cssaunimelb.com </li>
+					<li><strong>Human Resources: </strong>hr@cssaunimelb.com</li>
+				</ul>
+			</div>
+
+
+
+			<div class="col-md-2 col-sm-6">
 				<h4 class="mg-md text-sm-left text-center tc-white">
 					Follow Up
 				</h4>
 				<div class="row">
-					<div class="col-6 col-sm-2 col offset-sm-0">
+					<div class="col-4 col-sm-4">
 						<div class="text-center">
 							<a href="https://www.facebook.com/CSSAunimelb/"><span class="fa fa-facebook-official icon-md"></span></a>
 						</div>
 					</div>
-					<div class="col-6 col-sm-2">
+					<div class="col-4 col-sm-4">
 						<div class="text-center">
 							<a href="#"><span class="fa fa-weixin icon-md"></span></a>
 						</div>
 					</div>
-					<div class="col-6 col-sm-2">
+					<div class="col-4 col-sm-4">
 						<div class="text-center">
 							<a href="https://www.weibo.com/cssaum"><span class="fa fa-weibo icon-md"></span></a>
 						</div>
 					</div>
 				</div>
 			</div>
+
 		</div>
 	</div>
 </div>
 <!-- bloc-20 END -->
-<!-- bloc-28 -->
-{% load static %}
-<div class="bloc bgc-blue-gray none d-bloc" id="bloc-28">
-	<div class="container bloc-sm" >
-		<div class="row justify-content-md-center">
-			<div class="col-6 col-sm-3" >
-				<a href="https://umsu.unimelb.edu.au/">
-				<img src="{% static 'PublicSite/img/umsuLogo.png'%}"  class="img-fluid mx-auto d-block lazyload img-logo-style"/>
-				</a>
-			</div>
-			<div class="col-6 col-sm-3">
-				<a href="https://gsa.unimelb.edu.au/">
-				<img src="{% static 'PublicSite/img/gsaLogo.png'%}" class="img-fluid mx-auto d-block lazyload img-logo-style"/>
-				</a>
-			</div>
-		</div>
-	</div>
-</div>
-<!-- bloc-28 END -->
 
 <!--Modal Block-->
 <div class="modal fade" id="WeChatQRCode" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">

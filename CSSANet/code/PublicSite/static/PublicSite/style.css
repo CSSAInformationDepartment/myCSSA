@@ -433,8 +433,7 @@ h1,h2,h3,h4,h5,h6,p,label,.btn,a{
 	border-radius:0px 0px 0px 0px;
 }
 .img-logo-style{
-	max-width: 50%;
-	vertical-align: middle;
+	max-width: 45%;
 }
 .img-margin-right{
 	margin-right:-108px;
@@ -560,6 +559,9 @@ h1,h2,h3,h4,h5,h6,p,label,.btn,a{
 
 .tc-white{
 	color:#FFFFFF!important;
+}
+.tc-gray{
+	color:#DDDDDD!important;
 }
 
 /* Button colour styles */
