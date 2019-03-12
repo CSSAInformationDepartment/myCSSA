@@ -1,5 +1,5 @@
 
-FROM python:3.6.8-alpine3.8
+FROM python:3.7.2-alpine3.8
 
 # Set environment varibles
 
@@ -22,7 +22,6 @@ WORKDIR /code
 RUN mkdir /config
 RUN mkdir /data
 ADD requirements.txt /code/
-#ADD alice-bootloader.sh /code/
 RUN chmod g+w /code/
 RUN chmod g+w /data/
 
