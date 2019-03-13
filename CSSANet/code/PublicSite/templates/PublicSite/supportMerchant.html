@@ -11,8 +11,13 @@
 
 
       <div class="row justify-content-center">
+              <h3>金牌商家</h3>
+              </div>
+              <hr>
+      <div class="row justify-content-center">
         {% for info in infos %}
         {% if info.merchant_type == "赞助商家" %}
+        {% if info.merchant_level == "金牌商家" %}
          <div class="col-lg-6 col-sm-6 portfolio-item mt-2">
            <div class="card" style="border: none; width:280px;">
              {% if info.merchant_link %}
@@ -34,7 +39,44 @@
            </div>
          </div>
            {% endif %}
+           {% endif %}
          {% endfor %}
+</div>
+
+
+<div class="row justify-content-center">
+        <h2>银牌商家</h2>
+        </div>
+        <hr>
+<div class="row justify-content-center">
+  {% for info in infos %}
+  {% if info.merchant_type == "赞助商家" %}
+  {% if info.merchant_level == "银牌商家" %}
+   <div class="col-lg-6 col-sm-6 portfolio-item mt-2">
+     <div class="card" style="border: none; width:280px;">
+       {% if info.merchant_link %}
+       <a href="{{info.merchant_link}}">
+         {% else %}
+         <a href="#">
+         {% endif %}
+       <img alt="{{info.merchant_name}}" class="card-img-top img-fluid" src="/media/{{info.merchant_image}}" style="max-height:300px;"></a>
+       <div class="card-body">
+         <h1 class="card-title text-center">
+           {% if info.merchant_link %}
+           <a href="{{info.merchant_link}}" class="h1">
+           {% else %}
+           <a href=# class="h1">
+             {% endif %}
+             <strong>{{info.merchant_name}}</strong></a>
+         </h1>
+       </div>
+     </div>
+   </div>
+     {% endif %}
+     {% endif %}
+   {% endfor %}
+</div>
+
       </div>
 
           </div>

@@ -85,10 +85,12 @@
     <div class="form-group">
         <label for="merchant_name">商户名：</label>
         <input class="form-control" id="m_name" name="m_name" style="width:100%" required/>
-
-        {{ form.merchant_type.label_tag }}
+        {{ form.merchant_type.label_tag }}<span class="asteriskField">*</span>
         {% render_field form.merchant_type class="form-control" %}
-
+        {{ form.merchant_level.label_tag }}<span class="asteriskField">*</span>
+        {% render_field form.merchant_level class="form-control" %}
+        {{ form.merchant_Category.label_tag }}<span class="asteriskField">*</span>
+        {% render_field form.merchant_Category class="form-control" %}
         <label for="merchant_address">地址：</label>
         <input class="form-control" id="m_address" name="m_address" type="text" required />
         <label for="merchant_phone">联系电话：</label>
@@ -117,6 +119,9 @@
 
     document.getElementById("m_name").value = '{{form.merchant_name.value}}'
     document.getElementById("m_address").value = '{{form.merchant_address.value}}'
+    document.getElementById("{{form.merchant_type.id_for_label}}").value = '{{form.merchant_type.value}}'
+    document.getElementById("{{form.merchant_level.id_for_label}}").value = '{{form.merchant_level.value}}'
+    document.getElementById("{{form.merchant_Category.id_for_label}}").value = '{{form.merchant_Category.value}}'
     document.getElementById("m_phone").value = '{{form.merchant_phone.value}}'
     document.getElementById("m_link").value = '{{form.merchant_link.value}}'
     document.getElementById("m_description").value = '{{form.merchant_description.value}}'

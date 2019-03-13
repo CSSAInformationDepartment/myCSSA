@@ -38,6 +38,23 @@ class DiscountMerchant(models.Model):
         ('赞助商家', '赞助商家'),
     )
     merchant_type = models.CharField(verbose_name="商户类型", max_length=10, choices= merchantType, null=True, default='折扣商家')
+    merchantLevel = (
+        ('无', '无'),
+        ('钻石商家', '钻石商家'),
+        ('金牌商家', '金牌商家'),
+        ('银牌商家', '银牌商家'),
+    )
+    merchant_level = models.CharField(verbose_name="赞助商等级", max_length=10, choices= merchantLevel, null=True, default='银牌商家',blank=True)
+    merchantCategory = (
+        ('无', '无'),
+        ('美食', '美食'),
+        ('休闲娱乐', '休闲娱乐'),
+        ('便捷生活', '便捷生活'),
+    )
+    merchant_Category = models.CharField(verbose_name="折扣商家种类", max_length=10, choices= merchantCategory, null=True, default='美食',blank=True)
 
     def __str__(self):
         return self.merchant_name
+
+    def get_absolute_url(self):
+        return reverse("myCSSAhub:merchant_profile", args=[str(self.merchant_id)])
