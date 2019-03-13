@@ -4,7 +4,7 @@ Proundly developed and supported by the Department of Information Technology, CS
 ## Prerequisites
 You MUST have these packages/tools installed on your local machine before playing with this project
 1. Docker-CE (Community Edition)
-2. Python >= 3.6
+2. Python >= 3.7.2
 3. Lastest stable version of Pipenv (Optional but recommended)
 4. PostgesSQL Server == 10.6 (Optional for who wants to test code outside the Docker container)
 ## Additional Notice for Windows Users
