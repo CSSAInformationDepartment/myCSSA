@@ -6,17 +6,18 @@
 		<div class="row">
 			<div class="col-md-3 col-sm-6">
 				<h4 class="mg-md text-sm-left text-center tc-white">
-					Affiliate with 
-					<div class="row mt-3 d-block img-logo-style">
+					Affiliate with
+					</h4>
 						<a href="https://umsu.unimelb.edu.au/">
-							<img src="{% static 'PublicSite/img/umsuLogo.png'%}"  class="img-fluid"/>
+							<div class="mt-3 text-sm-left text-center">
+							<img src="{% static 'PublicSite/img/umsuLogo.png'%}"  class=" d-inline img-logo-style"/>
+							</div>
 						</a>
-					</div>
-					<div class="row mt-3 d-block img-logo-style" >
 						<a href="https://gsa.unimelb.edu.au/">
-							<img src="{% static 'PublicSite/img/gsaLogo.png'%}" class="img-fluid"/>
+							<div class="mt-3 text-sm-left text-center">
+								<img src="{% static 'PublicSite/img/gsaLogo.png'%}" class=" d-inline img-logo-style"/>
+							</div>
 						</a>
-					</div>
 			</div>
 
 			<div class="col-md-3 col-sm-6">
@@ -65,7 +66,7 @@
 					</div>
 					<div class="col-4 col-sm-4">
 						<div class="text-center">
-							<a href="#"><span class="fa fa-weixin icon-md"></span></a>
+							<a rel="qrcode-pops" data-container="body" data-toggle="popover" data-placement="top" data-img="{% static 'PublicSite/img/qrcode_wx.jpg'%}"><span class="fa fa-weixin icon-md"></span></a>
 						</div>
 					</div>
 					<div class="col-4 col-sm-4">
@@ -80,29 +81,6 @@
 	</div>
 </div>
 <!-- bloc-20 END -->
-
-<!--Modal Block-->
-<div class="modal fade" id="WeChatQRCode" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        ...
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!--Modal Block END-->
 
 <!-- bloc-30 -->
 <div class="bloc bgc-black d-bloc" id="bloc-22">
@@ -123,4 +101,12 @@
 	</div>
 </div>
 <!-- bloc-30 END -->
+<script>
+$('a[rel=qrcode-pops]').popover({
+  html: true,
+  trigger: 'hover',
+  placement: 'bottom',
+  content: function(){return '<img src="'+$(this).data('img') + '" />';}
+});
+</script>
 </footer>
