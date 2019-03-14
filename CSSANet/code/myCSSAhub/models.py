@@ -33,6 +33,7 @@ class DiscountMerchant(models.Model):
     merchant_link =  models.CharField(verbose_name="商家网站", max_length=200, null=True,blank=True)
     merchant_add_date = models.DateTimeField(verbose_name="商户加入时间", default=timezone.now)
     merchant_image =  models.ImageField(upload_to = 'img/merchants/', default = 'img/merchants/noneImg.jpg')
+    merchant_qrcode=models.ImageField(verbose_name="微信二维码",upload_to='uploads/usrImage/merchantWechatQRcode',default=None ,null=True, blank=True)
     merchantType = (
         ('折扣商家', '折扣商家'),
         ('赞助商家', '赞助商家'),
