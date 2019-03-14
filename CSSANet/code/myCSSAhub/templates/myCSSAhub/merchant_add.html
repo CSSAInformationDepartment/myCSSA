@@ -89,6 +89,10 @@
             <label for="merchant_pic">选择商家图片：<span class="asteriskField">*</span></label>
             <input id="input-b1" name="merchant_image" type="file" class="file" data-browse-on-zone-click="true">
         </div>
+        <div class="form-group">
+              {{ form.merchant_qrcode.label_tag }}<span class="asteriskField">*</span>
+            <input id="input-b1" name="merchant_qrcode" type="file" class="file" data-browse-on-zone-click="true">
+        </div>
     </div>
     <!-- 直接点击submit可以发送ID至后台，select2控件已经封装好了 -->
     <button class="btn btn-primary" type="submit">添加</button>
