@@ -16,3 +16,7 @@ settings.json
 !.gitkeep
 Pipfile
 Pipfile.lock
+.CSSANet/Pipfile
+.CSSANet/Pipfile.lock
+.CSSANet/code/Pipfile
+.CSSANet/code/Pipfile.lock
