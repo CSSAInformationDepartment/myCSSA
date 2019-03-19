@@ -10,65 +10,87 @@ from django_datatables_view.base_datatable_view import BaseDatatableView
 from django.urls import reverse
 from django.utils.html import escape
 from django.utils.translation import ugettext_lazy as _
+from datetime import datetime, timedelta
 
 from UserAuthAPI import models as UserModels
+from RecruitAPI.models import Resume
 from FinanceAPI.apis import lodge_sys_gen_transaction
 
 from .forms import *
+import uuid
 
 # Create your views here.
 
 # ============================  Committee 管理 =============================
-class DepartmentManagementView(LoginRequiredMixin, UserPassesTestMixin, View):
+class DepartmentManagementView(LoginRequiredMixin, PermissionRequiredMixin, View):
     login_url = '/hub/login/'
     template_name = 'OrganisationMgr/dept_mgr.html'
+    permission_required = ('UserAuthAPI.add_cssa_committe_profile')
     ViewBag = {}
-    ViewBag['PageHeader'] = _("会员信息管理")
-
-    def test_func(self):
-        if self.request.user.is_superuser:
-            return True
-        else:
-            if self.request.user.get_committee_profile():
-                return True
-        return False
+    ViewBag['PageHeader'] = _("部门成员管理")
+    dept_member_qs = UserModels.CSSACommitteProfile.objects.filter(is_active=True)
+    
 
     #请求处理函数 （get）
     def get(self, request, *args, **kwargs):
-        self.ViewBag['total_user_count']  = UserProfile.objects.all().count()
-        self.ViewBag['activated_member_count']  = UserProfile.objects.exclude(membershipId=None).count()
-        return render(request, self.template_name)
+        # self.ViewBag['total_user_count']  = UserProfile.objects.all().count()
+        # self.ViewBag['activated_member_count']  = UserProfile.objects.exclude(membershipId=None).count()
+        
+        if request.user.is_superuser:
+            self.ViewBag['dept_members'] = self.dept_member_qs
+        else:
+            request_user_role = get_object_or_404(UserModels.CSSACommitteProfile, Q(member=request.user) & Q(is_active=True))
+            self.ViewBag['dept_members'] = self.dept_member_qs.filter()
+        
+        return render(request, self.template_name, self.ViewBag)
 
     def post(self, request, *args, **kwargs):
-        return HttpResponseRedirect("")
+        id = request.POST.get('lookUPId')
+        return HttpResponseRedirect(reverse('myCSSAhub:OrganisationMgr:dept_add_committee', args=[str(id)]))
 
+class AddNewCommitteView(LoginRequiredMixin, PermissionRequiredMixin, View):
+    login_url = '/hub/login/'
+    template_name = 'OrganisationMgr/assign_new_committee.html'
+    permission_required = ('UserAuthAPI.add_cssa_committe_profile')
+    ViewBag = {}
+    ViewBag['PageHeader'] = _("新部员信息确认")
+    ViewBag['form'] = AssignNewComitteeForm
+    time_interval = datetime.today() - timedelta(days=180)
+    
+    def get(self, request, *args, **kwargs):
+        usr_id = self.kwargs.get('id')
+        self.ViewBag['usr_id'] = usr_id
+        self.ViewBag['user_profile'] = get_object_or_404(UserModels.UserProfile, user__pk=usr_id)
+        self.ViewBag['recent_resume'] = Resume.objects.filter(Q(user__pk=usr_id) & Q(timeOfCreate__gte = self.time_interval))
+        roles_data = UserModels.CSSACommitteProfile.objects.filter(Q(member__pk=usr_id) & Q(is_active=True))
+        if roles_data:
+            self.ViewBag['is_assgined_with_role'] = roles_data
+        else:
+            self.ViewBag['is_assgined_with_role'] = None
+        return render(request, self.template_name, self.ViewBag)
+    
+    def post(self, request, *args, **kwargs):
+        new_committee_id = self.kwargs.get('id')
+        request_user_role = get_object_or_404(UserModels.CSSACommitteProfile, Q(member=request.user) & Q(is_active=True))
+        
+        
 
 class GetCommitteeDetail(LoginRequiredMixin,PermissionRequiredMixin, View):
     login_url = '/hub/login/'
-    template_name = 'OrganisationMgr/dept_mgr.html'
+    template_name = 'OrganisationMgr/user_mgr.html'
     permission_required = 'UserAuthAPI.add_cssa_committe_profile'
 
     def get(self, request, *args, **kwargs):
-        return JsonResponse({
-            'success': False,
-            'status': '400',
-        })
+        pass
 
     def post(self, request, *args, **kwargs):
-        if request.user.is_authenticated:
-            search = request.POST.get('search', "")
-            print(search)
-        else:
-            return JsonResponse({
-                'success': False,
-                'status': '400',
-            })
+        pass
 
 # ============================  新会员激活    =============================
 class MemberSearchView(LoginRequiredMixin, PermissionRequiredMixin, View):
     login_url = '/hub/login/'
     permission_required = ('UserAuthAPI.activate_membership')
-    template_name = 'OrganisationMgr/dept_mgr.html'
+    template_name = 'OrganisationMgr/user_mgr.html'
     ViewBag = {}
     ViewBag['PageHeader'] = _("查找新会员")
 
@@ -117,7 +139,7 @@ class MembershipActivationView(LoginRequiredMixin, PermissionRequiredMixin, View
 class MemberListView(LoginRequiredMixin, PermissionRequiredMixin, View):
     login_url = '/hub/login/'
     permission_required = ('UserAuthAPI.change_indentity_data')
-    template_name = 'OrganisationMgr/dept_mgr.html'
+    template_name = 'OrganisationMgr/user_mgr.html'
     ViewBag = {}
     ViewBag['PageHeader'] = _("会员信息管理")
 
@@ -181,54 +203,3 @@ class ConfirmActivationView(LoginRequiredMixin, PermissionRequiredMixin, View):
         return render(request, self.template_name, {'user_profile':user_profile})
 
 
-
-
-class UserAuthLookup(LoginRequiredMixin, PermissionRequiredMixin ,View):
-    login_url = '/hub/login/'
-    permission_required = ()
-
-
-    def get(self, request, *args, **kwargs):
-        return JsonResponse({
-            'success': False,
-            'status': '400',
-        })
-
-    def post(self, request, *args, **kwargs):
-        if request.user.is_authenticated:
-            search = request.POST.get('search', "")
-            db_lookup = UserModels.UserProfile.objects.filter(
-                Q(studentId__istartswith=search) |
-                Q(user__email__istartswith=search) |
-                Q(user__telNumber__icontains=search)
-            )
-            if db_lookup:
-                result_set = []
-                for result in db_lookup:
-                    lookupResult = {
-                        'id': result.user.id,
-                        'full_name': str(result.firstNameEN) + " " + str(result.lastNameEN),
-                        'full_name_cn': str(result.firstNameCN) + " " + str(result.lastNameCN),
-                        'email': str(result.user.email),
-                        'text': str(result.user.email)
-                    }
-                    if result.avatar:
-                        lookupResult['avatar'] = str(result.avatar.url)
-                    result_set.append(lookupResult)
-
-                return JsonResponse({
-                    'success': True,
-                    'status': '200',
-                    'result': result_set,
-                })
-            else:
-                return JsonResponse({
-                    'success': False,
-                    'status': '404',
-                    'result': None,
-                })
-        else:
-            return JsonResponse({
-                'success': False,
-                'status': '400',
-            })

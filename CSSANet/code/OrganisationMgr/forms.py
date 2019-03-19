@@ -1,4 +1,4 @@
-from UserAuthAPI.models import User, UserProfile
+from UserAuthAPI.models import User, UserProfile, CSSACommitteProfile
 from LegacyDataAPI.models import LegacyUsers
 
 from django import forms
@@ -21,7 +21,6 @@ class BindingMembershipCardForm(forms.ModelForm):
             'user': forms.HiddenInput,
         }
 
-    
     def clean(self, *args, **kwargs):
 
         super().clean()
@@ -65,3 +64,12 @@ class UserEditForm(forms.ModelForm):
         duplicated_telNumber = User.objects.exclude(email=email).filter(telNumber=telNumber).first()
         if duplicated_telNumber:
             raise ValidationError(_(mark_safe('<li>该手机号已被他人注册</li>')), code='Duplicated tel number')
+
+class AssignNewComitteeForm(forms.ModelForm):
+    is_active = forms.BooleanField(initial=True, widget=forms.HiddenInput())
+    class Meta:
+        model = CSSACommitteProfile
+        fields = ('member','Department','role','is_active',)
+        widgets = {
+            'member': forms.HiddenInput,
+        }

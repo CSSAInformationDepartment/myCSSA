@@ -95,12 +95,15 @@ class CSSADept (models.Model):
 
 #职位 (对应fixture， 禁止人工修改)
 class CSSARole (models.Model):
+    '''
+    Define the role in the CSSA Committee
+    '''
     roleId = models.AutoField(primary_key=True, editable=False)
-    roleFlag = models.CharField(max_length=3) #此数值需与用户大组权限一致
+    roleFlag = models.CharField(max_length=15) #此数值需与用户大组权限一致
     roleName = models.CharField(max_length=50)
 
     def __str__(self):
-        return self.roleFlag
+        return self.roleName
 
 #学校专业信息
 class UniMajor (models.Model):
@@ -131,7 +134,7 @@ class User(AbstractUser):
 
     def get_full_CN_name(self):
         '''
-        Returns the first_name plus the last_name, with a space in between.
+        Returns the first_name plus the last_name in Chinese, with a space in between.
         '''
         Profile = UserProfile.objects.get(user=self)
         if Profile.lastNameCN and Profile.firstNameCN:
@@ -142,7 +145,7 @@ class User(AbstractUser):
 
     def get_full_EN_name(self):
         '''
-        Returns the first_name plus the last_name, with a space in between.
+        Returns the first_name plus the last_name in English, with a space in between.
         '''
         Profile = UserProfile.objects.get(user=self)
         if Profile.lastNameEN and Profile.firstNameEN:

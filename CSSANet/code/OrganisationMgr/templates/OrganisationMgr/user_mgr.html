@@ -1,0 +1,162 @@
+{% extends 'myCSSAhub/component/_layout.html' %}
+
+{% block pageTitle %}
+{{PageHeader}}
+{% endblock %}
+
+{% block ExtraHeader %}
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+{% endblock ExtraHeader %}
+
+{% block BreadcrumbPath %}
+<li class="breadcrumb-item">会员管理</li>
+<li class="breadcrumb-item active">
+    <a href="">{{PageHeader}}</a>
+</li>
+{% endblock BreadcrumbPath %}
+
+
+{% block pageContent %}
+{% csrf_token %}
+{% load static %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <i class="fa fa-align-justify"></i> 用户数据统计
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-sm-6 col-md-2">
+                        <div class="card text-white bg-info">
+                            <div class="card-body">
+                                <div class="h1 text-muted text-right mb-4">
+                                    <i class="icon-people"></i>
+                                </div>
+                                <div class="text-value">{{ total_user_count }}</div>
+                                <small class="text-muted text-uppercase font-weight-bold">系统用户总量</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-md-2">
+                        <div class="card text-white bg-success">
+                            <div class="card-body">
+                                <div class="h1 text-muted text-right mb-4">
+                                    <i class="cui-credit-card"></i>
+                                </div>
+                                <div class="text-value">{{ activated_member_count }}</div>
+                                <small class="text-muted text-uppercase font-weight-bold">已激活会员数量</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col col-md-12">
+        <div class="card">
+            <div class="card-header"><strong>查找用户</strong>beta</div>
+            <div class="card-body">
+                <form method="POST" id="membership-check" action="">
+                    {% csrf_token %}
+                    <div class="form-group col-sm-12">
+                        <label for="notification_user">可使用学生证号、邮箱、电话信息查询</label>
+                        <select class="form-control" id="userlookup" name="lookUPId" style="width:100%"></select>
+                    </div>
+            </div>
+            <div class="card-footer">
+                <button class="btn btn-sm btn-success" type="submit"><i class="fa fa-dot-circle-o"></i> 查询</button>
+                <button class="btn btn-sm btn-danger" type="reset" onclick="window.location.reload();"><i
+                        class="fa fa-ban"></i> 重置</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+{% endblock pageContent %}
+
+{% block ExtraJS %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+
+<script> //注意！！！ 此部分代码含服务器端渲染标签，不可移入单独的.js文件
+    $("#userlookup").select2({
+        allowClear: true,
+        // tags: true,  
+        // tokenSeparators: [',', ' '],
+        ajax: {
+            // url: "https://api.github.com/search/repositories",
+            url: '{% url "myCSSAhub:ajax_userLookup" %}',
+            dataType: 'json',
+            method: 'POST',
+            data: function (params) {
+                return {
+                    search: params.term, // search term
+                    page: params.page
+                };
+            },
+            processResults: function (data, params) {
+                // parse the results into the format expected by Select2
+                // since we are using custom formatting functions we do not need to
+                // alter the remote JSON data, except to indicate that infinite
+                // scrolling can be used
+                params.page = params.page || 1;
+
+                // var select2Data = $.map(data.result.data, function (obj) {
+                //     obj.id = obj.user_id;
+                //     obj.text = obj.email;
+
+                //    return obj;
+                //});
+
+                return {
+                    results: data.result,
+                    // results: data.items,
+                    pagination: {
+                        more: (params.page * 30) < data.length
+                    }
+                };
+            }
+        },
+        escapeMarkup: function (markup) { return markup; }, // let our custom formatter work
+        minimumInputLength: 2,
+        maximumSelectionLength: 1,
+        templateResult: formatRepo,
+        templateSelection: formatRepoSelection,
+
+    });
+
+    function formatRepo(repo) {
+        if (repo.loading) {
+            return repo.text;
+        }
+
+        var markup = "<span><div id='" + repo.id + "' class='select2-result-repository__title'> ";
+        if (repo.avatar) { //有头像显示头像，没头像显示placeholder
+            markup += "<img src='" + repo.avatar + "'class='img-avatar' height='35px' width='35px' style='margin-right:20px' />"
+        } else {
+            markup += "<img src= '{% static '/myCSSAhub/img/avatar_placeholder.png'%}' class='img-avatar' height='35px' width='35px' style='margin-right:20px'/>"
+        }
+        if (repo.full_name_cn && repo.full_name_cn != "None None") {
+            markup += "中文名：" + repo.full_name_cn + ";"
+        }
+        markup += " 英文名: " + repo.full_name + "; 邮箱: " + repo.email;
+
+        markup += "</div></span>";
+
+        return markup;
+    }
+
+    function formatRepoSelection(repo) {
+        // console.log(repo)
+        return repo.email;
+    }
+
+
+</script>
+{% endblock ExtraJS %}

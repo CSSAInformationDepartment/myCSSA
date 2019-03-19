@@ -1,0 +1,129 @@
+{% extends 'myCSSAhub/component/_layout.html' %} 
+
+{% block pageTitle %}
+    {{PageHeader}} 
+{% endblock %} 
+
+
+{% block BreadcrumbPath %}
+    <li class="breadcrumb-item">组织人事</li>
+    <li class="breadcrumb-item"><a href="{% url 'myCSSAhub:OrganisationMgr:dept_management' %}">部门成员管理</a></li>
+    <li class="breadcrumb-item">{{usr_id}}</li>
+    <li class="breadcrumb-item active">
+        <a href="{% url 'myCSSAhub:OrganisationMgr:dept_add_committee' usr_id %}">{{PageHeader}}</a>
+    </li>
+{% endblock BreadcrumbPath %}
+
+{% block pageContent %}
+{% load static %}
+{% load widget_tweaks %}
+<form action="" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="card">
+
+        
+        <div class="card-header">
+            <strong>用户档案</strong>
+        </div>
+        <div class="card-body">
+            {% if not user_profile.membershipId %}
+            <div class="alert alert-danger" role="alert"> <strong> 警告！</strong>此用户未激活会员身份，其可能没有通过身份核验</div> 
+            {% endif %}
+            
+            {% if not recent_resume %}
+            <div class="alert alert-danger" role="alert"> <strong> 警告！</strong>此用户在最近的180天中没有向您的部门呈递职位申请</div> 
+            {% endif %}
+            
+            <div class="row">
+                <div class="col col-8">
+                    {% for hidden_field in form.hidden_fields %}
+                        {{ hidden_field }}
+                    {% endfor %}
+
+                    {% if form.non_field_errors %}
+                    <div class="alert alert-danger" role="alert">
+                        {% for error in form.non_field_errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col col-4">
+                    <span class="align-text-bottom">
+                        <h1>{{user_profile.user.get_full_EN_name}}</h1>
+                    </span>
+                </div>
+                <div class="col col-8">
+                    {% load static %}
+                    {% if user_profile.avatar %}
+                        <img class="img-avatar float-right" src="{{user_profile.avatar.url}}" style="height:70px;width:70px;">
+                    {% else %}
+                        <img class="img-avatar float-right" src="{% static '/myCSSAhub/img/avatar_placeholder.png' %}" style="height:70px;width:70px;">
+                    {% endif %}                    
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="col col-4">
+                    <h5>学生证号: {{user_profile.studentId}}</h5>
+                </div>
+                <div class="col col-4">
+                    <h5>邮箱: {{user_profile.user.email}}</h5>
+                </div>
+                <div class="col col-4">
+                    <h5>电话号码: {{user_profile.user.telNumber}}</h5>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col col-4">
+                    <p>账号注册时间: {{user_profile.user.date_joined}}</p>
+                </div>
+                <div class="col col-4">
+                    <p>生日: {{user_profile.dateOfBirth}}</p>
+                </div>
+            </div>
+            <div class="row">
+            {% if recent_resume %}
+                <div class="alert alert-danger" role="alert"> <strong> 此用户目前以被授予以下职位，请协调人事或信息技术部门进行调整</div>
+                <table class="table table-responsive-md">
+                    <thead>
+
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
+            {% else %}
+                <form>
+                    {% for hidden_field in form.hidden_fields %}
+                        {{ hidden_field }}
+                    {% endfor %}
+                    {% for field in form.visible_fields %}
+                        <div class="form-group">
+                            {{ field.label_tag }}
+                            {% if field.errors %}
+                                {% render_field field class="form-control is-invalid" %}
+                                {% for error in field.errors %}
+                                    <div class="invalid-feedback">
+                                        {{ error }}
+                                    </div>
+                                {% endfor %}
+                            {% else %}
+                                {% render_field field class="form-control" style="font-size:24px;" %}
+                            {% endif %}
+
+                            {% if field.help_text %}
+                                <small class="form-text text-muted">{{ field.help_text }}</small>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </form>            
+            {% endif %}
+            </div>
+
+        
+
+</form>
+{% endblock pageContent %}
