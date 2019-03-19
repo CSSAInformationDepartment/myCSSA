@@ -29,9 +29,9 @@ docker-compose up --build
 ## Note for Configuring pylint for the project
 Since CSSANet is set to be running in a Docker Containter, the file structures is a bit different from an usual pipenv configuration. In some cases, especially when you use IDE with IntelliSense technology (e.g. VSCode), this could cause problems in importing project's app. Please following the steps below to resolve the issue:
 1. Under the directory 'your/path/to/myCSSA/CSSANet/code', run:
-'''
+```
 pipenv install -r ../requirements.txt --python=3.7.2
-'''
+```
 2. In VSCode, open the 'code' folder as a __new workspace__, then select your venv python as the interpreter and enable pylint.
 
 ## To be a Contributor
