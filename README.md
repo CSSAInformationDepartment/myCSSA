@@ -4,10 +4,10 @@ Proundly developed and supported by the Department of Information Technology, CS
 ## Prerequisites
 You MUST have these packages/tools installed on your local machine before playing with this project
 1. Docker-CE (Community Edition)
-2. Python >= 3.7.2
+2. Python == 3.7.2
 3. Lastest stable version of Pipenv (Optional but recommended)
 4. PostgesSQL Server == 10.6 (Optional for who wants to test code outside the Docker container)
-## Additional Notice for Windows Users
+## Additional Note for Windows Users
 Currently the ALICE bootloader (alice-bootloader.sh) is added as an entry point for myCSSA container. Due to the difference in EOL between Windows and UNIX-based systems, the bootloader could be not executed properly in Windows environment. If you see the error " exec user process caused 'no such file or directory'", please use Notepad++ or something equivlent to modify the EOL of alice-bootloader.sh to UNIX style.
 ## Quick Start Guide
 1. Clone this repo to your local machine by running: 
@@ -25,6 +25,14 @@ docker-compose up --build
 6. To access Admin Pages, use this account:
  <br> email: testadmin@cssa.com
  <br> password: test1234
+ 
+## Note for Configuring pylint for the project
+Since CSSANet is set to be running in a Docker Containter, the file structures is a bit different from an usual pipenv configuration. In some cases, especially when you use IDE with IntelliSense technology (e.g. VSCode), this could cause problems in importing project's app. Please following the steps below to resolve the issue:
+1. Under the directory 'your/path/to/myCSSA/CSSANet/code', run:
+```
+pipenv install -r ../requirements.txt --python=3.7.2
+```
+2. In VSCode, open the 'code' folder as a __new workspace__, then select your venv python as the interpreter and enable pylint.
 
 ## To be a Contributor
 Welcome to join us by contacting: information@cssaunimelb.com
