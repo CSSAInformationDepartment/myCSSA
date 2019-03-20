@@ -117,6 +117,38 @@
                     <p>生日: {{user_profile.dateOfBirth}}</p>
                 </div>
             </div>
+            {% if recent_resume %}
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card" >
+                        <div class="card-header">
+                            <i class="fa fa-align-justify"></i> 近期简历
+                        </div>
+                        <div class="card-body">
+                            <table id="main-datatable" class="table table-responsive-md"  style="width:100%" >
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>岗位名称</th>
+                                    <th>投递时间</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for resume in recent_resume %}
+                                    <tr>
+                                        <td><a href="{{resume.get_absolute_url}}">{{resume.CVId}}</a></td>
+                                        <td>{{resume.jobRelated.jobName}}</td>
+                                        <td>{{resume.timeOfCreate}}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                            </table>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+
             <div class="row">
                 <div class="col">
                     {% if is_assgined_with_role %}

@@ -18,7 +18,6 @@ from RecruitAPI.models import Resume
 from FinanceAPI.apis import lodge_sys_gen_transaction
 
 from .forms import *
-import uuid
 
 # Create your views here.
 
@@ -26,15 +25,15 @@ import uuid
 class DepartmentManagementView(LoginRequiredMixin, PermissionRequiredMixin, View):
     login_url = '/hub/login/'
     template_name = 'OrganisationMgr/dept_mgr.html'
-    permission_required = ('UserAuthAPI.add_cssacommitteprofile')
+    permission_required = ('UserAuthAPI.view_cssacommitteprofile')
     ViewBag = {}
-    ViewBag['PageHeader'] = _("部门成员管理")
+    ViewBag['PageHeader'] = _("部门成员")
 
     #请求处理函数 （get）
     def get(self, request, *args, **kwargs):
         dept_member_qs = UserModels.CSSACommitteProfile.objects.filter(is_active=True)
         qs = dept_member_qs
-        if not request.user.is_superuser:
+        if not (request.user.is_superuser or request.user.is_council_member):
              qs = dept_member_qs.filter(Department=request.user.get_committee_profile().Department)
 
         paginator = Paginator(qs, 15)
@@ -76,6 +75,7 @@ class AddNewCommitteView(LoginRequiredMixin, PermissionRequiredMixin, View):
                 'role':3,
             })
         else:
+            self.ViewBag['recent_resume']
             self.ViewBag['lock_table'] = True
             self.ViewBag['form'] = AssignNewComitteeForm(initial={
                 'member':usr_id,

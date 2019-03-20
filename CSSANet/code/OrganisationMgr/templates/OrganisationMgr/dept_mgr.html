@@ -18,6 +18,19 @@
 {% block pageContent %}
 {% load static %}
 
+<div class="row">
+    <div class="col-sm-6 col-md-2">
+        <div class="card text-white bg-info">
+            <div class="card-body">
+                <div class="h1 text-muted text-right mb-4">
+                    <i class="icon-people"></i>
+                </div>
+                <div class="text-value">{{ dept_members|length }}</div>
+                <small class="text-muted text-uppercase font-weight-bold">部门成员数量</small>
+            </div>
+        </div>
+    </div>
+</div>
 
 <div class="row">
     <div class="col">

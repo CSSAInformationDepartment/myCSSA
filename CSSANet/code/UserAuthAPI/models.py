@@ -118,6 +118,8 @@ class User(AbstractUser):
     username = None
     email = models.CharField(verbose_name="电子邮箱",max_length = 100,unique=True)
     telNumber = models.CharField(verbose_name="联系电话", max_length = 16, default='0400000000')
+    is_council_member = models.BooleanField(default=False)
+    is_business_account = models.BooleanField(default=False)
 
     objects = UserManager()
 

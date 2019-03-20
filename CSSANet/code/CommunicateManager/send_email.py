@@ -36,9 +36,7 @@ def send_emails(title, content, targetID, currentUserId):
 
         jobName = content.jobRelated.jobName
         dept = content.jobRelated.dept.deptTitle
-        username = content.user.userprofile.lastNameCN + " " + content.user.userprofile.firstNameCN
-        if not username:
-            username = content.user.userprofile.lastNameEN + " " + content.user.userprofile.firstNameEN
+        username = content.user.userprofile.lastNameEN + " " + content.user.userprofile.firstNameEN
         html_content = get_template('myCSSAhub/email/cv_mail.html').render({'username': username, 'dept': dept,
                                                                                   'jobName': jobName})
 
