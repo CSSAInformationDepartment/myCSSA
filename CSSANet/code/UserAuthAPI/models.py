@@ -91,7 +91,7 @@ class CSSADept (models.Model):
         height_field=None, width_field=None, max_length=None, null=True, blank=True)
 
     def __str__(self):
-        return self.deptName
+        return self.deptTitle
 
 #职位 (对应fixture， 禁止人工修改)
 class CSSARole (models.Model):

@@ -18,6 +18,7 @@
 {% block pageContent %}
 {% load static %}
 
+
 <div class="row">
     <div class="col">
         <div class="card" id="dept-member-list">
@@ -28,18 +29,22 @@
                 <div>
                     <table class="table table-responsive-md">
                         <thead>
+                            <th>部门</th>
                             <th>姓名</th>
                             <th>职位</th>
                             <th>邮箱</th>
                             <th>电话</th>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                            </tr>
+                            {% for member in dept_members  %}
+                                <tr>
+                                    <td>{{member.Department.deptTitle}}</td>
+                                    <td>{{member.member.get_full_EN_name}}</td>
+                                    <td>{{member.role.roleName}}</td>
+                                    <td>{{member.member.email}}</td>
+                                    <td>{{member.member.telNumber}}</td>
+                                </tr>
+                            {% endfor %}
                         </tbody>
                     </table>
                     {% if is_paginated %}
@@ -79,7 +84,7 @@
                         {% csrf_token %}
                         <div class="form-group col-sm-12">
                             <label for="notification_user">可使用姓名、学生证号、邮箱、电话信息查询</label>
-                            <select class="form-control" id="userlookup" name="lookUPId" style="width:100%"></select>
+                            <select required class="form-control" id="userlookup" name="lookUPId" style="width:100%"></select>
                         </div>
                 </div>
                 <div class="card-footer">

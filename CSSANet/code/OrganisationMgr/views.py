@@ -5,6 +5,7 @@ from django.http import JsonResponse, HttpResponseRedirect, HttpResponse, Http40
 from django.contrib.auth.mixins import  LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin
 from django.views import View
 from django.views.generic import ListView, DetailView, CreateView, UpdateView
+from django.core.paginator import Paginator
 
 from django_datatables_view.base_datatable_view import BaseDatatableView
 from django.urls import reverse
@@ -25,23 +26,22 @@ import uuid
 class DepartmentManagementView(LoginRequiredMixin, PermissionRequiredMixin, View):
     login_url = '/hub/login/'
     template_name = 'OrganisationMgr/dept_mgr.html'
-    permission_required = ('UserAuthAPI.add_cssa_committe_profile')
+    permission_required = ('UserAuthAPI.add_cssacommitteprofile')
     ViewBag = {}
     ViewBag['PageHeader'] = _("部门成员管理")
-    dept_member_qs = UserModels.CSSACommitteProfile.objects.filter(is_active=True)
-    
 
     #请求处理函数 （get）
     def get(self, request, *args, **kwargs):
-        # self.ViewBag['total_user_count']  = UserProfile.objects.all().count()
-        # self.ViewBag['activated_member_count']  = UserProfile.objects.exclude(membershipId=None).count()
+        dept_member_qs = UserModels.CSSACommitteProfile.objects.filter(is_active=True)
+        qs = dept_member_qs
+        if not request.user.is_superuser:
+             qs = dept_member_qs.filter(Department=request.user.get_committee_profile().Department)
+
+        paginator = Paginator(qs, 15)
+        page = request.GET.get('page')
+        self.ViewBag['dept_members'] = paginator.get_page(page)
         
-        if request.user.is_superuser:
-            self.ViewBag['dept_members'] = self.dept_member_qs
-        else:
-            request_user_role = get_object_or_404(UserModels.CSSACommitteProfile, Q(member=request.user) & Q(is_active=True))
-            self.ViewBag['dept_members'] = self.dept_member_qs.filter()
-        
+
         return render(request, self.template_name, self.ViewBag)
 
     def post(self, request, *args, **kwargs):
@@ -51,10 +51,12 @@ class DepartmentManagementView(LoginRequiredMixin, PermissionRequiredMixin, View
 class AddNewCommitteView(LoginRequiredMixin, PermissionRequiredMixin, View):
     login_url = '/hub/login/'
     template_name = 'OrganisationMgr/assign_new_committee.html'
-    permission_required = ('UserAuthAPI.add_cssa_committe_profile')
+    permission_required = ('UserAuthAPI.add_cssacommitteprofile')
     ViewBag = {}
     ViewBag['PageHeader'] = _("新部员信息确认")
-    ViewBag['form'] = AssignNewComitteeForm
+    ViewBag['lock_table'] = False
+    ViewBag['add_successful'] = False
+    
     time_interval = datetime.today() - timedelta(days=180)
     
     def get(self, request, *args, **kwargs):
@@ -67,11 +69,38 @@ class AddNewCommitteView(LoginRequiredMixin, PermissionRequiredMixin, View):
             self.ViewBag['is_assgined_with_role'] = roles_data
         else:
             self.ViewBag['is_assgined_with_role'] = None
+
+        if request.user.is_superuser:
+            self.ViewBag['form'] = AssignNewComitteeForm(initial={
+                'member':usr_id,
+                'role':3,
+            })
+        else:
+            self.ViewBag['lock_table'] = True
+            self.ViewBag['form'] = AssignNewComitteeForm(initial={
+                'member':usr_id,
+                'Department': request.user.get_committee_profile().Department.deptId,
+                'role':3,
+            })
+            
+
         return render(request, self.template_name, self.ViewBag)
     
     def post(self, request, *args, **kwargs):
-        new_committee_id = self.kwargs.get('id')
-        request_user_role = get_object_or_404(UserModels.CSSACommitteProfile, Q(member=request.user) & Q(is_active=True))
+        usr_id = self.kwargs.get('id')
+        
+        submit_form = AssignNewComitteeForm(data=request.POST or None)  
+        print(submit_form)
+        if submit_form.is_valid():
+            submit_form.save()
+            new_committee = UserModels.User.objects.get(pk=usr_id)
+            new_committee.is_staff=True
+            new_committee.save()
+            self.ViewBag['add_successful']=True
+        print(submit_form.errors)
+        self.ViewBag['form'] = submit_form
+        return render(request, self.template_name, self.ViewBag)
+        
         
         
 

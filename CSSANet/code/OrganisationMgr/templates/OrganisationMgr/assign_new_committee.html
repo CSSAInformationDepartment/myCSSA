@@ -16,9 +16,42 @@
 
 {% block pageContent %}
 {% load static %}
-{% load widget_tweaks %}
-<form action="" method="POST" enctype="multipart/form-data">
-    {% csrf_token %}
+
+{% if add_successful == True %}
+    <div class="row">
+        <div class="col">
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <strong>职务绑定成功</strong>
+                <div id="countdown" style="float:right;">3s后自动跳转</div>
+                <button class="close" type="button" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+
+            <script type="text/javascript">
+
+                var count = 3;
+                //写一个方法，显示倒数秒数  数到0后跳转页面
+                function countDown() {
+                    //将count显示在div中
+                    document.getElementById("countdown").innerHTML = count + 's后自动跳转';
+                    //没执行一次，count减1
+                    count -= 1;
+                    //count=0时，跳转页面
+                    if (count == 0) {
+                        location.href = '{% url 'myCSSAhub:OrganisationMgr:dept_management' %}';
+                        //window.location.href="index.html";
+                    }
+                    //每秒执行一次,showTime()
+                    setTimeout("countDown()", 1000);
+                }
+                //执行countDown方法
+                countDown();
+            </script>
+        </div>
+    </div>
+{% endif %}
+
     <div class="card">
 
         
@@ -85,45 +118,67 @@
                 </div>
             </div>
             <div class="row">
-            {% if recent_resume %}
-                <div class="alert alert-danger" role="alert"> <strong> 此用户目前以被授予以下职位，请协调人事或信息技术部门进行调整</div>
-                <table class="table table-responsive-md">
-                    <thead>
-
-                    </thead>
-                    <tbody>
-
-                    </tbody>
-                </table>
-            {% else %}
-                <form>
-                    {% for hidden_field in form.hidden_fields %}
-                        {{ hidden_field }}
-                    {% endfor %}
-                    {% for field in form.visible_fields %}
-                        <div class="form-group">
-                            {{ field.label_tag }}
-                            {% if field.errors %}
-                                {% render_field field class="form-control is-invalid" %}
-                                {% for error in field.errors %}
-                                    <div class="invalid-feedback">
-                                        {{ error }}
-                                    </div>
+                <div class="col">
+                    {% if is_assgined_with_role %}
+                        <div class="alert alert-danger" role="alert"> <strong> 此用户目前已被授予以下职位，请协调人事或信息技术部门进行调整</div>
+                        <table class="table table-responsive-md">
+                            <thead>
+                                <th>隶属部门</th>
+                                <th>职位</th>
+                                <th>生效时间</th>
+                            </thead>
+                            <tbody>
+                                {% for role in is_assgined_with_role %}
+                                    <tr>
+                                        <td>{{role.Department.deptTitle}}</td>
+                                        <td>{{role.role.roleName}}</td>
+                                        <td>{{role.CommenceDate}}</td>
+                                    </tr>                                
                                 {% endfor %}
-                            {% else %}
-                                {% render_field field class="form-control" style="font-size:24px;" %}
-                            {% endif %}
+                            </tbody>
+                        </table>
+                    {% else %}
+                        {% load widget_tweaks %}
+                        <form action="" method="POST" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            {% for hidden_field in form.hidden_fields %}
+                                {{ hidden_field }}
+                            {% endfor %}
+                            {% for field in form.visible_fields %}
+                                <div class="form-group">
+                                    {{ field.label_tag }}
+                                    {% if field.errors %}
+                                        {% if lock_table %}
+                                            {% render_field field class="form-control is-invalid" readonly="readonly" %}
+                                        {% else %}
+                                            {% render_field field class="form-control is-invalid"%}
+                                        {% endif %}
+                                        
+                                        {% for error in field.errors %}
+                                            <div class="invalid-feedback">
+                                                {{ error }}
+                                            </div>
+                                        {% endfor %}
+                                    {% else %}
+                                        {% if lock_table %}
+                                            {% render_field field class="form-control" readonly="readonly" %}
+                                        {% else %}
+                                            {% render_field field class="form-control"%}
+                                        {% endif %}
+                                        
+                                    {% endif %}
 
-                            {% if field.help_text %}
-                                <small class="form-text text-muted">{{ field.help_text }}</small>
-                            {% endif %}
-                        </div>
-                    {% endfor %}
-                </form>            
-            {% endif %}
+                                    {% if field.help_text %}
+                                        <small class="form-text text-muted">{{ field.help_text }}</small>
+                                    {% endif %}
+                                </div>
+                            {% endfor %}
+                            <button class="btn btn-sm btn-success" type="submit"><i class="fa fa-dot-circle-o"></i> 添加</button>
+                            <button class="btn btn-sm btn-danger" type="reset" onclick="window.history.back();"><i class="fa fa-ban"></i> 返回</button>
+                        </form>            
+                    {% endif %}
+                </div>
             </div>
 
-        
-
-</form>
+    
 {% endblock pageContent %}
