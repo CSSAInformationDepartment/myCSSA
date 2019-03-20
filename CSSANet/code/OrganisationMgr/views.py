@@ -36,6 +36,7 @@ class DepartmentManagementView(LoginRequiredMixin, PermissionRequiredMixin, View
         if not (request.user.is_superuser or request.user.is_council_member):
              qs = dept_member_qs.filter(Department=request.user.get_committee_profile().Department)
 
+        self.ViewBag['member_count'] = qs.count()
         paginator = Paginator(qs, 15)
         page = request.GET.get('page')
         self.ViewBag['dept_members'] = paginator.get_page(page)
@@ -52,13 +53,16 @@ class AddNewCommitteView(LoginRequiredMixin, PermissionRequiredMixin, View):
     template_name = 'OrganisationMgr/assign_new_committee.html'
     permission_required = ('UserAuthAPI.add_cssacommitteprofile')
     ViewBag = {}
-    ViewBag['PageHeader'] = _("新部员信息确认")
+    ViewBag['PageHeader'] = _("部员信息确认")
     ViewBag['lock_table'] = False
     ViewBag['add_successful'] = False
     
     time_interval = datetime.today() - timedelta(days=180)
     
     def get(self, request, *args, **kwargs):
+        self.ViewBag['lock_table'] = False
+        self.ViewBag['add_successful'] = False
+
         usr_id = self.kwargs.get('id')
         self.ViewBag['usr_id'] = usr_id
         self.ViewBag['user_profile'] = get_object_or_404(UserModels.UserProfile, user__pk=usr_id)
@@ -88,16 +92,14 @@ class AddNewCommitteView(LoginRequiredMixin, PermissionRequiredMixin, View):
     
     def post(self, request, *args, **kwargs):
         usr_id = self.kwargs.get('id')
-        
+        self.ViewBag['usr_id'] = usr_id
         submit_form = AssignNewComitteeForm(data=request.POST or None)  
-        print(submit_form)
         if submit_form.is_valid():
             submit_form.save()
             new_committee = UserModels.User.objects.get(pk=usr_id)
             new_committee.is_staff=True
             new_committee.save()
             self.ViewBag['add_successful']=True
-        print(submit_form.errors)
         self.ViewBag['form'] = submit_form
         return render(request, self.template_name, self.ViewBag)
         
