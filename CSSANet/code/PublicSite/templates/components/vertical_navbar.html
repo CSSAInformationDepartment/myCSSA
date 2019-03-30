@@ -2,31 +2,32 @@
 
 {% load static %}
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark" style="border:none;">
 <a class="navbar-brand" href="#">CSSA 2.0</a>
 	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
 		<span class="navbar-toggler-icon"></span>
 	</button>
 
-	<div class="collapse navbar-collapse" id="navbarColor01">
+	<div class="collapse navbar-collapse">
 		<ul class="navbar-nav mr-auto">
 			<li class="nav-item">
-				<a class="nav-link" href="/"><i class="fa fa-home mr-1"></i>{%trans "首页" %}<span class="sr-only">(current)</span></a>
+				<a class="nav-link" href="/">{%trans "首页" %}<span class="sr-only">(current)</span></a>
 			</li>
 			<li class="nav-item">
-				<a class="nav-link" href="{% url 'PublicSite:events' %}"><i class="fa fa-star mr-1"></i>{%trans "活动消息 " %}</a>
+				<a class="nav-link" href="{% url 'PublicSite:events' %}">{%trans "活动消息 " %}</a>
 			</li>
 			<li class="nav-item">
-				<a class="nav-link" href="{% url 'PublicSite:blogs' %}?page=1"><i class="fa fa-newspaper-o mr-1"></i>{%trans "新闻公告" %}</a>
+				<a class="nav-link" href="{% url 'PublicSite:blogs' %}?page=1">{%trans "新闻公告" %}</a>
 			</li>
 			<li class="nav-item" >
-				<a class="nav-link" href="{% url 'PublicSite:merchants' %}"><i class="fa fa-ticket mr-1"></i>{%trans "折扣商家 " %}</a>
+				<a class="nav-link" href="{% url 'PublicSite:merchants' %}">{%trans "折扣商家 " %}</a>
 			</li>
 			<li class="nav-item">
-				<a class="nav-link" href="{% url 'PublicSite:recruitment' %}"><i class="fa fa-group mr-1"></i>加入CSSA理事</a>
+				<a class="nav-link" href="{% url 'PublicSite:recruitment' %}">加入CSSA理事</a>
 			</li>
 			<li class="nav-item">
-				<a class="nav-link" href="{% url 'PublicSite:contact' %}"><i class="fa fa-envelope mr-1"></i>{%trans "联系我们" %}</a>
+				<a class="nav-link" href="{% url 'PublicSite:contact' %}">{%trans "联系我们" %}</a>
 			</li>
 			<li class="nav-item" >
 				<a class="nav-link" href="{% url 'PublicSite:supportMerchants' %}">{%trans "特别鸣谢 " %}</a>
@@ -34,7 +35,7 @@
 			{% if user.is_staff %}
 			<li class="nav-item dropdown">
 				<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-				<i class="fa fa-building mr-1"></i>{%trans "部门构成" %}
+				{%trans "部门构成" %}
 				</a>
 				<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
 				<a class="dropdown-item" href="{% url 'PublicSite:departments' 'council' %}">{%trans "主席团" %} </a>

@@ -68,7 +68,7 @@ class UserInfoForm(forms.ModelForm):
 class UserProfileUpdateForm(forms.ModelForm):
     class Meta:
         model = models.UserProfile
-        fields = ('firstNameEN','lastNameEN','firstNameCN','lastNameCN','address','postcode')
+        fields = ('firstNameEN','lastNameEN','firstNameCN','lastNameCN','address','postcode','avatar')
 
 class UserAcademicForm(forms.ModelForm):
     class Meta:

@@ -404,7 +404,7 @@ class UpdateUserProfileView(LoginRequiredMixin, View):
 
     def post(self, request, *args, **kwargs):
         current_data = self.model.objects.get(user=request.user)
-        form = self.form_class(request.POST or None, instance=current_data)
+        form = self.form_class(request.POST or None, files=request.FILES or None, instance=current_data)
         if form.is_valid():
             user = form.save()
             messages.success(request, 'User Profile has been updated!')
@@ -506,6 +506,15 @@ def GetUserAvatar(request):
         data['errMsg'] = "Permission Denied"
     return JsonResponse(data)
 
+def UpdateAvatar(request):
+    if request.method == 'POST':
+        form = UserProfileUpdateForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('/hub/home')
+    else:
+        form = UserProfileUpdateForm()
+    return render(request, 'myCSSAhub/userInfo.html', {'form': form})
 
 def CheckEmailIntegrity(request):
     data = {}
