@@ -174,7 +174,6 @@ class Merchant_profile(LoginRequiredMixin, View):
             form.save() 
             have_update = True
 
-
         return render(request, self.template_name, {'update': have_update, 'form':form, 'submit_url':reverse('myCSSAhub:merchant_profile', args=[str(profileID)])})
       
 
