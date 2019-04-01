@@ -279,12 +279,13 @@
           {% csrf_token %}
         <div class="modal-body">
             <div class="form-group">
-                <input id="input-b1" type="file" class="file" data-browse-on-zone-click="true">
+              <input class="btn btn-default" id="file" type="file" name="file">
+                <!-- <input id="input-b1" type="file" class="file" name="files" data-browse-on-zone-click="true"> -->
             </div>
         </div>
         <div class="modal-footer">
             <button class="btn btn-primary" type="submit"> 保存 </button>
-            <button class="btn btn-secondary" type="reset"> 取消 </button>
+            <button class="btn btn-secondary" type="reset" data-dismiss="modal"> 取消 </button>
         </div>
       </form>
       </div>
@@ -315,7 +316,7 @@
     $('#input-b1').fileinput({
 			theme: "fa",
 	        allowedFileExtensions: ['jpeg','jpg', 'png'],
-	        overwriteInitial: false,
+	        overwriteInitial: true,
             showUpload: false,
 	        maxFileSize: 2048,
 	        maxFilesNum: 1,
