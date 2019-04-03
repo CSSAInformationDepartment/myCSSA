@@ -94,14 +94,20 @@
             <label for="merchant_description">商家简介：<span class="asteriskField">*</span></label>
             <textarea class="form-control" name="merchant_description" rows="11" required>{{form.merchant_description.value}}</textarea>
         </div>
-        <div class="form-group">
-            <label for="merchant_pic">选择商家图片：<span class="asteriskField">*</span></label>
-            <input id="input-b1" name="merchant_image" type="file" class="file" data-browse-on-zone-click="true">
-        </div>
-        <div class="form-group">
-              {{ form.merchant_qrcode.label_tag }}<span class="asteriskField">*</span>
-            <input id="input-b2" name="merchant_qrcode" type="file" class="file" data-browse-on-zone-click="true">
-        </div>
+        {% if form.merchant_image.value %}
+            <div class="form-group">
+                <label for="merchant_pic">选择商家图片：<span class="asteriskField">*</span></label>
+                <input id="input-b1" name="merchant_image" type="file" class="file" data-browse-on-zone-click="true">
+            </div>
+        {% endif %}
+
+        {% if orm.merchant_qrcode.value %}
+            <div class="form-group">
+                {{ form.merchant_qrcode.label_tag }}<span class="asteriskField">*</span>
+                <input id="input-b2" name="merchant_qrcode" type="file" class="file" data-browse-on-zone-click="true">
+            </div>
+        {% endif %}
+
     </div>
 
     <button class="btn btn-primary" type="submit">保存</button>
@@ -127,44 +133,49 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.5.1/themes/fa/theme.min.js"></script>
 <script>
-
+    {% if form.merchant_image.value %}
         $("#input-b1").fileinput({
-        theme: "fa",
-        allowedFileExtensions: ['jpeg','jpg', 'png'],
-        overwriteInitial: true,
-        showUpload: false,
-        maxFileSize: 2048,
-        maxFilesNum: 1,
-        slugCallback: function (filename) {
-            return filename.replace('(', '_').replace(']', '_');
-        },
-        initialPreview: [
-                    "/media/{{form.merchant_image.value}}",
-        ],
-        initialPreviewAsData: true, 
-        initialPreviewConfig:[
-            { caption:"{{form.merchant_image.name}}" ,key: 1, downloadUrl: false,}, 
-        ]
-    });
+            theme: "fa",
+            allowedFileExtensions: ['jpeg','jpg', 'png'],
+            overwriteInitial: true,
+            showUpload: false,
+            maxFileSize: 2048,
+            maxFilesNum: 1,
+            slugCallback: function (filename) {
+                return filename.replace('(', '_').replace(']', '_');
+            },
+            initialPreview: [
+                        "/media/{{form.merchant_image.value}}",
+            ],
+            initialPreviewAsData: true, 
+            initialPreviewConfig:[
+                { caption:"{{form.merchant_image.name}}" ,key: 1, downloadUrl: false,}, 
+            ]
+        });
+    {% endif %}
 
-    $("#input-b2").fileinput({
-        theme: "fa",
-        allowedFileExtensions: ['jpeg','jpg', 'png'],
-        overwriteInitial: true,
-        showUpload: false,
-        maxFileSize: 2048,
-        maxFilesNum: 1,
-        slugCallback: function (filename) {
-            return filename.replace('(', '_').replace(']', '_');
-        },
-        initialPreview: [
-                    "/media/{{form.merchant_qrcode.value}}",
-        ],
-        initialPreviewAsData: true, 
-        initialPreviewConfig:[
-            { caption:"{{form.merchant_qrcode.name}}" ,key: 1, downloadUrl: false,}, 
-        ]
-    });
+    {% if form.merchant_qrcode.value %}
+        $("#input-b2").fileinput({
+            theme: "fa",
+            allowedFileExtensions: ['jpeg','jpg', 'png'],
+            overwriteInitial: true,
+            showUpload: false,
+            maxFileSize: 2048,
+            maxFilesNum: 1,
+            slugCallback: function (filename) {
+                return filename.replace('(', '_').replace(']', '_');
+            },
+            initialPreview: [
+                        "/media/{{form.merchant_qrcode.value}}",
+            ],
+            initialPreviewAsData: true, 
+            initialPreviewConfig:[
+                { caption:"{{form.merchant_qrcode.name}}" ,key: 1, downloadUrl: false,}, 
+            ]
+        });
+    {% endif %}
+
+
     
 </script>
 
