@@ -67,7 +67,7 @@
                     </div>
                   </div>
                 </div>
-                <form method="POST" action="{% url 'myCSSAhub:userInfo' %}">
+                <form method="POST" action="{% url 'myCSSAhub:userInfo' %}" enctype="multipart/form-data">
                   {% csrf_token %}
                   {% load widget_tweaks %}
                   {% for hidden_field in form.hidden_fields %}
@@ -220,37 +220,17 @@
                         </div>
                       </div>
                     </div>
-                    <!-- <div class="row">
+                    <div class="row">
                         <div class="col-md-12">
                             <div class="form-group">
                               <label for="avatar">头像上传</label>
-                              {% if form.is_bound %}
-                              {% if form.avatar.errors %}
-                              <div class="is-valid">
-                                <input id="input-b1" type="file" class="file" data-browse-on-zone-click="true">
-                            </div>
-                                  {% for error in form.avatar.errors %}
-                                  <div class="invalid-feedback">
-                                      {{ error }}
-                                  </div>
-                                  {% endfor %}
-                              {% else %}
-                                  
-                                  <div class="is-valid">
-                                    <input id="input-b1" type="file" class="file" data-browse-on-zone-click="true">
-                                </div>
-                              {% endif %}
-                            {% else %}
+                             
+                              
+                                <input id="input-b1" name="avatar" type="file" class="file" data-browse-on-zone-click="true">
                             
-                              <input id="input-b1" type="file" class="file" data-browse-on-zone-click="true">
-                          
-                            {% endif %}
-                            {% if form.avatar.help_text %}
-                                <small class="form-text text-muted">{{ form.avatar.help_text }}</small>
-                            {% endif %}
                           </div>
                         </div>
-                      </div> -->
+                      </div>
                     <button type="submit" class="btn btn-primary pull-right">更新个人基本信息</button>
                     <div class="clearfix"></div>
                   </form>
@@ -266,7 +246,7 @@
   </div>
 </div>
 
-<div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<!-- <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -279,20 +259,20 @@
           {% csrf_token %}
         <div class="modal-body">
             <div class="form-group">
-                <input id="input-b1" type="file" class="file" data-browse-on-zone-click="true">
+                <input id="input-b1" type="file" class="file" name="avatar" data-browse-on-zone-click="true">
             </div>
         </div>
         <div class="modal-footer">
             <button class="btn btn-primary" type="submit"> 保存 </button>
-            <button class="btn btn-secondary" type="reset"> 取消 </button>
+            <button class="btn btn-secondary" type="reset" data-dismiss="modal"> 取消 </button>
         </div>
       </form>
       </div>
     </div>
-  </div>
+  </div> -->
 
 
-{% endblock%}
+{% endblock %}
 
 {% block ExtraJS %}
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.23.0/moment.min.js"></script>
@@ -312,26 +292,28 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.5.1/themes/fa/theme.min.js"></script>
 <script>
-    $('#input-b1').fileinput({
-			theme: "fa",
-	        allowedFileExtensions: ['jpeg','jpg', 'png'],
-	        overwriteInitial: false,
-            showUpload: false,
-	        maxFileSize: 2048,
-	        maxFilesNum: 1,
-	        slugCallback: function (filename) {
-	            return filename.replace('(', '_').replace(']', '_');
-	        },
-					{% if prev_submission %}
-					initialPreview: [
-						{% if prev_submission.attachment %}
-								"{{ prev_submission.attachment.url }}"
-						{% endif %}
-						,
-					],
-					initialPreviewAsData: true,
-					{% endif %}
-	    });
+    $("#input-b1").fileinput({
+        theme: "fa",
+        allowedFileExtensions: ['jpeg','jpg', 'png'],
+        overwriteInitial: true,
+        showUpload: false,
+        maxFileSize: 2048,
+        maxFilesNum: 1,
+        slugCallback: function (filename) {
+            return filename.replace('(', '_').replace(']', '_');
+        },
+        initialPreview: [
+        {% if user.userprofile.avatar %} 
+                    "{{ user.userprofile.avatar.url }}",
+        {% else %}
+        false,
+        {% endif %}
+        ],
+        initialPreviewAsData: true, 
+        initialPreviewConfig:[
+            { caption:"{{form.avatar.name}}" ,key: 1, downloadUrl: false,}, 
+        ]
+    });
 
 </script>
       
