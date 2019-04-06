@@ -123,7 +123,7 @@ class ConfirmEventOrderView(LoginRequiredMixin,View):
     def get_context_data(self,user, *args, **kwargs):
         id = self.kwargs.get('id')
         event = get_object_or_404(Event, pk=id)
-        now_time = timezone.now()
+        now_time = sys_time.now()
         if is_duplicated_purchase(user,event):
             return {'event':event, 'now_time':now_time, 'duplicated_purchase':True}
         else:
@@ -132,7 +132,7 @@ class ConfirmEventOrderView(LoginRequiredMixin,View):
     def get(self, request, *args, **kwargs):
         id = self.kwargs.get('id')
         event = get_object_or_404(Event, pk=id)
-        now_time = timezone.now()
+        now_time = sys_time.now()
         if event.eventSignUpTime > now_time:
             raise Http404("Event is not open for enrollment yet.")
         return render(request, self.template_name, self.get_context_data(user=request.user))  
