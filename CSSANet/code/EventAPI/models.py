@@ -120,7 +120,9 @@ class Event (models.Model):
     def get_estimate_remaining_factor(self):
         if self.hasMaxAttendent:
             current_attendent = AttendEvent.objects.filter(attendedEventId = self).count()
-            return (round(current_attendent/self.maxAttendent, 2))
+            
+            # This return a percentage ratio of filling
+            return (round(current_attendent/self.maxAttendent*100, 2))
         else:
             return 0
 
