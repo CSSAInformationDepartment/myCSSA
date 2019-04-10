@@ -53,17 +53,18 @@ services:
   redis:
     restart: unless-stopped
     container_name: 'redis'
+    command: redis-server /usr/local/etc/redis/redis.conf
     image: 'redis:5.0.4'
     ports:
       - 6379:6379
     volumes:
-      - redis_data:/data
+      - ./config/redis/redis.conf:/usr/local/etc/redis/redis.conf
     networks:
-      - cssa_router
+      - data_link
 
 volumes:
   postgres_data:
-  redis_data:
+
 
 networks: 
   cssa_router:
