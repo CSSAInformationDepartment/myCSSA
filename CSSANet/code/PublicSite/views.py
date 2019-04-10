@@ -331,15 +331,15 @@ def SupportMerchants(request):
 ################################# errors pages ########################################
 from django.shortcuts import render
 
-def bad_request(request):
- return render(request,'errors/page_400.html')
+def bad_request(request, exception):
+ return render(request,'errors/page_400.html', status=400)
 
-def permission_denied(request):
- return render(request,'errors/page_403.html')
+def permission_denied(request, exception):
+ return render(request,'errors/page_403.html', status=403)
 
-def page_not_found(request):
- return render(request,'errors/page_404.html')
+def page_not_found(request, exception):
+ return render(request,'errors/page_404.html', status=404)
 
 def server_error(request):
- return render(request,'errors/page_500.html')
+ return render(request,'errors/page_500.html', status=500)
 ################################# errors pages ########################################
