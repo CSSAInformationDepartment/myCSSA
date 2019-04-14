@@ -20,10 +20,5 @@ class Submission(models.Models):
     )
     deviceType=models.CharField(verbose_name=_("设备"),choices=DeviceChoice, max_length=30, default="手机", null=True)
     categoryType=models.CharField(verbose_name=_("类别"), choices=CategoryChoice, max_length=30, default="风景", null=True)
-    
-class FilesSubmission(models.Model):
-    id = models.AutoField(primary_key = True, editable = False)
-    submission_id = models.ForeignKey(Submission, on_delete = models.CASCADE)
-    submission_userId=models.ForeignKey(adminModel.User, on_delete=models.DO_NOTHING)
     upload_photo = models.FileField(verbose_name=_("上传作品"),default=None, null=True, blank=True, upload_to='competition/competitionPics')
     description = models.CharField(verbose_name=_("简单描述"),max_length = 250)
