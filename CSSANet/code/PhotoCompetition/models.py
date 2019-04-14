@@ -24,6 +24,6 @@ class Submission(models.Models):
 class FilesSubmission(models.Model):
     id = models.AutoField(primary_key = True, editable = False)
     submission_id = models.ForeignKey(Submission, on_delete = models.CASCADE)
-    submission_user=models.ForeignKey(adminModel.User, on_delete=models.DO_NOTHING)
-    upload_photo = models.FileField(default=None, null=True, blank=True, upload_to='competition/competitionPics')
-    Description = models.CharField(max_length = 250)
+    submission_userId=models.ForeignKey(adminModel.User, on_delete=models.DO_NOTHING)
+    upload_photo = models.FileField(verbose_name=_("上传作品"),default=None, null=True, blank=True, upload_to='competition/competitionPics')
+    Description = models.CharField(verbose_name=_("简单描述"),max_length = 250)
