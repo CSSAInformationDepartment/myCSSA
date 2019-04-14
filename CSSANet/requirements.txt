@@ -26,6 +26,9 @@ xlwt
 
 django-filter
 
+redis
+
+celery
 
 
 ### For Development purpose only

@@ -17,12 +17,15 @@ services:
     depends_on:
       - db 
       - nginx
+      - redis
     networks: 
       - cssa_router
       - data_link
-  db:
+ 
+ 
+  db: ## Remove in production
     image: postgres:10.6-alpine
-    restart: always
+    restart: unless-stopped
     volumes:
       - postgres_data:/var/lib/postgresql/data
     environment:
@@ -47,8 +50,21 @@ services:
     networks:
       - cssa_router
 
+  redis:
+    restart: unless-stopped
+    container_name: 'redis'
+    command: redis-server /usr/local/etc/redis/redis.conf
+    image: 'redis:5.0.4'
+    ports:
+      - 6379:6379
+    volumes:
+      - ./config/redis/redis.conf:/usr/local/etc/redis/redis.conf
+    networks:
+      - data_link
+
 volumes:
   postgres_data:
+
 
 networks: 
   cssa_router:

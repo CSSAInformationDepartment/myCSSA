@@ -29,7 +29,6 @@ from LegacyDataAPI import urls as LegacyUrl
 from myCSSAhub import urls as HubUrl
 from django.conf.urls import handler400, handler403, handler404, handler500
 
-from PublicSite import views as PublicViews
 
 urlpatterns = [
     path('', include(PublicUrl)), 
@@ -40,10 +39,10 @@ urlpatterns = [
     path('api/users/', include(AuthUrl)),
     path('api/legacy/', include(LegacyUrl))
 ] 
-handler400 = PublicViews.bad_request
-handler403 = PublicViews.permission_denied
-handler404 = PublicViews.page_not_found
-handler500 = PublicViews.server_error
+handler400 = 'PublicSite.views.bad_request'
+handler403 = 'PublicSite.views.permission_denied'
+handler404 = 'PublicSite.views.page_not_found'
+handler500 = 'PublicSite.views.server_error'
 
 if settings.DEBUG:
     from django.conf.urls.static import static

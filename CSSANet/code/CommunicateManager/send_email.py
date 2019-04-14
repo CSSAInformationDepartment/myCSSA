@@ -21,10 +21,6 @@ def send_emails(title, content, targetID, currentUserId):
     settings.EMAIL_PORT = email.port
 
     if title == 'Register Successful':
-
-        # print("email", targetID)
-        # d = Context()
-
         html_content = get_template(
             'myCSSAhub/email/register_mail.html').render({'username': content})
 
@@ -65,21 +61,12 @@ def send_emails(title, content, targetID, currentUserId):
         for userID in targetID:
             info_list = UserModels.User.objects.get(id=userID)
             targetEmail.append(info_list.email)
-    # print("user", email.host_user)
-    # print("pwd", email.host_password)
-    # print("port", email.port)
-    # print("title", title)
-    # print("port", content)
-    # print("targetID", targetID)
 
-    # 获取需要发送的目标用户邮箱
 
 # 根据不同内容，发送email
 
-
 def email_content(title, content, html_content, targetEmail):
 
-    # html_content = '<p>欢迎访问<a href="http://www.CSSA.com" target=blank>www.CSSA.com</a>'+content+'</p>'
 
     email_msg = EmailMultiAlternatives(
         title, content, officialEmail, targetEmail)
@@ -87,11 +74,6 @@ def email_content(title, content, html_content, targetEmail):
     email_msg.attach_alternative(html_content, "text/html")
 
     email_msg.send()
-
-    # flag, message = insertEmailDB(title,content,targetID, currentUserId)
-
-    # return flag
-
 
 def queryEmailConfiguration():
 
