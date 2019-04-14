@@ -15,14 +15,11 @@ class Submission(models.Models):
     )
     CategoryChoice=(
         ('Nature','风景'),
-        ('Culture','人文')，
+        ('Culture','人文'),
     )
     deviceType=models.CharField(verbose_name=_("设备"),choices=DeviceChoice, max_length=30, default="手机", null=True)
     categoryType=models.CharField(verbose_name=_("类别"), choices=CategoryChoice, max_length=30, default="风景", null=True)
     
-from UserAuthAPI import models as adminModel
-
-# Create your models here.
 class FilesSubmission(models.Model):
     id = models.AutoField(primary_key = True, editable = False)
     submission_id = models.ForeignKey(submission.Id, on_delete = models.Do_NOTHING)
