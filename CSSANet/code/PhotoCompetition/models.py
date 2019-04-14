@@ -25,4 +25,4 @@ class FilesSubmission(models.Model):
     submission_id = models.ForeignKey(Submission, on_delete = models.CASCADE)
     submission_user=models.ForeignKey(adminModel.User, on_delete=models.DO_NOTHING)
     upload_photo = models.FileField(default=None, null=True, blank=True, upload_to='competition/competitionPics')
-    Description = models.CharFiled(max_length = 250)
+    Description = models.CharField(max_length = 250)
