@@ -1,6 +1,7 @@
 from django.db import models
 from django.core.validators import MaxValueValidator
 import uuid
+from django.utils.translation import ugettext_lazy as _
 
 from UserAuthAPI import models as adminModel
 
