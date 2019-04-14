@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'myCSSAhub',
     'BlogAPI',
     'FlexForm',
+    'PhotoCompetition',
 
     'rest_framework',
     'rest_framework.authtoken',
