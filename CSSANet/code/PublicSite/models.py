@@ -1,10 +1,12 @@
 from django.db import models
+from django.utils.translation import ugettext as _
 
 # Create your models here.
 class PublicAccessControl(models.Model):
     id = models.AutoField(primary_key=True, editable=False)
     uri = models.CharField(max_length=500)
     is_accessible = models.BooleanField(default=False)
+
 class PageRegister(models.Model):
     id = models.AutoField(primary_key=True)
     timestamp_create=models.DateTimeField(auto_now_add=True)
@@ -44,3 +46,11 @@ class ImgAttributes(models.Model):
     RelatedField = models.ForeignKey(HTMLFields, on_delete=models.DO_NOTHING)
     filePath = models.FileField(upload_to='uploads/usrImage/')
     styleAttr = models.TextField(null=True, blank=True)
+
+
+class HomepageCarousels(models.Model):
+    id = models.AutoField(primary_key=True, editable=False)
+    url = models.URLField(verbose_name=_('页面链接'))
+    filePath = models.FileField(verbose_name=_('图片'), upload_to='site/homepage/carousel/')
+    header = models.CharField(verbose_name=_('大标题'), max_length=35)
+    description = models.CharField(verbose_name=_('大标题'),max_length=100)

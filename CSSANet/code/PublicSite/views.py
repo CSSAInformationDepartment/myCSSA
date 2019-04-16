@@ -30,6 +30,7 @@ from django.db.models import Q
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import JsonResponse, HttpResponseRedirect, HttpResponse, Http404
 from django.contrib.auth.decorators import login_required
+
 from UserAuthAPI import models as UserModels
 from BlogAPI import models as BlogModels
 from UserAuthAPI.forms import BasicSiginInForm, UserInfoForm, MigrationForm, UserAcademicForm, UserProfileUpdateForm
@@ -50,7 +51,11 @@ def index(request):
     now_time = timezone.now()
     eventsPast=eventModels.Event.objects.filter(eventActualStTime__lt=now_time).order_by("eventActualStTime")
     eventsFuture=eventModels.Event.objects.filter(eventActualStTime__gt=now_time).order_by("eventActualStTime")
-    return render(request, 'PublicSite/index.html',{'now_time':now_time,'eventsPast':eventsPast,'eventsFuture':eventsFuture})
+    header_caro = models.HomepageCarousels.objects.all()
+    return render(request, 'PublicSite/index.html',
+        {'now_time':now_time,'eventsPast':eventsPast,'eventsFuture':eventsFuture,
+        'head_carousels': header_caro,
+        })
 
 
 def ContactUs(request):
