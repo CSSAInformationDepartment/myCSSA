@@ -17,7 +17,7 @@ jobs: # A basic unit of work in a run
           POSTGRES_DB: myCSSA
 
     steps: # steps that comprise the `build` job
-      - checkout: ~/myCSSA/CSSANet/code # check out source code to working directory
+      - checkout: ~/myCSSA #check out source code to working directory
       - run: sudo chown -R circleci:circleci /usr/local/bin
       - run: sudo chown -R circleci:circleci /usr/local/lib/python3.7/site-packages
       - restore_cache:
