@@ -48,6 +48,9 @@ from CommunicateManager.send_email import send_emails
 ################################# View Controller ########################################
 #@cache_page(CACHE_TTL)
 def index(request):
+    '''
+    The Homepage view function for public site
+    '''
     now_time = timezone.now()
     eventsPast=eventModels.Event.objects.filter(eventActualStTime__lt=now_time).order_by("eventActualStTime")
     eventsFuture=eventModels.Event.objects.filter(eventActualStTime__gt=now_time).order_by("eventActualStTime")
@@ -59,6 +62,9 @@ def index(request):
 
 
 def ContactUs(request):
+    '''
+    The Contact Detail view function for public site
+    '''
     return render(request, 'PublicSite/contact_us.html')
 
 #@cache_page(CACHE_TTL)

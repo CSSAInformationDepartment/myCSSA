@@ -40,7 +40,8 @@ if DEBUG == False:
     X_FRAME_OPTIONS = 'DENY'
 else:
     ALLOWED_HOSTS = ['*']
-    SECRET_KEY = env_dist.get('DJANGOKEYDEV')
+    #SECRET_KEY = env_dist.get('DJANGOKEYDEV')
+    SECRET_KEY = 'TEST_KEY'
 
 # Application definition
 INSTALLED_APPS = [
