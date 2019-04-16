@@ -58,10 +58,11 @@
 						<a href="#" class="btn btn-block btn-light-gray mt-3" disabled="disabled">报名将于 {{events.eventSignUpTime|date:"SHORT_DATETIME_FORMAT"}} 开始</a>
             {% elif events.eventActualStTime < now_time %}
             <a href="#" class="btn btn-block btn-light-gray mt-3" disabled="disabled">活动已结束</a>
+            {% elif event.get_estimate_remaining_factor >= 1 %}
+						<a href="#" class="btn btn-block btn-danger mt-3" disabled="disabled">名额已满</a>
+						<lead>可以扫一扫小助手的二维码，加入waiting list，还有机会参加哦！</lead>
             {% elif events.get_estimate_remaining_factor > 0.6 %}
             <a href="{% url 'myCSSAhub:EventAPI:confirm_order' events.eventID %}" class="btn btn-block btn-warning mt-3">余位有限</a>
-            {% elif events.get_estimate_remaining_factor >= 1 %}
-            <a href="#" class="btn btn-block btn-danger mt-3" disabled="disabled">名额已满</a>
 						{% else %}
 						<a href="{% url 'myCSSAhub:EventAPI:confirm_order' events.eventID %}" class="btn btn-block btn-blue-gray mt-3">参加此活动<br></a>
 						{% endif %}
