@@ -3,14 +3,14 @@ version: '3.6'
 services:
   cssanet:
     image: cssanet
-    entrypoint: /code/alice-bootloader.sh
+    # entrypoint: ./alice-bootloader.sh
     container_name: CSSAnet
     volumes:
       - ./code:/code
-      - ./shell:/shell
-      - ./data:/data
-      - ./code/static:/code/static
-      - ./code/media:/code/media
+      # - ./shell:/shell
+      # - ./data:/data
+      - ./data/static:/code/static
+      - ./data/media:/code/media
     build: .
     expose:
       - 8000
