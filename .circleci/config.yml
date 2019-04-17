@@ -35,7 +35,7 @@ jobs: # A basic unit of work in a run
             pipenv run python manage.py makemigrations
             pipenv run python manage.py migrate --no-input
             pipenv run python manage.py collectstatic --no-input
-            pipenv python manage.py loaddata createsuper.json
+            pipenv run python manage.py loaddata createsuper.json
       - save_cache: # cache Python dependencies using checksum of Pipfile as the cache-key
           key: deps9-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
           paths:
