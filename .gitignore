@@ -22,3 +22,5 @@ Pipfile.lock
 .CSSANet/code/Pipfile.lock
 CSSANet/CSSANet.code-workspace
 CSSANet/code/CSSANet/settings/production.py
+CSSANet/data/media
+CSSANet/data/static

@@ -23,8 +23,10 @@ RUN chmod g+w /code
 # RUN chmod g+w /data
 
 WORKDIR /code
-# ADD CSSANet/code/requirements.txt /code/
-COPY code/* /code/
+ADD code/requirements.txt /code/
+ADD code/alice-bootloader.sh /code/
+
+# COPY code/* /code/
 
 # Install dependencies
 RUN pip3 install --upgrade pip
