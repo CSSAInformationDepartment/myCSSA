@@ -3,7 +3,7 @@ from .base import *
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
-SECRET_KEY = env_dist.get('DJANGOKEYDEV')
+SECRET_KEY = '=3qm1_ubi+$_bzvcj0yxoq+52q!l9+k*za&s06@z1#pee9bd2l'
 
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
