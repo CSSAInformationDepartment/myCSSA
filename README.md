@@ -39,6 +39,9 @@ Welcome to join us by contacting: information@cssaunimelb.com
 
 ## Major Contributor
 Project Manager and Lead Engineer: Le (Josh). Lu (joshlubox@gmail.com)
+
 UI / UX Designer and Lead Front-end Developer : Mengyu (Caitlin) Jiang (icesymeng@gmail.com)
+
 Communication System Developer: Shenhai (Howie). Chen
+
 Content Managament System Developer: Maoting (Brook). Zuo
