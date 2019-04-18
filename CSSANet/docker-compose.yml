@@ -45,8 +45,8 @@ services:
     volumes:
       - .:/code
       -  ./config/nginx:/etc/nginx/conf.d
-      - ./code/static:/static
-      - ./code/media:/media
+      - ./data/static:/static
+      - ./data/media:/media
     networks:
       - cssa_router
 
