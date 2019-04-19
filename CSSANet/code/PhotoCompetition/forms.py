@@ -1,5 +1,5 @@
 from django import forms
-f
+
 from PhotoCompetition import models
 class CandidateSubmissionForm(forms.ModelForm):
     '''
@@ -7,7 +7,8 @@ class CandidateSubmissionForm(forms.ModelForm):
     '''
     class Meta:
         model = models.Submission
-        fields =('submissionUserId', 'deviceType', 'categoryType', 'upload_photo', 'description')
+        fields =('deviceType', 'categoryType', 'upload_photo', 'description')
+
 
     def clean(self):
         super().clean()
