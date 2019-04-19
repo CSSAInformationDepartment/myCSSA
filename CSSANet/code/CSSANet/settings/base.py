@@ -45,8 +45,6 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
 
     'django.contrib.contenttypes',
-    # 'grappelli.dashboard',
-    # 'grappelli',
     'filebrowser',
     'django.contrib.sites',
     'django.contrib.admin',
@@ -193,31 +191,6 @@ USE_L10N = True
 
 USE_TZ = True
 
-
-
-# # myCSSAHub Settings
-# GRAPPELLI_ADMIN_TITLE = 'myCSSAHub'
-# GRAPPELLI_INDEX_DASHBOARD = 'CSSANet.dashboard.CustomIndexDashboard'
-
-# File browser settings
-from filebrowser.sites import site
-site.directory = ''
-
-FILEBROWSER_DIRECTORY = ''
-FILEBROWSER_VERSIONS_BASEDIR = '_versions/'
-FILEBROWSER_EXTENSIONS = {
-    'Image': ['.jpg','.jpeg'],
-    'Document': ['.pdf','.doc','.xls'],
-
-}
-FILEBROWSER_VERSIONS = {
-    'admin_thumbnail': {'verbose_name': 'Admin Thumbnail', 'width': 60, 'height': 60, 'opts': 'crop'},
-    'thumbnail': {'verbose_name': 'Thumbnail (1 col)', 'width': 60, 'height': 60, 'opts': 'crop'},
-    'small': {'verbose_name': 'Small (2 col)', 'width': 140, 'height': '', 'opts': ''},
-    'medium': {'verbose_name': 'Medium (4col )', 'width': 300, 'height': '', 'opts': ''},
-    'big': {'verbose_name': 'Big (6 col)', 'width': 460, 'height': '', 'opts': ''},
-    'large': {'verbose_name': 'Large (8 col)', 'width': 680, 'height': '', 'opts': ''}
-}
 
 ### Logging configuration
 LOGGING = {
