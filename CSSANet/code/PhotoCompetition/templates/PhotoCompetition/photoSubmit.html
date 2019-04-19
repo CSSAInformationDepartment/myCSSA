@@ -1,0 +1,71 @@
+{% extends 'components/base_page.html' %}
+
+{% block 'pg_body' %}
+{% load static %}
+
+
+<div class="bloc none l-bloc" id="bloc-1">
+        <div class="container">
+                <div class="row">
+      <div class="jumbotron jumbotron-fluid col-md-12" style="width:100%">
+        <div class="container-fluid">
+        <h1 class="display-3 text-center">摄影大赛</h1>
+        </div>
+        </div>
+    </div>
+    </div>
+    </div>
+
+
+<div class="container bloc-fill-screen">
+  <div class="row justify-content-center">
+    <div class=" col-md-4 sticky-top" id="accordion">
+      <div class="card sticky-top">
+            <div class="card-header" id="headingOne">
+            <h5><button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                    摄影大赛规则明细
+                  </button></h5>
+                  </div>
+                  <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+                        <div class="card-body">
+                                此次摄影大赛主题以“我与墨尔本”为主题。共设立两个组别：
+                                手机组：全面征集与主题相关并用手机拍摄的摄影作品
+                                专业组：全面征集与主题相关并用专业设备，例如单反拍摄的摄影作品
+                                选手仅可投稿上述其中一种组别。两个组别又设有两个类型，分别为人文类型和
+                                风景类型。
+                                选手可以在投稿的组别中任意选择心仪的类型，并上传最多2个摄影作品。
+                                本次大赛上传的作品最大不可超过5兆。选手通过CSSA官网进行上传。 选手一旦上传照片，不可更改或者撤回。请选手务必审核之后在规定时间内通过官网提交。
+                                决赛阶段，CSSA将公开专设的投票链接。网友可通过专用的链接，按照组别以及类型，为自己喜欢的作品投票，投票截止后根据票数评选获奖作品。
+                                本次比赛最终解释权归CSSA社团所有。                        
+                            </div>
+                      </div>
+                    </div>
+                    </div>
+
+                    <div class="col-md-8">
+                            <div class="card">
+                              <div class="card-body justify-content-center text-center">
+                                    <form method="POST" enctype="multipart/form-data">
+                                        {% csrf_token %}
+                                        {% load widget_tweaks %}
+                                        {% for field in form%}
+                                        <div class="form-group">
+                                                {{ field.label_tag }}
+                                                {% render_field field class="form-control" %}
+                                                
+                                                </div>
+                                                {% endfor %}
+                                                <div class='card-footer'>
+                                                        <button class="btn btn-primary" type="submit"> 提交作品</button>
+                                                    </div>
+                                                    </form>
+                                                    </div>
+                                                    </div>
+                    </div>
+                    </div>
+                    </div>
+{% endblock 'pg_body' %}
+
+
+
+
