@@ -45,8 +45,8 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
 
     'django.contrib.contenttypes',
-    'grappelli.dashboard',
-    'grappelli',
+    # 'grappelli.dashboard',
+    # 'grappelli',
     'filebrowser',
     'django.contrib.sites',
     'django.contrib.admin',
@@ -195,11 +195,11 @@ USE_TZ = True
 
 
 
-# myCSSAHub Settings
-GRAPPELLI_ADMIN_TITLE = 'myCSSAHub'
-GRAPPELLI_INDEX_DASHBOARD = 'CSSANet.dashboard.CustomIndexDashboard'
+# # myCSSAHub Settings
+# GRAPPELLI_ADMIN_TITLE = 'myCSSAHub'
+# GRAPPELLI_INDEX_DASHBOARD = 'CSSANet.dashboard.CustomIndexDashboard'
 
-# File browswer settings
+# File browser settings
 from filebrowser.sites import site
 site.directory = ''
 
