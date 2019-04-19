@@ -17,20 +17,23 @@ RUN rm -rf /var/cache/apk/*
 
 
 RUN mkdir /code
-WORKDIR /code
-
 RUN mkdir /config
-RUN mkdir /data
-ADD requirements.txt /code/
-RUN chmod g+w /code/
-RUN chmod g+w /data/
+# RUN mkdir /data
+RUN chmod g+w /code
+# RUN chmod g+w /data
+
+WORKDIR /code
+ADD code/requirements.txt /code/
+ADD code/alice-bootloader.sh /code/
+
+# COPY code/* /code/
 
 # Install dependencies
 RUN pip3 install --upgrade pip
 
-RUN pip3 install -r /code/requirements.txt --no-cache-dir
+RUN pip3 install -r requirements.txt
 
-
+ENTRYPOINT ["sh", "alice-bootloader.sh" ]
 
 
 

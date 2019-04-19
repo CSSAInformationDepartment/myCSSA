@@ -14,33 +14,12 @@ import os
 env_dist = os.environ
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+DEBUG = False
+PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 BASE_DIR = os.path.dirname(PROJECT_DIR)
+SECRET_KEY = '=3qm1_ubi+$_bzvcj0yxoq+52q!l9+k*za&s06@z1#pee9bd2l'
 
 SITE_ID = 1
-
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
-
-# SECURITY WARNING: DevKey ONLY. Replace the secret key used in production secret!
-
-
-# SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = True
-DEBUG = True
-if DEBUG == False:
-    SECRET_KEY = env_dist.get('DJANGOKEYPD')
-    ALLOWED_HOSTS = ['cssanet','localhost','cssaunimelb.com','192.168.0.2', '0.0.0.0']
-    CSRF_COOKIE_SECURE = True
-#   SESSION_COOKIE_SECURE = True ## <- Activate in HTTPS envrioment only
-    SECURE_CONTENT_TYPE_NOSNIFF = True
-    SECURE_BROWSER_XSS_FILTER = True
-    SECURE_SSL_REDIRECT = False
-    X_FRAME_OPTIONS = 'DENY'
-else:
-    ALLOWED_HOSTS = ['*']
-    SECRET_KEY = env_dist.get('DJANGOKEYDEV')
 
 # Application definition
 INSTALLED_APPS = [
@@ -66,9 +45,6 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
 
     'django.contrib.contenttypes',
-    'grappelli.dashboard',
-    'grappelli',
-    'filebrowser',
     'django.contrib.sites',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -110,6 +86,17 @@ TEMPLATES = [
         },
     },
 ]
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'myCSSA',
+        'USER': 'postgres',
+        'PASSWORD': 'aiuh489ieu19vc*4',
+        'HOST': 'db',
+        'PORT': '5432'
+    }
+}
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -156,43 +143,6 @@ ACCOUNT_LOGOUT_ON_GET = True
 
 WSGI_APPLICATION = 'CSSANet.wsgi.application'
 
-
-# Database
-# https://docs.djangoproject.com/en/2.1/ref/settings/#databases
-
-DATABASES = {
-    #'default': {
-    #    'ENGINE': 'django.db.backends.sqlite3',
-    #    'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    #}
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'myCSSA',
-        'USER': 'postgres',
-        'PASSWORD': 'aiuh489ieu19vc*4',
-        'HOST': 'db',
-        'PORT': '5432'
-    }
-}
-
-# CACHES = {
-#  'default': {
-#   'BACKEND': 'django.core.cache.backends.dummy.DummyCache',  # 缓存后台使用的引擎
-#   'TIMEOUT': 0,            # 缓存超时时间（默认300秒，None表示永不过期，0表示立即过期）
-#   'OPTIONS':{
-#    'MAX_ENTRIES': 300,          # 最大缓存记录的数量（默认300）
-#    'CULL_FREQUENCY': 3,          # 缓存到达最大个数之后，剔除缓存个数的比例，即：1/CULL_FREQUENCY（默认3）
-#   },
-#  }
-# }
-
-# # Cache time to live is 1 minutes.
-# CACHE_TTL = 1 * 1
-# # Cahce ENV Setup
-# #SESSION_ENGINE = "django.contrib.sessions.backends.cache"
-# #SESSION_CACHE_ALIAS = "default"
-
-
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
 
@@ -219,16 +169,6 @@ STATICFILES_FINDERS = [
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 ]
 
-#STATICFILES_DIRS = [
-#   os.path.join(PROJECT_DIR, 'static'),
-#]
-
-# ManifestStaticFilesStorage is recommended in production, to prevent outdated
-# Javascript / CSS assets being served from cache (e.g. after a Wagtail upgrade).
-# See https://docs.djangoproject.com/en/2.1/ref/contrib/staticfiles/#manifeststaticfilesstorage
-
-# Temporary Disabled due to conflicts in configuration
-# STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
 
 STATIC_ROOT = os.path.join(PROJECT_DIR, 'static')
 STATIC_URL = '/static/'
@@ -250,31 +190,6 @@ USE_L10N = True
 
 USE_TZ = True
 
-
-
-# myCSSAHub Settings
-GRAPPELLI_ADMIN_TITLE = 'myCSSAHub'
-GRAPPELLI_INDEX_DASHBOARD = 'CSSANet.dashboard.CustomIndexDashboard'
-
-# File browswer settings
-from filebrowser.sites import site
-site.directory = ''
-
-FILEBROWSER_DIRECTORY = ''
-FILEBROWSER_VERSIONS_BASEDIR = '_versions/'
-FILEBROWSER_EXTENSIONS = {
-    'Image': ['.jpg','.jpeg'],
-    'Document': ['.pdf','.doc','.xls'],
-
-}
-FILEBROWSER_VERSIONS = {
-    'admin_thumbnail': {'verbose_name': 'Admin Thumbnail', 'width': 60, 'height': 60, 'opts': 'crop'},
-    'thumbnail': {'verbose_name': 'Thumbnail (1 col)', 'width': 60, 'height': 60, 'opts': 'crop'},
-    'small': {'verbose_name': 'Small (2 col)', 'width': 140, 'height': '', 'opts': ''},
-    'medium': {'verbose_name': 'Medium (4col )', 'width': 300, 'height': '', 'opts': ''},
-    'big': {'verbose_name': 'Big (6 col)', 'width': 460, 'height': '', 'opts': ''},
-    'large': {'verbose_name': 'Large (8 col)', 'width': 680, 'height': '', 'opts': ''}
-}
 
 ### Logging configuration
 LOGGING = {
