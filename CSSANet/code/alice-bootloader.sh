@@ -52,7 +52,7 @@ python3 manage.py makemigrations || { echo '[Bootloader] Migration Check Failure
 
 python3 manage.py migrate --no-input || { echo '[Bootloader] DB Migration Failure!'; exit 1;}
 
-python3 manage.py collectstatic --no-input || { echo '[Bootloader] Static Files Failure!';  exit 1; }
+# python3 manage.py collectstatic --no-input || { echo '[Bootloader] Static Files Failure!';  exit 1; }
 
 python3 manage.py loaddata createsuper.json || { echo '[Bootloader] Fixture Loading Failure!'; exit 1; }
 

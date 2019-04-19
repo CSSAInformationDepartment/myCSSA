@@ -22,7 +22,6 @@ from UserAuthAPI.forms import BasicSiginInForm, UserInfoForm, MigrationForm, Use
 from LegacyDataAPI import models as LegacyDataModels
 from CommunicateManager.send_email import send_emails
 
-from CSSANet.settings import MEDIA_ROOT, MEDIA_URL
 import json
 import base64
 import io

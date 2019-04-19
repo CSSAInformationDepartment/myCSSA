@@ -16,8 +16,6 @@ django-widget-tweaks
 
 gunicorn
 
-django-braces
-
 xlwt
 
 django-filter
@@ -28,6 +26,9 @@ celery
 
 sorl-thumbnail
 
+django-storages 
+
+boto3
 
 ### For Development purpose only
 pylint

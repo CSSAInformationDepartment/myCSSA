@@ -34,6 +34,20 @@ DATABASES = {
 # #SESSION_CACHE_ALIAS = "default"
 
 
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/2.1/howto/static-files/
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, '/static'),
+]
+
+STATIC_ROOT = os.path.join(PROJECT_DIR, 'static')
+STATIC_URL = '/static/'
+
+MEDIA_ROOT = os.path.join(PROJECT_DIR, 'media')
+MEDIA_URL = '/media/'
+
+
 try:
     from .local import *
 except:

@@ -172,7 +172,7 @@
         if (repo.avatar) { //有头像显示头像，没头像显示placeholder
             markup += "<img src='" + repo.avatar + "'class='img-flag' hight='16px' width='16px' style='margin-right:20px' />"
         } else {
-            markup += "<img src= '{% static '/myCSSAhub/img/avatar_placeholder.png'%}' class='img-flag' hight='16px' width='16px' style='margin-right:20px'/>"
+            markup += "<img src= '{% static 'myCSSAhub/img/avatar_placeholder.png'%}' class='img-flag' hight='16px' width='16px' style='margin-right:20px'/>"
         }
         if (repo.full_name_cn) {
             markup += "中文名：" + repo.full_name_cn;

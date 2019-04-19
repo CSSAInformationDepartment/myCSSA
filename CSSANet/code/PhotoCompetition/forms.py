@@ -11,4 +11,4 @@ class CandidateSubmissionForm(forms.ModelForm):
 
     def clean(self):
         super().clean()
-        user_ id = 
+        user_id = self.get_cleaned_data('submissionUserId') 

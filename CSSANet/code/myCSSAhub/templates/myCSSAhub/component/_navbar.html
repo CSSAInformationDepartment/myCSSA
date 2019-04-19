@@ -4,7 +4,7 @@
         <span class="navbar-toggler-icon"></span>
       </button>
       <a class="navbar-brand" href="{% url 'PublicSite:index' %}">
-        <img class="navbar-brand-full" src="{% static '/myCSSAhub/img/Main-Site-Logo-m.png' %}" width="105" height="45" alt="">
+        <img class="navbar-brand-full" src="{% static 'myCSSAhub/img/Main-Site-Logo-m.png' %}" width="105" height="45" alt="">
         <img class="navbar-brand-minimized" src="" width="30" height="30" alt="">
       </a>
       <button class="navbar-toggler sidebar-toggler d-md-down-none" type="button" data-toggle="sidebar-lg-show">
@@ -36,7 +36,7 @@
             {% if user.userprofile.avatar %}
               <img class="img-avatar" src="{{ user.userprofile.avatar.url }}" style="height:35px;width:35px;">
             {% else %}
-              <img class="img-avatar" src="{% static '/myCSSAhub/img/avatar_placeholder.png' %}" style="height:35px;width:35px;">
+              <img class="img-avatar" src="{% static 'myCSSAhub/img/avatar_placeholder.png' %}" style="height:35px;width:35px;">
             {% endif %}
           </a>
           <div class="dropdown-menu dropdown-menu-right">

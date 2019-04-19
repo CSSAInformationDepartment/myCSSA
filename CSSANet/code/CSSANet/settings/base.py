@@ -36,9 +36,9 @@ INSTALLED_APPS = [
     'FlexForm',
     'PhotoCompetition',
 
+    ## RESTful Support
     'rest_framework',
     'rest_framework.authtoken',
-
     'rest_auth',
     'allauth',
     'allauth.account',
@@ -48,12 +48,14 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'django.contrib.admin',
     'django.contrib.auth',
-
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    ## Server add-in
     'gunicorn',
     'widget_tweaks',
+    'storages',
     
 ]
 
@@ -168,13 +170,6 @@ STATICFILES_FINDERS = [
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 ]
-
-
-STATIC_ROOT = os.path.join(PROJECT_DIR, 'static')
-STATIC_URL = '/static/'
-
-MEDIA_ROOT = os.path.join(PROJECT_DIR, 'media')
-MEDIA_URL = '/media/'
 
 
 # Internationalization
