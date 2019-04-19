@@ -30,6 +30,8 @@ redis
 
 celery
 
+sorl-thumbnail
+
 
 ### For Development purpose only
 pylint
