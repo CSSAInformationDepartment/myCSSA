@@ -45,7 +45,6 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
 
     'django.contrib.contenttypes',
-    'filebrowser',
     'django.contrib.sites',
     'django.contrib.admin',
     'django.contrib.auth',
