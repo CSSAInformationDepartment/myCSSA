@@ -17,7 +17,8 @@ from django_datatables_view.base_datatable_view import BaseDatatableView
 from django.urls import reverse
 from django.utils.html import escape
 from pytz import timezone
-from CSSANet.settings import TIME_ZONE
+from django.conf import settings
+TIME_ZONE  = settings.TIME_ZONE
 
 from CommunicateManager.send_email import send_emails
 from FlexForm.apis import flexform_user_write_in

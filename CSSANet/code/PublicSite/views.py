@@ -5,8 +5,6 @@ from UserAuthAPI import models as UserModels
 from BlogAPI import models as BlogModels
 from RecruitAPI import models as JobModels
 from EventAPI import models as eventModels
-# Static Files Path Reference
-from CSSANet.settings import MEDIA_URL
 from Library.SiteManagement import LoadPagetoRegister
 # CacheSettings
 from django.core.cache.backends.base import DEFAULT_TIMEOUT
@@ -89,8 +87,6 @@ class PhotoCompetitionView(LoginRequiredMixin, View):
 #@cache_page(CACHE_TTL)
 def Departments(request,dept):
     ViewBag = {}
-    ViewBag['MEDIA_ROOT'] = MEDIA_ROOT
-    ViewBag['MEDIA_URL'] = MEDIA_URL
     DeptInfo = UserModels.CSSADept.objects.filter(deptName=dept)
     if not DeptInfo:
         ViewBag['dept'] = None

@@ -47,6 +47,7 @@ STATIC_URL = '/static/'
 MEDIA_ROOT = os.path.join(PROJECT_DIR, 'media')
 MEDIA_URL = '/media/'
 
+print("DEV CONFIG REACHED>>>>>>>>>>>>>>>>>>>")
 
 try:
     from .local import *
