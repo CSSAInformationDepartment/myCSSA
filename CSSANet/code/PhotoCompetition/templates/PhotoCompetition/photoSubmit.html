@@ -15,21 +15,35 @@
 	</div>
 </div>
 
-<div class="row">
-	<div class="col-lg-9">
-		<div id="ErrMsgArea" />
-		{% if prev_submission %}
-		<div class="card text-white bg-warning mb-3">
-			<div class="card-header">你的作品已经提交</div>
-			<div class="card-body">
-				<p class="card-text">上次提交时间为：{{ prev_submission.timeOfCreate }}</p>
+<div class="container">
+	<div class="row">
+		<div class="col-12">
+			{% if prev_submission %}
+			<div class="card text-white bg-primary mb-3">
+				<div class="card-header">您的作品提交记录</div>
+				<div class="card-body">
+					<table class="table text-white">
+						<thead>
+							<th>提交时间</th>
+							<th>设备类型</th>
+							<th>题材类型</th>
+						</thead>
+						<tbody>
+							{% for item in prev_submission %}
+							<tr>
+								<td>{{item.submissionTime}}</td>
+								<td>{{item.deviceType}}</td>
+								<td>{{item.categoryType}}</td>
+							</tr>
+							{% endfor %}
+						</tbody>	
+					</table>
+				</div>
 			</div>
+			{% endif %}
 		</div>
-		{% endif %}
 	</div>
 </div>
-</div>
-
 
 
 <div class="container bloc-fill-screen">
@@ -65,20 +79,29 @@
 					<form id="main_form" method="POST" enctype="multipart/form-data">
 						{% csrf_token %}
 						{% load widget_tweaks %}
-						{% for field in form %}
+						{% for hidden_field in form.hidden_fields %}
+								{{ hidden_field }}
+						{% endfor %}
+						{% if form.non_field_errors %}
+								<div class="alert alert-danger" role="alert">
+										{% for error in form.non_field_errors %}
+												{{ error }}
+										{% endfor %}
+								</div>
+						{% endif %}
+
+						{% for field in form.visible_fields %}
 							<div class="form-group ">
 								{% if field.name == "upload_photo" %}
 									{{form.upload_photo.label_tag}}
-									<input id="input-b1" name="attachment" type="file" class="file" data-browse-on-zone-click="true">
+									<input id="input-b1" name="upload_photo" type="file" class="file" data-browse-on-zone-click="true">
 								{% else %}
-									{{field.label_tag}}
+									{{ field.label_tag }}
 									{% render_field field class="form-control" %}
 								{% endif %}
 							</div>
 						{% endfor %}
-						<div class='card-footer'>
-							<button class="btn btn-primary" type="submit"> 提交作品</button>
-						</div>
+						<button class="btn btn-primary btn-block" type="submit">提交作品</button>
 					</form>
 				</div>
 			</div>
@@ -91,50 +114,11 @@
 
 	<script type="text/javascript" src="https://unpkg.com/file-upload-with-preview"></script>
 	<script type="text/javascript">
-		$('#form-agreement').on('click', function(){
-			if ($('#form-agreement').prop('checked')){
-			$('#form-submit').removeAttr('disabled')
-			$('#form-submit').attr('class','btn btn-primary btn-lg btn-block')
-			} else
-			{
-				$('#form-submit').attr('disabled','disabled')
-				$('#form-submit').attr('class','btn btn-secondary btn-lg btn-block')
-			}
-		});
-
-		function gotoParentPage(){
-			window.location.href = "{% url 'PublicSite:recruitment' %}"
-		}
 
 		$('#main_form').on('submit', function(e){
-			e.preventDefault();
-			var formData = new FormData(this);
 			$('#submit-loader').attr('class', 'loader loader-curtain is-active')
-			$.ajax({
-				url : window.location.href, // the endpoint
-				type : "POST", // http method
-				data : formData,
-				processData:false,
-				contentType:false,
-				// handle a successful response
-				success : function(json) {
-					$('#submit-loader').attr('class', 'loader loader-curtain')
-					if (json["result"]) {
-						$('#myModal').modal('show');
-					} else {
-						$('#ErrMsgArea').html('<div id="login-fail-alert" class="alert alert-dismissible alert-warning fade show" role="alert"><button type="button" class="close" data-dismiss="alert">&times;</button><h4 class="alert-heading">表单验证失败！请检查您的输入</h4><p class="mb-0">'+errmsg+'</p></div>')
-						console.log(json);
-					}
-				},
-				// handle a non-successful response
-				error : function(xhr,errmsg,err) {
-					$('#submit-loader').attr('class', 'loader loader-curtain')
-					$('#ErrMsgArea').html('<div id="login-fail-alert" class="alert alert-dismissible alert-warning fade show" role="alert"><button type="button" class="close" data-dismiss="alert">&times;</button><h4 class="alert-heading">服务器故障</h4><p class="mb-0">'+errmsg+'</p></div>')
-					console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
-					}
-				});
 
-			});
+		});
 </script>
 
 

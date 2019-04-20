@@ -4,6 +4,8 @@ from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.views.generic import CreateView, ListView, DeleteView
 
+from django.urls import reverse
+
 from . import models
 from . import forms
 # Create your views here.
@@ -17,19 +19,27 @@ class CandidateSubmissionView(LoginRequiredMixin, View):
     '''
     login_url = '/hub/login/'
     template_name = 'PhotoCompetition/photoSubmit.html' 
-    model = models.Submission
     form_class = forms.CandidateSubmissionForm
 
     def get(self, request, *args, **kwargs):
         '''
         Proceed GET request for the submission page
         '''
-        return render(request, self.template_name, {'form':self.form_class})
+        prev_submission = models.Submission.objects.filter(submissionUserId=request.user.id)
+        print(prev_submission.__dict__)
+        submit_form = self.form_class(initial={
+            'submissionUserId': request.user.id
+        })
+        return render(request, self.template_name, {'form':submit_form, 'prev_submission':prev_submission})
 
-    def post(self, request, **args, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
         '''
         Proceed POST request for the submission page
         '''
-        
+        submission = self.form_class(data=request.POST or None, files=request.FILES)
 
-        return render(self, request)
+        if submission.is_valid():
+            submission.save()
+            return HttpResponseRedirect(reverse('PublicSite:PhotoCompetition:submit-photo'))
+        
+        return render(request, self.template_name, {'form':submission})

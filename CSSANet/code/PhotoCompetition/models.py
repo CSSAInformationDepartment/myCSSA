@@ -7,7 +7,7 @@ from UserAuthAPI import models as adminModel
 
 # Create your models here.
 def _GetUserDir(instance, filename):
-    return 'competition/competitionPics/user_{0}/{1}'.format(instance.user.id, filename)
+    return 'competition/competitionPics/user_{0}/{1}'.format(instance.submissionUserId.id, filename)
 
 class Submission(models.Model):
     '''
@@ -28,5 +28,5 @@ class Submission(models.Model):
 
     deviceType = models.CharField(verbose_name=_("设备"),choices=DEVICE_CHOICE, max_length=30, default="手机", null=True)
     categoryType = models.CharField(verbose_name=_("类别"), choices=CATEGORY_CHOICE, max_length=30, default="风景", null=True)
-    upload_photo = SorlImageField(verbose_name=_("上传作品"),default=None, null=True, blank=True, upload_to = _GetUserDir)
+    upload_photo = SorlImageField(verbose_name=_("上传作品"), null=True, upload_to = _GetUserDir)
     description = models.CharField(verbose_name=_("作品简述"),max_length = 250)
