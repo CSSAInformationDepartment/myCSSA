@@ -5,10 +5,10 @@ services:
     image: cssanet
     # entrypoint: ./alice-bootloader.sh
     container_name: CSSAnet
+    environment:
+      DJANGO_SETTINGS_MODULE: CSSANet.settings.dev
     volumes:
       - ./code:/code
-      # - ./shell:/shell
-      # - ./data:/data
       - ./data/static:/code/static
       - ./data/media:/code/media
     build: .

@@ -6,10 +6,6 @@ FROM python:3.7.2-alpine3.8
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
-# Development Mode Secret Key
-ENV DJANGOKEYDEV '=3qm1_ubi+$_bzvcj0yxoq+52q!l9+k*za&s06@z1#pee9bd2l' 
-ENV DJANGOKEYPD '=3qm1_ubi+$_bzvcj0yxoq+52q!l9+k*za&s06@z1#PRODUCTION'
-
 RUN apk add --update netcat-openbsd
 RUN apk update && apk add postgresql-dev gcc python3-dev musl-dev
 RUN apk add jpeg-dev zlib-dev
