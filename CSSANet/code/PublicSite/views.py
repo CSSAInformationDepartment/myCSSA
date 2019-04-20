@@ -67,23 +67,6 @@ def ContactUs(request):
     return render(request, 'PublicSite/contact_us.html')
 
 
-class PhotoCompetitionView(LoginRequiredMixin, View):
-    '''
-    Adding a new event to the system
-    '''
-    login_url = '/hub/login/'
-    template_name = 'PhotoCompetition/photoSubmit.html'
-    form_class=CandidateSubmissionForm
-    
-    def get(self, request, *args, **kwargs):
-        return render(request, self.template_name, {'form':self.form_class})
-
-    def post(self, request, *args, **kwargs):
-        form = self.form_class(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
-        return render(request, self.template_name, {'form':form})
-
 #@cache_page(CACHE_TTL)
 def Departments(request,dept):
     ViewBag = {}

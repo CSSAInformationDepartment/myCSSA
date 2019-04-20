@@ -3,6 +3,7 @@ from django.urls import path, re_path, include
 from PublicSite import views as Views
 from Library.SiteManagement import LoadPagetoRegister
 
+from PhotoCompetition import public_urls as PhotoCompetitionPublicUrls
 app_name = "PublicSite"
 urlpatterns = [
     path('', Views.index, name='index'),
@@ -17,6 +18,8 @@ urlpatterns = [
     path('reviewblog/', Views.reviewBlogPublic.as_view(), name='reviewBlogPublic'),
     path('events/', Views.EventsListView.as_view(), name='events'),
     path('events/<str:eventID>/', Views.EventDetails, name='eventsDetails'),
-    path('app/photo-competition/submit/', Views.PhotoCompetitionView.as_view(), name='photoCompeptition'),
+
+    ### Apps Extension Urls
+    path('app/photo-competition/', include(PhotoCompetitionPublicUrls,  namespace='PhotoCompetition')),
 
 ]
