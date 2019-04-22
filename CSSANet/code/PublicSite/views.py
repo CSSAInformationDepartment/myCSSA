@@ -328,9 +328,9 @@ class reviewBlogPublic(LoginRequiredMixin, PermissionRequiredMixin, View):
 ################################# sponsor pages ########################################
 def Merchants(request):
 
-    infos = HubModels.DiscountMerchant.objects.all().order_by("merchant_add_date").values()
+    infos = HubModels.DiscountMerchant.objects.all().order_by("merchant_add_date")
 
-    return render(request,'PublicSite/merchant.html', locals())
+    return render(request,'PublicSite/merchant.html', {'infos':infos})
 
 def SupportMerchants(request):
     infos = HubModels.DiscountMerchant.objects.all().order_by("merchant_add_date")
