@@ -24,7 +24,7 @@
               {% else %}
               <a href=#>
               {% endif %}
-                <img alt="{{info.merchant_name}}" class="card-img-top img-fluid" src="/media/{{info.merchant_image}}" style="height:180px; width:100%"></a>
+                <img alt="{{info.merchant_name}}" class="card-img-top img-fluid" src="{{info.merchant_image.url}}" style="height:180px; width:100%"></a>
             <div class="card-body">
               <h3 class="card-title">
                 {% if info.merchant_link %}
