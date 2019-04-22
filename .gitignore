@@ -23,4 +23,3 @@ Pipfile.lock
 CSSANet/CSSANet.code-workspace
 CSSANet/data/media
 CSSANet/data/static
-CSSANet/code/CSSANet/settings/prod.py
