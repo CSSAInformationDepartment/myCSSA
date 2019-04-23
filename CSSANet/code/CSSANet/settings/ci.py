@@ -19,7 +19,6 @@ DATABASES = {
     }
 }
 
-
 # CACHES = {
 #  'default': {
 #   'BACKEND': 'django.core.cache.backends.dummy.DummyCache',  # 缓存后台使用的引擎
@@ -36,6 +35,16 @@ DATABASES = {
 # # Cache ENV Setup
 # #SESSION_ENGINE = "django.contrib.sessions.backends.cache"
 # #SESSION_CACHE_ALIAS = "default"
+
+STATICFILES_DIRS = [
+    os.path.join(PROJECT_DIR, 'static'),
+]
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_URL = '/static/'
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
 
 
 try:
