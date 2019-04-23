@@ -16,7 +16,6 @@ from .send_email import send_emails, queryEmailContent, queryEmailContent, query
 from .notification import insertDB, queryMessagesList, queryMessageContent
 from .forms import NotificationForm
 from .models import Notification_DB
-from CSSANet.settings import MEDIA_ROOT, MEDIA_URL
 
 
 ###### 站内信 -- Start ##########

@@ -19,7 +19,6 @@ from BlogAPI import models as BlogModels
 from UserAuthAPI.forms import BasicSiginInForm, UserInfoForm, MigrationForm, UserAcademicForm, UserProfileUpdateForm
 from LegacyDataAPI import models as LegacyDataModels
 
-from CSSANet.settings import MEDIA_ROOT, MEDIA_URL
 from Library.Mixins import AjaxableResponseMixin
 import json
 import base64

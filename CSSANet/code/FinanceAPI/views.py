@@ -16,7 +16,8 @@ from django.utils import timezone as sys_timezone
 
 from pytz import timezone
 
-from CSSANet.settings import TIME_ZONE
+from django.conf import settings
+TIME_ZONE  = settings.TIME_ZONE
 
 import datetime
 

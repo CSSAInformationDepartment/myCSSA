@@ -23,40 +23,40 @@
 >&2 echo '###############################################################################'
 sleep 1
 
-TIMEOUT=15
-QUIET=0
+# TIMEOUT=15
+# QUIET=0
 
-SQLCONNECTED='FALSE'
+# SQLCONNECTED='FALSE'
 
->&2 echo '[Bootloader] Checking Postgres'
+# >&2 echo '[Bootloader] Checking Postgres'
 
-until [ $SQLCONNECTED = 'TRUE' ] 
-do
-    SERVER=db
-    PORT=5432
-    `nc -z $SERVER $PORT`
-    result1=$?
-    if [  "$result1" != 0 ]; then
-      >&2 echo '[Bootloader] Postgres is unavailable - Waiting for 3 sec and Retry'
-      sleep 3
-    else
-        >&2 echo "[Bootloader] Postgres is up - Web Service Engine boot sequence initiated"
-        SQLCONNECTED='TRUE'
-    fi
-done
-
-DJANGO_SETTINGS_MODULE=CSSANet.settings.dev
-export DJANGO_SETTINGS_MODULE
+# until [ $SQLCONNECTED = 'TRUE' ] 
+# do
+#     SERVER=db
+#     PORT=5432
+#     `nc -z $SERVER $PORT`
+#     result1=$?
+#     if [  "$result1" != 0 ]; then
+#       >&2 echo '[Bootloader] Postgres is unavailable - Waiting for 3 sec and Retry'
+#       sleep 3
+#     else
+#         >&2 echo "[Bootloader] Postgres is up - Web Service Engine boot sequence initiated"
+#         SQLCONNECTED='TRUE'
+#     fi
+# done
 
 python3 manage.py makemigrations || { echo '[Bootloader] Migration Check Failure!';  exit 1;}
 
 python3 manage.py migrate --no-input || { echo '[Bootloader] DB Migration Failure!'; exit 1;}
 
-python3 manage.py collectstatic --no-input || { echo '[Bootloader] Static Files Failure!';  exit 1; }
+#python3 manage.py collectstatic --no-input || { echo '[Bootloader] Static Files Failure!';  exit 1; }
 
-python3 manage.py loaddata createsuper.json || { echo '[Bootloader] Fixture Loading Failure!'; exit 1; }
+#python3 manage.py loaddata createsuper.json || { echo '[Bootloader] Fixture Loading Failure!'; exit 1; }
 
-#exec gunicorn CSSANet.wsgi -b 0.0.0.0:8000 ;
->&2 echo '[Bootloader] Web Services is booting up now in Development Settings'
+# >&2 echo '[Bootloader] Web Services is booting up now in Development Settings'
 
-exec python3 manage.py runserver 0.0.0.0:8000 
+# exec python3 manage.py runserver 0.0.0.0:8000 
+
+>&2 echo '[Bootloader] Web Services is booting up now in Production Settings'
+
+exec gunicorn CSSANet.wsgi --workers=5 -b 0.0.0.0:8000 ;

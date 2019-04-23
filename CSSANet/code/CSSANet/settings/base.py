@@ -11,7 +11,6 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
 import os
-env_dist = os.environ
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 DEBUG = False
@@ -36,27 +35,26 @@ INSTALLED_APPS = [
     'FlexForm',
     'PhotoCompetition',
 
+    ## RESTful Support
     'rest_framework',
     'rest_framework.authtoken',
-
     'rest_auth',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
 
     'django.contrib.contenttypes',
-    'grappelli.dashboard',
-    'grappelli',
-    'filebrowser',
     'django.contrib.sites',
     'django.contrib.admin',
     'django.contrib.auth',
-
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    ## Server add-in
     'gunicorn',
     'widget_tweaks',
+    'storages',
     
 ]
 
@@ -173,13 +171,6 @@ STATICFILES_FINDERS = [
 ]
 
 
-STATIC_ROOT = os.path.join(PROJECT_DIR, 'static')
-STATIC_URL = '/static/'
-
-MEDIA_ROOT = os.path.join(PROJECT_DIR, 'media')
-MEDIA_URL = '/media/'
-
-
 # Internationalization
 # https://docs.djangoproject.com/en/2.1/topics/i18n/
 
@@ -193,31 +184,6 @@ USE_L10N = True
 
 USE_TZ = True
 
-
-
-# myCSSAHub Settings
-GRAPPELLI_ADMIN_TITLE = 'myCSSAHub'
-GRAPPELLI_INDEX_DASHBOARD = 'CSSANet.dashboard.CustomIndexDashboard'
-
-# File browswer settings
-from filebrowser.sites import site
-site.directory = ''
-
-FILEBROWSER_DIRECTORY = ''
-FILEBROWSER_VERSIONS_BASEDIR = '_versions/'
-FILEBROWSER_EXTENSIONS = {
-    'Image': ['.jpg','.jpeg'],
-    'Document': ['.pdf','.doc','.xls'],
-
-}
-FILEBROWSER_VERSIONS = {
-    'admin_thumbnail': {'verbose_name': 'Admin Thumbnail', 'width': 60, 'height': 60, 'opts': 'crop'},
-    'thumbnail': {'verbose_name': 'Thumbnail (1 col)', 'width': 60, 'height': 60, 'opts': 'crop'},
-    'small': {'verbose_name': 'Small (2 col)', 'width': 140, 'height': '', 'opts': ''},
-    'medium': {'verbose_name': 'Medium (4col )', 'width': 300, 'height': '', 'opts': ''},
-    'big': {'verbose_name': 'Big (6 col)', 'width': 460, 'height': '', 'opts': ''},
-    'large': {'verbose_name': 'Large (8 col)', 'width': 680, 'height': '', 'opts': ''}
-}
 
 ### Logging configuration
 LOGGING = {

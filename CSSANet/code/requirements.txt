@@ -1,9 +1,5 @@
 Django>=2.1.5
 
-django-grappelli==2.12.1
-
-django-filebrowser==3.11.1
-
 Djangorestframework==3.9.0
 
 django-datatables-view == 1.17.0
@@ -20,8 +16,6 @@ django-widget-tweaks
 
 gunicorn
 
-django-braces
-
 xlwt
 
 django-filter
@@ -30,6 +24,11 @@ redis
 
 celery
 
+sorl-thumbnail
+
+django-storages 
+
+boto3
 
 ### For Development purpose only
 pylint

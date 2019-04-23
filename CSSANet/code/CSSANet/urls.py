@@ -20,9 +20,6 @@ from django.conf import settings
 from django.contrib import admin
 from django.urls import path,re_path ,include
 
-from grappelli import urls as GrappelliUrl
-from filebrowser.sites import site as MediaBrowser 
-
 from PublicSite import urls as PublicUrl
 from UserAuthAPI import urls as AuthUrl
 from LegacyDataAPI import urls as LegacyUrl
@@ -33,9 +30,7 @@ from django.conf.urls import handler400, handler403, handler404, handler500
 urlpatterns = [
     path('', include(PublicUrl)), 
     path('hub/',include(HubUrl)),
-    path('grappelli/', include(GrappelliUrl)),
     path('admin/', admin.site.urls),
-    path('admin/filebrowser/', MediaBrowser.urls),
     path('api/users/', include(AuthUrl)),
     path('api/legacy/', include(LegacyUrl))
 ] 
