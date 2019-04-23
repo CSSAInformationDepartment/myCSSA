@@ -22,6 +22,9 @@ jobs: # A basic unit of work in a run
       - run: sudo chown -R circleci:circleci /usr/local/bin
       - run: sudo chown -R circleci:circleci /usr/local/lib/python3.7/site-packages
       - run: sudo chown -R circleci:circleci ~/myCSSA/CSSANet/code
+      - run: sudo mkdir /static
+      - run: sudo mkdir /media
+
       - restore_cache:
       # Read about caching dependencies: https://circleci.com/docs/2.0/caching/
           key: deps9-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
@@ -33,11 +36,6 @@ jobs: # A basic unit of work in a run
       - run:
           command: |
             export DJANGO_SETTINGS_MODULE=CSSANet.settings.ci
-            mkdir /static
-            mkdir /media
-            chmod g+w /static
-            chmod g+w /media
-
             pipenv run python manage.py makemigrations
             pipenv run python manage.py migrate --no-input
             pipenv run python manage.py collectstatic --no-input
