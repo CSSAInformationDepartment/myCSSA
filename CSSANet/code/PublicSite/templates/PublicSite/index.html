@@ -3,7 +3,7 @@
 
 {% block 'extra_header' %}
 
-<link rel="stylesheet" type="text/css" href="{% static 'myCSSAhub/css/index.css'%}">
+<link rel="stylesheet" type="text/css" href="{% static 'PublicSite/css/add-in.css'%}">
 
 
 <style>
@@ -21,9 +21,6 @@
 {% include 'components/index/_hero.html' %}
 
 <!-- bloc-2 -->
-
-
-
 	<section class="bg-light" id="portfolio">
 		<div class="container">
 			<div class="row">
@@ -77,17 +74,13 @@
 								<i class="fa fa-plus fa-3x"></i>
 							</div>
 						</div>
-
 						<img class="img-fluid" src="{{event.mainVisual.url}}" style="min-height:200px; max-height:200px; width:100%">
-
 					</a>
 					<div class="portfolio-caption" style="max-height:200px; height:100%;">
 						<h4>{{event.eventName}}</h4>
 						<p class="text-muted m-3" style="max-height:80px; overflow:auto;">{{event.eventInfo}}</p>
-
 					</div>
 				</div>
-
 				{% empty %}
 				<h4 class="mg-md text-center">
 					目前没有活动回顾，敬请期待
@@ -160,81 +153,77 @@
 
  <!-- Portfolio Modals -->
  {% for event in eventsFuture|slice:":4" %}
-					 <div class="portfolio-modal modal fade" id="model{{event.eventID}}" tabindex="-1" role="dialog" aria-hidden="true">
-					     <div class="modal-dialog">
-					       <div class="modal-content">
-					         <div class="close-modal" data-dismiss="modal">
-					           <div class="lr">
-					             <div class="rl"></div>
-					           </div>
-					         </div>
-					         <div class="container">
-					           <div class="row">
-					             <div class="col-lg-8 mx-auto">
-					               <div class="modal-body">
-					                 <!-- Project Details Go Here -->
-					                 <h2 class="text-uppercase">{{event.eventName}}</h2>
-					                 <p class="item-intro text-muted">活动主办方: {{event.eventBy}}</p>
-					                 <img class="img-fluid d-block mx-auto" src="{{event.mainVisual.url}}" style="max-height:300px">
-													 <p>{{event.eventInfo}}</p>
-					                 <ul class="list-inline">
-					                   <li>地址: {{event.address}}</li>
-					                   <li>时间: {{event.eventActualStTime}}</li>
-														 <li>报名开始时间: {{event.eventStartTime}}</li>
-					                 </ul>
-													 <p><a href="{% url 'PublicSite:eventsDetails' event.eventID %}"><u>查看详情以及报名</u></a></p>
-					                 <button class="btn btn-primary" data-dismiss="modal" type="button">
-					                   <i class="fa fa-times"></i>
-					                   Close</button>
-					               </div>
-					             </div>
-					           </div>
-					         </div>
-					       </div>
-					     </div>
-						 </div>
-
-
+<div class="portfolio-modal modal fade" id="model{{event.eventID}}" tabindex="-1" role="dialog" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="close-modal" data-dismiss="modal">
+					<div class="lr">
+						<div class="rl"></div>
+					</div>
+				</div>
+				<div class="container">
+					<div class="row">
+						<div class="col-lg-8 mx-auto">
+							<div class="modal-body">
+								<!-- Project Details Go Here -->
+								<h2 class="text-uppercase">{{event.eventName}}</h2>
+								<p class="item-intro text-muted">活动主办方: {{event.eventBy}}</p>
+								<img class="img-fluid d-block mx-auto" src="{{event.mainVisual.url}}" style="max-height:300px">
+								<p>{{event.eventInfo}}</p>
+								<ul class="list-inline">
+									<li>地址: {{event.address}}</li>
+									<li>时间: {{event.eventActualStTime}}</li>
+									<li>报名开始时间: {{event.eventStartTime}}</li>
+								</ul>
+								<p><a href="{% url 'PublicSite:eventsDetails' event.eventID %}"><u>查看详情以及报名</u></a></p>
+								<button class="btn btn-primary" data-dismiss="modal" type="button">
+									<i class="fa fa-times"></i>
+									Close</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 {% endfor %}
 
 <!-- Portfolio Modals -->
 {% for event in eventsPast|slice:":4" %}
-					<div class="portfolio-modal modal fade" id="model2{{event.eventID}}" tabindex="-1" role="dialog" aria-hidden="true">
-							<div class="modal-dialog">
-								<div class="modal-content">
-									<div class="close-modal" data-dismiss="modal">
-										<div class="lr">
-											<div class="rl"></div>
-										</div>
-									</div>
-									<div class="container">
-										<div class="row">
-											<div class="col-lg-8 mx-auto">
-												<div class="modal-body">
-													<!-- Project Details Go Here -->
-													<h2 class="text-uppercase">{{event.eventName}}</h2>
-													<p class="item-intro text-muted">{{event.eventBy}}</p>
-													<img class="img-fluid d-block mx-auto" src="{{event.mainVisual.url}}" style="max-height:300px">
-													<p>{{event.eventInfo}}</p>
-													<ul class="list-inline">
-														<li>地址: {{event.address}}</li>
-														<li>时间: {{event.eventActualStTime}}</li>
-														<li>报名开始时间: {{event.eventStartTime}}</li>
+<div class="portfolio-modal modal fade" id="model2{{event.eventID}}" tabindex="-1" role="dialog" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="close-modal" data-dismiss="modal">
+					<div class="lr">
+						<div class="rl"></div>
+					</div>
+				</div>
+				<div class="container">
+					<div class="row">
+						<div class="col-lg-8 mx-auto">
+							<div class="modal-body">
+								<!-- Project Details Go Here -->
+								<h2 class="text-uppercase">{{event.eventName}}</h2>
+								<p class="item-intro text-muted">{{event.eventBy}}</p>
+								<img class="img-fluid d-block mx-auto" src="{{event.mainVisual.url}}" style="max-height:300px">
+								<p>{{event.eventInfo}}</p>
+								<ul class="list-inline">
+									<li>地址: {{event.address}}</li>
+									<li>时间: {{event.eventActualStTime}}</li>
+									<li>报名开始时间: {{event.eventStartTime}}</li>
 
-													</ul>
-													 <p><a href="{% url 'PublicSite:eventsDetails' event.eventID %}"><u>查看详情</u></a></p>
-													<button class="btn btn-primary" data-dismiss="modal" type="button">
-														<i class="fa fa-times"></i>
-														Close Project</button>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
+								</ul>
+									<p><a href="{% url 'PublicSite:eventsDetails' event.eventID %}"><u>查看详情</u></a></p>
+								<button class="btn btn-primary" data-dismiss="modal" type="button">
+									<i class="fa fa-times"></i>
+									Close Project</button>
 							</div>
 						</div>
-
-
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 {% endfor %}
 
 <!-- bloc-2 END -->
@@ -260,17 +249,7 @@
 </div>
 </div>
 
-<script>(function(d, s, id) {
-  var js, fjs = d.getElementsByTagName(s)[0];
-  if (d.getElementById(id)) return;
-  js = d.createElement(s); js.id = id;
-  js.src = 'https://connect.facebook.net/zh_CN/sdk.js#xfbml=1&version=v3.2';
-  fjs.parentNode.insertBefore(js, fjs);
-}(document, 'script', 'facebook-jssdk'));</script>
-<!-- facebook plugin-->
 
 <script src="{% static 'myCSSAhub/js/index.js'%}" defer></script>
-
-
 
 {% endblock 'pg_body' %}

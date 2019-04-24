@@ -239,10 +239,10 @@ LOGGING = {
 }
 
 ### Email Configuration
-# from myCSSAhub import configuration
 
-# email_configuration = configuration.queryEmailConfiguration
-
+# To test the mail sending related features, adding your personal email accounts credentials here. 
+# Remember !!! You must REMOVE your credentails when you push this to the public repo, otherwise your 
+# credentials will be at risk.
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
