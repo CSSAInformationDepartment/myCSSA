@@ -16,7 +16,7 @@ env_dist = os.environ
 DEBUG = False
 
 SECRET_KEY = env_dist.get('DJANGOKEYPD')
-ALLOWED_HOSTS = ['cssanet','.cssaunimelb.com', 'cloud.digitalocean.com', '.digitalocean.com']
+ALLOWED_HOSTS = ['cssanet','.cssaunimelb.com', 'cloud.digitalocean.com', '.digitalocean.com', '165.227.240.43']
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True ## <- Activate in HTTPS envrioment only
 SECURE_CONTENT_TYPE_NOSNIFF = True
@@ -64,6 +64,9 @@ DATABASES = {
         'PORT': env_dist.get('DATABASE_PORT'),
     }
 }
+
+## Redis Message Cache Serivce
+# REDIS_ADDRESS = 'redis://redis:6379/6'
 
 
 ADMINS = [('Master Inbox', 'information@cssaunimelb.com'), ('Lead Engineer', 'joshlubox@gmail.com')]
