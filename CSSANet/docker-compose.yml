@@ -8,9 +8,9 @@ services:
     environment:
       DJANGO_SETTINGS_MODULE: CSSANet.settings.dev
     volumes:
-    #  - ./code:/code
-      - ./data/static:/code/static
-      - ./data/media:/code/media
+      - ./code:/code
+      - ./data/static:/static
+      - ./data/media:/media
     build: .
     expose:
       - 8000
