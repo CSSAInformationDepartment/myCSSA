@@ -1,6 +1,6 @@
 
-
-from django.conf.urls import include, url
+from django.urls import re_path
+from django.conf.urls import include
 from django.contrib import admin
 from django.views.generic import TemplateView, RedirectView
 import rest_auth.registration.urls
@@ -11,23 +11,23 @@ urlpatterns = [
 #    url(r'^$', TemplateView.as_view(template_name="home.html"), name='home'),
 #    url(r'^signup/$', TemplateView.as_view(template_name="signup.html"),
 #        name='signup'),
-    url(r'^email-verification/$',
+    re_path(r'^email-verification/$',
         TemplateView.as_view(template_name="email_verification.html"),
         name='email-verification'),
-    url(r'^login/$', TemplateView.as_view(template_name="login.html"),
+    re_path(r'^login/$', TemplateView.as_view(template_name="login.html"),
         name='login'),
-    url(r'^logout/$', TemplateView.as_view(template_name="logout.html"),
+    re_path(r'^logout/$', TemplateView.as_view(template_name="logout.html"),
         name='logout'),
-    url(r'^password-reset/$',
+    re_path(r'^password-reset/$',
         TemplateView.as_view(template_name="password_reset.html"),
         name='password-reset'),
-    url(r'^password-reset/confirm/$',
+    re_path(r'^password-reset/confirm/$',
         TemplateView.as_view(template_name="password_reset_confirm.html"),
         name='password-reset-confirm'),
-    url(r'^user-details/$',
+    re_path(r'^user-details/$',
         TemplateView.as_view(template_name="user_details.html"),
         name='user-details'),
-    url(r'^password-change/$',
+    re_path(r'^password-change/$',
         TemplateView.as_view(template_name="password_change.html"),
         name='password-change'),
 
@@ -37,10 +37,8 @@ urlpatterns = [
 #        TemplateView.as_view(template_name="password_reset_confirm.html"),
 #        name='password_reset_confirm'),
 
-    url(r'^rest-auth/', include('rest_auth.urls')),
-    url(r'^rest-auth/registration/', include('rest_auth.registration.urls')),
-    url(r'^account/', include('allauth.urls')),
-#    url(r'^admin/', admin.site.urls),
-    url(r'^accounts/profile/$', RedirectView.as_view(url='/', permanent=True), name='profile-redirect'),
-#    url(r'^docs/$', get_swagger_view(title='API Docs'), name='api_docs')
+    re_path(r'^rest-auth/', include('rest_auth.urls')),
+    re_path(r'^rest-auth/registration/', include('rest_auth.registration.urls')),
+    re_path(r'^account/', include('allauth.urls')),
+    re_path(r'^accounts/profile/$', RedirectView.as_view(url='/', permanent=True), name='profile-redirect'),
 ]
