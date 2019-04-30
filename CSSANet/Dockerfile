@@ -7,7 +7,20 @@ ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONPATH=/usr/local/lib/python3.7/site-packages/:/code/
 
+
+# System dependency installation
+## Network
 RUN apk add --update netcat-openbsd
+
+## Timezone
+RUN apk add tzdata
+RUN cp /usr/share/zoneinfo/Australia/Melbourne /etc/localtime
+RUN echo "Australia/Melbourne" >  /etc/timezone
+RUN date
+RUN apk del tzdata
+
+
+## Python Runtime
 RUN apk update && apk add postgresql-dev gcc python3-dev musl-dev
 RUN apk add jpeg-dev zlib-dev
 RUN rm -rf /var/cache/apk/*

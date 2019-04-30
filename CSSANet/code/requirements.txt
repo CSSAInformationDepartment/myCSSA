@@ -1,10 +1,10 @@
-Django>=2.1.5
+Django > 2.1.5
 
-Djangorestframework==3.9.0
+Djangorestframework == 3.9.0
 
 django-datatables-view == 1.17.0
 
-django-rest-auth>=0.3.3
+django-rest-auth > 0.3.3
 
 django-allauth
 
@@ -18,11 +18,9 @@ gunicorn
 
 xlwt
 
-django-filter
-
 redis
 
-celery
+celery == 4.3
 
 sorl-thumbnail
 
@@ -31,8 +29,8 @@ django-storages
 boto3
 
 ### For Development purpose only
-pylint
+mypy
 
-pylint-django
+names
 
 

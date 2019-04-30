@@ -174,14 +174,13 @@ STATICFILES_FINDERS = [
 
 LANGUAGE_CODE = 'zh-cn'
 
+USE_TZ = True
+
 TIME_ZONE = 'Australia/Melbourne'
 
 USE_I18N = True
 
 USE_L10N = True
-
-USE_TZ = True
-
 
 ### Logging configuration
 LOGGING = {
@@ -235,6 +234,7 @@ LOGGING = {
 		}
 	}
 }
+ADMINS = [('Master Inbox', 'information@cssaunimelb.com'), ('Lead Engineer', 'joshlubox@gmail.com')]
 
 ### Email Configuration
 
@@ -245,5 +245,5 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 0
-EMAIL_HOST_USER = ''
-EMAIL_HOST_PASSWORD = ''
+EMAIL_HOST_USER = 'testerMOZ123@gmail.com'
+EMAIL_HOST_PASSWORD = 'mpR32AcOjo'
