@@ -11,17 +11,22 @@ from django.contrib.auth.forms import SetPasswordForm, PasswordChangeForm
 from django.views import View
 from django.views.generic import CreateView, UpdateView, FormView
 from django.contrib.auth.models import update_last_login
-from django.views.decorators.debug import sensitive_post_parameters, sensitive_variables
 from django.db.models import Q
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import JsonResponse, HttpResponseRedirect, HttpResponse, Http404
+
+from django.utils.decorators import method_decorator
+from django.views.decorators.debug import sensitive_post_parameters, sensitive_variables
 from django.contrib.auth.decorators import login_required
+
+
 from .models import AccountMigration, DiscountMerchant
 from UserAuthAPI import models as UserModels
 from BlogAPI import models as BlogModels
 from UserAuthAPI.forms import BasicSiginInForm, UserInfoForm, MigrationForm, UserAcademicForm, UserProfileUpdateForm, EasyRegistrationForm
 from LegacyDataAPI import models as LegacyDataModels
 from CommunicateManager.send_email import send_emails
+
 
 import json
 import base64
@@ -201,7 +206,7 @@ class LoginPage(View):
         return render(request, self.template_name)
 
     # 请求处理函数（post）
-    @sensitive_post_parameters('password')
+    @method_decorator(sensitive_post_parameters('password'))
     def post(self, request, *args, **kwargs):
         email = request.POST['email'].lower()
         userQuery = self.model.objects.filter(email__iexact=email).first()

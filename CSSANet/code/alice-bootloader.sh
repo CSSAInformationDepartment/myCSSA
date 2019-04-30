@@ -49,14 +49,16 @@ python3 manage.py makemigrations || { echo '[Bootloader] Migration Check Failure
 
 python3 manage.py migrate --no-input || { echo '[Bootloader] DB Migration Failure!'; exit 1;}
 
-#python3 manage.py collectstatic --no-input || { echo '[Bootloader] Static Files Failure!';  exit 1; }
+python3 manage.py collectstatic --no-input || { echo '[Bootloader] Static Files Failure!';  exit 1; }
 
-#python3 manage.py loaddata createsuper.json || { echo '[Bootloader] Fixture Loading Failure!'; exit 1; }
+python3 manage.py loaddata createsuper.json || { echo '[Bootloader] Fixture Loading Failure!'; exit 1; }
 
-# >&2 echo '[Bootloader] Web Services is booting up now in Development Settings'
+>&2 echo '[Bootloader] Web Services is booting up now in Development Settings'
 
-# exec python3 manage.py runserver 0.0.0.0:8000 
+python3 manage.py runserver 0.0.0.0:8000 
 
->&2 echo '[Bootloader] Web Services is booting up now in Production Settings'
+# >&2 echo '[Bootloader] Web Services is booting up now in Production Settings'
 
-exec gunicorn CSSANet.wsgi --workers=5 -b 0.0.0.0:8000 ;
+# exec gunicorn CSSANet.wsgi --workers=5 -b 0.0.0.0:8000 ;
+
+# exec python3 manage.py celery worker --loglevel=info

@@ -1,3 +1,4 @@
+from typing import Dict
 from django.shortcuts import render,reverse, get_object_or_404
 from django.http import JsonResponse
 from PublicSite import models
@@ -98,7 +99,7 @@ class ResumeSubmissionView(LoginRequiredMixin,View):
     login_url = "/hub/login/"
     redirect_field_name = 'redirect_to'
 
-    json_data={}
+    json_data: Dict = {}
 
     def get(self, request, *args, **kwargs):
         prev_submission = None
@@ -131,19 +132,22 @@ class ResumeSubmissionView(LoginRequiredMixin,View):
 
 class EventsListView(View):
     template_name = 'PublicSite/event.html'
-    now_time = timezone.now()
     events=eventModels.Event.objects.all().order_by("eventStartTime")
-    eventsFuture=eventModels.Event.objects.filter(eventActualStTime__gt=now_time).order_by("eventActualStTime")
-    eventsPast=eventModels.Event.objects.filter(eventActualStTime__lt=now_time).order_by("eventActualStTime")
+    
 
     def get(self, request, *args, **kwargs):
-        return render(request, self.template_name, {'eventsFuture':self.eventsFuture, 'now_time':self.now_time,'events':self.events, 'eventsPast':self.eventsPast})
+        timezone.activate('Australia/Melbourne')
+        now_time = timezone.now()
+        eventsFuture=eventModels.Event.objects.filter(eventActualStTime__gt=now_time).order_by("eventActualStTime")
+        eventsPast=eventModels.Event.objects.filter(eventActualStTime__lt=now_time).order_by("eventActualStTime")
+        return render(request, self.template_name, {'eventsFuture':eventsFuture, 'now_time':now_time,'events':self.events, 'eventsPast':eventsPast})
 
 
 def EventDetails(request, eventID):
     event=get_object_or_404(eventModels.Event, pk=eventID)
+    timezone.activate('Australia/Melbourne')
     now_time = timezone.now()
-
+    print(now_time)
     return render(request,'PublicSite/eventDetails.html',{'events':event, 'now_time':now_time})
 
 

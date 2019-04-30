@@ -14,12 +14,14 @@ RUN rm -rf /var/cache/apk/*
 
 
 RUN mkdir /code
-RUN mkdir /config
 RUN chmod g+w /code
 
 WORKDIR /code
 COPY code/ /code/
+RUN chmod g+w /code/static
+RUN chmod g+w /code/media
 RUN ls -la /code/*
+
 
 # Install dependencies
 RUN pip3 install --upgrade pip

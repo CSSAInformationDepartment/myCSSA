@@ -36,6 +36,9 @@ DATABASES = {
 # #SESSION_ENGINE = "django.contrib.sessions.backends.cache"
 # #SESSION_CACHE_ALIAS = "default"
 
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/2.1/howto/static-files/
+
 STATICFILES_DIRS = [
     os.path.join(PROJECT_DIR, 'static'),
 ]
