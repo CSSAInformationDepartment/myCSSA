@@ -166,7 +166,7 @@ class User(AbstractUser):
 
 #用户信息主体 （继承自标准admin model，参照： https://www.zmrenwu.com/post/31/）
 class UserProfile (models.Model):
-    user = models.OneToOneField(User,on_delete=models.DO_NOTHING, primary_key=True, blank=True)
+    user = models.OneToOneField(User,on_delete=models.CASCADE, primary_key=True, blank=True)
 
     avatar = models.ImageField(verbose_name="头像", upload_to=_GetUserDir,
     height_field=None, width_field=None, max_length=None,null=True, blank=True)
@@ -210,7 +210,7 @@ class UserProfile (models.Model):
 
 class CSSACommitteProfile(models.Model):
     Id = models.AutoField(primary_key=True, editable=False)
-    member = models.ForeignKey(User, on_delete=models.DO_NOTHING)
+    member = models.ForeignKey(User, on_delete=models.CASCADE)
 
     is_active = models.BooleanField(default=False)
     CommenceDate = models.DateTimeField(auto_now_add=True)
@@ -233,7 +233,7 @@ class UserAcademic (models.Model):
 
     academicRecId = models.AutoField(primary_key=True, editable=False)
     # 来自同一张表的外键变量名、配置需一致
-    userProfile = models.ForeignKey(User, on_delete = models.DO_NOTHING, blank=True)
+    userProfile = models.ForeignKey(User, on_delete = models.CASCADE, blank=True)
     # 不同模型中表示同一功能的变量名需一致
     timeOfCreate  = models.DateTimeField(auto_now_add=True)
 

@@ -21,3 +21,4 @@ Pipfile.lock
 CSSANet/CSSANet.code-workspace
 CSSANet/data/media
 CSSANet/data/static
+CSSANet/code/.mypy_cache

@@ -1,7 +1,8 @@
 <footer class='footer'>
 <!-- bloc-20 -->
 {% load static %}
-<div class="bloc d-bloc none" id="bloc-20" style="background-color: grey">
+{% load get_system_version %}
+<div class="bloc d-bloc none" id="bloc-20" style="background-color:RoyalBlue">
 	<div class="container bloc-sm">
 		<div class="row">
 			<div class="col-md-3 col-sm-6">
@@ -52,8 +53,6 @@
 				</ul>
 			</div>
 
-
-
 			<div class="col-md-2 col-sm-6">
 				<h4 class="mg-md text-sm-left text-center tc-white">
 					Follow Up
@@ -76,25 +75,34 @@
 					</div>
 				</div>
 			</div>
-
+		</div>
+		<div class="row">
+			<div class="col mg-md d-bloc mx-auto text-center">
+				<a href="https://github.com/ShepherdMOZ/myCSSA">
+					<h6 class="text-center tc-white">系统版本 System Version：<strong>{% get_system_version %}</strong></h6>
+				</a>
+			</div>
 		</div>
 	</div>
 </div>
 <!-- bloc-20 END -->
 
 <!-- bloc-30 -->
-<div class="bloc bgc-black d-bloc" id="bloc-22">
+<div class="bloc d-bloc" id="bloc-22" style="background-color:rgb(38, 38, 38)">
 	<div class="container">
 		<div class="row">
 			<div class="col">
-				<h6 class="mg-md text-lg-center">
+				<!-- <h6 class="mg-md text-lg-center">
 					本项目由 卢玏 设计管理 This Project is Designed &amp; Managed by Josh. Le. Lu
 				</h6>
 				<p class="mg-md text-lg-center h6-margin-top">
 					站点交互设计：蒋梦雨 UI/UX Design: Caitlin. Mengyu. Jiang
-				</p>
-				<p class="mg-md text-lg-center h6-margin-top">
+				</p> -->
+				<h6 class="mg-md text-lg-center">
 					版权所有 墨尔本大学中国学生会 Copyrights @ Chinese Student and Scholars Association, University of Melbourne 2012 - 2019
+				</h6>
+				<p class="mg-md text-lg-center h6-margin-top">
+					由 信息技术部系统开发组 设计管理 Designed and Managed by Department of Information Technology, System Development Group
 				</p>
 			</div>
 		</div>
