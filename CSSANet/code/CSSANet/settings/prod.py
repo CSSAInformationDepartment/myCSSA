@@ -27,6 +27,7 @@ X_FRAME_OPTIONS = 'DENY'
 
 ## S3 Elastic Storage Configuration
 
+AWS_DEFAULT_ACL = None
 AWS_ACCESS_KEY_ID = env_dist.get('AWS_ACCESS_KEY_ID')
 AWS_SECRET_ACCESS_KEY = env_dist.get('AWS_SECRET_ACCESS_KEY')
 AWS_STORAGE_BUCKET_NAME = env_dist.get('AWS_STORAGE_BUCKET_NAME')
