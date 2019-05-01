@@ -67,12 +67,12 @@
          {% else %}
          <a href="#">
          {% endif %}
-       <img alt="{{info.merchant_name}}" class="mx-auto d-block img-fluid" src="/media/{{info.merchant_image}}" style="max-width:50%"></a>
+       <img alt="{{info.merchant_name}}" class="mx-auto d-block img-fluid" src="{{info.merchant_image.url}}" style="max-width:50%"></a>
      </div>
    </div>
    <div class="col-lg-6 col-sm-6 portfolio-item mt-2 align-self-center">
      <div class="text-center align-self-center">
-       <img alt="{{info.merchant_name}}" class="mx-auto d-block img-fluid" src="/media/{{info.merchant_qrcode}}" style="width:150px; height:150px">
+       <img alt="{{info.merchant_name}}" class="mx-auto d-block img-fluid" src="{{info.merchant_qrcode.url}}" style="width:150px; height:150px">
      </div>
    </div>
    <div class="col-12 m-4 text-center">

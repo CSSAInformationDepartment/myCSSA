@@ -18,9 +18,7 @@ Pipfile
 Pipfile.lock
 .CSSANet/Pipfile
 .CSSANet/Pipfile.lock
-.CSSANet/code/Pipfile
-.CSSANet/code/Pipfile.lock
 CSSANet/CSSANet.code-workspace
 CSSANet/data/media
 CSSANet/data/static
-CSSANet/code/CSSANet/settings/prod.py
+CSSANet/code/.mypy_cache

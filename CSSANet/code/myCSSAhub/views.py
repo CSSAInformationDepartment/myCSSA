@@ -14,13 +14,19 @@ from django.contrib.auth.models import update_last_login
 from django.db.models import Q
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import JsonResponse, HttpResponseRedirect, HttpResponse, Http404
+
+from django.utils.decorators import method_decorator
+from django.views.decorators.debug import sensitive_post_parameters, sensitive_variables
 from django.contrib.auth.decorators import login_required
+
+
 from .models import AccountMigration, DiscountMerchant
 from UserAuthAPI import models as UserModels
 from BlogAPI import models as BlogModels
 from UserAuthAPI.forms import BasicSiginInForm, UserInfoForm, MigrationForm, UserAcademicForm, UserProfileUpdateForm, EasyRegistrationForm
 from LegacyDataAPI import models as LegacyDataModels
 from CommunicateManager.send_email import send_emails
+
 
 import json
 import base64
@@ -200,19 +206,20 @@ class LoginPage(View):
         return render(request, self.template_name)
 
     # 请求处理函数（post）
+    @method_decorator(sensitive_post_parameters('password'))
     def post(self, request, *args, **kwargs):
         email = request.POST['email'].lower()
         userQuery = self.model.objects.filter(email__iexact=email).first()
+        redirect_to = request.GET.get('next') or request.GET.get('redirect_to')
+        password = request.POST['password']
+        if userQuery is None:
+            return JsonResponse(self.loginErrorMsg)
+        
         # Patch, clean email with capitalisation
         if any(c.isupper for c in userQuery.email):
             _email_convert = userQuery.email.lower()
             userQuery.email = _email_convert
             userQuery.save()
-
-        redirect_to = request.GET.get('redirect_to')
-        if userQuery is None:
-            return JsonResponse(self.loginErrorMsg)
-        password = request.POST['password']
         user = authenticate(request, email=email, password=password)
         if user is not None:
             login(request, user)
