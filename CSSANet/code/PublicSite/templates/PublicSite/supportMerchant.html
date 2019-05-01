@@ -26,11 +26,14 @@
                <a href="#">
                {% endif %}
              <img alt="{{info.merchant_name}}" class="card-img-top img-fluid" src="/media/{{info.merchant_image}}" style="max-width:80%"></a>
+             <div class="row text-center align-items-center">
+              <img alt="{{info.merchant_name}}" class="card-img-top img-fluid" src="/media/{{info.merchant_qrcode}}"  style="width:150px; height:150px">
+             </div>
            </div>
          </div>
          <div class="col-lg-6 col-sm-6 portfolio-item mt-2 align-self-center">
            <div class="text-center align-items-center">
-             <img alt="{{info.merchant_name}}" class="card-img-top img-fluid" src="/media/{{info.merchant_qrcode}}"  style="width:150px; height:150px">
+             {{info.merchant_description}}
            </div>
          </div>
          <div class="col-12 m-4 text-center">
