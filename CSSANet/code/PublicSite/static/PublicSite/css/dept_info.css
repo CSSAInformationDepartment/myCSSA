@@ -1,0 +1,127 @@
+/* 定义了一些样式，名字为div的class或id的名字*/
+.jumbotron-billboard .img {
+	margin-bottom: 0px;
+	color: #fff;
+	background: #000;
+	width: 100%;
+	height: 100%;
+	background-size: cover;
+	overflow: hidden;
+	position:absolute;
+	top:0;
+	left:0;
+	z-index:1;
+}
+
+.jumbotron .image_resize{
+	opacity: 0.8;
+	width: 1600px;
+	height: 500px;
+}
+
+.jumbotron .jumbotron__body {
+  padding-top: 110px;
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  text-align: center;
+}
+
+.jumbotron h1 {
+	font-family:STXihei;
+	opacity: 2;
+	color: rgb(251, 253, 252);
+	margin-top:5;
+	text-align: center;
+}
+
+.jumbotron {
+	position:relative;
+	padding-top:50px;
+	padding-bottom:50px;
+	height: 400px;
+}
+
+.jumbotron p{
+	color: rgb(219, 243, 233);
+}
+.jumbotron .container {
+	background-color:rgb(28, 88, 46);
+	opacity: 0.8;
+	width:100%;
+	height:70%;
+	text-align: center;
+	position:relative;
+	z-index:2;
+}
+
+.small_image{
+	width:100px;
+	height:100px;
+	margin-left: 20px;
+	border-color: rgb(190, 114, 114);
+	border-width:15px;
+}
+
+@media screen and (max-width: 768px) {
+	.jumbotron {
+		padding-top:20px;
+		padding-bottom:20px;
+	}
+}
+
+#header_aboutme {
+  padding-top: 50px;
+  padding-left: 50px;
+  padding-bottom: 25px;
+  font: bold 30px Helvetica;
+}
+
+#aboutme{
+	padding-top:0;
+	background-color: #fff;
+}
+
+#aboutme p {
+	font: 20px Arial;
+	
+}
+.people_img{
+	width: auto;
+	height:200px;
+}
+
+#portfolio_1 {
+  background-color: rgb(230, 230, 230);
+  padding-top: 10px;
+  padding-bottom: 50px;
+}
+#portfolio_2 {
+  padding-top: 0;
+  padding-bottom: 50px;
+}
+
+#portfolio_1 h4{
+	text-align: center;
+}
+#portfolio_2 h4{
+	text-align: center;
+}
+
+#header_portfolio {
+  padding-left: 50px;
+  padding-bottom: 25px;
+  font: bold 30px Helvetica;
+}
+.row p {
+  font: bold 18px san_serif;
+  padding-top: 10px;
+}
+
+#footer {	
+  background-color: rgb(28, 88, 46);
+  border-top: 2px solid black;
+}

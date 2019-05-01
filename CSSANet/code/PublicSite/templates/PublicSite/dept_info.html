@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Personal Webpage with Bootstrap</title>
+   <!-- 不用管，是因为用了bootstrap所以必须加上的 -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+  <link href="{% static 'PublicSite/css/dept_info.css' %}" rel="stylesheet" /><!-- 指明了用的哪个css文件 -->
+</head>
+
+<body>
+  <div class="jumbotron jumbotron-billboard">
+		<div class="img">
+      <img class="image_resize"src = {% static '/PublicSite/img/dept_info/background_code1.jpg'%} />
+    </div> <!-- 图片的url以及属性在css文件里定义了 -->
+	    <div class="container">
+	        <div class="row">
+	            <div class="col-lg-12">
+	              <h1>信息部</h1>
+	                <p>可以用代码解决的问题都不是问题</p>
+	            </div>
+	        </div>
+	    </div>
+	</div>
+
+  <div id="aboutme">
+    <div class="container">
+      <h3 id="header_aboutme">部门简介<img class = "small_image" src={% static '/PublicSite/img/dept_info/dep.jpg'%} style="border-radius: 50%;border: 1px solid #ddd;padding: 5px;" /></h3>
+      
+      </div>
+
+  <div id="aboutme">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-9 col-md-offset-1"> 
+            
+            <p>为社团提供技术支持，主要业务包含：制作网页，参与活动技术指导。</p>
+            <p></p>
+            <p></p>
+            <p></p>
+          <!-- text-indent 定义了文字缩近 -->
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div id="portfolio_1">
+   <div id="portfolio" class="portfolioImage container">
+      <h3 id="header_portfolio">部长介绍</h3>
+     <div class="row">
+        <div class="col-md-5.5 col-xs-6">
+          <div class="thumbnail img-responsive">
+            <img src={% static '/PublicSite/img/dept_info/Caitlin.jpg'%} alt="Tribute Page" title="Tribute to the United States Military" /> <!-- 图片的url以及属性，可以改成照片 -->
+            <h4 class="caption">部长：Caitlin</h4>
+          </div>
+        </div>
+        <div class="col-md-5.5 col-xs-6">
+        
+          <h3>部长有话说：</h3>
+          <p> 说话！说话！</p>
+          <!-- 可写成部长致辞 -->
+          </div>
+        </div>
+      </div>
+   </div>
+ </div>
+
+  
+<!-- 下面的结构都是重复的 -->
+ <div id="portfolio_2">
+   <div id="portfolio" class="portfolioImage container">
+      <h3 id="header_portfolio">副部长介绍</h3>
+     <div class="row">
+        <div class="col-md-5.5 col-xs-6">
+          <div class="thumbnail img-responsive">
+            <img src={% static '/PublicSite/img/dept_info/Judy.jpg'%} alt="Tribute Page" title="Tribute to the United States Military" style="width: 500px; height: 300px;" />
+            <p class="caption">副部：Judy</p>
+          </div>
+        </div>
+
+        <div class="col-md-5.5 col-xs-6">
+          <div class="thumbnail img-responsive">
+            <img src={% static '/PublicSite/img/dept_info/random.jpg'%} alt="Random Quotes" title="Random Quotes" style="width: 500px;height: 300px;"/>
+            <p class="caption">副部员介绍</p>
+          </div>
+        </div>
+      </div>
+   </div>
+ </div>
+
+  <div id="portfolio_1">
+    <div id="portfolio" class="portfolioImage container">
+      <h3 id="header_portfolio">部员介绍</h3>
+      <div class="row">
+        <div class="col-md-4 col-xs-4">
+          <div class="thumbnail img-responsive">
+            <img src={% static '/PublicSite/img/dept_info/random.jpg'%} alt="Tribute Page" title="Tribute to the United States Military" />
+            <p class="caption">部员介绍</p>
+          </div>
+        </div>
+        <div class="col-md-4 col-xs-4">
+          <div class="thumbnail img-responsive">
+            <img src={% static '/PublicSite/img/dept_info/random.jpg'%} alt="Random Quotes" title="Random Quotes" />
+            <p class="caption">部员介绍</p>
+          </div>
+        </div>
+        <div class="col-md-4 col-xs-4">
+          <div class="thumbnail img-responsive">
+            <img src={% static '/PublicSite/img/dept_info/random.jpg'%} alt="Weather" title="Local Weather" />
+            <p class="caption">部员介绍</p>
+          </div>
+        </div>
+      </div>
+      <br>
+      <div class="row">
+        <div class="col-md-4 col-xs-4">
+          <div class="thumbnail img-responsive">
+           <img src={% static '/PublicSite/img/dept_info/random.jpg'%} alt="Wikipedia Search" title="Wikipedia Search" />
+            <p class="caption">部员介绍</p>
+          </div>
+        </div>
+        <div class="col-md-4 col-xs-4">
+           <div class="thumbnail img-responsive">
+            <img src={% static '/PublicSite/img/dept_info/random.jpg'%} alt="Twitch Streaming" title="Twitch" />
+           <p class="caption">部员介绍</p>
+          </div>
+        </div>
+        <div class="col-md-4 col-xs-4">
+          <div class="thumbnail img-responsive">
+            <img src={% static '/PublicSite/img/dept_info/random.jpg'%} alt="Calculator" title="Calculator" />
+            <p class="caption">部员介绍</p>
+          </div>
+        </div>
+      </div> 
+      <div class="row">
+        <div class="col-md-4 col-xs-4">
+          <div class="thumbnail img-responsive">
+            <img src={% static '/PublicSite/img/dept_info/random.jpg'%} alt="Pomodoro Clock" title="Pomodoro Clock" />
+            <p class="caption">部员介绍</p>
+          </div>
+        </div>
+        <div class="col-md-4 col-xs-4">
+          <div class="thumbnail img-responsive">
+            <img src={% static '/PublicSite/img/dept_info/random.jpg'%} alt="TicTacToe" title="TicTacToe" />
+            <p class="caption">部员介绍</p>
+          </div>
+        </div>
+        <div class="col-md-4 col-xs-4">
+          <div class="thumbnail img-responsive">
+            <img src={% static '/PublicSite/img/dept_info/random.jpg'%} alt="Simon Game" title="Simon Game" />
+           <p class="caption">部员介绍</p>
+          </div>
+        </div>
+      </div>
+      <br>
+	  
+    </div>
+  </div>
+  
+  <!-- 往期精彩：<a...>定义了一个可以点击的button，可以direct to其他的网页 -->
+  <div id="portfolio_2">
+    <div id="portfolio" class="portfolioImage container">
+      <h3 id="header_portfolio">往期活动/精彩</h3>
+
+	    <div class="row">
+	        <div class="col-lg-12">
+	            <h2>活动1</h2>
+	            <p>Description: hahhahahahahhahahahhahahahahahahahahhahahahhahahahahhahahahhahahahahahahahahhahahahhahahahahhahahahhahahahahahahahahhaha</p>
+	            <p>
+	            	<a class="btn btn-default" target="_blank" href="http://127.0.0.1:5000" role="button">点击查看完整信息 &raquo;</a> <!-- 网址随便写的 （localhost）-->
+	            </p>
+
+		    <hr>
+
+		    	<h2>活动2</h2>
+	            <p>Description: hahhahahahahhahahahhahahahahahahahahhahahahhahahahahhahahahhahahahahahahahahhahahahhahahahahhahahahhahahahahahahahahhaha</p>
+	            <p>
+	            	<a class="btn btn-default" target="_blank" href="http://127.0.0.1:5000" role="button">点击查看完整信息 &raquo;</a>
+	            </p>
+
+		    <hr>
+
+	            <h2>活动3</h2>
+	            <p>Description: hahhahahahahhahahahhahahahahahahahahhahahahhahahahahhahahahhahahahahahahahahhahahahhahahahahhahahahhahahahahahahahahhaha</p>
+	            <p>
+	            	<a class="btn btn-default" target="_blank" href="http://127.0.0.1:5000" role="button">点击查看完整信息 &raquo;</a>
+	            </p>
+
+	        </div>
+	    </div>
+    </div>
+  </div>
+
+  <hr>
+  <!-- 定义了footer的信息 -->
+  <div id="footer">
+    <div class="container">
+        <p style="color: white;">&copy; 2019 Tiantong Li， Ningjing Wang</p>
+    </div>
+  </div>
+
+  <!-- 不用管，是因为用了bootstrap所以必须加上的 -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+</body>
+
+</html>
