@@ -10,7 +10,8 @@
 <div class="row">
 	<div class="jumbotron jumbotron-fluid col-md-12" style="width:100%">
 		<div class="container-fluid">
-			<h1 class="display-3 text-center">摄影大赛报名</h1>
+			<h1 class="display-3 text-center">摄影大赛报名</h1><br>
+			<p class="lead text-center display-4">-我与墨尔本-</p>
 		</div>
 	</div>
 </div>
@@ -32,8 +33,8 @@
 							{% for item in prev_submission %}
 							<tr>
 								<td>{{item.submissionTime}}</td>
-								<td>{{item.deviceType}}</td>
-								<td>{{item.categoryType}}</td>
+								<td>{{item.get_deviceType_display}}</td>
+								<td>{{item.get_categoryType_display}}</td>
 							</tr>
 							{% endfor %}
 						</tbody>	

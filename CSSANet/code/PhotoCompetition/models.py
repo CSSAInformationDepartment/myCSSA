@@ -26,7 +26,7 @@ class Submission(models.Model):
     submissionUserId = models.ForeignKey(adminModel.User, on_delete=models.DO_NOTHING)
     submissionTime = models.DateTimeField(auto_now_add=True)
 
-    deviceType = models.CharField(verbose_name=_("设备"),choices=DEVICE_CHOICE, max_length=30, default="手机", null=True)
-    categoryType = models.CharField(verbose_name=_("类别"), choices=CATEGORY_CHOICE, max_length=30, default="风景", null=True)
+    deviceType = models.CharField(verbose_name=_("设备类型"),choices=DEVICE_CHOICE, max_length=30, default="手机", null=True)
+    categoryType = models.CharField(verbose_name=_("题材类型"), choices=CATEGORY_CHOICE, max_length=30, default="风景", null=True)
     upload_photo = SorlImageField(verbose_name=_("上传作品"), null=True, upload_to = _GetUserDir)
     description = models.CharField(verbose_name=_("作品简述"),max_length = 250)

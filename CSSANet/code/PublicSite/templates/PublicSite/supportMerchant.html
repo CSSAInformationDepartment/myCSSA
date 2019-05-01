@@ -18,19 +18,21 @@
         {% for info in infos %}
         {% if info.merchant_type == "赞助商家" %}
         {% if info.merchant_level == "金牌商家" %}
-         <div class="col-lg-6 col-sm-6 portfolio-item align-self-center">
+         <div class="col-lg-7 col-sm-7 portfolio-item align-self-center">
            <div class="align-items-center text-center">
              {% if info.merchant_link %}
              <a href="{{info.merchant_link}}">
                {% else %}
                <a href="#">
                {% endif %}
-             <img alt="{{info.merchant_name}}" class="card-img-top img-fluid" src="{{info.merchant_image.url}}" style="max-width:80%"></a>
+             <img alt="{{info.merchant_name}}" class="card-img-top img-fluid" src="/media/{{info.merchant_image}}" style="max-width:60%"></a>
+            
+              <img alt="{{info.merchant_name}}" class="card-img-top img-fluid" src="/media/{{info.merchant_qrcode}}"  style="width:130px; height:130px; margin-left:40px">
            </div>
          </div>
-         <div class="col-lg-6 col-sm-6 portfolio-item mt-2 align-self-center">
+         <div class="col-lg-5 col-sm-5 portfolio-item mt-2 align-self-center">
            <div class="text-center align-items-center">
-             <img alt="{{info.merchant_name}}" class="card-img-top img-fluid" src="{{info.merchant_qrcode.url}}"  style="width:150px; height:150px">
+             {{info.merchant_description}}
            </div>
          </div>
          <div class="col-12 m-4 text-center">
@@ -57,19 +59,20 @@
   {% for info in infos %}
   {% if info.merchant_type == "赞助商家" %}
   {% if info.merchant_level == "银牌商家" %}
-   <div class="col-lg-6 col-sm-6 portfolio-item align-self-center">
+   <div class="col-lg-7 col-sm-7 portfolio-item align-self-center">
      <div class="align-items-center text-center">
        {% if info.merchant_link %}
        <a href="{{info.merchant_link}}">
          {% else %}
          <a href="#">
          {% endif %}
-       <img alt="{{info.merchant_name}}" class="mx-auto d-block img-fluid" src="{{info.merchant_image.url}}" style="max-width:50%"></a>
+       <img alt="{{info.merchant_name}}" class="card-img-top img-fluid" src="{{info.merchant_image.url}}" style="max-width:50%"></a>
+       <img alt="{{info.merchant_name}}" class="card-img-top img-fluid" src="{{info.merchant_qrcode.url}}" style="width:130px; height:130px; margin-left:60px;">
      </div>
    </div>
-   <div class="col-lg-6 col-sm-6 portfolio-item mt-2 align-self-center">
+   <div class="col-lg-5 col-sm-5 portfolio-item mt-2 align-self-center">
      <div class="text-center align-self-center">
-       <img alt="{{info.merchant_name}}" class="mx-auto d-block img-fluid" src="{{info.merchant_qrcode.url}}" style="width:150px; height:150px">
+        {{info.merchant_description}}
      </div>
    </div>
    <div class="col-12 m-4 text-center">
