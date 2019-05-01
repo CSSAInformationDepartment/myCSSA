@@ -25,9 +25,9 @@
                {% else %}
                <a href="#">
                {% endif %}
-             <img alt="{{info.merchant_name}}" class="card-img-top img-fluid" src="/media/{{info.merchant_image}}" style="max-width:60%"></a>
+             <img alt="{{info.merchant_name}}" class="card-img-top img-fluid" src="{{info.merchant_image.url}}" style="max-width:60%"></a>
             
-              <img alt="{{info.merchant_name}}" class="card-img-top img-fluid" src="/media/{{info.merchant_qrcode}}"  style="width:130px; height:130px; margin-left:40px">
+              <img alt="{{info.merchant_name}}" class="card-img-top img-fluid" src="{{info.merchant_qrcode.url}}"  style="width:130px; height:130px; margin-left:40px">
            </div>
          </div>
          <div class="col-lg-5 col-sm-5 portfolio-item mt-2 align-self-center">
