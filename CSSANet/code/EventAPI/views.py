@@ -16,14 +16,13 @@ from django_datatables_view.base_datatable_view import BaseDatatableView
 
 from django.urls import reverse
 from django.utils.html import escape
-from pytz import timezone
 from django.conf import settings
 TIME_ZONE  = settings.TIME_ZONE
 
 from CommunicateManager.send_email import send_emails
 from FlexForm.apis import flexform_user_write_in
 from EventAPI.apis import get_ticket,check_availability
-from django.utils import timezone as sys_time
+from django.utils import timezone
 
 # Create your views here.
 class EventListView(LoginRequiredMixin, PermissionRequiredMixin, View):
@@ -124,7 +123,8 @@ class ConfirmEventOrderView(LoginRequiredMixin,View):
     def get_context_data(self,user, *args, **kwargs):
         id = self.kwargs.get('id')
         event = get_object_or_404(Event, pk=id)
-        now_time = sys_time.now()
+        timezone.activate(TIME_ZONE)
+        now_time = timezone.now()
         if is_duplicated_purchase(user,event):
             return {'event':event, 'now_time':now_time, 'duplicated_purchase':True}
         else:
@@ -133,7 +133,8 @@ class ConfirmEventOrderView(LoginRequiredMixin,View):
     def get(self, request, *args, **kwargs):
         id = self.kwargs.get('id')
         event = get_object_or_404(Event, pk=id)
-        now_time = sys_time.now()
+        timezone.activate(TIME_ZONE)
+        now_time = timezone.now()
         if event.eventSignUpTime > now_time:
             raise Http404("Event is not open for enrollment yet.")
         return render(request, self.template_name, self.get_context_data(user=request.user))  
@@ -166,7 +167,8 @@ class EventCheckInSetupView(LoginRequiredMixin, PermissionRequiredMixin, ListVie
     model = Event 
 
     def get_queryset(self, *args, **kwargs):
-        melb_date=sys_time.localdate(sys_time.now())
+        timezone.activate(TIME_ZONE)
+        melb_date=timezone.localdate(timezone.now())
         
         print(melb_date)
         qs = self.model.objects.filter(Q(eventActualStTime__date=melb_date) & Q(disabled=False))
@@ -183,7 +185,7 @@ class TicketCheckInView(LoginRequiredMixin, PermissionRequiredMixin, View):
 
     def get(self, request, *args, **kwargs):
         event_id = self.kwargs.get('event_id')
-        melb_date=sys_time.localdate(sys_time.now())
+        melb_date=timezone.localdate(timezone.now())
         
         return render(request, self.template_name)
 
@@ -239,6 +241,7 @@ class EventListJsonView(LoginRequiredMixin, PermissionRequiredMixin, BaseDatatab
     max_display_length = 500
 
     def render_column(self, row, column):
+        timezone.activate(TIME_ZONE)
         # Customer HTML column rendering
         if (column == 'eventSignUpTime'):
             return row.eventSignUpTime.strftime('%Y-%m-%d %H:%M')
