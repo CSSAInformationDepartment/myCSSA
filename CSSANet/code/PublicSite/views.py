@@ -77,13 +77,26 @@ class DepartmentInfoView(View):
         'recruitment':'',
         'Information':'',
         'liaison':'',
-        'publicity':'',
+        'publicity':'PublicSite/dept_publicity.html',
     }
     members_model = UserModels.CSSACommitteProfile
     dept_model = UserModels.CSSADept
 
     def get(self,request, *args, **kwargs):
-        return render(request, 'PublicSite/dept.html')
+        view_bag: Dict = {}
+        dept: str = self.kwargs.get('dept')
+        dept_profiles = self.members_model.objects.filter(Q(Department__deptName=dept) & Q(is_active=True))
+        view_bag['director'] = dept_profiles.filter(role__roleFlag='director').first()
+        view_bag['vice_director'] = dept_profiles.filter(role__roleFlag='vice-director')
+        view_bag['general'] = dept_profiles.filter(role__roleFlag='general')
+        view_bag['accountant'] = dept_profiles.filter(role__roleFlag='accountant')
+        view_bag['president'] = dept_profiles.filter(role__roleFlag='president')
+        view_bag['vice_president'] = dept_profiles.filter(role__roleFlag='vice-president')
+        view_bag['lead_eng'] = dept_profiles.filter(role__roleFlag='lead_eng')
+        view_bag['secretary'] = dept_profiles.filter(role__roleFlag='secretary')
+        view_bag['headOfSecretary'] = dept_profiles.filter(role__roleFlag='headOfSecretary')
+
+        return render(request, template_name=self.templates_dict[dept], context={'view_bag': view_bag})
 
 
 def Recruitments(request):
