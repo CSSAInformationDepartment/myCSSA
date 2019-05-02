@@ -1,4 +1,4 @@
-from typing import Dict
+from typing import Dict, List
 from django.shortcuts import render,reverse, get_object_or_404
 from django.http import JsonResponse
 from PublicSite import models
@@ -15,7 +15,7 @@ from django.views.decorators.cache import cache_page
 import json, math
 
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.http import JsonResponse, HttpResponseRedirect, HttpResponse
+from django.http import JsonResponse, HttpResponseRedirect, HttpResponse, HttpResponseBadRequest
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin
@@ -67,29 +67,24 @@ def ContactUs(request):
     '''
     return render(request, 'PublicSite/contact_us.html')
 
+class DepartmentInfoView(View):
+    '''
+    The All-in-one view for presenting the department info for cssa departments
+    '''
+    templates_dict: Dict[str,str] = {
+        'council':'',
+        'organisation':'',
+        'recruitment':'',
+        'Information':'',
+        'liaison':'',
+        'publicity':'',
+    }
+    members_model = UserModels.CSSACommitteProfile
+    dept_model = UserModels.CSSADept
 
-#@cache_page(CACHE_TTL)
-def Departments(request,dept):
-    ViewBag = {}
-    DeptInfo = UserModels.CSSADept.objects.filter(deptName=dept)
-    if not DeptInfo:
-        ViewBag['dept'] = None
-    else:
-        ViewBag['dept'] = DeptInfo[0]
+    def get(self,request, *args, **kwargs):
+        return render(request, 'PublicSite/dept.html')
 
-    PageFields = models.HTMLFields.objects.filter(PageId__uri=request.get_full_path(Departments))
-
-    for field in PageFields:
-        if field.fieldType == 'text':
-            ViewBag[field.fieldName.replace("-","")] = {'fieldInnerText':field.fieldInnerText}
-        if field.fieldType == 'img':
-            imgPath = models.ImgAttributes.objects.filter(RelatedField__id=field.id)[0].filePath
-            ViewBag[field.fieldName.replace("-","")] = {
-                'imgUri': imgPath.url
-            }
-    print(ViewBag)
-
-    return render(request, 'PublicSite/dept.html', ViewBag)
 
 def Recruitments(request):
     job_list = JobModels.JobList.objects.filter(disabled=False)
