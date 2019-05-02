@@ -1,5 +1,5 @@
 # myCSSA 
-This is the next-gen online services platform for Chinese Students and Scholars Association @ Unimelb <br>
+This is the online services platform for Chinese Students and Scholars Association @ Unimelb <br>
 Proundly developed and supported by the Department of Information Technology, CSSAUnimelb
 ## Prerequisites
 You MUST have these packages/tools installed on your local machine before playing with this project
@@ -37,5 +37,11 @@ pipenv install -r ../requirements.txt --python=3.7.2
 ## To be a Contributor
 Welcome to join us by contacting: information@cssaunimelb.com
 
-## Project Info
+## Major Contributor
 Project Manager and Lead Engineer: Le (Josh). Lu (joshlubox@gmail.com)
+
+UI / UX Designer and Lead Front-end Developer : Mengyu (Caitlin) Jiang (icesymeng@gmail.com)
+
+Communication System Developer: Shenhai (Howie). Chen
+
+Content Managament System Developer: Maoting (Brook). Zuo
