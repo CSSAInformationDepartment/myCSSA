@@ -15,31 +15,34 @@
 ###############################################################################
 
 
-from rest_framework import generics,authentication,permissions, status, response
+from rest_framework import generics, viewsets, filters
+from rest_framework.authentication import TokenAuthentication, SessionAuthentication
+from rest_framework.permissions import IsAdminUser,IsAuthenticated, IsAuthenticatedOrReadOnly, BasePermission
+from django_filters.rest_framework import DjangoFilterBackend
 from django.contrib.auth import get_user_model, authenticate
 
-from UserAuthAPI import models, serializers
-
-class UserListView(generics.ListCreateAPIView):
-    queryset = models.User.objects.all()
-    serializer_class = serializers.LoginSerializer
+from UserAuthAPI import models, serializers, filters
 
 
-class EditUserDetails(generics.GenericAPIView):
-    authentication_classes = (authentication.TokenAuthentication,)
-    permission_classes = (permissions.IsAuthenticated,)
+class UserListAPIView(viewsets.ReadOnlyModelViewSet):
+    '''
+    Retrive user profile with filtering
 
-    def get_object(self):
-        return self.request.user
+    Endpoint: 
+        - List: /hub/api/user/user-info/
+            > GET Filters: gender, joinDate_after, joinDate_before, dateOfBirth
+        - Detials /hub/api/user/user-info/<id>/
+    '''
+    authentication_classes = (TokenAuthentication, SessionAuthentication)
+    permission_classes = (IsAuthenticated, )
+    queryset = models.UserProfile.objects.all()
+    serializer_class = serializers.UserDetailSerializer
+    filterset_class = filters.UserProfileFilterSet
 
-    def post(self, request):
-        self.object = self.get_object()
-        serializer = serializers.UserDetailSerializer(self.object, data=request.data)
-        if serializer.is_valid():
-            self.object.save()
-            return response(serializer.data, status=status.HTTP_200_OK)
-        else:
-            return response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+    def filter_queryset(self, queryset):
+        filter_backends = (DjangoFilterBackend, )
 
-#class DuplicateEmailCheck(generics.GenericAPIView):
-#    queryset = models.UserProfile.objects.filter('')
+        # Other condition for different filter backend goes here
+        for backend in list(filter_backends):
+            queryset = backend().filter_queryset(self.request, queryset, view=self)
+        return queryset

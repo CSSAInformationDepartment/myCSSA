@@ -8,6 +8,7 @@ from RecruitAPI import urls as RecruitUrls
 from EventAPI import urls as EventUrls
 from FlexForm import urls as FlexFormUrls
 from CommunicateManager import urls as CommUrls
+from UserAuthAPI import urls as UserAuthUrls
 
 app_name = "myCSSAhub"
 urlpatterns = [
@@ -51,4 +52,7 @@ urlpatterns += [
     path('ajax/checkPhoneIntegrity/', Views.CheckTelIntegrity, name="ajax_checkTelIntegrity"),
     path('ajax/checkStudentIdIntegrity/', Views.CheckStudentIdIntegrity, name="ajax_checkStudentIdIntegrity"),
     path('ajax/userlookup/', Views.UserLookup.as_view(), name="ajax_userLookup"),
+    
+    ## Replace in future (built on Django Rest Framework )
+    path('api/user/', include(UserAuthUrls, namespace='UserAuthAPI'))
 ]
