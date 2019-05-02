@@ -134,6 +134,12 @@ class User(AbstractUser):
     def __str__(self):
         return '%s' % (self.email)
 
+    def user_profile(self):
+        try:
+            return UserProfile.objects.get(user=self.id)
+        except:
+            pass
+
     def get_full_CN_name(self):
         '''
         Returns the first_name plus the last_name in Chinese, with a space in between.
@@ -151,7 +157,7 @@ class User(AbstractUser):
         '''
         Profile = UserProfile.objects.get(user=self)
         if Profile.lastNameEN and Profile.firstNameEN:
-            full_name = '%s %s' % (Profile.firstNameEN, Profile.lastNameEN)
+            full_name = '%s %s' % (Profile.firstNameEN.capitalize(), Profile.lastNameEN.capitalize())
             return full_name.strip()
         else:
             return None
