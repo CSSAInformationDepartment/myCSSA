@@ -183,12 +183,12 @@ class UserProfile (models.Model):
     firstNameCN = models.CharField(verbose_name="中文名",max_length=50,null=True, blank=True)
     lastNameCN = models.CharField(verbose_name="中文姓",max_length=50,null=True, blank=True)
 
-    genderChoice = (
+    GENDER_CHOICE = (
         ('Male', 'Male'),
         ('Female', 'Female'),
         ('Other', 'Other')
     )
-    gender = models.CharField(choices = genderChoice,default='Other',max_length=50)
+    gender = models.CharField(choices = GENDER_CHOICE,default='Other',max_length=50)
 
     dateOfBirth = models.DateField(verbose_name="生日", null=True)
     joinDate = models.DateTimeField(auto_now_add=True)

@@ -213,14 +213,9 @@ class AcccountInitRegisterSerializer(serializers.Serializer):
         return user
 
 
-class UserDetailSerializer(serializers.Serializer):
+class UserDetailSerializer(serializers.ModelSerializer):
+    email = serializers.ReadOnlyField(source='user.email')
+    telNumber = serializers.ReadOnlyField(source='user.telNumber')
     class Meta:
-        model = models.User
-        fields = ('id','firstNameEN','lastNameEN', 'gender',
-        'dateOfBirth', 'studentId','address', 'postcode', 'originate')
-
-        read_only_fields = ('id', )
-
-    def update(self, validated_data, instance):
-
-        return instance()
+        model = models.UserProfile
+        fields = '__all__'
