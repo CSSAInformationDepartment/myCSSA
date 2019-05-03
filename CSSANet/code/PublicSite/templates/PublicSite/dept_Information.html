@@ -1,0 +1,157 @@
+{% extends 'components/base_page.html' %}
+
+{% block 'extra_header'%}
+{% load static %}
+<link href="{% static 'PublicSite/css/dept_info.css' %}" rel="stylesheet" /><!-- 指明了用的哪个css文件 -->
+{% endblock 'extra_header'%}
+
+{% block 'pg_body' %}
+<!-- bloc-4 -->
+{% load static %}
+
+<div class="bloc dept-header l-bloc" id="bloc-4">
+	<div class="py-3"> 
+		<hr >
+		<h1 style="font-family: 'PingFang SC'; color: #393d3e; font-weight: normal; " class="mg-md text-center">
+		信息技术部
+		</h1>
+		<h3 style="font-family: 'PingFang SC'; color: #393d3e; font-weight: normal; " class="mg-md text-center">
+		Department of Information Technology
+		</h3>
+		<hr >
+	</div>
+	<div class="row" style="min-height:20rem;">
+        <div class="col-lg-4 card" style='border:none;'>
+            <div class="card-body text-center">
+                <div class="my-3 d-block mx-auto avatar-lg rounded-circle">
+                    {% if view_bag.director.member.user_profile.avatar %}
+                        <img class='img-fluid' src="{{view_bag.director.member.user_profile.avatar.url}}" />
+                    {% else %}
+                        <img class="img-fluid" src="{% static 'PublicSite/img/placeholder-user.png' %}">
+                    {% endif %}
+                </div>
+                <h4 class="card-title ">部长 Director</h4>
+                <h3>{{view_bag.director.member.get_full_EN_name}}</h3>
+            </div>
+        </div>
+        <div class="col-lg-8 card" style='border:none;'>
+            <div class='my-auto mx-auto'>
+                <h1 class="text-center card-title">部门简介 About the Department</h1>
+                <p style="line-height:2">
+                  
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- bloc-4 END -->
+
+<!-- 
+  <div class="jumbotron jumbotron-billboard">
+		<div class="img">
+      <img class="image_resize"src = {% static '/PublicSite/img/dept_info/background_code1.jpg'%} />
+    </div>
+	    <div class="container">
+	        <div class="row">
+	            <div class="col-lg-12">
+	              <h1>信息部</h1>
+	                <p>可以用代码解决的问题都不是问题</p>
+	            </div>
+	        </div>
+	    </div>
+	</div> -->
+
+<!-- bloc-7 -->
+<div class="bloc" id="bloc-7">
+	<div class="container bloc-sm">
+		<div class="row">
+			<div class="col-md-12 col-lg-6 offset-lg-3">
+				<h3 class="mg-md text-center">
+					2018/19届 管理团队成员
+				</h3>
+				<h5 class="text-center">
+					Meet the Management Team of 2018/19 Term
+				</h5>
+			</div>
+		</div>
+		<div class="row text-center" style="min-height:5rem;">
+			{% for user in view_bag.vice_director %}
+				<div class="col-lg-6 col-md-6 col-sm-6" >
+					<div class="my-3 d-block mx-auto avatar-md rounded-circle">
+						{% if user.member.user_profile.avatar %}
+							<img class='img-fluid' src="{{user.member.user_profile.avatar.url}}" />
+						{% else %}
+							<img class="img-fluid" src="{% static 'PublicSite/img/placeholder-user.png' %}">
+						{% endif %}
+					</div>
+					<h5>{{user.role.roleName}}</h5>
+					<h4> {{user.member.get_full_EN_name}} </h4>
+				</div>
+			{% endfor %}
+		</div>
+	</div>
+</div>
+<!-- bloc-7 END -->
+
+<div class="bloc py-5">
+    <div class="py-3">
+        <h3 class="text-center">2018/19届 部门成员</h3>
+        <h5 class="text-center">Meet the Committee Members of 2018/19 Term</h5>
+    </div>
+    <div class="row" style="min-height:20rem">
+        {% for user in view_bag.general %}
+            <div class="col-lg-3 col-md-4 col-sm-6 text-center">
+                <div class="my-3 d-block mx-auto avatar-md rounded-circle">
+                    {% if user.member.user_profile.avatar %}
+                        <img class='img-fluid' src="{{user.member.user_profile.avatar.url}}" />
+                    {% else %}
+                        <img class="img-fluid" src="{% static 'PublicSite/img/placeholder-user.png' %}">
+                    {% endif %}
+                </div>
+                <h5>{{user.member.get_full_EN_name}}</h5>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+  
+  <!-- 往期精彩：<a...>定义了一个可以点击的button，可以direct to其他的网页 -->
+  <div id="portfolio_2" style='display:none;'>
+    <div id="portfolio" class="portfolioImage container">
+      <h3 id="header_portfolio">往期活动/精彩</h3>
+
+	    <div class="row">
+	        <div class="col-lg-12">
+	            <h2>活动1</h2>
+	            <p>Description: hahhahahahahhahahahhahahahahahahahahhahahahhahahahahhahahahhahahahahahahahahhahahahhahahahahhahahahhahahahahahahahahhaha</p>
+	            <p>
+	            	<a class="btn btn-default" target="_blank" href="http://127.0.0.1:5000" role="button">点击查看完整信息 &raquo;</a> <!-- 网址随便写的 （localhost）-->
+	            </p>
+
+		    <hr>
+
+		    	<h2>活动2</h2>
+	            <p>Description: hahhahahahahhahahahhahahahahahahahahhahahahhahahahahhahahahhahahahahahahahahhahahahhahahahahhahahahhahahahahahahahahhaha</p>
+	            <p>
+	            	<a class="btn btn-default" target="_blank" href="http://127.0.0.1:5000" role="button">点击查看完整信息 &raquo;</a>
+	            </p>
+
+		    <hr>
+
+	            <h2>活动3</h2>
+	            <p>Description: hahhahahahahhahahahhahahahahahahahahhahahahhahahahahhahahahhahahahahahahahahhahahahhahahahahhahahahhahahahahahahahahhaha</p>
+	            <p>
+	            	<a class="btn btn-default" target="_blank" href="http://127.0.0.1:5000" role="button">点击查看完整信息 &raquo;</a>
+	            </p>
+
+	        </div>
+	    </div>
+    </div>
+  </div>
+
+<hr>
+<div class="bloc py-2">
+	<p>页面作者 Page developed by</p>
+  <p>&copy; 2019 Tiantong Li</p>
+</div>
+
+{% endblock 'pg_body' %}
