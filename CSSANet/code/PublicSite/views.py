@@ -75,7 +75,7 @@ class DepartmentInfoView(View):
         'council':'',
         'organisation':'',
         'recruitment':'PublicSite/dept_recruitment.html',
-        'Information':'',
+        'Information':'PublicSite/dept_Information.html',
         'liaison':'',
         'publicity':'PublicSite/dept_publicity.html',
     }
