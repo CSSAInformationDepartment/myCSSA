@@ -7,7 +7,7 @@ from PhotoCompetition import public_urls as PhotoCompetitionPublicUrls
 app_name = "PublicSite"
 urlpatterns = [
     path('', Views.index, name='index'),
-    path('department/<str:dept>/', Views.Departments, name='departments'),
+    path('department/<str:dept>/', Views.DepartmentInfoView.as_view(), name='departments'),
     path('contact/', Views.ContactUs, name="contact"),
     path('recruitment/', Views.Recruitments, name='recruitment'),
     path('resumes/<str:jobId>/', Views.ResumeSubmissionView.as_view(), name='resumes'),
