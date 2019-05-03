@@ -73,7 +73,7 @@ class DepartmentInfoView(View):
     '''
     templates_dict: Dict[str,str] = {
         'council':'',
-        'organisation':'',
+        'organisation':'PublicSite/dept_organisation.html',
         'recruitment':'',
         'Information':'',
         'liaison':'',
