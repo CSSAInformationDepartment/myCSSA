@@ -2,7 +2,7 @@
 
 {% block 'extra_header'%}
 {% load static %}
-<link href="{% static 'PublicSite/css/dept_info.css' %}" rel="stylesheet" /><!-- 指明了用的哪个css文件 -->
+{% comment %} <link href="{% static 'PublicSite/css/dept_info.css' %}" rel="stylesheet" /><!-- 指明了用的哪个css文件 --> {% endcomment %}
 {% endblock 'extra_header'%}
 
 {% block 'pg_body' %}
@@ -20,33 +20,66 @@
 		</h3>
 		<hr >
 	</div>
-	<div class="row" style="min-height:20rem;">
-        <div class="col-lg-4 card" style='border:none;'>
-            <div class="card-body text-center">
-                <div class="my-3 d-block mx-auto avatar-lg rounded-circle">
-                    {% if view_bag.director.member.user_profile.avatar %}
-                        <img class='img-fluid' src="{{view_bag.director.member.user_profile.avatar.url}}" />
-                    {% else %}
-                        <img class="img-fluid" src="{% static 'PublicSite/img/placeholder-user.png' %}">
-                    {% endif %}
-                </div>
-                <h4 class="card-title ">部长 Director</h4>
-                <h3>{{view_bag.director.member.get_full_EN_name}}</h3>
-            </div>
-        </div>
-        <div class="col-lg-8 card" style='border:none;'>
-            <div class='my-auto mx-auto'>
-                <h1 class="text-center card-title">部门简介 About the Department</h1>
-                <p style="line-height:2">
-                  
-                </p>
-            </div>
+		<div class="row my-3" style="min-height:20rem;">
+			<div class="col-lg-4 card" style='border:none;'>
+				<div class="card-body text-center">
+					<div class="my-3 d-block mx-auto avatar-md rounded-circle">
+						{% if view_bag.director.member.user_profile.avatar %}
+							<img class='img-fluid' src="{{view_bag.director.member.user_profile.avatar.url}}" />
+						{% else %}
+							<img class="img-fluid" src="{% static 'PublicSite/img/placeholder-user.png' %}">
+						{% endif %}
+					</div>
+					<h4 class="card-title ">部长 Director</h4>
+					<h3>{{view_bag.director.member.get_full_EN_name}}</h3>
+				</div>
+			</div>
+			<div class="col-lg-8 card" style='border:none;'>
+				<div class='my-auto mx-auto'>
+					<h3 class="text-center card-title">部门简介 About us</h3>
+					<p class="card-text px-5" style="line-height:2">
+						信息技术部是墨尔本大学中国学生会的信息技术开发支持部门。部门职责任务涵盖多个领域，与其他部门协作完成。信息部主要以站点设计，软件开发，信息整合为主，为了整个社团提供高质量的数字化解决方案支持。
+						</br></br>除了满足社团内部对于创新解决方案的需求。平时，信息部也会组织线上或线下的交流讨论等活动，为有兴趣参与设计网站与开发网站的会员提供一个一起来开发我们的网站的实践机会。除此之外，信息部还担任了社团的记录者的职位，是社团发展的见证者，是社团文化的传承者，与社团一起成长，记录社团的美丽，撰写社团的历史。
+						
+					</p>
+				</div>
+				<hr>
+				<div class="row">
+					<div class="col-md-3 mx-auto">
+						<h3 class="text-center">
+							<strong>{{view_bag.number_of_member}}</strong>
+						</h3>
+						<h4 class="text-center">
+							成员数量 
+						</h4>
+						<p class="text-center">
+							Number of Members
+						</p>
+					</div>
+					<div class="col-md-3 mx-auto">
+						<h3 class="text-center">
+							{% if view_bag.gender_div != 0 %}
+								<strong>{{view_bag.gender_div}} : 1</strong>
+							{% else %}
+								Not updated yet
+							{% endif %}
+						</h3>
+						<h4 class="text-center">
+							性别多样性比例 
+						</h4>
+						<p class="text-center">
+							Gender Diversity
+						</p>
+					</div>
+				</div>
+			</div>
         </div>
     </div>
 </div>
+
 <!-- bloc-4 END -->
 
-<!-- 
+{% comment %} <!-- 
   <div class="jumbotron jumbotron-billboard">
 		<div class="img">
       <img class="image_resize"src = {% static '/PublicSite/img/dept_info/background_code1.jpg'%} />
@@ -59,49 +92,53 @@
 	            </div>
 	        </div>
 	    </div>
-	</div> -->
+	</div> --> {% endcomment %}
 
 <!-- bloc-7 -->
-<div class="bloc" id="bloc-7">
-	<div class="container bloc-sm">
-		<div class="row">
-			<div class="col-md-12 col-lg-6 offset-lg-3">
-				<h3 class="mg-md text-center">
-					2018/19届 管理团队成员
-				</h3>
-				<h5 class="text-center">
-					Meet the Management Team of 2018/19 Term
-				</h5>
-			</div>
+<div class="bloc my-3">
+	<div class="row">
+		<div class="col-12">
+			<h3 class="mg-md text-center">
+				2018/19届 管理团队成员
+			</h3>
+			<h5 class="text-center">
+				Meet the Management Team of 2018/19 Term
+			</h5>
 		</div>
-		<div class="row text-center" style="min-height:5rem;">
-			{% for user in view_bag.vice_director %}
-				<div class="col-lg-6 col-md-6 col-sm-6" >
-					<div class="my-3 d-block mx-auto avatar-md rounded-circle">
-						{% if user.member.user_profile.avatar %}
-							<img class='img-fluid' src="{{user.member.user_profile.avatar.url}}" />
-						{% else %}
-							<img class="img-fluid" src="{% static 'PublicSite/img/placeholder-user.png' %}">
-						{% endif %}
-					</div>
-					<h5>{{user.role.roleName}}</h5>
-					<h4> {{user.member.get_full_EN_name}} </h4>
+	</div>
+	<div class="row text-center" style="min-height:5rem;">
+		{% for user in view_bag.management %}
+			<div class="col-lg-3 col-md-3 col-6" >
+				<div class="my-3 d-block mx-auto avatar-md rounded-circle">
+					{% if user.member.user_profile.avatar %}
+						<img class='img-fluid' src="{{user.member.user_profile.avatar.url}}" />
+					{% else %}
+						<img class="img-fluid" src="{% static 'PublicSite/img/placeholder-user.png' %}">
+					{% endif %}
 				</div>
-			{% endfor %}
-		</div>
+				<h5>{{user.role.roleName}}</h5>
+				<h4> {{user.member.get_full_EN_name}} </h4>
+			</div>
+		{% endfor %}
 	</div>
 </div>
 <!-- bloc-7 END -->
 
-<div class="bloc py-5">
-    <div class="py-3">
-        <h3 class="text-center">2018/19届 部门成员</h3>
-        <h5 class="text-center">Meet the Committee Members of 2018/19 Term</h5>
+<div class="bloc my-3">
+    <div class="row">
+        <div class="col-12">
+			<h3 class="mg-md text-center">
+				2018/19届 部门成员
+			</h3>
+			<h5 class="text-center">
+				Meet the Committee Members of 2018/19 Term
+			</h5>
+		</div>
     </div>
     <div class="row" style="min-height:20rem">
         {% for user in view_bag.general %}
-            <div class="col-lg-3 col-md-4 col-sm-6 text-center">
-                <div class="my-3 d-block mx-auto avatar-md rounded-circle">
+            <div class="col-lg-3 col-md-4 col-6 text-center">
+                <div class="my-3 d-block mx-auto avatar-sm rounded-circle">
                     {% if user.member.user_profile.avatar %}
                         <img class='img-fluid' src="{{user.member.user_profile.avatar.url}}" />
                     {% else %}

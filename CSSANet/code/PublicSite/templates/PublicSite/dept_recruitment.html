@@ -31,11 +31,40 @@
         </div>
         <div class="col-lg-8 card" style='border:none;'>
             <div class='my-auto mx-auto'>
-                <h1 class="text-center card-title">部门简介 About the Department</h1>
-				<p style="line-height:2">
+                <h3 class="text-center card-title">部门简介 About us</h3>
+				<p class="card-text px-5" style="line-height:2">
 					人力资源部是CSSA最年轻最活力最温暖的存在，我们致力于扮演多重角色，在CSSA里有着不可替代的重要地位哦！比如作为各个部门的沟通枢纽，将各个部门联系在一起使社团更紧密；比如是温暖贴心照顾社员们方方面面的知心姐姐（哥哥）比如是追求完美致力于帮助社团发展的行政工作者，比如脑洞大开创意飞扬的周边设计狗，又比如写文能力 6 到飞起的微信推送和认真负责的小助手。
 				</p>
             </div>
+			<hr>
+			<div class="row">
+				<div class="col-md-3 mx-auto">
+					<h3 class="text-center">
+						<strong>{{view_bag.number_of_member}}</strong>
+					</h3>
+					<h5 class="text-center">
+						当届成员数量 
+					</h5>
+					<p class="text-center">
+						Number of Members
+					</p>
+				</div>
+				<div class="col-md-3 mx-auto">
+					<h3 class="text-center">
+						{% if view_bag.gender_div != 0 %}
+							<strong>{{view_bag.gender_div}} : 1</strong>
+						{% else %}
+							Not updated yet
+						{% endif %}
+					</h3>
+					<h5 class="text-center">
+						成员性别多样性 
+					</h5>
+					<p class="text-center">
+						Gender Diversity
+					</p>
+				</div>
+			</div>
         </div>
     </div>
 </div>
@@ -60,104 +89,51 @@
 	</div>
 </div>
 <!-- bloc-5 END -->
-
-<!-- bloc-6 -->
-<div class="bloc l-bloc" id="bloc-6" style="display:none;">
-	<div class="container bloc-sm">
-		<div class="row">
-			<div class="col-md-2">
-				<h3 class="mg-md text-center ">
-					<strong>148K</strong>
-				</h3>
-				<h4 class="mg-md text-center ">
-					Product Users
-				</h4>
-			</div>
-			<div class="col-md-2">
-				<h3 class="mg-md text-center ">
-					<strong>1289</strong>
-				</h3>
-				<h4 class="mg-md text-center ">
-					Tweets
-				</h4>
-			</div>
-			<div class="col-md-2">
-				<h3 class="mg-md text-center  h3-style">
-					<strong></strong>
-				</h3>
-				<h4 class="mg-md text-center ">
-					成员数量
-				</h4>
-			</div>
-			<div class="col-md-2">
-				<h3 class="mg-md text-center ">
-					<strong>220K</strong>
-				</h3>
-				<h4 class="mg-md text-center ">
-					男女比例
-				</h4>
-			</div>
-			<div class="col-md-2">
-				<h3 class="mg-md text-center ">
-					<strong>20K</strong>
-				</h3>
-				<h4 class="mg-md text-center ">
-					Likes
-				</h4>
-			</div>
-			<div class="col-md-2">
-				<h3 class="mg-md text-center ">
-					<strong>999K</strong>
-				</h3>
-				<h4 class="mg-md text-center ">
-					Cups of Tea
-				</h4>
-			</div>
-		</div>
-	</div>
-</div>
-
 <!-- bloc-7 -->
-<div class="bloc" id="bloc-7">
-	<div class="container bloc-sm">
-		<div class="row">
-			<div class="col-md-12 col-lg-6 offset-lg-3">
-				<h3 class="mg-md text-center">
-					2018/19届 管理团队成员
-				</h3>
-				<h5 class="text-center">
-					Meet the Management Team of 2018/19 Term
-				</h5>
-			</div>
-		</div>
-		<div class="row text-center" style="min-height:20rem;">
-			{% for user in view_bag.vice_director %}
-				<div class="col-lg-6 col-md-6 col-sm-6" >
-					<div class="my-3 d-block mx-auto avatar-lg rounded-circle">
-						{% if user.member.user_profile.avatar %}
-							<img class='img-fluid' src="{{user.member.user_profile.avatar.url}}" />
-						{% else %}
-							<img class="img-fluid" src="{% static 'PublicSite/img/placeholder-user.png' %}">
-						{% endif %}
-					</div>
-					<h5>副部长 Vice-Director</h5>
-					<h4> {{user.member.get_full_EN_name}} </h4>
-				</div>
-			{% endfor %}
+<div class="bloc my-3">
+	<div class="row">
+		<div class="col-12">
+			<h3 class="mg-md text-center">
+				2018/19届 管理团队成员
+			</h3>
+			<h5 class="text-center">
+				Meet the Management Team of 2018/19 Term
+			</h5>
 		</div>
 	</div>
+	<div class="row text-center" style="min-height:5rem;">
+		{% for user in view_bag.management %}
+			<div class="col-lg-3 col-md-3 col-sm-6" >
+				<div class="my-3 d-block mx-auto avatar-md rounded-circle">
+					{% if user.member.user_profile.avatar %}
+						<img class='img-fluid' src="{{user.member.user_profile.avatar.url}}" />
+					{% else %}
+						<img class="img-fluid" src="{% static 'PublicSite/img/placeholder-user.png' %}">
+					{% endif %}
+				</div>
+				<h5>{{user.role.roleName}}</h5>
+				<h4> {{user.member.get_full_EN_name}} </h4>
+			</div>
+		{% endfor %}
+	</div>
 </div>
-<!-- bloc-7 END -->
 
-<div class="bloc py-5">
-    <div class="py-3">
-        <h3 class="text-center">2018/19届 部门成员</h3>
-        <h5 class="text-center">Meet the Committee Members of 2018/19 Term</h5>
+
+<div class="bloc my-3">
+    <div class="row">
+        <div class="col-12">
+			<h3 class="mg-md text-center">
+				2018/19届 部门成员
+			</h3>
+			<h5 class="text-center">
+				Meet the Committee Members of 2018/19 Term
+			</h5>
+		</div>
     </div>
     <div class="row" style="min-height:20rem">
         {% for user in view_bag.general %}
             <div class="col-lg-3 col-md-4 col-sm-6 text-center">
-                <div class="my-3 d-block mx-auto avatar-md rounded-circle">
+                <div class="my-3 d-block mx-auto avatar-sm rounded-circle">
                     {% if user.member.user_profile.avatar %}
                         <img class='img-fluid' src="{{user.member.user_profile.avatar.url}}" />
                     {% else %}
@@ -169,7 +145,7 @@
         {% endfor %}
     </div>
 </div>
-
+<!-- bloc-7 END -->
 
 <hr>
 <div class="bloc py-2">
