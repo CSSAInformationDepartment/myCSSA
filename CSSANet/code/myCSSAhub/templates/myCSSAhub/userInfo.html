@@ -251,11 +251,12 @@
         <div class="modal-body">
             <div class="form-group">
                 <button class="btn btn-primary btn-block" id="upload-img"> 点击此处上传新头像 </button>
-                <input class="hide" name="avatar" type="file" id="file-input" accept="image/jpeg,image/png" />
+                <input class="hide" name="avatar" type="file" id="file-input" accept="image/jpeg" />
                 <input name="x" type="hidden" id="anchor-x"/>
                 <input name="y" type="hidden" id="anchor-y"/>
                 <input name="width" type="hidden" id="anchor-width"/>
                 <input name="height" type="hidden" id="anchor-height"/>
+                <input name="cropped_b64" type="hidden" id="cropped_b64"/>
             </div>
             <div class="row" style="max-height:100%">
               <div class="col-12 col-md-6 col-lg-6">
@@ -307,6 +308,7 @@ crop_x = document.querySelector('#anchor-x'),
 crop_y = document.querySelector('#anchor-y'),
 crop_width = document.querySelector('#anchor-width'),
 crop_height = document.querySelector('#anchor-height'),
+cropped_b64 = document.querySelector('#cropped_b64')
 cropper = '';
 
 // init upload dialog
@@ -346,6 +348,7 @@ upload.addEventListener('change', (e) => {
 
 // save on click
 crop_form.addEventListener('submit',(e)=>{
+
   e.preventDefault();
   // get result to data uri
   var cropData = cropper.getData();
@@ -353,6 +356,7 @@ crop_form.addEventListener('submit',(e)=>{
   crop_y.value = cropData["y"];
   crop_width.value = cropData["width"];
   crop_height.value = cropData["height"];
+  cropped_b64.value = cropper.getCroppedCanvas().toDataURL('image/jpeg')
   crop_form.submit();
 });
 

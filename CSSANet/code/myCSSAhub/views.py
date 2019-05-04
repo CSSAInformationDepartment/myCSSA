@@ -432,7 +432,6 @@ class UpdateUserAvatarView(LoginRequiredMixin, View):
         current_data = self.model.objects.get(user=request.user)
         form = self.form_class(request.POST or None, request.FILES or None, instance=current_data)
         if form.is_valid():
-            print(form)
             user = form.save()
             return HttpResponseRedirect('/hub/userinfo/')
         else:

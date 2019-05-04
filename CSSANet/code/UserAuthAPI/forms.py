@@ -18,9 +18,19 @@ from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
 from UserAuthAPI import models
-import re
-from PIL import Image
+import os
 
+import base64
+from django.core.files.base import ContentFile
+
+from PIL import Image
+from django.core.files.storage import default_storage as storage
+
+def get_file_extension(file):
+    name, extension = os.path.splitext(file.name)
+    if extension == '.png':
+        return 'png'
+    return 'jpeg'
 
 # 电话号码的验证
 def CheckTelNumber(value):
@@ -78,25 +88,36 @@ class UserAvatarUpdateForm(forms.ModelForm):
     y = forms.FloatField(widget=forms.HiddenInput())
     width = forms.FloatField(widget=forms.HiddenInput())
     height = forms.FloatField(widget=forms.HiddenInput())
+    cropped_b64 = forms.CharField()
     class Meta:
         model = models.UserProfile
         fields = ('avatar',)
 
     def save(self):
-        form = super().save()
+        form = super().save(commit=False)
 
         x = self.cleaned_data.get('x')
         y = self.cleaned_data.get('y')
         w = self.cleaned_data.get('width')
         h = self.cleaned_data.get('height')
+        img_b64 = self.cleaned_data.get('cropped_b64')
 
-        image = Image.open(form.avatar)
-        cropped_image = image.crop((x, y, w+x, h+y))
-        #resized_image = cropped_image.resize((200, 200), Image.ANTIALIAS)
-        if settings.DEBUG:
-            cropped_image.save(form.avatar.path)
-        else:
-            cropped_image.save(form.avatar.name)
+        format, imgstr = img_b64.split(';base64,') 
+        ext = format.split('/')[-1] 
+
+        decoded_file = ContentFile(base64.b64decode(imgstr), name='avatar_lg.' + ext)
+        form.avatar = decoded_file # You can save this as file instance.
+        
+        super().save()
+        # img_path = form.avatar.name
+        # print('Target Avatar is:',img_path)
+        # upload_img = storage.open(img_path, 'r')
+        # image = Image.open(upload_img)
+        # format = get_file_extension(form.avatar.file)
+        # cropped_image = image.crop((x, y, w+x, h+y))
+        # image_file = storage.open(img_path, "w")
+        # cropped_image.save(image_file, format)
+        # image_file.close()
         return form
 
 class UserAcademicForm(forms.ModelForm):
