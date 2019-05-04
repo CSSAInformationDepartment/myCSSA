@@ -16,6 +16,7 @@
 from django import forms
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
+from django.conf import settings
 from UserAuthAPI import models
 import re
 from PIL import Image
@@ -92,8 +93,10 @@ class UserAvatarUpdateForm(forms.ModelForm):
         image = Image.open(form.avatar)
         cropped_image = image.crop((x, y, w+x, h+y))
         #resized_image = cropped_image.resize((200, 200), Image.ANTIALIAS)
-        cropped_image.save(form.avatar.path)
-
+        if settings.DEBUG:
+            cropped_image.save(form.avatar.path)
+        else:
+            cropped_image.save(form.avatar.name)
         return form
 
 class UserAcademicForm(forms.ModelForm):

@@ -15,7 +15,7 @@ urlpatterns = [
     path('under-dev/', Views.under_dev_notice, name='under-dev'),
     path('userinfo/', Views.UpdateUserProfileView.as_view(), name="userInfo"),
     # POST Request Only:
-    path('userinfo/update-avatar', Views.UpdateUserAvatarView.as_view(), name="update_user_avatar"),
+    path('userinfo/update-avatar/', Views.UpdateUserAvatarView.as_view(), name="update_user_avatar"),
     path('member-card-info', Views.MembershipCardView.as_view(), name="membership-info"),
     path('login/', Views.LoginPage.as_view(), name="hub_login"), 
     path('logout/', Views.logout_page , name='hub_logout'),
