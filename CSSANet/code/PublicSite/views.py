@@ -72,7 +72,7 @@ class DepartmentInfoView(View):
     The All-in-one view for presenting the department info for cssa departments
     '''
     templates_dict: Dict[str,str] = {
-        'council':'',
+        'council':'PublicSite/dept_council.html',
         'organisation':'PublicSite/dept_organisation.html',
         'recruitment':'PublicSite/dept_recruitment.html',
         'Information':'PublicSite/dept_Information.html',

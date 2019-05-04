@@ -1,0 +1,142 @@
+{% extends 'components/base_page.html' %}
+{% block 'pg_body' %}
+<!-- bloc-4 -->
+{% load static %}
+
+<html>
+
+   
+<link rel="stylesheet" href="//apps.bdimg.com/libs/bootstrap/3.3.0/css/bootstrap.min.css">
+<style>
+	.row{
+    margin-top: 50px;
+	}
+	
+	.bc{
+		background-color: #999;
+	}
+	.col-r{
+		padding-right: 0px;
+		
+	}
+</style>
+<body>
+<hr >
+<div class="text-center ">
+        <h1 class="display-4"> 主席团 </br> Presidium </h1>
+</div>
+<hr >
+
+<div class="container">
+	<div class="container">
+		<div class="jumbotron jumbotron-fluid">
+			<h2 class="text-center">致辞</h2>
+			<p>亲爱的学弟学妹们，</p>
+			<p>你们好！</p>
+			<p>你们好我是墨尔本大学中国学生会2019届主席张本源。</p>
+			<p>很高兴能够在墨尔本大学与你相遇，我与墨尔本大学中国学生会的所有成员一起对于你的加入表示欢迎，也祝愿你在墨尔本大学的学习与生活一切顺利。</p>
+			<p>墨尔本大学中国学生会是一个拥有近六千个会员的非盈利组织，英文简称是CSSA，英文全称是Chinese Students and Scholars Association，也称中国学生学者联合会。我们的宗旨和存在的意义就是为墨尔本广大的中国留学生和学者们提供生活和学习的帮助。</p>
+			<p>墨城攻略这本书是CSSA给大家的一份开学礼物，这本书从头到尾全部由CSSA的学长学姐们搜集，编辑，排版的心血之作，你们可以在最短的时间内毫不费力的掌握到在墨尔本大学生活/学习/娱乐的各类攻略与贴心指南；同时，也能从字里行间里了解到我们的社团，由衷的期待我们的付出可以给你带来些许便利。往后翻，希望你会喜欢！</p>
+			<p>对于漂洋过海来墨尔本的你，可能怀揣着儿时的梦想，可能背负着父母的期望。那么我想说，在你墨尔本的留学生涯中，CSSA拥远是你可以停靠的港湾，在这里你可以有亲密的朋友，难忘的经历和遇见最美好的自己。</p>
+			<p>最后送一句汪国真的诗给你：“既然选择了远方，便只顾风雨兼程，既然目标是地平线，留给世界的只能是背影。”</p>
+			<p align="right">张本源</p>
+			<p align="right">墨尔本大学中国学生会</p>
+			<p align="right">2019年1月</p>
+		</div>
+	</div>
+   
+	
+   <div class="row">
+		<div class="col-lg-12 card" style='border:none;'>
+			<div class="card-body text-center">
+				<div class="my-3 d-block mx-auto avatar-lg rounded-circle">
+					{% if view_bag.director.member.user_profile.avatar %}
+						<img class='img-fluid' src="{{view_bag.director.member.user_profile.avatar.url}}" />
+					{% else %}
+						<img class="img-fluid" src="{% static 'PublicSite/img/placeholder-user.png' %}">
+					{% endif %}
+				</div>
+				<h4 class="card-title ">主席 Chairman</h4>
+				<h3>{{view_bag.director.member.get_full_EN_name}}</h3>
+			</div>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-lg-4 card" style='border:none;'>
+			<div class="card-body text-center">
+				<div class="my-3 d-block mx-auto avatar-lg rounded-circle">
+					{% if view_bag.director.member.user_profile.avatar %}
+						<img class='img-fluid' src="{{view_bag.director.member.user_profile.avatar.url}}" />
+					{% else %}
+						<img class="img-fluid" src="{% static 'PublicSite/img/placeholder-user.png' %}">
+					{% endif %}
+				</div>
+				<h4 class="card-title ">副主席 Vice-chairman</h4>
+				<h3>{{view_bag.director.member.get_full_EN_name}}</h3>
+			</div>
+		</div>
+		<div class="col-lg-4 card" style='border:none;'>
+			<div class="card-body text-center">
+				<div class="my-3 d-block mx-auto avatar-lg rounded-circle">
+					{% if view_bag.director.member.user_profile.avatar %}
+						<img class='img-fluid' src="{{view_bag.director.member.user_profile.avatar.url}}" />
+					{% else %}
+						<img class="img-fluid" src="{% static 'PublicSite/img/placeholder-user.png' %}">
+					{% endif %}
+				</div>
+				<h4 class="card-title ">副主席 Vice-chairman</h4>
+				<h3>{{view_bag.director.member.get_full_EN_name}}</h3>
+			</div>
+		</div>
+		<div class="col-lg-4 card" style='border:none;'>
+			<div class="card-body text-center">
+				<div class="my-3 d-block mx-auto avatar-lg rounded-circle">
+					{% if view_bag.director.member.user_profile.avatar %}
+						<img class='img-fluid' src="{{view_bag.director.member.user_profile.avatar.url}}" />
+					{% else %}
+						<img class="img-fluid" src="{% static 'PublicSite/img/placeholder-user.png' %}">
+					{% endif %}
+				</div>
+				<h4 class="card-title ">副主席 Vice-chairman</h4>
+				<h3>{{view_bag.director.member.get_full_EN_name}}</h3>
+			</div>
+		</div>
+
+		
+	</div>
+
+   <div class="row">
+		<div class="col-lg-6 card" style='border:none;'>
+			<div class="card-body text-center">
+				<div class="my-3 d-block mx-auto avatar-lg rounded-circle">
+					{% if view_bag.director.member.user_profile.avatar %}
+						<img class='img-fluid' src="{{view_bag.director.member.user_profile.avatar.url}}" />
+					{% else %}
+						<img class="img-fluid" src="{% static 'PublicSite/img/placeholder-user.png' %}">
+					{% endif %}
+				</div>
+				<h4 class="card-title ">财务长 Treasurer</h4>
+				<h3>{{view_bag.director.member.get_full_EN_name}}</h3>
+			</div>
+		</div>
+		<div class="col-lg-6 card" style='border:none;'>
+			<div class="card-body text-center">
+				<div class="my-3 d-block mx-auto avatar-lg rounded-circle">
+					{% if view_bag.director.member.user_profile.avatar %}
+						<img class='img-fluid' src="{{view_bag.director.member.user_profile.avatar.url}}" />
+					{% else %}
+						<img class="img-fluid" src="{% static 'PublicSite/img/placeholder-user.png' %}">
+					{% endif %}
+				</div>
+				<h4 class="card-title ">秘书 Secretary</h4>
+				<h3>{{view_bag.director.member.get_full_EN_name}}</h3>
+			</div>
+		</div>
+	</div>
+</div>
+
+</body>
+</html>
+{% endblock 'pg_body' %}
+
