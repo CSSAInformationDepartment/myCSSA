@@ -2,7 +2,7 @@ from django.shortcuts import get_object_or_404
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .forms import MerchantsForm
 from django.shortcuts import render
-from django.http import JsonResponse, HttpResponseRedirect, HttpResponse
+from django.http import JsonResponse, HttpResponseRedirect, HttpResponse, HttpResponseBadRequest
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin
@@ -23,7 +23,8 @@ from django.contrib.auth.decorators import login_required
 from .models import AccountMigration, DiscountMerchant
 from UserAuthAPI import models as UserModels
 from BlogAPI import models as BlogModels
-from UserAuthAPI.forms import BasicSiginInForm, UserInfoForm, MigrationForm, UserAcademicForm, UserProfileUpdateForm, EasyRegistrationForm
+from UserAuthAPI.forms import ( BasicSiginInForm, UserInfoForm, MigrationForm, 
+    UserAcademicForm, UserProfileUpdateForm, EasyRegistrationForm, UserAvatarUpdateForm)
 from LegacyDataAPI import models as LegacyDataModels
 from CommunicateManager.send_email import send_emails
 
@@ -413,11 +414,30 @@ class UpdateUserProfileView(LoginRequiredMixin, View):
         if form.is_valid():
             user = form.save()
             messages.success(request, 'User Profile has been updated!')
-            return HttpResponseRedirect('/hub/home')
+            return HttpResponseRedirect('/hub/userinfo/')
         else:
             messages.error(request, 'Please double-check your input.')
         return render(request, self.template_name, {'form': form, 'data': current_data})
 
+class UpdateUserAvatarView(LoginRequiredMixin, View):
+    login_url = 'hub/login/'
+    model = UserModels.UserProfile
+    form_class = UserAvatarUpdateForm
+    template_name = 'myCSSAhub/userInfo.html'
+
+    def get(self, request, *args, **kwargs):
+        return HttpResponseBadRequest()
+
+    def post(self, request, *args, **kwargs):
+        current_data = self.model.objects.get(user=request.user)
+        form = self.form_class(request.POST or None, request.FILES or None, instance=current_data)
+        if form.is_valid():
+            print(form)
+            user = form.save()
+            return HttpResponseRedirect('/hub/userinfo/')
+        else:
+            messages.error(request, 'Please double-check your input.')
+        return render(request, self.template_name, {'form': form, 'data': current_data})
 
 class MembershipCardView(LoginRequiredMixin, View):
     login_url = 'hub/login/'

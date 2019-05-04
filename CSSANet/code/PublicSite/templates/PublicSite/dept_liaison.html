@@ -1,16 +1,15 @@
 {% extends 'components/base_page.html' %}
 {% block 'pg_body' %}
-<!-- bloc-4 -->
 {% load static %}
 
 <div class="bloc dept-header l-bloc">
     <div class="py-3"> 
 		<hr >
 		<h1 style="font-family: 'PingFang SC'; color: #393d3e; font-weight: normal; " class="mg-md text-center">
-		宣传部
+		外联部
 		</h1>
 		<h3 style="font-family: 'PingFang SC'; color: #393d3e; font-weight: normal; " class="mg-md text-center">
-		Department of Publicity
+		Department of Public Relations
 		</h3>
 		<hr >
 	</div>
@@ -31,45 +30,40 @@
         <div class="col-lg-8 card" style='border:none;'>
             <div class='my-auto mx-auto'>
                 <h3 class="text-center card-title">部门简介 About us</h3>
-                <ol class="text-center card-text">
-                    <li>为学生会内部举办的各类活动进行前期、后期宣传，并在举办活动时进行实时宣传</li>
-                    <li>为活动提供更加专业化的策划、建议和服务</li>
-                    <li>运用多种宣传手段，传达活动信息和学生会理念</li>
-                    <li>为全系学生第一时间传递学校发布的信息，并及时反馈他们的意见和建议</li>
-                    <li>与其他部门共同开展内部建设活动，并对院系宣传工作进行监督</li>
-                    <li>定期举办宣传技能培训，提高各宣传部成员宣传工作方面的水平</li>
-                    <li>协助学生会其他部门开展工作，使各部门工作更好的完成</li>
-                </ol> 
+                <div class="card-text px-5" style="line-height:2">
+                    外联部作为墨尔本大学中国学生会与外界沟通的窗口，负责一切对外合作事宜，包括但不局限于赞助商，折扣商家，战略合作伙伴以及校外其他活动的沟通和参与。我们是墨大中国学生会对外界的形象代表。作为主要负责社团资金来源的部门，外联部同样需要寻求年度赞助商，活动合作商家，来减轻社团的负担，更好的给与广大社员福利。
+                    </br></br>外联部提供了一个充分锻炼社交能力和沟通技巧的平台。日常事务包括:与墨尔本各个商家和企业维持良好的关系，代表社团联系并参加墨尔本地区的各个活动，与校内各个兄弟社团保持良好的关系，对于兄弟社团的活动推广互相帮助支持，扩大社团影响力。
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-md-3 mx-auto">
+                        <h3 class="text-center">
+                            <strong>{{view_bag.number_of_member}}</strong>
+                        </h3>
+                        <h5 class="text-center">
+                            当届成员数量 
+                        </h5>
+                        <p class="text-center">
+                            Number of Members
+                        </p>
+                    </div>
+                    <div class="col-md-3 mx-auto">
+                        <h3 class="text-center">
+                            {% if view_bag.gender_div != 0 %}
+                                <strong>{{view_bag.gender_div}} : 1</strong>
+                            {% else %}
+                                Not updated yet
+                            {% endif %}
+                        </h3>
+                        <h5 class="text-center">
+                            成员性别多样性 
+                        </h5>
+                        <p class="text-center">
+                            Gender Diversity
+                        </p>
+                    </div>
+                </div>
             </div>
-            <hr>
-            <div class="row">
-				<div class="col-md-3 mx-auto">
-					<h3 class="text-center">
-						<strong>{{view_bag.number_of_member}}</strong>
-					</h3>
-					<h5 class="text-center">
-						当届成员数量 
-					</h5>
-					<p class="text-center">
-						Number of Members
-					</p>
-				</div>
-				<div class="col-md-3 mx-auto">
-					<h3 class="text-center">
-						{% if view_bag.gender_div != 0 %}
-							<strong>{{view_bag.gender_div}} : 1</strong>
-						{% else %}
-							Not updated yet
-						{% endif %}
-					</h3>
-					<h5 class="text-center">
-						成员性别多样性 
-					</h5>
-					<p class="text-center">
-						Gender Diversity
-					</p>
-				</div>
-			</div>
         </div>
     </div>
 </div>
@@ -137,5 +131,7 @@
 	<p>页面作者 Page developed by</p>
     <p>&copy; 2019 ????</p>
 </div>
-{% endblock 'pg_body' %}
 
+
+
+{% endblock 'pg_body' %}

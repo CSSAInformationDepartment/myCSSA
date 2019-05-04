@@ -18,6 +18,8 @@ from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 from UserAuthAPI import models
 import re
+from PIL import Image
+
 
 # 电话号码的验证
 def CheckTelNumber(value):
@@ -68,7 +70,31 @@ class UserInfoForm(forms.ModelForm):
 class UserProfileUpdateForm(forms.ModelForm):
     class Meta:
         model = models.UserProfile
-        fields = ('firstNameEN','lastNameEN','firstNameCN','lastNameCN','address','postcode','avatar')
+        fields = ('firstNameEN','lastNameEN','firstNameCN','lastNameCN','address','postcode')
+
+class UserAvatarUpdateForm(forms.ModelForm):
+    x = forms.FloatField(widget=forms.HiddenInput())
+    y = forms.FloatField(widget=forms.HiddenInput())
+    width = forms.FloatField(widget=forms.HiddenInput())
+    height = forms.FloatField(widget=forms.HiddenInput())
+    class Meta:
+        model = models.UserProfile
+        fields = ('avatar',)
+
+    def save(self):
+        form = super().save()
+
+        x = self.cleaned_data.get('x')
+        y = self.cleaned_data.get('y')
+        w = self.cleaned_data.get('width')
+        h = self.cleaned_data.get('height')
+
+        image = Image.open(form.avatar)
+        cropped_image = image.crop((x, y, w+x, h+y))
+        #resized_image = cropped_image.resize((200, 200), Image.ANTIALIAS)
+        cropped_image.save(form.avatar.path)
+
+        return form
 
 class UserAcademicForm(forms.ModelForm):
     class Meta:
