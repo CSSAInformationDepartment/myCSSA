@@ -50,26 +50,37 @@
 			</div>
 		</div>
 	</div>
+
+	<div class="row">
+        <div class="col-12">
+			<h3 class="mg-md text-center">
+				2018/19届 主席团成员成员
+			</h3>
+			<h5 class="text-center">
+				Meet the Council Board Members of 2018/19 Term
+			</h5>
+		</div>
+  </div>
    
 	
    <div class="row">
 		<div class="col-lg-12 card" style='border:none;'>
 			<div class="card-body text-center">
 				<div class="my-3 d-block mx-auto avatar-lg rounded-circle">
-					{% if view_bag.director.member.user_profile.avatar %}
-						<img class='img-fluid' src="{{view_bag.director.member.user_profile.avatar.url}}" />
+					{% if view_bag.president.member.user_profile.avatar %}
+						<img class='img-fluid' src="{{ view_bag.president.member.user_profile.avatar.url }}" />
 					{% else %}
 						<img class="img-fluid" src="{% static 'PublicSite/img/placeholder-user.png' %}">
 					{% endif %}
 				</div>
 				<h4 class="card-title ">主席 President</h4>
-				<h3>{{view_bag.director.member.get_full_EN_name}}</h3>
+				<h3>{{ view_bag.president.member.get_full_EN_name }}</h3>
 			</div>
 		</div>
 	</div>
 
 	<div class="row">
-	{% for user in vice_president  %}
+	{% for user in view_bag.vice_president  %}
 		<div class="col-lg-4 card" style='border:none;'>
 			<div class="card-body text-center">
 				<div class="my-3 d-block mx-auto avatar-md rounded-circle">
@@ -104,7 +115,7 @@
 			<div class="card-body text-center">
 				<div class="my-3 d-block mx-auto avatar-md rounded-circle">
 					{% if view_bag.headOfSecretary.member.user_profile.avatar %}
-						<img class='img-fluid' src="{{view_bag.director.headOfSecretary.user_profile.avatar.url}}" />
+						<img class='img-fluid' src="{{view_bag.headOfSecretary.member.user_profile.avatar.url}}" />
 					{% else %}
 						<img class="img-fluid" src="{% static 'PublicSite/img/placeholder-user.png' %}">
 					{% endif %}
@@ -119,7 +130,7 @@
 <hr>
 <div class="bloc py-2">
 	<p>页面作者 Page developed by</p>
-  <p>&copy; 2019  Tianyi Mo, Junda Li </p>
+  <p>&copy; 2019  Tianyi Mo, Yuxiang Xie </p>
 </div>
 
 {% endblock 'pg_body' %}

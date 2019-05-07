@@ -91,10 +91,10 @@ class DepartmentInfoView(View):
         view_bag['general'] = dept_profiles.filter(role__roleFlag='general')
 
         if dept == 'council':
-            view_bag['accountant'] = dept_profiles.filter(role__roleFlag='accountant')
-            view_bag['president'] = dept_profiles.filter(role__roleFlag='president')
+            view_bag['accountant'] = dept_profiles.filter(role__roleFlag='accountant').first()
+            view_bag['president'] = dept_profiles.filter(role__roleFlag='president').first()
             view_bag['vice_president'] = dept_profiles.filter(role__roleFlag='vice-president')
-            view_bag['headOfSecretary'] = dept_profiles.filter(role__roleFlag='headOfSecretary')
+            view_bag['headOfSecretary'] = dept_profiles.filter(role__roleFlag='headOfSecretary').first()
 
         if dept == 'information':
             view_bag['lead_eng'] = dept_profiles.filter(role__roleFlag='lead_eng')
@@ -109,7 +109,8 @@ class DepartmentInfoView(View):
             factor = (num_of_male + num_of_other) / (num_of_female + num_of_other)
         elif num_of_male != 0:
             factor = (num_of_female + num_of_other) / (num_of_male + num_of_other) 
-        view_bag['gender_div'] = round(factor) or 0
+        view_bag['gender_div'] = round(factor, 2) or 0
+
         return render(request, template_name=self.templates_dict[dept], context={'view_bag': view_bag})
 
 
