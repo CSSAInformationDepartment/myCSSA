@@ -4,7 +4,7 @@
 
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light" style="border:none;">
-<a class="navbar-brand" href="#"><img class="img-fluid" src="{% static 'PublicSite/img/Logo_b.png' %}" style="max-width: 5rem;" /></a>
+<a class="navbar-brand" href="/"><img class="img-fluid" src="{% static 'PublicSite/img/Logo_b.png' %}" style="max-width: 5rem;" /></a>
 	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
 		<span class="navbar-toggler-icon"></span>
 	</button>
@@ -23,36 +23,35 @@
 				<a class="dropdown-item" href="{% url 'PublicSite:PhotoCompetition:submit-photo' %}"> CSSA摄影大赛 </a>
 				</div>
 			</li>
-			<li class="nav-item">
-				<a class="nav-link" href="{% url 'PublicSite:blogs' %}?page=1">{%trans "新闻公告" %}</a>
-			</li>
-			<li class="nav-item" >
-				<a class="nav-link" href="{% url 'PublicSite:merchants' %}">{%trans "折扣商家 " %}</a>
-			</li>
-			<li class="nav-item">
-				<a class="nav-link" href="{% url 'PublicSite:recruitment' %}">加入CSSA理事</a>
-			</li>
-			<li class="nav-item">
-				<a class="nav-link" href="{% url 'PublicSite:contact' %}">{%trans "联系我们" %}</a>
-			</li>
-			<li class="nav-item" >
-				<a class="nav-link" href="{% url 'PublicSite:supportMerchants' %}">{%trans "特别鸣谢 " %}</a>
-			</li>
-			{% if user.is_staff %}
 			<li class="nav-item dropdown">
 				<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 				{%trans "部门构成" %}
 				</a>
 				<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-				<a class="dropdown-item" href="#{#% url 'PublicSite:departments' 'council' %#}">{%trans "主席团" %} </a>
+				<!--a class="dropdown-item" href="#{#% url 'PublicSite:departments' 'council' %#}">{%trans "主席团" %} </a-->
 				<a class="dropdown-item" href="{% url 'PublicSite:departments' 'organisation' %}">{%trans "组织部" %}</a>
 				<a class="dropdown-item" href="{% url 'PublicSite:departments' 'liaison' %}">{%trans "外联部" %}</a>
-				<a class="dropdown-item" href="{% url 'PublicSite:departments' 'information' %}">{%trans "信息部" %}</a>
 				<a class="dropdown-item" href="{% url 'PublicSite:departments' 'publicity' %}">{%trans "宣传部 " %}</a>
+				<a class="dropdown-item" href="{% url 'PublicSite:departments' 'information' %}">{%trans "信息技术部" %}</a>
 				<a class="dropdown-item" href="{% url 'PublicSite:departments' 'recruitment' %}">{%trans "人力资源部" %}</a>
 				</div>
 			</li>
-			{% endif %}
+			<!--li class="nav-item">
+				<a class="nav-link" href="{% url 'PublicSite:blogs' %}?page=1">{%trans "新闻公告" %}</a>
+			</li-->
+			<li class="nav-item" >
+				<a class="nav-link" href="{% url 'PublicSite:merchants' %}">{%trans "折扣商家 " %}</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" href="{% url 'PublicSite:recruitment' %}">岗位信息</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" href="{% url 'PublicSite:contact' %}">{%trans "联系我们" %}</a>
+			</li>
+			<li class="nav-item" >
+				<a class="nav-link" href="{% url 'PublicSite:supportMerchants' %}">{%trans "赞助商 " %}</a>
+			</li>
+
 		</ul>
 		<ul class="navbar-nav navbar-right" > <!--Login Info-->
 		{% if user.is_authenticated %}
