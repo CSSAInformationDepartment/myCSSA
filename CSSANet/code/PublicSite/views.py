@@ -72,10 +72,10 @@ class DepartmentInfoView(View):
     The All-in-one view for presenting the department info for cssa departments
     '''
     templates_dict: Dict[str,str] = {
-        'council':'',
+        'council':'PublicSite/dept_council.html',
         'organisation':'PublicSite/dept_organisation.html',
         'recruitment':'PublicSite/dept_recruitment.html',
-        'information':'PublicSite/dept_information.html',
+        'information':'PublicSite/dept_Information.html',
         'liaison':'PublicSite/dept_liaison.html',
         'publicity':'PublicSite/dept_publicity.html',
     }
@@ -96,7 +96,7 @@ class DepartmentInfoView(View):
             view_bag['vice_president'] = dept_profiles.filter(role__roleFlag='vice-president')
             view_bag['headOfSecretary'] = dept_profiles.filter(role__roleFlag='headOfSecretary')
 
-        if dept == 'Information':
+        if dept == 'information':
             view_bag['lead_eng'] = dept_profiles.filter(role__roleFlag='lead_eng')
 
         ### Metrics

@@ -1,0 +1,126 @@
+{% extends 'components/base_page.html' %}
+{% block 'pg_body' %}
+<!-- bloc-4 -->
+{% load static %}
+   
+<style>
+	.row{
+    margin-top: 50px;
+	}
+	
+	.bc{
+		background-color: #999;
+	}
+	.col-r{
+		padding-right: 0px;
+		
+	}
+</style>
+
+<hr >
+<div class="text-center ">
+	<div class="py-3"> 
+		<hr >
+		<h1 style="font-family: 'PingFang SC'; color: #393d3e; font-weight: normal; " class="mg-md text-center">
+			主席团
+		</h1>
+		<h3 style="font-family: 'PingFang SC'; color: #393d3e; font-weight: normal; " class="mg-md text-center">
+			CSSA Council Board
+		</h3>
+		<hr >
+	</div>
+</div>
+<hr >
+
+<div class="bloc l-bloc">
+	<div class="bloc">
+		<div class="jumbotron jumbotron-fluid">
+			<h2 class="text-center">致辞</h2>
+			<div class="mg-md mx-auto d-block col-12 col-lg-7 col-md-10 col-sm-12" >
+				<p style="font-size:16px; padding-top:0.5rem;">亲爱的学弟学妹们，</p>
+				<p style="font-size:16px; padding-top:0.5rem;">你们好！</p>
+				<p style="font-size:16px; padding-top:0.5rem;">我是墨尔本大学中国学生会2019届主席张本源。</p>
+				<p style="font-size:16px; padding-top:0.5rem;">很高兴能够在墨尔本大学与你相遇，我与墨尔本大学中国学生会的所有成员一起对于你的加入表示欢迎，也祝愿你在墨尔本大学的学习与生活一切顺利。</p>
+				<p style="font-size:16px; padding-top:0.5rem;">墨尔本大学中国学生会是一个拥有近六千个会员的非盈利组织，英文简称是CSSA，英文全称是Chinese Students and Scholars Association，也称中国学生学者联合会。我们的宗旨和存在的意义就是为墨尔本广大的中国留学生和学者们提供生活和学习的帮助。</p>
+				<p style="font-size:16px; padding-top:0.5rem;">对于漂洋过海来墨尔本的你，可能怀揣着儿时的梦想，可能背负着父母的期望。那么我想说，在你墨尔本的留学生涯中，CSSA拥远是你可以停靠的港湾，在这里你可以有亲密的朋友，难忘的经历和遇见最美好的自己。</p>
+				<p style="font-size:16px; padding-top:0.5rem;">最后送一句汪国真的诗给你：“既然选择了远方，便只顾风雨兼程，既然目标是地平线，留给世界的只能是背影。”</p>
+				<h5 align="right">张本源</h5>
+				<h5 align="right">墨尔本大学中国学生会</h5>
+				<h5 align="right">2018/19届 主席</h5>
+			</div>
+		</div>
+	</div>
+   
+	
+   <div class="row">
+		<div class="col-lg-12 card" style='border:none;'>
+			<div class="card-body text-center">
+				<div class="my-3 d-block mx-auto avatar-lg rounded-circle">
+					{% if view_bag.director.member.user_profile.avatar %}
+						<img class='img-fluid' src="{{view_bag.director.member.user_profile.avatar.url}}" />
+					{% else %}
+						<img class="img-fluid" src="{% static 'PublicSite/img/placeholder-user.png' %}">
+					{% endif %}
+				</div>
+				<h4 class="card-title ">主席 President</h4>
+				<h3>{{view_bag.director.member.get_full_EN_name}}</h3>
+			</div>
+		</div>
+	</div>
+
+	<div class="row">
+	{% for user in vice_president  %}
+		<div class="col-lg-4 card" style='border:none;'>
+			<div class="card-body text-center">
+				<div class="my-3 d-block mx-auto avatar-md rounded-circle">
+					{% if user.member.user_profile.avatar %}
+						<img class='img-fluid' src="{{user.member.user_profile.avatar.url}}" />
+					{% else %}
+						<img class="img-fluid" src="{% static 'PublicSite/img/placeholder-user.png' %}">
+					{% endif %}
+				</div>
+				<h4 class="card-title ">副主席 Vice-President</h4>
+				<h3>{{user.member.get_full_EN_name}}</h3>
+			</div>
+		</div>
+	{% endfor %}
+	</div>
+
+   <div class="row">
+		<div class="col-lg-6 card" style='border:none;'>
+			<div class="card-body text-center">
+				<div class="my-3 d-block mx-auto avatar-md rounded-circle">
+					{% if view_bag.accountant.member.user_profile.avatar %}
+						<img class='img-fluid' src="{{view_bag.accountant.member.user_profile.avatar.url}}" />
+					{% else %}
+						<img class="img-fluid" src="{% static 'PublicSite/img/placeholder-user.png' %}">
+					{% endif %}
+				</div>
+				<h4 class="card-title ">财务 Treasurer</h4>
+				<h3>{{view_bag.accountant.member.get_full_EN_name}}</h3>
+			</div>
+		</div>
+		<div class="col-lg-6 card" style='border:none;'>
+			<div class="card-body text-center">
+				<div class="my-3 d-block mx-auto avatar-md rounded-circle">
+					{% if view_bag.headOfSecretary.member.user_profile.avatar %}
+						<img class='img-fluid' src="{{view_bag.director.headOfSecretary.user_profile.avatar.url}}" />
+					{% else %}
+						<img class="img-fluid" src="{% static 'PublicSite/img/placeholder-user.png' %}">
+					{% endif %}
+				</div>
+				<h4 class="card-title ">秘书长 Secretary</h4>
+				<h3>{{view_bag.headOfSecretary.member.get_full_EN_name}}</h3>
+			</div>
+		</div>
+	</div>
+</div>
+
+<hr>
+<div class="bloc py-2">
+	<p>页面作者 Page developed by</p>
+  <p>&copy; 2019  Tianyi Mo, Junda Li </p>
+</div>
+
+{% endblock 'pg_body' %}
+

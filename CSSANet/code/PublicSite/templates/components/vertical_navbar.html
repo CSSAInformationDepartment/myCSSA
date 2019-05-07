@@ -28,7 +28,7 @@
 				{%trans "部门构成" %}
 				</a>
 				<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-				<!--a class="dropdown-item" href="#{#% url 'PublicSite:departments' 'council' %#}">{%trans "主席团" %} </a-->
+				<a class="dropdown-item" href="{% url 'PublicSite:departments' 'council' %}">{%trans "主席团" %} </a>
 				<a class="dropdown-item" href="{% url 'PublicSite:departments' 'organisation' %}">{%trans "组织部" %}</a>
 				<a class="dropdown-item" href="{% url 'PublicSite:departments' 'liaison' %}">{%trans "外联部" %}</a>
 				<a class="dropdown-item" href="{% url 'PublicSite:departments' 'publicity' %}">{%trans "宣传部 " %}</a>
