@@ -105,19 +105,15 @@ class UserAvatarUpdateForm(forms.ModelForm):
         format, imgstr = img_b64.split(';base64,') 
         ext = format.split('/')[-1] 
 
+        ## Patch to avoid incorrect padding caused by some browsers
+        missing_padding = len(imgstr) % 4
+        if missing_padding:
+            imgstr += b'='* (4 - missing_padding)
+
         decoded_file = ContentFile(base64.b64decode(imgstr), name='avatar_lg.' + ext)
-        form.avatar = decoded_file # You can save this as file instance.
+        form.avatar = decoded_file
         
         super().save()
-        # img_path = form.avatar.name
-        # print('Target Avatar is:',img_path)
-        # upload_img = storage.open(img_path, 'r')
-        # image = Image.open(upload_img)
-        # format = get_file_extension(form.avatar.file)
-        # cropped_image = image.crop((x, y, w+x, h+y))
-        # image_file = storage.open(img_path, "w")
-        # cropped_image.save(image_file, format)
-        # image_file.close()
         return form
 
 class UserAcademicForm(forms.ModelForm):
