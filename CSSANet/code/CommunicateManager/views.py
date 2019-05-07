@@ -41,7 +41,7 @@ class NotificationsList(LoginRequiredMixin, View):
             # tmp.setdefault('Expires', 0)
             # tmp.setdefault('Pragma', 'no-cache')
 
-            return render(request, self.template_name, locals())
+            return render(request, self.template_name)
 
     def post(self, request):
         # if request.user.is_authenticated:
