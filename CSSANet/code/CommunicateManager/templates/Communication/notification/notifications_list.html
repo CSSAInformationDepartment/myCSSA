@@ -57,7 +57,7 @@
                                 {% if user.is_staff %}
                                 <div class="col-md-6">
                                     <div class="btn-group float-right" role="group">
-                                        <a class="btn btn-pill btn-block btn-primary" role="button" href="{% url 'myCSSAhub:notifications_form' %}">发送消息</a>
+                                        <a class="btn btn-pill btn-block btn-primary" role="button" href="{% url 'myCSSAhub:Comm:notifications_form' %}">发送消息</a>
                                     </div>
                                 </div>
                                 {% endif %}
@@ -142,7 +142,7 @@
                                 {% if user.is_staff %}
                                 <div class="col-md-6">
                                     <div class="btn-group float-right" role="group">
-                                        <a class="btn btn-pill btn-block btn-primary" role="button" href="{% url 'myCSSAhub:email' %}">发送邮件</a>
+                                        <a class="btn btn-pill btn-block btn-primary" role="button" href="{% url 'myCSSAhub:Comm:email' %}">发送邮件</a>
                                     </div>
                                 </div>
                                 {% endif %}

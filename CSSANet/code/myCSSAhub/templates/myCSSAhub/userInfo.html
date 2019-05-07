@@ -251,12 +251,16 @@
         <div class="modal-body">
             <div class="form-group">
                 <button class="btn btn-primary btn-block" id="upload-img"> 点击此处上传新头像 </button>
+
                 <input class="hide" name="avatar" type="file" id="file-input" accept="image/jpeg" />
                 <input name="x" type="hidden" id="anchor-x"/>
                 <input name="y" type="hidden" id="anchor-y"/>
                 <input name="width" type="hidden" id="anchor-width"/>
                 <input name="height" type="hidden" id="anchor-height"/>
                 <input name="cropped_b64" type="hidden" id="cropped_b64"/>
+            </div>
+            <div id='file-size-exceed-warning' class="alert alert-danger hide" role="alert">
+              上传的文件过大! 头像图片格式只可为.jpg/.jpeg, 且不能超过2Mb
             </div>
             <div class="row" style="max-height:100%">
               <div class="col-12 col-md-6 col-lg-6">
@@ -308,8 +312,24 @@ crop_x = document.querySelector('#anchor-x'),
 crop_y = document.querySelector('#anchor-y'),
 crop_width = document.querySelector('#anchor-width'),
 crop_height = document.querySelector('#anchor-height'),
-cropped_b64 = document.querySelector('#cropped_b64')
+cropped_b64 = document.querySelector('#cropped_b64'),
 cropper = '';
+
+checkFileSize = (size) => {
+  const MB = 1024;
+  const KB = 1024;
+  let limit = 2; // Measured in MB
+  if (size/KB/MB > limit) {
+    document.querySelector('#file-size-exceed-warning').classList.remove('hide');
+    if (!save.classList.contains('hide')){
+      save.classList.add('hide');
+      img_result.classList.add('hide');
+    }
+  } else {
+    document.querySelector('#file-size-exceed-warning').classList.add('hide');
+    return true
+  }
+}
 
 // init upload dialog
 upload_btn.addEventListener('click', (e) => {
@@ -322,14 +342,14 @@ upload.addEventListener('change', (e) => {
   if (e.target.files.length) {
 		// start file reader
     const reader = new FileReader();
+    // clean result before
+    result.innerHTML = '';
     reader.onload = (e)=> {
-      if(e.target.result){
-				// create new image
+      if(e.target.result && checkFileSize(upload.files[0].size)){
+        // create new image
 				let img = document.createElement('img');
 				img.id = 'image';
 				img.src = e.target.result
-				// clean result before
-				result.innerHTML = '';
 				// append new image
         result.appendChild(img);
 				// show save btn and options
