@@ -76,7 +76,7 @@ class DepartmentInfoView(View):
         'organisation':'PublicSite/dept_organisation.html',
         'recruitment':'PublicSite/dept_recruitment.html',
         'Information':'PublicSite/dept_Information.html',
-        'liaison':'',
+        'liaison':'PublicSite/dept_liaison.html',
         'publicity':'PublicSite/dept_publicity.html',
     }
     members_model = UserModels.CSSACommitteProfile
@@ -87,15 +87,29 @@ class DepartmentInfoView(View):
         dept: str = self.kwargs.get('dept')
         dept_profiles = self.members_model.objects.filter(Q(Department__deptName=dept) & Q(is_active=True))
         view_bag['director'] = dept_profiles.filter(role__roleFlag='director').first()
-        view_bag['vice_director'] = dept_profiles.filter(role__roleFlag='vice-director')
+        view_bag['management'] = dept_profiles.filter(Q(role__roleFlag='vice-director')|Q(role__roleFlag='lead_eng')|Q(role__roleFlag='secretary')).order_by('-role__roleFlag')
         view_bag['general'] = dept_profiles.filter(role__roleFlag='general')
-        view_bag['accountant'] = dept_profiles.filter(role__roleFlag='accountant')
-        view_bag['president'] = dept_profiles.filter(role__roleFlag='president')
-        view_bag['vice_president'] = dept_profiles.filter(role__roleFlag='vice-president')
-        view_bag['lead_eng'] = dept_profiles.filter(role__roleFlag='lead_eng')
-        view_bag['secretary'] = dept_profiles.filter(role__roleFlag='secretary')
-        view_bag['headOfSecretary'] = dept_profiles.filter(role__roleFlag='headOfSecretary')
 
+        if dept == 'council':
+            view_bag['accountant'] = dept_profiles.filter(role__roleFlag='accountant')
+            view_bag['president'] = dept_profiles.filter(role__roleFlag='president')
+            view_bag['vice_president'] = dept_profiles.filter(role__roleFlag='vice-president')
+            view_bag['headOfSecretary'] = dept_profiles.filter(role__roleFlag='headOfSecretary')
+
+        if dept == 'Information':
+            view_bag['lead_eng'] = dept_profiles.filter(role__roleFlag='lead_eng')
+
+        ### Metrics
+        view_bag['number_of_member'] = dept_profiles.count()
+        num_of_male = dept_profiles.filter(member__userprofile__gender='Male').count()
+        num_of_female = dept_profiles.filter(member__userprofile__gender='Female').count()
+        num_of_other = dept_profiles.filter(member__userprofile__gender='Other').count() / 2
+        factor: float = 0
+        if num_of_male > num_of_female and num_of_female != 0:
+            factor = (num_of_male + num_of_other) / (num_of_female + num_of_other)
+        elif num_of_male != 0:
+            factor = (num_of_female + num_of_other) / (num_of_male + num_of_other) 
+        view_bag['gender_div'] = round(factor) or 0
         return render(request, template_name=self.templates_dict[dept], context={'view_bag': view_bag})
 
 
