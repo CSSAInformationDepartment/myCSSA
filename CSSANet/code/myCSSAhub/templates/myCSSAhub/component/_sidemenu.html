@@ -180,6 +180,13 @@
                 </li>
               {% endif %}
 
+              {% if perms.PhotoCompetition.view_submission %}
+                <li class="nav-item">
+                  <a class="nav-link" href="{% url 'myCSSAhub:PhotoComp:submission-list' %}">
+                    <i class="nav-icon fa fa-camera-retro"></i> 投稿管理 </a>
+                </li>
+              {% endif %}
+
               {% endif %}
           </ul>
         </nav>
