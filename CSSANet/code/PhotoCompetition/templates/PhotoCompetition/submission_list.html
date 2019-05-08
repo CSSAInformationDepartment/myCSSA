@@ -1,0 +1,87 @@
+{% extends 'myCSSAhub/component/_layout.html' %}
+
+{% block ExtraHeader %}
+
+{% endblock ExtraHeader %}
+
+{% block BreadcrumbPath %}
+  <li class="breadcrumb-item">Photo Competition管理</li>
+  <li class="breadcrumb-item">
+    <a href="{% url 'myCSSAhub:PhotoComp:submission-list' %}">用户提交照片</a>
+  </li>
+{% endblock BreadcrumbPath %}
+
+{% block pageContent %}
+<div class="row mb-3">
+  <div class="col-6">
+
+  </div>
+  
+  {% if user.is_staff %}
+  <div class="col-6">
+      <div class="btn-group float-right" role="group">
+         
+      </div>
+  </div>
+  {% endif %}
+</div>
+<div class="row">
+  <div class="col-md-12">
+    <div class="card" >
+      <div class="card-header">
+        提交记录
+      </div>
+      <div class="card-body">
+          <table id="main-datatable" class="table table-responsive-md"  style="width:100%" >
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>作者</th>
+                  <th>提交时间</th>
+                  <th>题材</th>
+                  <th>设备</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for submission in submissions %}
+                  <tr>
+                    <td><a href="{{submission.get_absolute_url}}">{{submission.submissionId}}</a></td>
+                    <th>{{submission.submissionUserId.get_full_EN_name}}</th>
+                    <td>{{submission.submissionTime}}</td>
+                    <td>{{submission.get_deviceType_display}}</td>
+                    <td>{{submission.get_categoryType_display}}</td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+          </table>
+          {% if is_paginated %}
+            <ul class="pagination">
+              {% if page_obj.has_previous %}
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Prev</a></li>
+              {% else %}
+                <li class="page-item disabled"><a class="page-link" href="#">Prev</a></li>
+              {% endif %}
+              {% for i in paginator.page_range %}
+                {% if page_obj.number == i %}
+                  <li class="page-item active"><a class="page-link" href="#">{{ i }} </a></li>
+                {% else %}
+                  <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+                {% endif %}
+              {% endfor %}
+              {% if page_obj.has_next %}
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
+              {% else %}
+                <li class="page-item disabled"><a class="page-link" href="#">Prev</a></li>
+              {% endif %}
+            </ul>
+          {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock pageContent %}
+
+
+{% block ExtraJS %}
+
+{% endblock ExtraJS %}

@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 from django.core.validators import MaxValueValidator
 import uuid
 from django.utils.translation import ugettext_lazy as _
@@ -30,3 +31,18 @@ class Submission(models.Model):
     categoryType = models.CharField(verbose_name=_("题材类型"), choices=CATEGORY_CHOICE, max_length=30, default="风景", null=True)
     upload_photo = SorlImageField(verbose_name=_("上传作品"), null=True, upload_to = _GetUserDir)
     description = models.CharField(verbose_name=_("作品简述"),max_length = 250)
+
+    def get_absolute_url(self):
+        return reverse("myCSSAhub:PhotoComp:submission-detail", kwargs={"pk": self.pk})
+    
+
+
+class ApprovedSubmission(models.Model):
+    '''
+    PhotoCompetition Model Class - Selected Submission to the next round
+
+    '''
+    id = models.AutoField(primary_key=True, editable=False)
+    disabled  = models.BooleanField(default=False)
+    submission = models.ForeignKey(Submission,verbose_name=_("作品") ,on_delete=models.CASCADE)
+    aggregate_votes = models.IntegerField(verbose_name=_("获得票数"), default=0)
