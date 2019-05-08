@@ -5,3 +5,4 @@ from . import models
 
 
 admin.site.register(models.Submission)
+admin.site.register(models.ApprovedSubmission)
