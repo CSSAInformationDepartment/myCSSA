@@ -114,6 +114,11 @@ class UniMajor (models.Model):
         return self.majorName
 
 class User(AbstractUser):
+    '''
+    This is the User model for authentication purpose ONLY! It only has one foreign key model -- UserProfile.
+    DO NOT reference any foreign key field to this model. Refer it to UserProfile instead. The have exactly same
+    primary key. 
+    '''
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     username = None
     email = models.CharField(verbose_name="电子邮箱",max_length = 100,unique=True)
@@ -133,41 +138,6 @@ class User(AbstractUser):
 
     def __str__(self):
         return '%s' % (self.email)
-
-    def user_profile(self):
-        try:
-            return UserProfile.objects.get(user=self.id)
-        except:
-            pass
-
-    def get_full_CN_name(self):
-        '''
-        Returns the first_name plus the last_name in Chinese, with a space in between.
-        '''
-        Profile = UserProfile.objects.get(user=self)
-        if Profile.lastNameCN and Profile.firstNameCN:
-            full_name = '%s %s' % (Profile.lastNameCN, Profile.firstNameCN)
-            return full_name.strip()
-        else:
-            return None
-
-    def get_full_EN_name(self):
-        '''
-        Returns the first_name plus the last_name in English, with a space in between.
-        '''
-        Profile = UserProfile.objects.get(user=self)
-        if Profile.lastNameEN and Profile.firstNameEN:
-            full_name = '%s %s' % (Profile.firstNameEN.capitalize(), Profile.lastNameEN.capitalize())
-            return full_name.strip()
-        else:
-            return None
-    
-    def get_committee_profile(self):
-        try:
-            return CSSACommitteProfile.objects.get(member=self.id, is_active=True)
-        except:
-            return False
-
 
 
 #用户信息主体 （继承自标准admin model，参照： https://www.zmrenwu.com/post/31/）
@@ -206,6 +176,34 @@ class UserProfile (models.Model):
     postcode = models.CharField(verbose_name="邮编",max_length=4, null=True, blank=True)
     originate = models.CharField(verbose_name="籍贯",max_length=50, null=True,blank=True)
 
+
+    def get_full_CN_name(self):
+        '''
+        Returns the first_name plus the last_name in Chinese, with a space in between.
+        '''
+
+        if self.lastNameCN and self.firstNameCN:
+            full_name = '%s %s' % (self.lastNameCN, self.firstNameCN)
+            return full_name.strip()
+        else:
+            return None
+
+    def get_full_EN_name(self):
+        '''
+        Returns the first_name plus the last_name in English, with a space in between.
+        '''
+        if self.lastNameEN and self.firstNameEN:
+            full_name = '%s %s' % (self.firstNameEN.capitalize(), self.lastNameEN.capitalize())
+            return full_name.strip()
+        else:
+            return None
+    
+    def get_committee_profile(self):
+        try:
+            return CSSACommitteProfile.objects.get(member=self.id, is_active=True)
+        except:
+            return False
+
     class Meta:
         permissions = (
             ("activate_membership", "Can activate new membership"),
@@ -216,7 +214,7 @@ class UserProfile (models.Model):
 
 class CSSACommitteProfile(models.Model):
     Id = models.AutoField(primary_key=True, editable=False)
-    member = models.ForeignKey(User, on_delete=models.CASCADE)
+    member = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
 
     is_active = models.BooleanField(default=False)
     CommenceDate = models.DateTimeField(auto_now_add=True)
@@ -239,7 +237,7 @@ class UserAcademic (models.Model):
 
     academicRecId = models.AutoField(primary_key=True, editable=False)
     # 来自同一张表的外键变量名、配置需一致
-    userProfile = models.ForeignKey(User, on_delete = models.CASCADE, blank=True)
+    userProfile = models.ForeignKey(UserProfile, on_delete = models.CASCADE, blank=True)
     # 不同模型中表示同一功能的变量名需一致
     timeOfCreate  = models.DateTimeField(auto_now_add=True)
 

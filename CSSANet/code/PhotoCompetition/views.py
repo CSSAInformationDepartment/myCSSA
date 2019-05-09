@@ -66,13 +66,33 @@ class SubmissionListAPIViewSet(ReadOnlyModelViewSet):
 
 class SubmissionListView(LoginRequiredMixin,PermissionRequiredMixin,ListView):
     template_name = 'PhotoCompetition/submission_list.html'
-    queryset = models.Submission.objects.all()
     context_object_name = 'submissions'
     paginate_by = 25
     login_url = '/hub/login/'
     permission_required = ('PhotoCompetition.view_submission')
 
+    def get_queryset(self):
+        qs = models.Submission.objects.all()
+        status = self.request.GET.get('shortlist_status')
+        if status:
+            shortlisted_submission = models.ApprovedSubmission.objects.all()
+            if status == 'not-shortlisted':
+                return qs.exclude(pk__in = [obj.submission.pk for obj in shortlisted_submission])
+            if status == 'shortlisted':
+                return qs.filter(pk__in = [obj.submission.pk for obj in shortlisted_submission])
+        return qs
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        qs = self.get_queryset()
+        context["filter"] = filters.SubmissionFilter(self.request.GET, queryset=qs)
+        context["device_phone"] = qs.filter(deviceType="MobilePhone").count()
+        context["device_camera"] = qs.filter(deviceType="Camera").count()
+        context["category_nature"] = qs.filter(categoryType="Nature").count()
+        context["category_culture"] = qs.filter(categoryType="Culture").count()
+        return context
+    
+    
 
 
 class SubmissionDetailView(LoginRequiredMixin, PermissionRequiredMixin, DetailView):

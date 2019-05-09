@@ -18,8 +18,8 @@
         <div class="col-lg-4 card" style='border:none;'>
             <div class="card-body text-center">
                 <div class="my-3 d-block mx-auto avatar-lg rounded-circle">
-                    {% if view_bag.director.member.user_profile.avatar %}
-                        <img class='img-fluid' src="{{view_bag.director.member.user_profile.avatar.url}}" />
+                    {% if view_bag.director.member.avatar %}
+                        <img class='img-fluid' src="{{view_bag.director.member.avatar.url}}" />
                     {% else %}
                         <img class="img-fluid" src="{% static 'PublicSite/img/placeholder-user.png' %}">
                     {% endif %}
@@ -90,8 +90,8 @@
 		{% for user in view_bag.management %}
 			<div class="col-lg-3 col-md-3 col-sm-6" >
 				<div class="my-3 d-block mx-auto avatar-md rounded-circle">
-					{% if user.member.user_profile.avatar %}
-						<img class='img-fluid' src="{{user.member.user_profile.avatar.url}}" />
+					{% if user.member.avatar %}
+						<img class='img-fluid' src="{{user.member.avatar.url}}" />
 					{% else %}
 						<img class="img-fluid" src="{% static 'PublicSite/img/placeholder-user.png' %}">
 					{% endif %}
@@ -119,8 +119,8 @@
         {% for user in view_bag.general %}
             <div class="col-lg-3 col-md-4 col-sm-6 text-center">
                 <div class="my-3 d-block mx-auto avatar-sm rounded-circle">
-                    {% if user.member.user_profile.avatar %}
-                        <img class='img-fluid' src="{{user.member.user_profile.avatar.url}}" />
+                    {% if user.member.avatar %}
+                        <img class='img-fluid' src="{{user.member.avatar.url}}" />
                     {% else %}
                         <img class="img-fluid" src="{% static 'PublicSite/img/placeholder-user.png' %}">
                     {% endif %}

@@ -2,7 +2,7 @@ from django.db import models
 from django.db.models import F
 from django.db.models.signals import post_save
 from django.urls import reverse
-from UserAuthAPI.models import User
+from UserAuthAPI.models import UserProfile
 import uuid
 # Create your models here.
 
@@ -23,7 +23,7 @@ class TransactionType(models.Model):
 class Transaction(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid1, editable=False)
     transaction_type = models.ForeignKey(TransactionType, on_delete=models.DO_NOTHING)
-    related_user = models.ForeignKey(User, on_delete=models.DO_NOTHING, null=True, blank=True)
+    related_user = models.ForeignKey(UserProfile, on_delete=models.DO_NOTHING, null=True, blank=True)
     time = models.DateTimeField(auto_now_add=True)
     is_disabled = models.BooleanField(default=False)
     is_effective = models.BooleanField(default=True)
@@ -39,7 +39,7 @@ class TransactionReview(models.Model):
     time = models.DateTimeField(auto_now_add=True)
     is_auto_created = models.BooleanField(default=False)
     is_approved = models.BooleanField(default=False)
-    operator = models.ForeignKey(User, on_delete=models.DO_NOTHING, null=True, blank=True)
+    operator = models.ForeignKey(UserProfile, on_delete=models.DO_NOTHING, null=True, blank=True)
     note = models.CharField(max_length=500,null=True, blank=True)
 
     def _update_transaction_status(self, created=False):
@@ -61,7 +61,7 @@ class Invoice(models.Model):
     is_disabled = models.BooleanField(default=False)
     time = models.DateTimeField(auto_now_add=True)
     related_transaction = models.ForeignKey(Transaction, on_delete=models.CASCADE,null=True,blank=True)
-    uploader = models.ForeignKey(User, on_delete=models.DO_NOTHING, null=True, blank=True)
+    uploader = models.ForeignKey(UserProfile, on_delete=models.DO_NOTHING, null=True, blank=True)
     abn_number = models.CharField(max_length=11)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     note = models.CharField(max_length=500,null=True, blank=True)
@@ -104,7 +104,7 @@ class BankTransferRecipient(models.Model):
     bsb = models.CharField(max_length=6)
     acc_number = models.CharField(max_length=11)
     amount = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
-    sender = models.ForeignKey(User, on_delete=models.DO_NOTHING, null=True, blank=True)
+    sender = models.ForeignKey(UserProfile, on_delete=models.DO_NOTHING, null=True, blank=True)
     pic_scan = models.ImageField(upload_to='finance/bankreceipient/', height_field=None, width_field=None, 
         blank=True, null=True)
     note = models.CharField(max_length=500,null=True, blank=True)

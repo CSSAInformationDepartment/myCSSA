@@ -2,7 +2,7 @@ from django.db import models
 import sys
 sys.path.append("..")
 
-from UserAuthAPI.models import User
+from UserAuthAPI.models import UserProfile
 
 # Create your models here.
 
@@ -42,7 +42,7 @@ class BlogOldContent (models.Model):
 class BlogWrittenBy(models.Model):
     blogCreatedId = models.AutoField(primary_key = True)
     blogId = models.ForeignKey(Blog, on_delete = models.CASCADE)
-    userId = models.ForeignKey(User, on_delete = models.DO_NOTHING)
+    userId = models.ForeignKey(UserProfile, on_delete = models.DO_NOTHING)
 
 class BlogTag (models.Model):
     tagId = models.AutoField(primary_key = True)
@@ -67,4 +67,4 @@ class BlogReviewed (models.Model):
 
     reviewedId = models.AutoField(primary_key=True)
     blogId = models.ForeignKey(Blog, on_delete=models.CASCADE)
-    userId = models.ForeignKey(User, on_delete=models.DO_NOTHING)
+    userId = models.ForeignKey(UserProfile, on_delete=models.DO_NOTHING)

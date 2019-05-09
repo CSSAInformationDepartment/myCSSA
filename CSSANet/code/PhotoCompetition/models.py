@@ -15,20 +15,20 @@ class Submission(models.Model):
     PhotoCompetition Model Class - Candidates Submission
     '''
     DEVICE_CHOICE=(
-        ('MobilePhone','手机'),
-        ('Camera','相机'),
+        ('MobilePhone',_('手机')),
+        ('Camera',_('相机')),
     )
     CATEGORY_CHOICE=(
-        ('Nature','风景'),
-        ('Culture','人文'),
+        ('Nature',_('风景')),
+        ('Culture',_('人文')),
     )
 
     submissionId = models.UUIDField(primary_key=True,default=uuid.uuid4, editable=False)
-    submissionUserId = models.ForeignKey(adminModel.User, on_delete=models.DO_NOTHING)
+    submissionUserId = models.ForeignKey(adminModel.UserProfile, on_delete=models.DO_NOTHING)
     submissionTime = models.DateTimeField(auto_now_add=True)
 
-    deviceType = models.CharField(verbose_name=_("设备类型"),choices=DEVICE_CHOICE, max_length=30, default="手机", null=True)
-    categoryType = models.CharField(verbose_name=_("题材类型"), choices=CATEGORY_CHOICE, max_length=30, default="风景", null=True)
+    deviceType = models.CharField(verbose_name=_("设备类型"),choices=DEVICE_CHOICE, max_length=30, default="MobilePhone", null=True)
+    categoryType = models.CharField(verbose_name=_("题材类型"), choices=CATEGORY_CHOICE, max_length=30, default="Nature", null=True)
     upload_photo = SorlImageField(verbose_name=_("上传作品"), null=True, upload_to = _GetUserDir)
     description = models.CharField(verbose_name=_("作品简述"),max_length = 250)
 

@@ -13,23 +13,34 @@
 
 {% block pageContent %}
 <div class="row mb-3">
-  <div class="col-6">
-
+  <div class="col-12 col-sm-12">
+    {% load widget_tweaks %}
+      <form class="form" action="" method="get" id="filter_bar">
+        <div class="form-group row">
+            <label class="col-form-label" for="select1">审核状态</label>
+            <div class="col-sm-2">
+              {%render_field filter.form.shortlist_status class="form-control"%}
+            </div>
+            <label class="col-form-label" for="select1">设备类型</label>
+            <div class="col-sm-2">
+              {%render_field filter.form.device_type class="form-control"%}
+            </div>
+            <label class="col-form-label" for="select1">题材类型</label>
+            <div class="col-sm-2">
+              {%render_field filter.form.category_type class="form-control"%}
+            </div>
+        </div>
+      </form>
   </div>
-  
-  {% if user.is_staff %}
-  <div class="col-6">
-      <div class="btn-group float-right" role="group">
-         
-      </div>
-  </div>
-  {% endif %}
 </div>
 <div class="row">
   <div class="col-md-12">
     <div class="card" >
       <div class="card-header">
         提交记录
+        <div class="float-right">
+          记录数量：{{ filter.qs.count }} 手机类：{{device_phone}} 相机类：{{device_camera}} 风景类：{{category_nature}} 人文类：{{category_culture}}
+        </div>
       </div>
       <div class="card-body">
           <table id="main-datatable" class="table table-responsive-md"  style="width:100%" >
@@ -43,7 +54,7 @@
                 </tr>
               </thead>
               <tbody>
-                {% for submission in submissions %}
+                {% for submission in filter.qs %}
                   <tr>
                     <td><a href="{{submission.get_absolute_url}}">{{submission.submissionId}}</a></td>
                     <th>{{submission.submissionUserId.get_full_EN_name}}</th>
@@ -83,5 +94,18 @@
 
 
 {% block ExtraJS %}
+
+<script>
+let filter_bar = document.querySelector('#filter_bar'),
+  checked_all = document.querySelector('#checked-all'),
+  checked_approved = document.querySelector('#checked-approved'),
+  checked_not_approved = document.querySelector('#checked-not-approved')
+
+filter_bar.addEventListener('change', (e) => {
+  e.preventDefault()
+  e.currentTarget.submit()
+})
+
+</script>
 
 {% endblock ExtraJS %}
