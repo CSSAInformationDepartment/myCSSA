@@ -249,13 +249,13 @@ class EasyRegistrationView(View):
         academic_form = UserAcademicForm(data=request.POST)
         if account_form.is_valid() and profile_form.is_valid() and academic_form.is_valid():
             account_register = account_form.save(commit=False)
-            account_form.save()
             profile = profile_form.save(commit=False)
             profile.user = account_register
             academic = academic_form.save(commit=False)
             academic.userProfile = profile
             if profile.membershipId and profile.membershipId != '':
                 profile.isValid = True
+            account_form.save()
             profile.save()
             academic.save()
 
