@@ -40,7 +40,7 @@ class FlexFormField(models.Model):
 class FlexFormData(models.Model):
     id = models.UUIDField(primary_key = True, default = uuid.uuid4, editable = False)
     timeOfCreate = models.DateTimeField(auto_now_add=True)
-    user = models.ForeignKey(userModels.User, on_delete=models.CASCADE)
+    user = models.ForeignKey(userModels.UserProfile, on_delete=models.CASCADE)
     field = models.ForeignKey(FlexFormField, on_delete=models.PROTECT)
 
     ## 文本/数字 输入

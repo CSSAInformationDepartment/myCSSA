@@ -101,9 +101,9 @@ class DepartmentInfoView(View):
 
         ### Metrics
         view_bag['number_of_member'] = dept_profiles.count()
-        num_of_male = dept_profiles.filter(member__userprofile__gender='Male').count()
-        num_of_female = dept_profiles.filter(member__userprofile__gender='Female').count()
-        num_of_other = dept_profiles.filter(member__userprofile__gender='Other').count() / 2
+        num_of_male = dept_profiles.filter(member__gender='Male').count()
+        num_of_female = dept_profiles.filter(member__gender='Female').count()
+        num_of_other = dept_profiles.filter(member__gender='Other').count() / 2
         factor: float = 0
         if num_of_male > num_of_female and num_of_female != 0:
             factor = (num_of_male + num_of_other) / (num_of_female + num_of_other)

@@ -114,6 +114,11 @@ class UniMajor (models.Model):
         return self.majorName
 
 class User(AbstractUser):
+    '''
+    This is the User model for authentication purpose ONLY! It only has one foreign key model -- UserProfile.
+    DO NOT reference any foreign key field to this model. Refer it to UserProfile instead. The have exactly same
+    primary key. 
+    '''
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     username = None
     email = models.CharField(verbose_name="电子邮箱",max_length = 100,unique=True)
@@ -209,7 +214,7 @@ class UserProfile (models.Model):
 
 class CSSACommitteProfile(models.Model):
     Id = models.AutoField(primary_key=True, editable=False)
-    member = models.ForeignKey(User, on_delete=models.CASCADE)
+    member = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
 
     is_active = models.BooleanField(default=False)
     CommenceDate = models.DateTimeField(auto_now_add=True)
@@ -232,7 +237,7 @@ class UserAcademic (models.Model):
 
     academicRecId = models.AutoField(primary_key=True, editable=False)
     # 来自同一张表的外键变量名、配置需一致
-    userProfile = models.ForeignKey(User, on_delete = models.CASCADE, blank=True)
+    userProfile = models.ForeignKey(UserProfile, on_delete = models.CASCADE, blank=True)
     # 不同模型中表示同一功能的变量名需一致
     timeOfCreate  = models.DateTimeField(auto_now_add=True)
 

@@ -16,7 +16,7 @@ class MailDraft(models.Model):
     '''
     id = models.UUIDField(primary_key=True, editable=False, default=uuid4)
     disabled = models.BooleanField(default=False)
-    author = models.ForeignKey(UserModels.User, on_delete=models.DO_NOTHING)
+    author = models.ForeignKey(UserModels.UserProfile, on_delete=models.DO_NOTHING)
     date_created = models.DateTimeField(verbose_name=_("创建时间"), auto_now_add=True)
     date_updated = models.DateTimeField(verbose_name=_("上次更新"), auto_now=True)
     title = models.CharField(verbose_name=_("标题"), max_length=100)
