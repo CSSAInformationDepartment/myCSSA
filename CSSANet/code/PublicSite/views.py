@@ -135,7 +135,7 @@ class ResumeSubmissionView(LoginRequiredMixin,View):
     def post(self, request, *args, **kwargs):
         jobId = self.kwargs.get('jobId')
         if request.user.is_authenticated:
-            if checkDuplicateResume(jobId,request.user.id):
+            if checkDuplicateResume(jobId, request.user.id):
                 self.json_data['result'] = False
                 self.json_data['error'] = "Duplicated Submission! 您已经提交过该岗位的申请"
             else:

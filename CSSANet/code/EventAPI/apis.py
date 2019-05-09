@@ -10,7 +10,7 @@ def is_duplicated_purchase(user,event):
     '''
     Check if the user is going to proceed a duplicated purchase.
     '''
-    current_ticket = AttendEvent.objects.filter(Q(attendedEventId=event) & Q(attendedUserId=user) & Q(disabled=False))
+    current_ticket = AttendEvent.objects.filter(Q(attendedEventId=event) & Q(attendedUserId__user=user) & Q(disabled=False))
     if current_ticket:
         return True
 
@@ -67,7 +67,7 @@ def get_ticket(user, event_id, ticket_id=None ,is_paid=False):
         elif check_availability(event):
             new_ticket = AttendEvent(
                 attendedEventId = event,
-                attendedUserId = user,
+                attendedUserId__user = user,
                 paid = is_paid,
             )
             if event.isFree:

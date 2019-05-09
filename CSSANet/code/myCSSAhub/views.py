@@ -95,21 +95,6 @@ class Email_Compose(LoginRequiredMixin, View):
 
         return render(request, self.template_name)
 
-################################# calendar ########################################
-
-
-class Calendar(LoginRequiredMixin, View):
-    login_url = '/hub/login/'
-    template_name = 'myCSSAhub/calendar.html'
-
-    def get(self, request):
-
-        return render(request, self.template_name, locals())
-
-    def post(self, request):
-
-        return render(request, self.template_name)
-
 
 ################################# merchants ########################################
 
@@ -268,7 +253,7 @@ class EasyRegistrationView(View):
             profile = profile_form.save(commit=False)
             profile.user = account_register
             academic = academic_form.save(commit=False)
-            academic.userProfile = account_register
+            academic.userProfile = profile
             if profile.membershipId and profile.membershipId != '':
                 profile.isValid = True
             profile.save()

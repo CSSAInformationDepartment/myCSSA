@@ -224,7 +224,7 @@ class UserTicketListView(LoginRequiredMixin, View):
     template_name = 'EventAPI/user_ticket_list.html'
 
     def get(self, request, *args, **kwargs):
-        tickets = AttendEvent.objects.filter(attendedUserId=request.user).order_by("-attendedEventId__eventActualStTime")
+        tickets = AttendEvent.objects.filter(attendedUserId__user=request.user).order_by("-attendedEventId__eventActualStTime")
         return render(request, self.template_name, {'tickets':tickets})
 
 class EventListJsonView(LoginRequiredMixin, PermissionRequiredMixin, BaseDatatableView):

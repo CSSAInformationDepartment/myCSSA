@@ -143,7 +143,7 @@ class AttendEvent(models.Model):
     attendedId = models.UUIDField(primary_key = True, default = uuid.uuid4, editable = False)
 
     attendedEventId = models.ForeignKey(Event, on_delete = models.CASCADE)
-    attendedUserId = models.ForeignKey(adminModel.User, on_delete = models.DO_NOTHING)
+    attendedUserId = models.ForeignKey(adminModel.UserProfile, on_delete = models.DO_NOTHING)
 
     # 票据状态
     paid = models.BooleanField(default=False)
