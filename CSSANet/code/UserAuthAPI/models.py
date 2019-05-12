@@ -16,6 +16,7 @@
 
 
 from django.db import models
+from django.db.models import Q
 from django.contrib.auth.models import AbstractUser, BaseUserManager, Group, Permission
 import uuid
 from django.utils.translation import ugettext_lazy as _
@@ -200,7 +201,7 @@ class UserProfile (models.Model):
     
     def get_committee_profile(self):
         try:
-            return CSSACommitteProfile.objects.get(member=self.id, is_active=True)
+            return CSSACommitteProfile.objects.get(Q(member=self.pk) & Q(is_active=True))
         except:
             return False
     def __str__(self):

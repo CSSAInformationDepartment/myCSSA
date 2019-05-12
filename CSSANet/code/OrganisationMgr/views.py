@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.shortcuts import render, get_object_or_404
 from django.db.models import Q
-from django.http import JsonResponse, HttpResponseRedirect, HttpResponse, Http404
+from django.http import JsonResponse, HttpResponseRedirect, HttpResponse, Http404, HttpResponseForbidden
 from django.contrib.auth.mixins import  LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin
 from django.views import View
 from django.views.generic import ListView, DetailView, CreateView, UpdateView
@@ -35,8 +35,10 @@ class DepartmentManagementView(LoginRequiredMixin, PermissionRequiredMixin, View
         qs = dept_member_qs
         if not (request.user.is_superuser or request.user.is_council_member):
             profile = UserProfile.objects.get(user=request.user)
-            qs = dept_member_qs.filter(Department=profile.get_committee_profile().Department)
-
+            try:
+                qs = dept_member_qs.filter(Department=profile.get_committee_profile().Department)
+            except:
+                return HttpResponseForbidden()
         self.ViewBag['member_count'] = qs.count()
         paginator = Paginator(qs, 15)
         page = request.GET.get('page')
