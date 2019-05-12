@@ -203,7 +203,8 @@ class UserProfile (models.Model):
             return CSSACommitteProfile.objects.get(member=self.id, is_active=True)
         except:
             return False
-
+    def __str__(self):
+        return '%s' % (self.get_full_EN_name())
     class Meta:
         permissions = (
             ("activate_membership", "Can activate new membership"),

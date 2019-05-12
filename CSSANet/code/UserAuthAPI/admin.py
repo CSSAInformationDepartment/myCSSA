@@ -29,15 +29,15 @@ class CsutomUserAdmin(UserAdmin):
     ordering = ('email',)
 
 class UserProfileAdmin(admin.ModelAdmin):
-    list_display = ('user','firstNameEN','lastNameEN','gender','dateOfBirth' ,'membershipId')
+    list_display = ('user','firstNameEN','lastNameEN','gender','dateOfBirth' ,'membershipId',)
     list_display_links = ('user',)
     search_fields = ('lastNameEN','firstNameEN','user__email','user__telNumber','studentId','membershipId')
     list_per_page = 25
 
 class CommitteeAdmin(admin.ModelAdmin):
     list_display = ('Id','member','is_active','Department','role','CommenceDate')
-    list_display_links = ('Id','member')
-    search_fields = ('member','Department','role')
+    list_display_links = ('Id',)
+    search_fields = ('member__firstNameEN','member__lastNameEN','Department__deptTitle','role__roleName')
     list_per_page = 25
 
 

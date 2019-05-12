@@ -5,6 +5,7 @@ from django.db import transaction
 from django.http import HttpResponseRedirect
 
 from .models import *
+from UserAuthAPI.models import User, UserProfile
 
 def is_duplicated_purchase(user,event):
     '''
@@ -65,9 +66,10 @@ def get_ticket(user, event_id, ticket_id=None ,is_paid=False):
                 ticket.paid = True
                 return issue_token_for_ticket(ticket)
         elif check_availability(event):
+            user_pf = UserProfile.objects.get(pk=user.id)
             new_ticket = AttendEvent(
                 attendedEventId = event,
-                attendedUserId__user = user,
+                attendedUserId = user_pf,
                 paid = is_paid,
             )
             if event.isFree:
