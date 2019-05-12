@@ -34,7 +34,7 @@ class DepartmentManagementView(LoginRequiredMixin, PermissionRequiredMixin, View
         dept_member_qs = UserModels.CSSACommitteProfile.objects.filter(is_active=True)
         qs = dept_member_qs
         if not (request.user.is_superuser or request.user.is_council_member):
-            profile = User.objects.get(user=request.user)
+            profile = UserProfile.objects.get(user=request.user)
             qs = dept_member_qs.filter(Department=profile.get_committee_profile().Department)
 
         self.ViewBag['member_count'] = qs.count()
@@ -80,7 +80,7 @@ class AddNewCommitteView(LoginRequiredMixin, PermissionRequiredMixin, View):
                 'role':3,
             })
         else:
-            profile = User.objects.get(user=request.user)
+            profile = UserProfile.objects.get(user=request.user)
             self.ViewBag['recent_resume']
             self.ViewBag['lock_table'] = True
             self.ViewBag['form'] = AssignNewComitteeForm(initial={
