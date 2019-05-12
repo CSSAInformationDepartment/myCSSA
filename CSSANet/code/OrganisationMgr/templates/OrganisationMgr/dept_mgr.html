@@ -52,10 +52,10 @@
                             {% for member in dept_members  %}
                                 <tr>
                                     <td>{{member.Department.deptTitle}}</td>
-                                    <td>{{member.member.get_full_EN_name}}</td>
+                                    <td>{{member.get_full_EN_name}}</td>
                                     <td>{{member.role.roleName}}</td>
-                                    <td>{{member.member.email}}</td>
-                                    <td>{{member.member.telNumber}}</td>
+                                    <td>{{member.user.email}}</td>
+                                    <td>{{member.user.telNumber}}</td>
                                 </tr>
                             {% endfor %}
                         </tbody>
