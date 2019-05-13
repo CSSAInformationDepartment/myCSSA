@@ -15,3 +15,6 @@ class SubmissionFilter(FilterSet):
     def pesudo_filter(self, queryset, name, value):
         return queryset
 
+class DisplaySubmissionFilter(FilterSet):
+    device_type = filters.ChoiceFilter(field_name='deviceType', choices=models.Submission.DEVICE_CHOICE, label=_("使用设备"))
+    category_type = filters.ChoiceFilter(field_name='categoryType', choices=models.Submission.CATEGORY_CHOICE, label=_("题材类型"))

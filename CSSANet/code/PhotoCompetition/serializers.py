@@ -27,3 +27,14 @@ class SubmissionSelectionControlSerializers(serializers.ModelSerializer):
     class Meta:
         model = ApprovedSubmission
         fields = ('id', 'is_selected', 'submission',)
+
+
+class DisplayedSubmissionSerializers(serializers.ModelSerializer):
+    author_name = serializers.SerializerMethodField()
+
+    def get_author_name(self, obj):
+        return obj.submissionUserId.get_full_EN_name()
+
+    class Meta:
+        model = Submission
+        fields = ('submissionId','deviceType', 'categoryType', 'upload_photo', 'description','author_name')

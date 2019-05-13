@@ -12,6 +12,8 @@ from rest_framework.views import APIView
 from rest_framework.authentication import SessionAuthentication, TokenAuthentication
 from rest_framework.permissions import IsAuthenticated, DjangoModelPermissions
 
+
+import django_filters
 from . import models, forms, serializers, filters, app_permission
 from UserAuthAPI.models import User, UserProfile
 
@@ -63,6 +65,24 @@ class SubmissionListAPIViewSet(ReadOnlyModelViewSet):
     authentication_classes = (SessionAuthentication, TokenAuthentication)
     permission_classes = (IsAuthenticated, DjangoModelPermissions)
 
+class ApprovedSubmissionsAPIViewSet(ReadOnlyModelViewSet):
+    '''
+    PhotoCompetition App - Public - Displaying all submission for the final round
+    Read Only
+
+    Result can be filtered using deviceType and categoryType
+    Examples: http://localhost:8000/app/photo-competition/api/photos/?device_type=MobilePhone&category_type=Culture
+
+    Written by Le (Josh). Lu
+    '''
+    queryset = models.Submission.objects.all()
+    serializer_class = serializers.DisplayedSubmissionSerializers
+    filter_backends = (django_filters.rest_framework.DjangoFilterBackend,)
+    filterset_class = filters.DisplaySubmissionFilter
+    def get_queryset(self):
+        qs = models.Submission.objects
+        approved_submission = models.ApprovedSubmission.objects.all()
+        return qs.filter(pk__in=[obj.submission.pk for obj in approved_submission])
 
 class SubmissionListView(LoginRequiredMixin,PermissionRequiredMixin,ListView):
     template_name = 'PhotoCompetition/submission_list.html'
