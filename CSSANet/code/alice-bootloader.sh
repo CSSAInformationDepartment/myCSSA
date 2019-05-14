@@ -45,7 +45,7 @@ sleep 1
 #     fi
 # done
 
-python3 manage.py makemigrations || { echo '[Bootloader] Migration Check Failure!';  exit 1;}
+yes | python3 manage.py makemigrations || { echo '[Bootloader] Migration Check Failure!';  exit 1;}
 
 python3 manage.py migrate --no-input || { echo '[Bootloader] DB Migration Failure!'; exit 1;}
 

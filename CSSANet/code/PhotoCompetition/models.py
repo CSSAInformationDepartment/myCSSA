@@ -1,6 +1,7 @@
 from django.db import models
 from django.urls import reverse
 from django.core.validators import MaxValueValidator
+from django.db.models import F
 import uuid
 from django.utils.translation import ugettext_lazy as _
 from sorl.thumbnail import ImageField as SorlImageField
@@ -46,3 +47,34 @@ class ApprovedSubmission(models.Model):
     disabled  = models.BooleanField(default=False)
     submission = models.ForeignKey(Submission,verbose_name=_("作品") ,on_delete=models.CASCADE)
     aggregate_votes = models.IntegerField(verbose_name=_("获得票数"), default=0)
+
+
+class SubmissionVoting(models.Model):
+    id = models.AutoField(primary_key=True, editable=False)
+    time_stamp = models.DateTimeField(auto_now_add=True)
+    voter = models.ForeignKey(adminModel.UserProfile, on_delete=models.DO_NOTHING, default=None, blank=True, null=True)
+    user_IPv4 = models.GenericIPAddressField()
+    votable_submission = models.ForeignKey(ApprovedSubmission, on_delete=models.CASCADE)
+
+    def _add_aggregate_votes(self, created=False):
+        if created:
+            target_transaction =  ApprovedSubmission.objects.get(pk=self.votable_submission.pk)
+            target_transaction.aggregate_votes += 1
+            target_transaction.save()
+    
+    def _remove_aggregate_votes(self):
+        target_transaction =  ApprovedSubmission.objects.get(pk=self.votable_submission.pk)
+        target_transaction.aggregate_votes -= 1
+        target_transaction.save()
+    
+
+    def save(self, *args, **kwargs):
+        created = self._state.adding
+        print(self.__dict__)
+        super(SubmissionVoting, self).save(*args, **kwargs)
+        self._add_aggregate_votes(created)
+
+    def delete(self, *args, **kwargs):
+        self._remove_aggregate_votes()
+        super(SubmissionVoting, self).delete(*args, **kwargs)
+        
