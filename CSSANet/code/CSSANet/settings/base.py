@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'gunicorn',
     'widget_tweaks',
     'django_filters',
+    'guard_angel',
     'storages',
     'redis',
     
@@ -67,6 +68,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'guard_angel.middleware.HttpRequestLogMiddleware',
 ]
 
 ROOT_URLCONF = 'CSSANet.urls'
