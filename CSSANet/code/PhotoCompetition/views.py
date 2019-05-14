@@ -1,9 +1,12 @@
 from django.shortcuts import render
 from django.shortcuts import Http404, HttpResponse, HttpResponseRedirect
 from django.views import View
+from django.db.models import Q
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.views.generic import CreateView, ListView, DeleteView, DetailView
 from django.urls import reverse
+from django.utils.translation import ugettext_lazy as _
+from django.utils import timezone
 
 from rest_framework import status
 from rest_framework.response import Response
@@ -11,11 +14,15 @@ from rest_framework.viewsets import ReadOnlyModelViewSet
 from rest_framework.views import APIView
 from rest_framework.authentication import SessionAuthentication, TokenAuthentication
 from rest_framework.permissions import IsAuthenticated, DjangoModelPermissions
+from rest_framework.exceptions import ValidationError
 
+import datetime
 
 import django_filters
 from . import models, forms, serializers, filters, app_permission
 from UserAuthAPI.models import User, UserProfile
+
+from guard_angel.apis import get_previous_path_ip_count_by_hour, get_request_IPv4
 
 # Create your views here.
 
@@ -114,7 +121,6 @@ class SubmissionListView(LoginRequiredMixin,PermissionRequiredMixin,ListView):
     
     
 
-
 class SubmissionDetailView(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
     '''
     PhotoCompetition App - Admin - Submission Detail View 
@@ -160,6 +166,82 @@ class SubmissionSelectionControlAPI(APIView):
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, format=None):
+        pk = request.GET.get('pk')
+        record = self.get_object(pk)
+        record.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+class VoteSubmissionControlAPI(APIView):
+    '''
+    PhotoCompetition App - Admin - Voting Control
+
+    GET -> Return all voting history for a registered users. Return None for guest
+
+    POST -> Posting candidate ID using AJAX to load data in this given format:
+    {
+    "votable_submission": null
+    }
+    '''
+    authentication_classes = (SessionAuthentication, TokenAuthentication,)
+
+    def get_object(self, key):
+        try:
+            return models.SubmissionVoting.objects.filter(Q(votable_submission=key) & Q(voter = self.request.user))
+        except models.SubmissionVoting.DoesNotExist:
+            raise Http404
+
+    def check_duplicate_votes(self, key:str):
+        dt_from: datetime.datetime = timezone.now() - datetime.timedelta(hours=24)
+        count:int = get_previous_path_ip_count_by_hour(self.request, path=self.request.path_info, method='POST')
+        voter_ip = get_request_IPv4(self.request)
+        obj = None
+        if count >= 3:
+            raise ValidationError(_('You have exceeded the daily voting limit'))
+
+        try:
+            obj = models.SubmissionVoting.objects.get(Q(votable_submission=key) 
+                & Q(user_IPv4=voter_ip)
+                & Q(time_stamp__gte=dt_from))
+        except:
+            pass
+
+        if obj:
+            raise ValidationError(_('You cannot vote the same candidate within 24 hours'))
+
+        return True
+    
+    def get(self, request, format=None):
+        res = serializers.VotingControlSerializers()
+        if request.user.is_authenticated:
+            votes = models.SubmissionVoting.objects.filter(voter = request.user)
+            res = serializers.VotingControlSerializers(votes)
+        
+        return Response(res.data)
+
+    def post(self, request, format=None):
+        votable_submission_id:str = request.data.get('votable_submission')
+        try:
+            obj_confirm = models.ApprovedSubmission.objects.get(submission__pk=votable_submission_id)
+        except:
+            raise ValidationError(_('Invalid candidate ID'))
+
+        voter = None
+        if request.user.is_authenticated:
+            voter = UserProfile.objects.get(user = request.user).pk
+
+        serializer = serializers.VotingControlSerializers(data={
+            "votable_submission": obj_confirm.pk,
+            "voter": voter,
+            "user_IPv4": get_request_IPv4(request),
+        })
+       
+        if serializer.is_valid() and self.check_duplicate_votes(serializer.validated_data.get('votable_submission')):
+            serializer.save()
+            return Response(serializer.data)
+
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, format=None):

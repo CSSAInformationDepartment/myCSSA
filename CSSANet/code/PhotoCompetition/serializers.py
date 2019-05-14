@@ -1,6 +1,6 @@
 from rest_framework import serializers
-from .models import Submission, ApprovedSubmission
-from UserAuthAPI.models import User
+from .models import Submission, ApprovedSubmission, SubmissionVoting
+from UserAuthAPI.models import User, UserProfile
 
 
 class SubmissionListSerializers(serializers.ModelSerializer):
@@ -38,3 +38,12 @@ class DisplayedSubmissionSerializers(serializers.ModelSerializer):
     class Meta:
         model = Submission
         fields = ('submissionId','deviceType', 'categoryType', 'upload_photo', 'description','author_name')
+
+
+class VotingControlSerializers(serializers.ModelSerializer):
+    voter = serializers.PrimaryKeyRelatedField(queryset=UserProfile.objects, allow_null=True)
+    votable_submission = serializers.PrimaryKeyRelatedField(queryset=ApprovedSubmission.objects)
+    class Meta:
+        model = SubmissionVoting
+        fields = ('time_stamp', 'voter', 'user_IPv4', 'votable_submission')
+        read_only_fields = ('time_stamp',)
