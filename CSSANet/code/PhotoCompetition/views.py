@@ -249,3 +249,10 @@ class VoteSubmissionControlAPI(APIView):
         record = self.get_object(pk)
         record.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+### FOR DEV Purpose only
+class AxiosTestView(View):
+
+    def get(self,request, *args, **kwargs):
+        return render(self.request, template_name='PhotoCompetition/test_UI.html')
