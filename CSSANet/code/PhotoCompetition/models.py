@@ -9,7 +9,7 @@ from UserAuthAPI import models as adminModel
 
 # Create your models here.
 def _GetUserDir(instance, filename):
-    return 'competition/competitionPics/user_{0}/{1}'.format(instance.submissionUserId.id, filename)
+    return 'competition/competitionPics/user_{0}/{1}'.format(instance.submissionUserId.pk, filename)
 
 class Submission(models.Model):
     '''

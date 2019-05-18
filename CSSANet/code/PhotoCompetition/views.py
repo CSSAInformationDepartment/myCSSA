@@ -255,4 +255,4 @@ class VoteSubmissionControlAPI(APIView):
 class AxiosTestView(View):
 
     def get(self,request, *args, **kwargs):
-        return render(self.request, template_name='PhotoCompetition/test_UI.html')
+        return render(self.request, template_name='PhotoCompetition/vote.html')
