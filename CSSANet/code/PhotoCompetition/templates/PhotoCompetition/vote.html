@@ -1,6 +1,24 @@
 
 {% extends 'components/base_page.html' %}
 
+{% block 'extra_header' %}
+
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/ekko-lightbox/5.3.0/ekko-lightbox.css">
+
+<!-- <style>
+
+.modal-dialog {
+  max-width: 100%;
+  width:100%;
+  margin: 0;
+  padding: 0;
+}
+
+</style> -->
+
+
+{% endblock 'extra_header' %}
+
 {% block 'pg_body' %}
 {% load static %}
 <div class="page-container">
@@ -27,36 +45,47 @@
     </div>
   </div>
 <hr>
-    <div class="row" id="album">
+    <div class="row" id="display">
     </div>
 <!-- 
-    <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-              <div class="modal-content">
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
-                </div>
-                <div class="modal-body">
-                    <img src="" id="imagepreview">
-                </div>
-                <div class="modal-footer">
-                </div>
-              </div>
-            </div> -->
+    <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <figure class="figure">
+                <img src="{% static 'myCSSAhub/img/hjc.jpeg' %}" class="img-fluid" >
+                <figcaption class="figure-caption"></figcaption>
+            </figure>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary">Save changes</button>
+          </div>
+        </div>
+      </div>
+            </div>  -->
+
+
           </div>
 
 </div>
-  </div>
 
-
-</div>
 
 {% endblock 'pg_body' %}
 
 {% block 'extra_js' %}
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ekko-lightbox/5.3.0/ekko-lightbox.min.js"></script>
 <script>
+  $(document).on('click', '[data-toggle="lightbox"]', function(event) {
+                event.preventDefault();
+                $(this).ekkoLightbox();
+            });
     //const axios = require('axios');
     axios.defaults.xsrfCookieName = 'csrftoken'
     axios.defaults.xsrfHeaderName = "X-CSRFTOKEN"
@@ -65,7 +94,8 @@
         sourceURI_3 = '/app/photo-competition/api/photos/?device_type=MobilePhone&category_type=Nature',
         sourceURI_4 = '/app/photo-competition/api/photos/?device_type=Camera&category_type=Culture',
         sourceURI_5 = '/app/photo-competition/api/photos/?device_type=Camera&category_type=Nature',
-        album = document.querySelector('#album'),
+        album = document.querySelector('#display'),
+        // details = document.querySelector('#details'),
         btn1 = document.querySelector('#mobelCulture'),
         btn2 = document.querySelector('#mobelNature'),
         btn3 = document.querySelector('#cameraCulture'),
@@ -79,9 +109,10 @@
             //console.log(res.data);
             res.data.map((element) => {
                 console.log(element.upload_photo)
-                album.innerHTML +=  "<div class='col-sm-5 col-lg-3 portfolio-item mt-3' >"+"<div class='card' style='border: none; width:100%;'>"+"<a data-toggle='modal' href='#modal' id=pop>"+
-                        "<img style='height:180px; width:100%; display: block;' src='"+element.upload_photo+"' alt=''><div class='card-body'></a><p class='card-text' style='max-height:80px; overflow:auto;'>"+element.description+"</p></div></div>"
+                album.innerHTML +=  "<div class='col-sm-5 col-lg-3 portfolio-item mt-3' >"+"<div class='card' style='border: none; width:100%;'>"+"<a data-toggle='lightbox' href='"+element.upload_photo+"'>"+
+                        "<img style='height:180px; width:100%; display: block;' src='"+element.upload_photo+"' alt=''><div class='card-body'></a><p class='card-text' style='max-height:80px; overflow:auto;'>"+element.description+"</p></div></div>" 
             })
+            
         })
         .catch( (err)=> {
             console.log(err);
