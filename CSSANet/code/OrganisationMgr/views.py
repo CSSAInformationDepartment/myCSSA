@@ -165,7 +165,7 @@ class MembershipActivationView(LoginRequiredMixin, PermissionRequiredMixin, View
         self.ViewBag['form'] = form
         if form.is_valid():
             instance = form.save()
-            lodge_sys_gen_transaction(user_profile.user,type='New Member Activation', amount=5.00, 
+            lodge_sys_gen_transaction(user_profile, type='New Member Activation', amount=5.00, 
                 note='Card No.' + str(instance.membershipId))
             return HttpResponseRedirect(reverse('myCSSAhub:OrganisationMgr:confirm_activation', args=[str(usr_id)]))
         return render(request, self.template_name, self.ViewBag)
