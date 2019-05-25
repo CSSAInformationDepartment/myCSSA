@@ -3,10 +3,7 @@
 db.sqlite3
 .lock
 .DS_Store
-.vscode/
-.CSSANet/.vscode/
-.vscode/settings.json
-.idea/
+
 settings.json
 /CSSANet/data/*
 !/CSSANet/data/
@@ -22,3 +19,17 @@ CSSANet/CSSANet.code-workspace
 CSSANet/data/media
 CSSANet/data/static
 CSSANet/code/.mypy_cache
+
+
+# Visual Studio Code Config
+.vscode/
+.CSSANet/.vscode/
+.vscode/settings.json
+.idea/
+
+# Visual Studio Local Dependency
+.vs/
+myCSSA/
+CSSANet/code/bin
+CSSANet/code/env
+CSSANet/code/obj
