@@ -54,7 +54,7 @@ class MailAttachments(models.Model):
 
 class MailQuene(models.Model):
     '''
-    PostmanAPI Model - The mail quene that handle mail sending 
+    PostmanAPI Model - The mail quene that handle mail sending
     
     Le (Josh). Lu APR242019
     '''
