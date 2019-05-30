@@ -10,6 +10,7 @@ from django.utils.translation import ugettext_lazy as _
 from mail_owl.models import MailDraft, MailQuene
 from .tasks import send_async_mail
 
+import time
 
 ## Process:
 ##  1. template is stringfy with the content 
@@ -35,6 +36,8 @@ class AutoMailSender():
         self.quene.receiver = to_address
         self.quene.mail_text = mail_text
 
+
+        ## To-do: maybe need base64 support 
         if template_path:
             self.quene.mail_html = render_to_string(template_path, fill_in_context)
 
@@ -46,8 +49,10 @@ class AutoMailSender():
 
 
     def send_now(self) -> MailQuene:
+        start_time = time.time()
         self.quene.save()
-        send_async_mail.delay(self.quene)
+        print("--- %s DB writing times in seconds ---" % (time.time() - start_time))
+        send_async_mail.delay(self.quene.pk)
         return self.quene
 
 
