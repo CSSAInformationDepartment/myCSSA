@@ -18,7 +18,14 @@ def send_async_mail(quene_task:MailQuene) -> None:
     
     if quene_task.mail_html:
         mail_comp.attach_alternative(quene_task.mail_html, mimetype="text/html")
-    mail_comp.send()
+    
+    
+    quene_task._send_init()
+    try:
+        mail_comp.send()
+        quene_task._send_success()
+    except:
+        quene_task._send_failed()
 
 
 
