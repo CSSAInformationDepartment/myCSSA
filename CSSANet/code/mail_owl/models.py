@@ -65,17 +65,19 @@ class MailQuene(models.Model):
     )
 
     STATUS = (
-        (-1, 'Failed'),
-        (0, 'On Quene'),
-        (1, 'Sending'),
-        (2, 'Success'),
+        (-1, _('Failed')),
+        (0, _('On Quene')),
+        (1, _('Sending')),
+        (2, _('Success')),
     )
 
     id = models.AutoField(primary_key=True, editable=False)
     date_created = models.DateTimeField(verbose_name=_("创建时间"), auto_now_add=True)
     date_scheduled = models.DateTimeField(verbose_name=_("设定发送时间"), default = sys_now_time)
-    mail_body = models.ForeignKey(verbose_name=_("邮件名"), to=MailDraft, on_delete=models.CASCADE)
     receiver = models.EmailField(verbose_name=_("收件人"))
+    title = models.CharField(verbose_name=_("标题"), max_length=100)
+    mail_text = models.TextField(verbose_name=_("邮件正文"), default=None, blank=True, null=True)
+    mail_html = models.TextField(verbose_name=_("邮件HTML"), default=None, blank=True, null=True)
     priorty = models.IntegerField(verbose_name=_("优先级"), choices=PRIORITY, default=1)
     state = models.IntegerField(verbose_name=_("发送状态"), choices=STATUS, default=0)
     disabled = models.BooleanField(default=False)
@@ -84,7 +86,7 @@ class MailQuene(models.Model):
         if not self.disabled and self.state in (0,-1):
             self.state = 1
             self.save()
-        else: 
+        else:
             raise ValidationError(_("This mail quene has been disabled! Please contact system admin for more details"), 
                 code="Disabled mail quene")
 
