@@ -33,3 +33,4 @@ myCSSA/
 CSSANet/code/bin
 CSSANet/code/env
 CSSANet/code/obj
+.mypy_cache/
