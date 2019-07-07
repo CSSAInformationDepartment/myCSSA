@@ -37,7 +37,7 @@ class MailAttachments(models.Model):
     '''
     FILE_TYPE = (
         ('CSS','CSS'),
-        ('IMAGE','IMAGE'),
+        ('IMAGE','IMAGE'), 
         ('VIDEO','VIDEO'),
         ('DOCUMENT','DOCUMENT'),
     )

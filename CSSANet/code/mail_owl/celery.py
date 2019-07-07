@@ -6,12 +6,12 @@
 #          .'`',`''''`________:   ":___________________________________
 #        (`'. '.;  |           ;/\;\;                                  |
 #       (`',.',.;  |                                                   |
-#      (,'` .`.,'  |        Mail Owl -> RESTful email solution         |
+#      (,'` .`.,'  |    Mail Owl -> RESTful email service interface    |
 #      (,.',.','   |              ~ Universal Component of openALICE   |
 #     (,.',.-`_____|                                                   |
 #         __\_ _\_ |              Designer: Le Lu (2019)               |
-#                  |                   Ver: 0.0.2                      |
-#                  |                   MIT Licensed                    |
+#                  |               Ver: 0.0.2 (Ricecake)               |
+#                  |                 M.I.T. Licensed                   |
 #                  |___________________________________________________|
 #    
 

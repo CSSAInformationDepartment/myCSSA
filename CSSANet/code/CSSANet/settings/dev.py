@@ -23,6 +23,12 @@ CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = TIME_ZONE
 
+# Mail Owl Config
+MAILOWL_MULTI_NODES = True
+MAILOWL_MASTER_NODE = ''
+MAILOWL_PORT = 44300
+
+
 # CACHES = {
 #  'default': {
 #   'BACKEND': 'django.core.cache.backends.dummy.DummyCache',  # 缓存后台使用的引擎
