@@ -89,17 +89,6 @@ TEMPLATES = [
     },
 ]
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'myCSSA',
-        'USER': 'postgres',
-        'PASSWORD': 'aiuh489ieu19vc*4',
-        'HOST': 'db',
-        'PORT': '5432'
-    }
-}
-
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.BasicAuthentication',
