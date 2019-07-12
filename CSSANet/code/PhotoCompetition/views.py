@@ -41,7 +41,7 @@ class CandidateSubmissionView(LoginRequiredMixin, View):
         '''
         Proceed GET request for the submission page
         '''
-        prev_submission = models.Submission.objects.filter(submissionUserId=request.user.id)
+        prev_submission = models.Submission.objects.filter(submissionUserId__user=request.user.id)
         submit_form = self.form_class(initial={
             'submissionUserId': request.user.id
         })
@@ -249,3 +249,10 @@ class VoteSubmissionControlAPI(APIView):
         record = self.get_object(pk)
         record.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+### FOR DEV Purpose only
+class AxiosTestView(View):
+
+    def get(self,request, *args, **kwargs):
+        return render(self.request, template_name='PhotoCompetition/test_UI.html')

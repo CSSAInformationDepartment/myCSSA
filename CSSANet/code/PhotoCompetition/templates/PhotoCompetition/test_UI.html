@@ -1,0 +1,62 @@
+{% extends 'components/base_page.html' %}
+
+
+
+{% block 'pg_body' %}
+<div class="bloc l-bloc"style="min-height:75vh;">
+  <div class="row" style="max-height:15vh">
+    <button id="switch"> Click me </button>
+    <div class="col-3 col-lg-3" id="album">
+      
+    </div>
+  </div>
+</div>
+{% endblock 'pg_body' %}
+
+
+{% block 'extra_js' %}
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+    //const axios = require('axios');
+  axios.defaults.xsrfCookieName = 'csrftoken'
+  axios.defaults.xsrfHeaderName = "X-CSRFTOKEN"
+  let sourceURI_1 ='/app/photo-competition/api/photos/',
+    sourceURI_2 = '/app/photo-competition/api/photos/?device_type=MobilePhone&category_type=Nature',
+    album = document.querySelector('#album'),
+    btn = document.querySelector('#switch');
+  "<img style='height: 100%; display: block;' src='' alt=''>"
+
+  loader(sourceURI_1);
+
+
+
+  function loader(source){
+
+    album.innerHTML = ''
+
+    axios.get(source)
+      .then((res)=>{
+        //console.log(res.data);
+        res.data.map((element) => {
+          console.log(element.upload_photo)
+          album.innerHTML += "<img style='weight: 100%; display: block;' src='"+element.upload_photo+"' alt=''>"
+        })
+      })
+      .catch( (err)=> {
+        console.log(err);
+      })
+      .finally(function () {
+        // always executed
+      });
+
+  }
+
+btn.addEventListener('click', (e)=>{
+  loader(sourceURI_2);
+})
+
+
+
+</script>
+
+{% endblock 'extra_js' %}
