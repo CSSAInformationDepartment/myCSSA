@@ -1,7 +1,5 @@
 from django.db import models
-from django.urls import reverse
-import uuid
-from UserAuthAPI import models as userModel
+from UserAuthAPI import models as UserModel
 # Create your models here.
 
 class Prize(models.Model):
@@ -10,4 +8,4 @@ class Prize(models.Model):
     '''
     id = models.AutoField(primary_key=True, editable= False)
     prize_name=models.CharField(max_length=30)
-    prize_UserId=models.ForeignKey(userModel.UserProfile, on_delete=models.DO_NOTHING)
+    prize_userId=models.ForeignKey(UserModel.User, on_delete=models.DO_NOTHING)

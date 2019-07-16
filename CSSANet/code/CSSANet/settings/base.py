@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     'BlogAPI',
     'FlexForm',
     'PhotoCompetition',
+    'PrizeAPI',
 #    'PostmanAPI',
 
     ## RESTful Support
