@@ -1,0 +1,73 @@
+{% extends 'components/base_page.html' %}
+
+{% block 'pg_body' %}
+{% load static %}
+
+<div class="page-container">
+    <div class="container bloc-fill-screen">
+    <h1 class="my-4 text-left">
+        摄影大赛得奖作品
+        </h1>
+        <div class="row" style="max-height:15vh mt-4">
+            
+        </div>
+
+
+
+        {% endblock 'pg_body' %}
+
+{% block 'extra_js' %}
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+    //const axios = require('axios');
+    axios.defaults.xsrfCookieName = 'csrftoken'
+    axios.defaults.xsrfHeaderName = "X-CSRFTOKEN"
+    let sourceURI_1 ='/app/photo-competition/api/photos/',
+        sourceURI_2 = '/app/photo-competition/api/photos/?device_type=MobilePhone&category_type=Culture',
+        sourceURI_3 = '/app/photo-competition/api/photos/?device_type=MobilePhone&category_type=Nature',
+        sourceURI_4 = '/app/photo-competition/api/photos/?device_type=Camera&category_type=Culture',
+        sourceURI_5 = '/app/photo-competition/api/photos/?device_type=Camera&category_type=Nature',
+        album = document.querySelector('#album'),
+        btn1 = document.querySelector('#mobelCulture'),
+        btn2 = document.querySelector('#mobelNature'),
+        btn3 = document.querySelector('#cameraCulture'),
+        btn4 = document.querySelector('#cameraNature');
+        
+    loader(sourceURI_1);
+    function loader(source){
+        album.innerHTML = ''
+        axios.get(source)
+            .then((res)=>{
+            //console.log(res.data);
+            res.data.map((element) => {
+                console.log(element.upload_photo)
+                album.innerHTML +=  "<div class='col-sm-5 col-lg-3 portfolio-item mt-3' >"+"<div class='card' style='border: none; width:100%;'>"+"<a data-toggle='modal' href='#modal' id=pop>"+
+                        "<img style='height:180px; width:100%; display: block;' src='"+element.upload_photo+"' alt=''><div class='card-body'></a><p class='card-text' style='max-height:80px; overflow:auto;'>"+element.description+"</p></div></div>"
+            })
+        })
+        .catch( (err)=> {
+            console.log(err);
+        })
+        .finally(function () {
+        // always executed
+        });
+    }
+    
+  
+    btn1.addEventListener('click', (e)=>{
+    loader(sourceURI_2);
+    })
+    btn2.addEventListener('click', (e)=>{
+    loader(sourceURI_3);
+    })
+    btn3.addEventListener('click', (e)=>{
+    loader(sourceURI_4);
+    })
+    btn4.addEventListener('click', (e)=>{
+    loader(sourceURI_5);
+    })
+
+
+</script>
+
+{% endblock 'extra_js' %}
