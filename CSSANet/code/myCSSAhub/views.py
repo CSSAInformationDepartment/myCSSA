@@ -23,8 +23,8 @@ from django.contrib.auth.decorators import login_required
 from .models import AccountMigration, DiscountMerchant
 from UserAuthAPI import models as UserModels
 from BlogAPI import models as BlogModels
-from UserAuthAPI.forms import ( BasicSiginInForm, UserInfoForm, MigrationForm, 
-    UserAcademicForm, UserProfileUpdateForm, EasyRegistrationForm, UserAvatarUpdateForm)
+from UserAuthAPI.forms import (BasicSiginInForm, UserInfoForm, MigrationForm,
+                               UserAcademicForm, UserProfileUpdateForm, EasyRegistrationForm, UserAvatarUpdateForm)
 from LegacyDataAPI import models as LegacyDataModels
 from CommunicateManager.send_email import send_emails
 
@@ -153,20 +153,20 @@ class Merchant_profile(LoginRequiredMixin, View):
         obj = get_object_or_404(DiscountMerchant, merchant_id=profileID)
         form = self.form_class(instance=obj)
 
-        return render(request, self.template_name, {'form':form, 'submit_url':reverse('myCSSAhub:merchant_profile', args=[str(profileID)])})
-   
-      
+        return render(request, self.template_name, {'form': form, 'submit_url': reverse('myCSSAhub:merchant_profile', args=[str(profileID)])})
+
     def post(self, request,  *args, **kwargs):
         have_update = False
-        profileID = self.kwargs.get('id')    
+        profileID = self.kwargs.get('id')
         obj = get_object_or_404(DiscountMerchant, merchant_id=profileID)
-        form = self.form_class(data=request.POST or None, files=request.FILES or None, instance=obj)
+        form = self.form_class(data=request.POST or None,
+                               files=request.FILES or None, instance=obj)
         if form.is_valid():
-            form.save() 
+            form.save()
             have_update = True
 
-        return render(request, self.template_name, {'update': have_update, 'form':form, 'submit_url':reverse('myCSSAhub:merchant_profile', args=[str(profileID)])})
-      
+        return render(request, self.template_name, {'update': have_update, 'form': form, 'submit_url': reverse('myCSSAhub:merchant_profile', args=[str(profileID)])})
+
 
 ###### logout page ##########
 
@@ -200,7 +200,7 @@ class LoginPage(View):
         password = request.POST['password']
         if userQuery is None:
             return JsonResponse(self.loginErrorMsg)
-        
+
         # Patch, clean email with capitalisation
         if any(c.isupper for c in userQuery.email):
             _email_convert = userQuery.email.lower()
@@ -395,7 +395,8 @@ class UpdateUserProfileView(LoginRequiredMixin, View):
 
     def post(self, request, *args, **kwargs):
         current_data = self.model.objects.get(user=request.user)
-        form = self.form_class(request.POST or None, request.FILES or None, instance=current_data)
+        form = self.form_class(request.POST or None,
+                               request.FILES or None, instance=current_data)
         if form.is_valid():
             user = form.save()
             messages.success(request, 'User Profile has been updated!')
@@ -403,6 +404,7 @@ class UpdateUserProfileView(LoginRequiredMixin, View):
         else:
             messages.error(request, 'Please double-check your input.')
         return render(request, self.template_name, {'form': form, 'data': current_data})
+
 
 class UpdateUserAvatarView(LoginRequiredMixin, View):
     login_url = 'hub/login/'
@@ -415,13 +417,15 @@ class UpdateUserAvatarView(LoginRequiredMixin, View):
 
     def post(self, request, *args, **kwargs):
         current_data = self.model.objects.get(user=request.user)
-        form = self.form_class(request.POST or None, request.FILES or None, instance=current_data)
+        form = self.form_class(request.POST or None,
+                               request.FILES or None, instance=current_data)
         if form.is_valid():
             user = form.save()
             return HttpResponseRedirect('/hub/userinfo/')
         else:
             messages.error(request, 'Please double-check your input.')
         return render(request, self.template_name, {'form': form, 'data': current_data})
+
 
 class MembershipCardView(LoginRequiredMixin, View):
     login_url = 'hub/login/'
@@ -514,6 +518,7 @@ def GetUserAvatar(request):
     else:
         data['errMsg'] = "Permission Denied"
     return JsonResponse(data)
+
 
 def CheckEmailIntegrity(request):
     data = {}
@@ -614,6 +619,19 @@ class UserLookup(LoginRequiredMixin, PermissionRequiredMixin, View):
                 'success': False,
                 'status': '400',
             })
+
+################################# lucky draw ########################################
+
+
+class LuckyDrawView(LoginRequiredMixin, View):
+    login_url = 'hub/login/'
+    template_name = 'myCSSAhub/luckyDraw.html'
+
+    def get(self, request, *args, **kwargs):
+        return render(request, self.template_name)
+
+    def post(self, request, *args, **kwargs):
+        return render(request, self.template_name)
 
 
 ################################# errors pages ########################################

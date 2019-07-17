@@ -1,0 +1,112 @@
+@charset "utf-8";
+
+.luckydraw_body{
+    /* background: url("../img/pc_bg1.jpg") top; */
+    background-size: cover;
+    width: 100%;
+    height: 600px;
+}
+.luckydraw_main_box{
+    /* width: 1500px;
+    height: 800px; */
+    /* margin: 0 auto; */
+    padding-top: 80px;
+    position: relative;
+}
+/*******title********/
+/* .title-box{
+    width: 80%;
+    margin: 0 auto;
+    text-align: center;
+    margin-left: 82px;
+}
+.title-box img{
+    display: inline-block;
+    max-width: 100%;
+} */
+/*******desc********/
+/* .desc-box{
+    position: absolute;
+    left: -32px;
+    top: -24px;
+    width: 100%;
+    z-index: 5;
+}
+.desc-box img{
+    z-index: 6;
+} */
+
+/*******抽奖主体********/
+.luckydraw_main{
+    width:600px;
+    height:100%;
+    position:relative;
+    margin:0 auto;
+    margin-top: -60px;
+}
+.luckydraw_num-bg-box{
+    position: relative;
+    width: 600px;
+    height: 262px;
+    border: 3px solid #000;
+    background-color: #fff;
+    box-sizing: border-box;
+    margin: 0 auto;
+    /* box-shadow: 25px 25px 20px #a30e16;
+    -webkit-box-shadow: 25px 25px 20px #a30e16;
+    -moz-box-shadow: 25px 25px 20px #a30e16; */
+    z-index: 8;
+}
+.luckydraw_num_box{
+    height:100px;
+    width:420px;
+    position:absolute;
+    left:80%;
+    top:50%;
+    margin-left:-378px;
+    margin-top: -50px;
+    z-index:8;
+    overflow:hidden;
+    text-align:center;}
+.luckydraw_num{
+    background:url(../img/num1.png) top center repeat-y;
+    float:left;
+    width: 64px;
+    height: 100px;
+    margin-right:6px;
+}
+.luckydraw_main p{
+    text-align: center;
+    font-size: 36px;
+    color: #fefefe;
+    letter-spacing: 5px;
+    margin-top: 20px;
+}
+.luckydraw_btn-box{
+    height: 50px;
+    width: 540px;
+    margin: 0 auto;
+    overflow: hidden;
+    z-index: 999;
+    position: relative;
+    top: 10px;
+}
+.btn{
+    width:260px;
+    height:50px;
+    float: left;
+    line-height: 50px;
+    box-sizing: border-box;
+    text-align: center;
+    cursor:pointer;
+    color: #00d468;
+    border: 1px solid #00d468;
+    background-color: #fff;
+}
+.btn:hover{
+    background-color: #00d468;
+    color: #fff;
+}
+.btn:last-child{
+    margin-left: 20px;
+}
