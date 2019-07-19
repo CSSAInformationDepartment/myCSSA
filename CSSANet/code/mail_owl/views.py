@@ -21,7 +21,7 @@ class MailDraftViewSet(viewsets.ModelViewSet):
 class MailQueneViewSet(viewsets.ModelViewSet):
     authentication_classes = (SessionAuthentication, TokenAuthentication)
     permission_classes = (IsAuthenticated, )
-    queryset= PostmanModels.MailQuene.objects.all()
+    queryset = PostmanModels.MailQuene.objects.all()
     serializer_class = PostmanSerializers.MailQueneSerializers
 
     
