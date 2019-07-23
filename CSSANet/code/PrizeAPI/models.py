@@ -8,4 +8,5 @@ class Prize(models.Model):
     '''
     id = models.AutoField(primary_key=True, editable= False)
     prize_name=models.CharField(max_length=30)
-    prize_userId=models.ForeignKey(UserModel.User, on_delete=models.DO_NOTHING)
+    prize_userId=models.ForeignKey(UserModel.UserProfile, on_delete=models.DO_NOTHING)
+    

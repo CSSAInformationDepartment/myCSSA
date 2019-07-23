@@ -94,15 +94,17 @@
         $('.stop').click(function () {
 
             //  ############################################################################### 
-            var arr = ["122456", "143242", "412656", "535563", "777745"];
+            // var arr = ["122456", "143242", "412656", "535563", "777745"];
+            var arr="{{new_member_id}}";
             // ###############################################################################   
          
 
             var index = Math.floor((Math.random() * arr.length));
-
-
+            
             var num_arr = (arr[index] + '').split('');
-
+            console.log(arr);
+            console.log(index);
+            
             $(".luckydraw_num").each(function (index) {
                 var _num = $(this);
                 setTimeout(function () {
@@ -118,11 +120,14 @@
                             }
                         });
                 }, 100);
+
             });
+            console.log(num_arr);
             window.clearTimeout(timer);
             isBegin = false;
         });
     });
+    
 </script>
 
 
