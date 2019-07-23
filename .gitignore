@@ -36,3 +36,6 @@ CSSANet/code/bin
 CSSANet/code/env
 CSSANet/code/obj
 .mypy_cache/
+CSSANet/code/celerybeat-schedule
+CSSANet/code/cssanet-sys.log
+CSSANet/code/supervisord.log
