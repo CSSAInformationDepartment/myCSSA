@@ -10,7 +10,7 @@ urlpatterns = [
     path('api/',include(PhotoCompPublic.urls)),
     path('api/vote/',views.VoteSubmissionControlAPI.as_view(),name='vote-photo'),
     path('submit/', views.CandidateSubmissionView.as_view(), name="submit-photo"),
-    path('test/',views.AxiosTestView.as_view(), name='test'),
+    path('vote/',views.AxiosTestView.as_view(), name='vote'),
     
 ]
 

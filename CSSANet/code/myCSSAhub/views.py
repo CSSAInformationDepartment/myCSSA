@@ -21,6 +21,7 @@ from django.contrib.auth.decorators import login_required
 
 
 from .models import AccountMigration, DiscountMerchant
+from PrizeAPI.models import Prize
 from UserAuthAPI import models as UserModels
 from BlogAPI import models as BlogModels
 from UserAuthAPI.forms import (BasicSiginInForm, UserInfoForm, MigrationForm,
@@ -636,9 +637,17 @@ class UserLookup(LoginRequiredMixin, PermissionRequiredMixin, View):
 class LuckyDrawView(LoginRequiredMixin, View):
     login_url = 'hub/login/'
     template_name = 'myCSSAhub/luckyDraw.html'
+    ViewBag={}
 
     def get(self, request, *args, **kwargs):
-        return render(request, self.template_name)
+        test=[]
+        new_members=Prize.objects.all()
+        for member in new_members:
+            test.append(member.prize_userId.membershipId)
+        self.ViewBag['new_member_id']=test
+        self.ViewBag['count']=len(test)
+        print(self.ViewBag['new_member_id'])
+        return render(request, self.template_name,self.ViewBag)
 
     def post(self, request, *args, **kwargs):
         return render(request, self.template_name)

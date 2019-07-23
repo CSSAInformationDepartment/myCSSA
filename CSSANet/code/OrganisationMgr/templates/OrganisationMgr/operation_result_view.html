@@ -13,13 +13,22 @@
     <div class="card text-white bg-success">
         <div class="card-header">新会员激活成功</div>
             <div class="card-body"> 
-                用户<strong> {{user_profile.get_full_EN_name}} </strong> 已与卡 <strong> {{user_profile.membershipId}}</strong> 绑定
+                用户<strong> {{usr_name}} </strong> 已与卡 <strong> {{membership_id}}</strong> 绑定
                 <br>
                 <div class="mt-5">
                     <button class="btn btn-lg btn-warning" type="button" onclick="window.location.href='{% url 'myCSSAhub:OrganisationMgr:new_member'%}'"> 
                         开始下一个激活 
                     </button>
                 </div>
+            </div>
+    </div>
+</div>
+<div class="col-sm-6 col-md-4">
+    <div class="card text-white bg-success">
+        <div class="card-header">{{PrizeHeader}}</div>
+            <div class="card-body"> 
+                <strong>{{PrizeDetail}} </strong> 
+                <br>
             </div>
     </div>
 </div>
