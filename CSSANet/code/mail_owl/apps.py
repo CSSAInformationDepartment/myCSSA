@@ -2,4 +2,4 @@ from django.apps import AppConfig
 
 
 class PostmanapiConfig(AppConfig):
-    name = 'PostmanAPI'
+    name = 'mail_owl'

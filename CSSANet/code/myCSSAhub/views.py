@@ -28,6 +28,7 @@ from UserAuthAPI.forms import (BasicSiginInForm, UserInfoForm, MigrationForm,
                                UserAcademicForm, UserProfileUpdateForm, EasyRegistrationForm, UserAvatarUpdateForm)
 from LegacyDataAPI import models as LegacyDataModels
 from CommunicateManager.send_email import send_emails
+from mail_owl.utils import AutoMailSender
 
 
 import json
@@ -261,9 +262,18 @@ class EasyRegistrationView(View):
             academic.save()
 
             # 完成信息保存以后，发送注册成功的邮件
-            user_name = '%s %s' % (profile.lastNameEN, profile.firstNameEN)
-            # target_email = account_register.email
-            # send_emails('Register Successful', user_name, target_email, None)
+            username = profile.get_full_EN_name()
+            target_email = account_register.email
+            mail_content = {'username':username}
+            confirm_mail = AutoMailSender(
+                title="注册成功！Registraion Successful",
+                mail_text="",
+                template_path="myCSSAhub/email/register_mail.html",
+                fill_in_context=mail_content,
+                to_address=target_email,
+            )
+            confirm_mail.send_now()
+            
 
         else:
             return JsonResponse({
