@@ -69,6 +69,18 @@ DATABASES = {
 ## Redis Message Cache Serivce
 # REDIS_ADDRESS = 'redis://redis:6379/6'
 
+CELERY_BROKER_URL = 'redis://redis-service:6379'
+CELERY_RESULT_BACKEND = 'redis://redis-service:6379'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = TIME_ZONE
+
+# Mail Owl Config
+MAILOWL_MULTI_NODES = True
+MAILOWL_MASTER_NODE = ''
+MAILOWL_PORT = 44300
+
 
 ADMINS = [('Master Inbox', 'information@cssaunimelb.com'), ('Lead Engineer', 'joshlubox@gmail.com')]
 
