@@ -32,7 +32,7 @@ INSTALLED_APPS = [
     'BlogAPI',
     'FlexForm',
     'PhotoCompetition',
-#    'PostmanAPI',
+    'mail_owl',
 
     ## RESTful Support
     'rest_framework',
@@ -231,9 +231,5 @@ LOGGING = {
 }
 ADMINS = [('Master Inbox', 'information@cssaunimelb.com'), ('Lead Engineer', 'joshlubox@gmail.com')]
 
-### Email Configuration
 
-# To test the mail sending related features, adding your personal email accounts credentials here. 
-# Remember !!! You must REMOVE your credentails when you push this to the public repo, otherwise your 
-# credentials will be at risk.
-EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
+

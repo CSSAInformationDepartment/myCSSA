@@ -10,7 +10,7 @@ ENV PYTHONPATH=/usr/local/lib/python3.7/site-packages/:/code/
 
 # System dependency installation
 ## Network
-RUN apk add --update netcat-openbsd
+RUN apk add --update netcat-openbsd supervisor
 
 ## Timezone
 RUN apk add tzdata
@@ -29,6 +29,7 @@ RUN rm -rf /var/cache/apk/*
 RUN mkdir /code
 RUN chmod g+w /code
 
+COPY supervisord.conf /etc/supervisord.conf
 WORKDIR /code
 COPY code/ /code/
 RUN chmod g+w /code/static
@@ -40,7 +41,7 @@ RUN ls -la /code/*
 RUN pip3 install --upgrade pip
 RUN pip3 install -r requirements.txt
 
-ENTRYPOINT ["sh", "alice-bootloader.sh" ]
+#ENTRYPOINT ["sh", "alice-bootloader.sh" ]
 
 
 

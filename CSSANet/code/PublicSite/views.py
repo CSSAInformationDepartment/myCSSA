@@ -41,6 +41,7 @@ from django.utils import timezone
 
 from myCSSAhub import models as HubModels
 from CommunicateManager.send_email import send_emails
+from mail_owl.utils import AutoMailSender
 
 # Create your views here.
 
@@ -144,13 +145,24 @@ class ResumeSubmissionView(LoginRequiredMixin,View):
                 if form.is_valid():
                     instance = form.save()
                     self.json_data['result'] = True
-                    send_emails("CV Submitted", instance, request.user.email, None)
+                    mail_content = {'username': instance.user.userprofile.lastNameEN + " " + instance.user.userprofile.firstNameEN, 
+                        'dept': instance.jobRelated.dept.deptTitle,
+                        'jobName': instance.jobRelated.jobName}
+                        
+                    confirm_mail = AutoMailSender(
+                        title="CV Submitted. 我们已经收到您的简历",
+                        mail_text="",
+                        template_path='myCSSAhub/email/cv_mail.html',
+                        fill_in_context=mail_content,
+                        to_address=request.user.email,
+                    )
+                    confirm_mail.send_now()
                 else:
                     self.json_data['result'] = False
-                    self.json_data['error'] = form.error_class
+                    self.json_data['error'] = "抱歉，您的表单填写有误，请重新检查。请注意，每项字数不可超过500字。"
         else:
             self.json_data['result'] = False
-            self.json_data['error'] =  'You need to login first! '
+            self.json_data['error'] =  'You need to login first! 请先登录！ '
         return JsonResponse(self.json_data)
 
 class EventsListView(View):

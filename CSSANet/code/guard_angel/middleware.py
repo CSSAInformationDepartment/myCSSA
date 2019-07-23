@@ -14,6 +14,17 @@ def not_logging_whitelist(ip):
 
 
 class HttpRequestLogMiddleware():
+
+
+    def get_machine_ip_addr(self):
+        import socket
+        #获取本机电脑名
+        myname = socket.getfqdn(socket.gethostname(  ))
+        #获取本机ip
+        myaddr = socket.gethostbyname(myname)
+        print(myname)
+        print(myaddr)
+    
     def __init__(self, get_response):
         self.get_response = get_response
         
@@ -24,6 +35,8 @@ class HttpRequestLogMiddleware():
         # the view (and later middleware) are called.
 
         response = self.get_response(request)
+
+        self.get_machine_ip_addr()
 
         new_log = HttpAccessLogModel()
         new_log.request_path = request.path_info or request.path

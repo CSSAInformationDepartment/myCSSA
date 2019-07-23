@@ -1,28 +1,7 @@
 version: '3.6'
 
 services:
-  cssanet:
-    image: cssanet
-    # entrypoint: ./alice-bootloader.sh
-    container_name: CSSAnet
-    environment:
-      DJANGO_SETTINGS_MODULE: CSSANet.settings.dev
-    volumes:
-      - ./code:/code
-      - ./data/static:/static
-      - ./data/media:/media
-    build: .
-    expose:
-      - 8000
-    depends_on:
-      - nginx
-      - db 
-      - redis
-    networks: 
-      - cssa_router
-      - data_link
- 
- 
+  
   db: ## Remove in production
     image: postgres:10.6-alpine
     volumes:
@@ -58,6 +37,29 @@ services:
     volumes:
       - ./config/redis/redis.conf:/usr/local/etc/redis/redis.conf
     networks:
+      - data_link
+
+  cssanet:
+    image: cssanet
+    container_name: CSSAnet
+    environment:
+      DJANGO_SETTINGS_MODULE: CSSANet.settings.dev
+    volumes:
+      - ./code:/code
+      - ./data/static:/static
+      - ./data/media:/media
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: /usr/bin/supervisord -c /etc/supervisord.conf
+    expose:
+      - 8000
+    depends_on:
+      - nginx
+      - db 
+      - redis
+    networks: 
+      - cssa_router
       - data_link
 
 volumes:
