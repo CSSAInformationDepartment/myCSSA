@@ -302,7 +302,7 @@ class ConfirmActivationView(LoginRequiredMixin, PermissionRequiredMixin, View):
         if luckyDrawNumber < 10:
             count=Prize.objects.filter(prize_name='红包').count()
             # if len(first_prize) < 1:
-            if count<1:
+            if count<11:
                 firstPrize=Prize(prize_name="红包", prize_userId=user_profile) 
                 firstPrize.save()
                 self.ViewBag['PrizeDetail']=("恭喜您，获得5元红包一个！")
@@ -322,7 +322,7 @@ class ConfirmActivationView(LoginRequiredMixin, PermissionRequiredMixin, View):
         elif luckyDrawNumber > 9 and luckyDrawNumber < 95:
             count2=Prize.objects.filter(prize_name='零食').count()
 
-            if count2 < 1:
+            if count2 < 86:
                 secondPrize=Prize(prize_name="零食", prize_userId=user_profile) 
                 secondPrize.save()
                 self.ViewBag['PrizeDetail']=("恭喜您，获得零食！")
@@ -336,9 +336,9 @@ class ConfirmActivationView(LoginRequiredMixin, PermissionRequiredMixin, View):
                 self.ViewBag['PrizeDetail']=("很遗憾，您没有中奖。")
                 # print("很遗憾，您没有中奖。")
 
-        elif luckyDrawNumber > 94 and luckyDrawNumber < 105:
+        elif luckyDrawNumber > 94 and luckyDrawNumber < 115:
             count3=Prize.objects.filter(prize_name='电影票').count()
-            if count3 < 1:
+            if count3 < 21:
                 thirdPrize=Prize(prize_name="电影票", prize_userId=user_profile) 
                 thirdPrize.save()
                 # print("恭喜您，获得三等奖！")
