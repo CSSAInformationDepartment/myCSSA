@@ -51,8 +51,8 @@
                 {% for attendant in attendants %}
                   <tr>
                     <td>{{attendant.attendedUserId.get_full_EN_name}}</td>
-                    <td>{{attendant.attendedUserId.email}}</td>
-                    <td>{{attendant.attendedUserId.telNumber}}</td>
+                    <td>{{attendant.attendedUserId.user.email}}</td>
+                    <td>{{attendant.attendedUserId.user.telNumber}}</td>
                     {% if attendant.token %}
                       <td>已出票</td>
                     {% else %}
