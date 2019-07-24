@@ -95,21 +95,17 @@
 
             //  ############################################################################### 
             // var arr = ["122456", "143242", "412656", "535563", "777745"];
-            var arr="{{new_member_id}}";
+            // var arr="{{new_member_id|safe}}";
             // ###############################################################################   
-         
-
-            var index = Math.floor((Math.random() * arr.length));
             
-            var num_arr = (arr[index] + '').split('');
-            console.log(arr);
-            console.log(index);
+            var index = "{{index}}"     
+            var num_arr = ("{{number}}" + '').split('');
             
             $(".luckydraw_num").each(function (index) {
                 var _num = $(this);
                 setTimeout(function () {
                     _num.animate({
-                        backgroundPositionY: (u * 60) - (u * num_arr[index])
+                        backgroundPositionY: (u * 60) - (u * "{{number}}")
                     }, {
                             duration: 500,
                             easing: "easeInOutCirc",
@@ -122,7 +118,7 @@
                 }, 100);
 
             });
-            console.log(num_arr);
+            // console.log(num_arr);
             window.clearTimeout(timer);
             isBegin = false;
         });

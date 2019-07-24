@@ -198,7 +198,7 @@ class TicketCheckInView(LoginRequiredMixin, PermissionRequiredMixin, View):
                 | Q(user__telNumber=manual_check_input)).first()
             if user:
                 ticket = AttendEvent.objects.filter(Q(attendedEventId__pk=event_id) 
-                    & Q(attendedUserId=user.user) & Q(token_used=False)).first()
+                    & Q(attendedUserId=user) & Q(token_used=False)).first()
                 if ticket:
                     ticket.token_used=True
                     ticket.save()

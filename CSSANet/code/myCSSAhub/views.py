@@ -35,6 +35,7 @@ import json
 import base64
 import io
 import hashlib
+import random
 
 from urllib import parse
 
@@ -645,8 +646,9 @@ class LuckyDrawView(LoginRequiredMixin, View):
         for member in new_members:
             test.append(member.prize_userId.membershipId)
         self.ViewBag['new_member_id']=test
-        self.ViewBag['count']=len(test)
-        print(self.ViewBag['new_member_id'])
+        index = random.randint(0, len(test))
+        self.ViewBag['index']=index
+        self.ViewBag['number']=test[index]
         return render(request, self.template_name,self.ViewBag)
 
     def post(self, request, *args, **kwargs):
