@@ -638,21 +638,22 @@ class UserLookup(LoginRequiredMixin, PermissionRequiredMixin, View):
 class LuckyDrawView(LoginRequiredMixin, View):
     login_url = 'hub/login/'
     template_name = 'myCSSAhub/luckyDraw.html'
+
+    def get(self, request, *args, **kwargs):
+        return render(request, self.template_name)
+
+
+class LuckyDrawDataView(LoginRequiredMixin, View):
+    login_url = 'hub/login/'
     ViewBag={}
 
     def get(self, request, *args, **kwargs):
-        test=[]
+        lucky_list=[]
         new_members=Prize.objects.all()
         for member in new_members:
-            test.append(member.prize_userId.membershipId)
-        self.ViewBag['new_member_id']=test
-        index = random.randint(0, len(test))
-        self.ViewBag['index']=index
-        self.ViewBag['number']=test[index]
-        return render(request, self.template_name,self.ViewBag)
-
-    def post(self, request, *args, **kwargs):
-        return render(request, self.template_name)
+            lucky_list.append(member.prize_userId.membershipId)
+        self.ViewBag['new_member_id']=lucky_list
+        return JsonResponse(self.ViewBag)
 
 
 ################################# errors pages ########################################

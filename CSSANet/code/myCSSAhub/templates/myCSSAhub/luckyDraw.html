@@ -52,8 +52,17 @@
 {% endblock %}
 
 {% block ExtraJS %}
-<script >
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+    axios.defaults.xsrfCookieName = 'csrftoken'
+    axios.defaults.xsrfHeaderName = "X-CSRFTOKEN"
+    var arr=[];
 
+    axios.get('get/').then((response)=>{
+        response.data.new_member_id.forEach(element => {
+            arr.push(element)
+        });
+    })
     var u = 100;
     var n = 1;
     var timer; //定义滚动的定时器
@@ -90,22 +99,22 @@
                 run();
             }
         });
+      
         //停止抽奖
         $('.stop').click(function () {
 
             //  ############################################################################### 
             // var arr = ["122456", "143242", "412656", "535563", "777745"];
-            // var arr="{{new_member_id|safe}}";
             // ###############################################################################   
             
-            var index = "{{index}}"     
-            var num_arr = ("{{number}}" + '').split('');
+            var index = Math.floor((Math.random() * arr.length));   
+            var num_arr = (arr[index] + '').split('');
             
             $(".luckydraw_num").each(function (index) {
                 var _num = $(this);
                 setTimeout(function () {
                     _num.animate({
-                        backgroundPositionY: (u * 60) - (u * "{{number}}")
+                        backgroundPositionY: (u * 60) - (u * num_arr[index])
                     }, {
                             duration: 500,
                             easing: "easeInOutCirc",
