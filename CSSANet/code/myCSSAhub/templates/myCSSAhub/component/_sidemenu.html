@@ -186,6 +186,12 @@
                     <i class="nav-icon fa fa-camera-retro"></i> 投稿管理 </a>
                 </li>
               {% endif %}
+              {% if user.is_superuser %}
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'myCSSAhub:luckydraw' %}">
+                  <i class="nav-icon fa fa-medal"></i> 抽奖 </a>
+              </li>
+              {% endif %}
 
               {% endif %}
           </ul>

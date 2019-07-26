@@ -34,7 +34,7 @@ urlpatterns = [
     path('merchant_profile/<str:id>/', Views.Merchant_profile.as_view(), name="merchant_profile"),
     path('calendar/', Views.Calendar.as_view(), name="calendar"),
     path('luckydraw/', Views.LuckyDrawView.as_view(), name="luckydraw"),
-
+    path('luckydraw/get/', Views.LuckyDrawDataView.as_view(), name="luckydrawget"),
 ]
 
 ## System app directory
