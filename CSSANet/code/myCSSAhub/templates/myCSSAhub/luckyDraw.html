@@ -33,7 +33,7 @@
                     <div class="luckydraw_num"></div>
                     <div class="luckydraw_num"></div>
                     <div class="luckydraw_num"></div>
-                    {% comment %} <div class="luckydraw_num"></div> {% endcomment %}
+                    <div class="luckydraw_num"></div>
                 </div>
             </div>
         </div>
@@ -59,7 +59,7 @@
     var arr=[];
 
     axios.get('get/').then((response)=>{
-        response.data.new_member_id.forEach(element => {
+        response.data.new_student_id.forEach(element => {
             arr.push(element)
         });
     })
@@ -75,7 +75,7 @@
     $(".luckydraw_num").eq(2).css('backgroundPositionY', -600)
     $(".luckydraw_num").eq(3).css('backgroundPositionY', -600)
     $(".luckydraw_num").eq(4).css('backgroundPositionY', -600)
-    {% comment %} $(".luckydraw_num").eq(5).css('backgroundPositionY', -600) {% endcomment %}
+    $(".luckydraw_num").eq(5).css('backgroundPositionY', -600)
 
     //执行数字滚动
     function run() {
@@ -127,7 +127,7 @@
                 }, 100);
 
             });
-            // console.log(num_arr);
+            console.log(num_arr);
             window.clearTimeout(timer);
             isBegin = false;
         });

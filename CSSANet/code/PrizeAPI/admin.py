@@ -4,3 +4,4 @@ from .models import *
 # Register your models here.
 
 admin.site.register(Prize)
+admin.site.register(PrizePool)
