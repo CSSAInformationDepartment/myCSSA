@@ -1,0 +1,12 @@
+[2019-07-31 09:10:00,000: INFO/MainProcess] Scheduler: Sending due task check-schedule-every-ten-minutes (mail_schedule_checker)
+[2019-07-31 09:10:00,002: INFO/MainProcess] Received task: mail_schedule_checker[0c4ef16c-41f3-4069-a8a3-6a00a5062c8b]  
+[2019-07-31 09:10:00,018: INFO/ForkPoolWorker-2] Task mail_schedule_checker[0c4ef16c-41f3-4069-a8a3-6a00a5062c8b] succeeded in 0.014460000000326545s: None
+[2019-07-31 09:14:00,000: INFO/MainProcess] Scheduler: Sending due task check-schedule-every-ten-minutes (mail_schedule_checker)
+[2019-07-31 09:14:00,002: INFO/MainProcess] Received task: mail_schedule_checker[0b60bb71-6765-44e5-8454-c96817289a0a]  
+[2019-07-31 09:14:00,011: INFO/ForkPoolWorker-4] Task mail_schedule_checker[0b60bb71-6765-44e5-8454-c96817289a0a] succeeded in 0.007951100000354927s: None
+[2019-07-31 09:15:00,000: INFO/MainProcess] Scheduler: Sending due task check-schedule-every-ten-minutes (mail_schedule_checker)
+[2019-07-31 09:15:00,002: INFO/MainProcess] Received task: mail_schedule_checker[798d092b-acae-46ab-9473-6e4286e2b509]  
+[2019-07-31 09:15:00,010: INFO/ForkPoolWorker-1] Task mail_schedule_checker[798d092b-acae-46ab-9473-6e4286e2b509] succeeded in 0.007067599999572849s: None
+[2019-07-31 10:38:16,999: INFO/MainProcess] Scheduler: Sending due task check-schedule-every-ten-minutes (mail_schedule_checker)
+[2019-07-31 10:38:17,002: INFO/MainProcess] Received task: mail_schedule_checker[f3cdc63c-8e50-485d-9efc-d5309b3396d7]  
+[2019-07-31 10:38:17,013: INFO/ForkPoolWorker-2] Task mail_schedule_checker[f3cdc63c-8e50-485d-9efc-d5309b3396d7] succeeded in 0.00907290000031935s: None

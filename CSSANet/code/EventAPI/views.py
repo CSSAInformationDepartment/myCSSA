@@ -25,6 +25,8 @@ from FlexForm.apis import flexform_user_write_in
 from EventAPI.apis import get_ticket,check_availability
 from django.utils import timezone as sys_time
 
+from PrizeAPI.apis import add_event_candidate_to_poll
+
 # Create your views here.
 class EventListView(LoginRequiredMixin, PermissionRequiredMixin, View):
     '''
@@ -199,9 +201,12 @@ class TicketCheckInView(LoginRequiredMixin, PermissionRequiredMixin, View):
             if user:
                 ticket = AttendEvent.objects.filter(Q(attendedEventId__pk=event_id) 
                     & Q(attendedUserId=user) & Q(token_used=False)).first()
+                print(ticket)
                 if ticket:
                     ticket.token_used=True
                     ticket.save()
+                    add_event_candidate_to_poll(user,ticket.attendedEventId, 
+                        ticket.attendedEventId.eventActualStTime)
                     return JsonResponse(
                         {'success': True,
                         'type':0,
