@@ -62,6 +62,10 @@
                       <a class="nav-link" href="{% url 'myCSSAhub:EventAPI:check-in' %}">
                         <i class="nav-icon fa fa-check-circle"></i> 来访者签到 </a>
                     </li>
+                    <li class="nav-item">
+                      <a class="nav-link" href="{% url 'myCSSAhub:luckydraw_event_list' %}">
+                        <i class="nav-icon fa fa-tag"></i> 活动抽奖 </a>
+                    </li>
                   {% endif %}
                   
 
@@ -186,12 +190,7 @@
                     <i class="nav-icon fa fa-camera-retro"></i> 投稿管理 </a>
                 </li>
               {% endif %}
-              {% if user.is_superuser %}
-              <li class="nav-item">
-                <a class="nav-link" href="{% url 'myCSSAhub:luckydraw' %}">
-                  <i class="nav-icon fa fa-medal"></i> 抽奖 </a>
-              </li>
-              {% endif %}
+
 
               {% endif %}
           </ul>

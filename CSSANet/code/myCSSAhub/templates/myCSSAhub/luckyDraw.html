@@ -44,8 +44,6 @@
         <div class="btn stop">停止抽奖</div>
     </div>
 
- 
-
 </div>
 
 
@@ -58,7 +56,7 @@
     axios.defaults.xsrfHeaderName = "X-CSRFTOKEN"
     var arr=[];
 
-    axios.get('get/').then((response)=>{
+    axios.get('/hub/ajax/prize/get_pool/{{event_id}}').then((response)=>{
         response.data.new_student_id.forEach(element => {
             arr.push(element)
         });

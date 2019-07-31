@@ -633,33 +633,6 @@ class UserLookup(LoginRequiredMixin, PermissionRequiredMixin, View):
                 'status': '400',
             })
 
-################################# lucky draw ########################################
-
-class LuckyDrawEventView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
-    login_url = '/hub/login/'
-    template_name = 'EventAPI/event_luckyDraw.html'
-    paginate_by = 15
-    queryset = Event.objects.filter(disabled=False).order_by("-eventActualStTime")
-
-class LuckyDrawView(LoginRequiredMixin, View):
-    login_url = 'hub/login/'
-    template_name = 'myCSSAhub/luckyDraw.html'
-
-    def get(self, request, *args, **kwargs):
-        return render(request, self.template_name)
-
-
-class LuckyDrawDataView(LoginRequiredMixin, View):
-    login_url = 'hub/login/'
-    ViewBag={}
-
-    def get(self, request, *args, **kwargs):
-        lucky_list=[]
-        new_members=Prize.objects.all()
-        for member in new_members:
-            lucky_list.append(member.prize_userId.studentId)
-        self.ViewBag['new_student_id']=lucky_list
-        return JsonResponse(self.ViewBag)
 
 
 ################################# errors pages ########################################
