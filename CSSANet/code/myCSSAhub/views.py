@@ -9,7 +9,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMix
 from django.contrib.auth.forms import SetPasswordForm, PasswordChangeForm
 
 from django.views import View
-from django.views.generic import CreateView, UpdateView, FormView
+from django.views.generic import CreateView, UpdateView, FormView, ListView
 from django.contrib.auth.models import update_last_login
 from django.db.models import Q
 from django.core.exceptions import ObjectDoesNotExist
@@ -28,6 +28,7 @@ from UserAuthAPI.forms import (BasicSiginInForm, UserInfoForm, MigrationForm,
                                UserAcademicForm, UserProfileUpdateForm, EasyRegistrationForm, UserAvatarUpdateForm)
 from LegacyDataAPI import models as LegacyDataModels
 from CommunicateManager.send_email import send_emails
+from EventAPI.models import Event
 from mail_owl.utils import AutoMailSender
 
 
@@ -632,28 +633,6 @@ class UserLookup(LoginRequiredMixin, PermissionRequiredMixin, View):
                 'status': '400',
             })
 
-################################# lucky draw ########################################
-
-
-class LuckyDrawView(LoginRequiredMixin, View):
-    login_url = 'hub/login/'
-    template_name = 'myCSSAhub/luckyDraw.html'
-
-    def get(self, request, *args, **kwargs):
-        return render(request, self.template_name)
-
-
-class LuckyDrawDataView(LoginRequiredMixin, View):
-    login_url = 'hub/login/'
-    ViewBag={}
-
-    def get(self, request, *args, **kwargs):
-        lucky_list=[]
-        new_members=Prize.objects.all()
-        for member in new_members:
-            lucky_list.append(member.prize_userId.membershipId)
-        self.ViewBag['new_member_id']=lucky_list
-        return JsonResponse(self.ViewBag)
 
 
 ################################# errors pages ########################################

@@ -10,6 +10,8 @@ from FlexForm import urls as FlexFormUrls
 from CommunicateManager import urls as CommUrls
 from PhotoCompetition import hub_urls as PhotoCompUrls
 
+from PrizeAPI.views import (LuckyDrawDataView,LuckyDrawEventView,LuckyDrawView)
+
 app_name = "myCSSAhub"
 urlpatterns = [
     path('home/', Views.home, name="home"),
@@ -33,9 +35,11 @@ urlpatterns = [
     path('merchant_add/', Views.Merchant_add.as_view(), name="merchants_add"),
     path('merchant_profile/<str:id>/', Views.Merchant_profile.as_view(), name="merchant_profile"),
     path('calendar/', Views.Calendar.as_view(), name="calendar"),
-    path('luckydraw/', Views.LuckyDrawView.as_view(), name="luckydraw"),
-    path('luckydraw/get/', Views.LuckyDrawDataView.as_view(), name="luckydrawget"),
+    # path('luckydraw/', LuckyDrawView.as_view(), name="luckydraw"),
+    path('luckydraw/event_pool/',LuckyDrawEventView.as_view(), name="luckydraw_event_list"),
+    path('luckydraw/event_pool/<str:id>/',LuckyDrawView.as_view(), name="luckydraw_event_draw")
 ]
+    
 
 ## System app directory
 urlpatterns += [
@@ -56,4 +60,5 @@ urlpatterns += [
     path('ajax/checkPhoneIntegrity/', Views.CheckTelIntegrity, name="ajax_checkTelIntegrity"),
     path('ajax/checkStudentIdIntegrity/', Views.CheckStudentIdIntegrity, name="ajax_checkStudentIdIntegrity"),
     path('ajax/userlookup/', Views.UserLookup.as_view(), name="ajax_userLookup"),
+    path('ajax/prize/get_pool/<str:id>/', LuckyDrawDataView.as_view(), name="luckydrawget"),
 ]
