@@ -10,12 +10,13 @@ from FlexForm import urls as FlexFormUrls
 from CommunicateManager import urls as CommUrls
 from PhotoCompetition import hub_urls as PhotoCompUrls
 
+from PrizeAPI.views import (LuckyDrawDataView,LuckyDrawEventView,LuckyDrawView)
+
 app_name = "myCSSAhub"
 urlpatterns = [
     path('home/', Views.home, name="home"),
     path('under-dev/', Views.under_dev_notice, name='under-dev'),
     path('userinfo/', Views.UpdateUserProfileView.as_view(), name="userInfo"),
-    # POST Request Only:
     path('userinfo/update-avatar/', Views.UpdateUserAvatarView.as_view(), name="update_user_avatar"),
     path('member-card-info', Views.MembershipCardView.as_view(), name="membership-info"),
     path('login/', Views.LoginPage.as_view(), name="hub_login"), 
@@ -27,16 +28,18 @@ urlpatterns = [
     path('regform/', Views.EasyRegistrationView.as_view() , name='hub_regform'),
     path('regform/<str:id>/', Views.EasyRegistrationView.as_view() , name='hub_migrationreg'),
     path('userinfo/create/', Views.EasyRegistrationView.as_view(), name='hub_userinfo_create'),
-    path('reg/success/', Views.EasyConfirmationPage,name='hub_regformConfirmation'),
-    path('migration/',Views.migrationView.as_view(),name='hub_migration'),
+    path('reg/success/', Views.EasyConfirmationPage, name='hub_regformConfirmation'),
+    path('migration/',Views.migrationView.as_view(), name='hub_migration'),
     path('reset-password/', Views.UpdatePasswordView.as_view(), name="update-password"),
     path('merchants_list/', Views.Merchants_list.as_view(), name="merchants_list"),
     path('merchant_add/', Views.Merchant_add.as_view(), name="merchants_add"),
     path('merchant_profile/<str:id>/', Views.Merchant_profile.as_view(), name="merchant_profile"),
     path('calendar/', Views.Calendar.as_view(), name="calendar"),
-    path('luckydraw/', Views.LuckyDrawView.as_view(), name="luckydraw"),
-
+    # path('luckydraw/', LuckyDrawView.as_view(), name="luckydraw"),
+    path('luckydraw/event_pool/',LuckyDrawEventView.as_view(), name="luckydraw_event_list"),
+    path('luckydraw/event_pool/<str:id>/',LuckyDrawView.as_view(), name="luckydraw_event_draw")
 ]
+    
 
 ## System app directory
 urlpatterns += [
@@ -57,4 +60,5 @@ urlpatterns += [
     path('ajax/checkPhoneIntegrity/', Views.CheckTelIntegrity, name="ajax_checkTelIntegrity"),
     path('ajax/checkStudentIdIntegrity/', Views.CheckStudentIdIntegrity, name="ajax_checkStudentIdIntegrity"),
     path('ajax/userlookup/', Views.UserLookup.as_view(), name="ajax_userLookup"),
+    path('ajax/prize/get_pool/<str:id>/', LuckyDrawDataView.as_view(), name="luckydrawget"),
 ]

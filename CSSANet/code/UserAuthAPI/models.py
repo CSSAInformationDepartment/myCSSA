@@ -177,6 +177,19 @@ class UserProfile (models.Model):
     postcode = models.CharField(verbose_name="邮编",max_length=4, null=True, blank=True)
     originate = models.CharField(verbose_name="籍贯",max_length=50, null=True,blank=True)
 
+    def get_gender_CN(self):
+        '''
+        Returns gender in Chinese.
+        '''
+
+        if self.gender =='Female' :
+            female_CN='女'
+            return female_CN.strip()
+        elif self.gender == 'Male' :
+            male_CN='男'
+            return male_CN.strip()
+        else:
+            return None
 
     def get_full_CN_name(self):
         '''

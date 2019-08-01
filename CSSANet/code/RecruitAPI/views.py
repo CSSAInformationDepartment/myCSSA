@@ -18,7 +18,7 @@ from django.utils.html import escape
 from pytz import timezone
 from CSSANet.settings import TIME_ZONE
 
-from CommunicateManager.send_email import send_emails
+from mail_owl.utils import AutoMailSender
 
 
 class JobListView(LoginRequiredMixin, PermissionRequiredMixin, View):
@@ -74,7 +74,21 @@ class AddInterviewView(PermissionRequiredMixin, View):
             time_arrangement = form.save()
             resume.isEnrolled = True
             resume.save()
-            send_emails("Interview Scheduled", time_arrangement, resume.user.email, None)
+            mail_content = {'username': time_arrangement.resume.user.userprofile.lastNameEN + " " + time_arrangement.resume.user.userprofile.firstNameEN, 
+                'date': time_arrangement.date,
+                'time': time_arrangement.time, 
+                'location': time_arrangement.location, 
+                'note': time_arrangement.note, 
+                'jobName': time_arrangement.resume.jobRelated.jobName}
+                
+            confirm_mail = AutoMailSender(
+                title="Interview Scheduled. 您的面试时间已确认",
+                mail_text="",
+                template_path='myCSSAhub/email/interview_notice.html',
+                fill_in_context=mail_content,
+                to_address=resume.user.email,
+            )
+            confirm_mail.send_now()
             return render(request, self.template_name, {'form':self.form_class,'current_arrangement':time_arrangement})
         return render(request, self.template_name, {'form':self.form_class})
 

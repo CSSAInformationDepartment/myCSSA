@@ -9,7 +9,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMix
 from django.contrib.auth.forms import SetPasswordForm, PasswordChangeForm
 
 from django.views import View
-from django.views.generic import CreateView, UpdateView, FormView
+from django.views.generic import CreateView, UpdateView, FormView, ListView
 from django.contrib.auth.models import update_last_login
 from django.db.models import Q
 from django.core.exceptions import ObjectDoesNotExist
@@ -21,18 +21,22 @@ from django.contrib.auth.decorators import login_required
 
 
 from .models import AccountMigration, DiscountMerchant
+from PrizeAPI.models import Prize
 from UserAuthAPI import models as UserModels
 from BlogAPI import models as BlogModels
 from UserAuthAPI.forms import (BasicSiginInForm, UserInfoForm, MigrationForm,
                                UserAcademicForm, UserProfileUpdateForm, EasyRegistrationForm, UserAvatarUpdateForm)
 from LegacyDataAPI import models as LegacyDataModels
 from CommunicateManager.send_email import send_emails
+from EventAPI.models import Event
+from mail_owl.utils import AutoMailSender
 
 
 import json
 import base64
 import io
 import hashlib
+import random
 
 from urllib import parse
 
@@ -260,9 +264,18 @@ class EasyRegistrationView(View):
             academic.save()
 
             # 完成信息保存以后，发送注册成功的邮件
-            user_name = '%s %s' % (profile.lastNameEN, profile.firstNameEN)
-            # target_email = account_register.email
-            # send_emails('Register Successful', user_name, target_email, None)
+            username = profile.get_full_EN_name()
+            target_email = account_register.email
+            mail_content = {'username':username}
+            confirm_mail = AutoMailSender(
+                title="注册成功！Registraion Successful",
+                mail_text="",
+                template_path="myCSSAhub/email/register_mail.html",
+                fill_in_context=mail_content,
+                to_address=target_email,
+            )
+            confirm_mail.send_now()
+            
 
         else:
             return JsonResponse({
@@ -620,18 +633,6 @@ class UserLookup(LoginRequiredMixin, PermissionRequiredMixin, View):
                 'status': '400',
             })
 
-################################# lucky draw ########################################
-
-
-class LuckyDrawView(LoginRequiredMixin, View):
-    login_url = 'hub/login/'
-    template_name = 'myCSSAhub/luckyDraw.html'
-
-    def get(self, request, *args, **kwargs):
-        return render(request, self.template_name)
-
-    def post(self, request, *args, **kwargs):
-        return render(request, self.template_name)
 
 
 ################################# errors pages ########################################

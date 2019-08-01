@@ -16,7 +16,7 @@ class MailQueneAdmin(admin.ModelAdmin):
     '''
     Django Admin Page settings for the MailQuene model
     '''
-    list_display = ('id','date_created','date_scheduled','mail_body','receiver','state','disabled',)
+    list_display = ('id','date_created','date_scheduled','title','receiver','state','disabled',)
     list_display_links = ('id',)
     search_fields = ('mail_body','receiver')
     list_per_page = 25

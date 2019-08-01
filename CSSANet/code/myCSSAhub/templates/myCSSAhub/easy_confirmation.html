@@ -42,10 +42,10 @@
             </a>
           </div>
           <div class="row form-label-group">
-            <i class="iconfont col-md-6 ">&#xe607;</i>
-            <i class="iconfont col-md-6 ">&#xeab5;</i>
-            <p class="col-md-6 text-center">墨城攻略<br>(请Oweek前往cssa摊位免费领取哦)</p>
-            <p class="col-md-6 text-center">活动报名<br>(该功能尚未开放，敬请期待)</p>
+            <a href="" class="iconfont col-md-6"><i class="iconfont">&#xe607;</i></a>
+            <a href="{% url 'PublicSite:events' %}" class="iconfont col-md-6"><i class="iconfont">&#xeab5;</i></a>
+            <a href="" class="col-md-6 text-center"><p>墨城攻略<br>(请Oweek前往cssa摊位免费领取哦)</p></a>
+            <a href="{% url 'PublicSite:events' %}" class="col-md-6 text-center"><p>活动报名</p></a>
           </div>
           <hr />
           <p class="lead text-left">
@@ -53,12 +53,12 @@
           </p>
           <div class="table text-left">
             <ul id="tableTime" style="margin-top:10px;">
-              <li class="col-md-5">下次开放时间: 2019年2月28号 {{table.time}}</li>
+              <li class="col-md-12">下次开放时间: 2019年7月23号 {{table.time}}</li>
               <li class="col-md-12">下次开放地点: South Lawn, CSSA table {{table.location}}</li>
             </ul>
             <div class="table text-left">
               <ul id="tableTime" style="margin-top:10px;">
-                <li class="col-md-12">下次Graduates会员办理开放时间: 2019年3月7号 {{table.time}}</li>
+                <li class="col-md-12">下次Graduates会员办理开放时间: 2019年7月24号</li>
                 <li class="col-md-12">下次开放地点: 1888 building, CSSA Graduates table {{table.location}}</li>
               </ul>
             </div>

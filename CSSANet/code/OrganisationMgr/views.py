@@ -14,6 +14,7 @@ from django.utils.translation import ugettext_lazy as _
 from datetime import datetime, timedelta
 
 from UserAuthAPI import models as UserModels
+from PrizeAPI.models import Prize
 from RecruitAPI.models import Resume
 from FinanceAPI.apis import lodge_sys_gen_transaction
 
@@ -256,35 +257,56 @@ class ConfirmActivationView(LoginRequiredMixin, PermissionRequiredMixin, View):
     login_url = '/hub/login/'
     permission_required = ('UserAuthAPI.activate_membership')
     template_name = 'OrganisationMgr/operation_result_view.html'
-
+    ViewBag = {}
+    ViewBag['PrizeHeader'] = _("中奖情况")
     
-
     def get(self, request, *args, **kwargs):
         usr_id = self.kwargs.get('id')
-        user_profile = get_object_or_404(
-            UserModels.UserProfile, user__pk=usr_id)
+        user_profile = get_object_or_404(UserModels.UserProfile, user__pk=usr_id)
+        user = get_object_or_404(UserModels.User, pk=usr_id)
 
-        luckyDrawNumber = random.randint(0, 30)
+        # self.ViewBag['usr_name'] = user_profile.firstNameEN + " " + user_profile.lastNameEN
+        self.ViewBag['usr_name'] = user_profile.get_full_EN_name()
+        self.ViewBag['membership_id']= user_profile.membershipId
+
+        luckyDrawNumber = random.randint(0, 420)
         
         print(luckyDrawNumber)
 
         # 如果数组存满了，再存入到数据库中去
-        print('一等奖数组长度:',len(first_prize))
-        print('二等奖数组长度:',len(second_prize))
-        print('三等奖数组长度:',len(third_prize))
-        if len(first_prize) == 1:
-           print('')
-        if len(second_prize) == 1:
-           print('')
-        if len(third_prize) == 1:
-           print('')   
+        # print('一等奖数组长度:',len(first_prize))
+        # print('二等奖数组长度:',len(second_prize))
+        # print('三等奖数组长度:',len(third_prize))
+        
+
+        # if len(first_prize) == 1:
+        #     for userID in first_prize:
+        #         winPrizeUser= UserModels.User(id=userID)
+        #         firstPrize=Prize(prize_name="一等奖", prize_userId=winPrizeUser)
+        #         firstPrize.save()
+        #     print('')
+        # if len(second_prize) == 1:
+        #     for userID in second_prize:
+        #         winPrizeUser= UserModels.User(id=userID)
+        #         secondPrize=Prize(prize_name="二等奖", prize_userId=winPrizeUser)
+        #         secondPrize.save()
+        #     print('')
+        # if len(third_prize) == 1:
+        #     for userID in third_prize:
+        #         winPrizeUser= UserModels.User(id=userID)
+        #         thirdPrize=Prize(prize_name="三等奖", prize_userId=winPrizeUser)
+        #         thirdPrize.save()
+        #     print('')   
 
 
-        if luckyDrawNumber < 3:
-
-            if len(first_prize) < 2:
-                first_prize.append(usr_id)
-                print("恭喜您，获得一等奖！")
+        if luckyDrawNumber < 10:
+            count=Prize.objects.filter(prize_name='红包').count()
+            # if len(first_prize) < 1:
+            if count<11:
+                firstPrize=Prize(prize_name="红包", prize_userId=user_profile) 
+                firstPrize.save()
+                self.ViewBag['PrizeDetail']=("恭喜您，获得5元红包一个！")
+                # print("恭喜您，获得一等奖！")
             # elif len(second_prize) < 10:
             #     second_prize.append(usr_id)
             #     print("恭喜您，获得二等奖！")
@@ -292,28 +314,45 @@ class ConfirmActivationView(LoginRequiredMixin, PermissionRequiredMixin, View):
             #     third_prize.append(usr_id)
             #     print("恭喜您，获得三等奖！")
             else:
-                print("很遗憾，您没有中奖。")
+                noPrize=Prize(prize_name="无奖", prize_userId=user_profile) 
+                noPrize.save()
+                self.ViewBag['PrizeDetail']=("很遗憾，您没有中奖。")
+                # print("很遗憾，您没有中奖。")
 
-        elif luckyDrawNumber > 2 and luckyDrawNumber < 13:
+        elif luckyDrawNumber > 9 and luckyDrawNumber < 95:
+            count2=Prize.objects.filter(prize_name='零食').count()
 
-            if len(second_prize) < 2:
-                second_prize.append(usr_id)
-                print("恭喜您，获得二等奖！")
+            if count2 < 86:
+                secondPrize=Prize(prize_name="零食", prize_userId=user_profile) 
+                secondPrize.save()
+                self.ViewBag['PrizeDetail']=("恭喜您，获得零食！")
+                # print("恭喜您，获得二等奖！")
             # elif len(third_prize) < 15:
             #     third_prize.append(usr_id)
             #     print("恭喜您，获得三等奖！")
             else:
-                print("很遗憾，您没有中奖。")
+                noPrize=Prize(prize_name="无奖", prize_userId=user_profile) 
+                noPrize.save()
+                self.ViewBag['PrizeDetail']=("很遗憾，您没有中奖。")
+                # print("很遗憾，您没有中奖。")
 
-        elif luckyDrawNumber > 12 and luckyDrawNumber <= 30:
-
-            if len(third_prize) < 2:
-                third_prize.append(usr_id)
-                print("恭喜您，获得三等奖！")
+        elif luckyDrawNumber > 94 and luckyDrawNumber < 115:
+            count3=Prize.objects.filter(prize_name='电影票').count()
+            if count3 < 21:
+                thirdPrize=Prize(prize_name="电影票", prize_userId=user_profile) 
+                thirdPrize.save()
+                # print("恭喜您，获得三等奖！")
+                self.ViewBag['PrizeDetail']=_("恭喜您，获得金华免费电影票！")
             else:
-                print("很遗憾，您没有中奖。")
+                noPrize=Prize(prize_name="无奖", prize_userId=user_profile) 
+                noPrize.save()
+                self.ViewBag['PrizeDetail']=("很遗憾，您没有中奖。")
+                # print("很遗憾，您没有中奖。")
 
         else:
-            print("很遗憾，您没有中奖。")
+            noPrize=Prize(prize_name="无奖", prize_userId=user_profile) 
+            noPrize.save()
+            self.ViewBag['PrizeDetail']=("很遗憾，您没有中奖。")
+            # print("很遗憾，您没有中奖。")
 
-        return render(request, self.template_name, {'user_profile': user_profile})
+        return render(request, self.template_name, self.ViewBag)

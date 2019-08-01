@@ -15,7 +15,6 @@ DATABASES = {
     }
 }
 
-# CELERY Control
 CELERY_BROKER_URL = 'redis://redis:6379'
 CELERY_RESULT_BACKEND = 'redis://redis:6379'
 CELERY_ACCEPT_CONTENT = ['application/json']
@@ -23,19 +22,10 @@ CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = TIME_ZONE
 
-# CACHES = {
-#  'default': {
-#   'BACKEND': 'django.core.cache.backends.dummy.DummyCache',  # 缓存后台使用的引擎
-#   'TIMEOUT': 0,            # 缓存超时时间（默认300秒，None表示永不过期，0表示立即过期）
-#   'OPTIONS':{
-#    'MAX_ENTRIES': 300,          # 最大缓存记录的数量（默认300）
-#    'CULL_FREQUENCY': 3,          # 缓存到达最大个数之后，剔除缓存个数的比例，即：1/CULL_FREQUENCY（默认3）
-#   },
-#  }
-# }
-
-# # Cache time to live is 1 minutes.
-# CACHE_TTL = 1 * 1
+# Mail Owl Config
+MAILOWL_MULTI_NODES = True
+MAILOWL_MASTER_NODE = ''
+MAILOWL_PORT = 44300
 
 
 # Static files (CSS, JavaScript, Images)
@@ -50,6 +40,13 @@ STATIC_URL = '/static/'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
+
+### Email Configuration
+
+# To test the mail sending related features, adding your personal email accounts credentials here. 
+# Remember !!! You must REMOVE your credentails when you push this to the public repo, otherwise your 
+# credentials will be at risk.
+EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
 
 try:
     from .local import *
