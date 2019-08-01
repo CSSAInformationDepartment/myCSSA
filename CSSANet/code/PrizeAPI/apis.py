@@ -31,5 +31,4 @@ def get_pool_by_group_tag(tag):
     return models.PrizePool.objects.filter(group_tag = tag)
 
 def get_pool_by_event(event,tag):
-    return models.PrizePool.objects.filter(Q(group_tag = tag)
-        & Q(event_related=event))
+    return models.PrizePool.objects.filter(event_related=event)
