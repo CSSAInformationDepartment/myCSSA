@@ -96,15 +96,21 @@
         $('.stop').click(function () {
 
             //  ############################################################################### 
-            var arr = ["122456", "143242", "412656", "535563", "777745"];
+            var arr = ["122456", "1432421", "255555", "968574"];
             // ###############################################################################   
          
 
             var index = Math.floor((Math.random() * arr.length));
 
 
-            var num_arr = (arr[index] + '').split('');
+            var num_arr = arr[index];
+        
 
+            if (num_arr.length == 6){
+                num_arr = '0'.concat(num_arr);
+           
+            } 
+        
             $(".luckydraw_num").each(function (index) {
                 var _num = $(this);
                 setTimeout(function () {
