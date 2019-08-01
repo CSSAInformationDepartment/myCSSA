@@ -56,13 +56,14 @@
 <script>
     axios.defaults.xsrfCookieName = 'csrftoken'
     axios.defaults.xsrfHeaderName = "X-CSRFTOKEN"
-    var arr=[];
+    var arr=[]; 
 
     axios.get('/hub/ajax/prize/get_pool/{{event_id}}').then((response)=>{
         response.data.new_student_id.forEach(element => {
             arr.push(element)
         });
-    })
+    }) 
+    
     var u = 100;
     var n = 1;
     var timer; //定义滚动的定时器
@@ -106,7 +107,7 @@
         $('.stop').click(function () {
 
             //  ############################################################################### 
-            // var arr = ["122456", "143242", "412656", "535563", "777745"];
+            // var arr = ["122456", "1432842", "412656", "535563", "777745"];
             // ###############################################################################   
             
             var index = Math.floor((Math.random() * arr.length));   
