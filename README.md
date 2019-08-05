@@ -32,7 +32,11 @@ Since CSSANet is set to be running in a Docker Containter, the file structures i
 ```
 pipenv install -r ../requirements.txt --python=3.7.2
 ```
-2. In VSCode, open the 'code' folder as a __new workspace__, then select your venv python as the interpreter and enable pylint.
+2. then, switch to the virtual environment, run the command: 
+```
+pipenv shell
+```
+3. In VSCode, open the 'code' folder as a __new workspace__, then select your venv python as the interpreter and enable pylint.
 
 ## To be a Contributor
 Welcome to join us by contacting: information@cssaunimelb.com
