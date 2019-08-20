@@ -11,7 +11,7 @@ class SubmissionListSerializers(serializers.ModelSerializer):
 
     class Meta:
         model = Submission
-        fields = ('submissionId', 'submissionTime', 'deviceType', 'categoryType','detail_url')
+        fields = ('submissionId', 'submissionTime', 'deviceType', 'themeType','detail_url')
 
 
 class SubmissionSelectionControlSerializers(serializers.ModelSerializer):
@@ -37,7 +37,7 @@ class DisplayedSubmissionSerializers(serializers.ModelSerializer):
 
     class Meta:
         model = Submission
-        fields = ('submissionId','deviceType', 'categoryType', 'upload_photo', 'description','author_name')
+        fields = ('submissionId','deviceType', 'themeType', 'upload_photo', 'description','author_name')
 
 
 class VotingControlSerializers(serializers.ModelSerializer):

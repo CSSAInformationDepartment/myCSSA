@@ -11,7 +11,7 @@
 	<div class="jumbotron jumbotron-fluid col-md-12" style="width:100%">
 		<div class="container-fluid">
 			<h1 class="display-3 text-center">摄影大赛报名</h1><br>
-			<p class="lead text-center display-4">-我与墨尔本-</p>
+			<!-- <p class="lead text-center display-4">-美的定义-<br>-水的模样-</p> -->
 		</div>
 	</div>
 </div>
@@ -34,7 +34,8 @@
 							<tr>
 								<td>{{item.submissionTime}}</td>
 								<td>{{item.get_deviceType_display}}</td>
-								<td>{{item.get_categoryType_display}}</td>
+								<td>{{item.get_themeType_display}}</td>
+								<!-- <td>{{item.get_categoryType_display}}</td> -->
 							</tr>
 							{% endfor %}
 						</tbody>	
@@ -59,15 +60,16 @@
 				</div>
 				<div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
 					<div class="card-body">
-						主题：<strong>我与墨尔本</strong>
+						主题1：<strong>美的定义</strong><br>
+						主题2：<strong>水的模样</strong>
 						<br><br>
 						手机组：全面征集与主题相关并用手机拍摄的摄影作品<br>
 						专业组：全面征集与主题相关并用专业设备，例如单反拍摄的摄影作品<br><br>
-						选手仅可投稿上述其中<strong>一种</strong>组别。两个组别设有两个类型，分别为人文类型和
-						风景类型。<br>
-						选手可以在投稿的组别中任意选择心仪的类型，每个类别只可上传<strong>最多一张</strong>摄影作品。
+						选手仅可投稿上述其中<strong>一种</strong>组别。两个组别设有两个主题，分别为美的定义和
+						水的模样。<br>
+						选手可以在投稿的组别中任意选择心仪的主题，每个类别只可上传<strong>最多两张</strong>摄影作品。
 						本次大赛上传的作品最大不可超过5Mb。<br><br><strong>选手一旦上传照片，不可更改或者撤回。请选手务必审核之后在规定时间内通过官网提交。</strong>
-						<br><br>决赛阶段，CSSA将公开专设的投票链接。投票可通过网站，按照组别以及类型，为自己喜欢的作品投票，投票截止后根据票数评选获奖作品。
+						<br><br>复赛阶段，CSSA将公开专设的投票链接。投票可通过网站，按照组别以及主题，为自己喜欢的作品投票，投票截止后根据票数评选进入复赛的作品。
 						<br><br>本次比赛最终解释权归CSSA社团所有。
 					</div>
 				</div>

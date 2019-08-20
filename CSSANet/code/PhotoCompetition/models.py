@@ -23,6 +23,10 @@ class Submission(models.Model):
         ('Nature',_('风景')),
         ('Culture',_('人文')),
     )
+    THEME_CHOICE=(
+        ('Beauty',_('美的定义')),
+        ('Water',_('水的模样')),
+    )
 
     submissionId = models.UUIDField(primary_key=True,default=uuid.uuid4, editable=False)
     submissionUserId = models.ForeignKey(adminModel.UserProfile, on_delete=models.DO_NOTHING)
@@ -30,6 +34,7 @@ class Submission(models.Model):
 
     deviceType = models.CharField(verbose_name=_("设备类型"),choices=DEVICE_CHOICE, max_length=30, default="MobilePhone", null=True)
     categoryType = models.CharField(verbose_name=_("题材类型"), choices=CATEGORY_CHOICE, max_length=30, default="Nature", null=True)
+    themeType = models.CharField(verbose_name=_("主题类型"), choices=THEME_CHOICE, max_length=30, default="Beauty", null=True)
     upload_photo = SorlImageField(verbose_name=_("上传作品"), null=True, upload_to = _GetUserDir)
     description = models.CharField(verbose_name=_("作品简述"),max_length = 250)
 

@@ -56,7 +56,8 @@
                                 <h5 class="mb-1"> 题材组别 </h5>
                             </div>
                             <p class="mb-1">
-                                {{ object.get_categoryType_display }}
+                                {% comment %}{{ object.get_categoryType_display }}{% endcomment %}
+                                {{ object.get_themeType_display }}
                             </p>
                         </div>
                         <div class="list-group-item">
