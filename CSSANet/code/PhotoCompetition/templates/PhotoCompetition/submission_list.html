@@ -25,9 +25,11 @@
             <div class="col-sm-2">
               {%render_field filter.form.device_type class="form-control"%}
             </div>
-            <label class="col-form-label" for="select1">题材类型</label>
+            <!-- <label class="col-form-label" for="select1">题材类型</label> -->
+            <label class="col-form-label" for="select1">主题类型</label>
             <div class="col-sm-2">
-              {%render_field filter.form.category_type class="form-control"%}
+              {% comment %}{%render_field filter.form.category_type class="form-control"%}{% endcomment %}
+              {%render_field filter.form.theme_type class="form-control"%}
             </div>
         </div>
       </form>
@@ -39,7 +41,8 @@
       <div class="card-header">
         提交记录
         <div class="float-right">
-          记录数量：{{ filter.qs.count }} 手机类：{{device_phone}} 相机类：{{device_camera}} 风景类：{{category_nature}} 人文类：{{category_culture}}
+          <!-- 记录数量：{{ filter.qs.count }} 手机类：{{device_phone}} 相机类：{{device_camera}} 风景类：{{category_nature}} 人文类：{{category_culture}} -->
+          记录数量：{{ filter.qs.count }} 手机类：{{device_phone}} 相机类：{{device_camera}} 水的模样：{{theme_water}} 美的定义：{{theme_beauty}}
         </div>
       </div>
       <div class="card-body">
@@ -51,6 +54,7 @@
                   <th>提交时间</th>
                   <th>题材</th>
                   <th>设备</th>
+
                 </tr>
               </thead>
               <tbody>
@@ -59,8 +63,9 @@
                     <td><a href="{{submission.get_absolute_url}}">{{submission.submissionId}}</a></td>
                     <th>{{submission.submissionUserId.get_full_EN_name}}</th>
                     <td>{{submission.submissionTime}}</td>
+                    <td>{{submission.get_themeType_display}}</td>
                     <td>{{submission.get_deviceType_display}}</td>
-                    <td>{{submission.get_categoryType_display}}</td>
+                    
                   </tr>
                 {% endfor %}
               </tbody>

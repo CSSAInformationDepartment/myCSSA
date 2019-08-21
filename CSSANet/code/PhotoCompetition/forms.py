@@ -11,7 +11,8 @@ class CandidateSubmissionForm(forms.ModelForm):
     '''
     class Meta:
         model = models.Submission
-        fields =('submissionUserId', 'deviceType', 'categoryType', 'upload_photo', 'description')
+        # fields =('submissionUserId', 'deviceType', 'categoryType', 'upload_photo', 'description')
+        fields =('submissionUserId', 'deviceType', 'themeType', 'upload_photo', 'description')
         widgets = {
             'submissionUserId': forms.HiddenInput,
             'description': forms.Textarea
@@ -22,10 +23,14 @@ class CandidateSubmissionForm(forms.ModelForm):
         super().clean()
         user_id = self.cleaned_data.get('submissionUserId')
         #device_type = self.cleaned_data.get('deviceType')
-        category_type = self.cleaned_data.get('categoryType')
+        # category_type = self.cleaned_data.get('categoryType')
+        theme_type=self.cleaned_data.get('themeType')
+
+        # check_duplication = models.Submission.objects.filter(Q(submissionUserId=user_id)
+        #     & Q(categoryType=category_type)).first()
 
         check_duplication = models.Submission.objects.filter(Q(submissionUserId=user_id)
-            & Q(categoryType=category_type)).first()
+            & Q(themeType=theme_type)).count()
 
-        if check_duplication:
+        if check_duplication>=2:
             raise ValidationError(_(mark_safe('<li>您已在该类别有过提交记录</li>')), code='duplicated submission in the same category')

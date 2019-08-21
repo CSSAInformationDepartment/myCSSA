@@ -117,6 +117,8 @@ class SubmissionListView(LoginRequiredMixin,PermissionRequiredMixin,ListView):
         context["device_camera"] = qs.filter(deviceType="Camera").count()
         context["category_nature"] = qs.filter(categoryType="Nature").count()
         context["category_culture"] = qs.filter(categoryType="Culture").count()
+        context["theme_water"] = qs.filter(themeType="Water").count()
+        context["theme_beauty"] = qs.filter(themeType="Beauty").count()
         return context
     
     
