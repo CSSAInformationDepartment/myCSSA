@@ -6,7 +6,7 @@ from .forms import *
 from .apis import is_duplicated_purchase
 
 from myCSSAhub.apis import GetDocViewData
-from UserAuthAPI.models import UserProfile
+from UserAuthAPI.models import UserProfile, User
 from django.http import JsonResponse, HttpResponseRedirect, HttpResponse, Http404
 from django.contrib.auth.mixins import  LoginRequiredMixin, PermissionRequiredMixin
 from django.utils.formats import localize
@@ -142,13 +142,14 @@ class ConfirmEventOrderView(LoginRequiredMixin,View):
     
     def post(self, request, *args, **kwargs):
         event_id = self.kwargs.get('id')
+        user_profile = get_object_or_404(UserProfile, user__pk=request.user.id)
         fields = self.get_info_collection_form_field()
-        
+
         if fields:
             field_data = {}
             for field in fields:
                 field_data[field.id]=request.POST.get(str(field.id))
-            flexform_user_write_in(request.user, field_data)
+            flexform_user_write_in(user_profile, field_data)
        
         if get_ticket(request.user, event_id):
             return HttpResponseRedirect(reverse('myCSSAhub:EventAPI:user_ticket_list'))
