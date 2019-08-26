@@ -19,6 +19,8 @@ urlpatterns = [
     path('events/', Views.EventsListView.as_view(), name='events'),
     path('events/<str:eventID>/', Views.EventDetails, name='eventsDetails'),
 
+    path("previousCouncil/<str:year>/", Views.previousCouncil.as_view(), name="previousCouncil"),
+
     ### Apps Extension Urls
     path('app/photo-competition/', include(PhotoCompetitionPublicUrls,  namespace='PhotoCompetition')),
 

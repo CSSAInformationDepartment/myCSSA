@@ -304,6 +304,19 @@ def BlogContents(request, blogId):
     return render(request, 'PublicSite/blogs.html', ViewBag)
 
 
+class previousCouncil(View):
+    ViewBag = {}
+    template_name = ""
+
+    def getPreviousConcilMembers(self, memberInfo):
+        pass
+
+    def get(self, request, *args, **kwargs):
+        year = kwargs.get("year")
+        self.getPreviousConcilMembers({})
+        return JsonResponse({"year":year})
+
+
 class reviewBlogPublic(LoginRequiredMixin, PermissionRequiredMixin, View):
     login_url = "/hub/login/"
     permission_required = ("BlogAPI.add_blogreviewed", "BlogAPI.delete_blogreviewed",
