@@ -41,7 +41,7 @@ class CandidateSubmissionView(LoginRequiredMixin, View):
         '''
         Proceed GET request for the submission page
         '''
-        prev_submission = models.Submission.objects.filter(submissionUserId__user=request.user.id)
+        prev_submission = models.Submission.objects.filter(Q(submissionUserId__user=request.user.id) & Q(submissionTime__date__gt=datetime.date(2019, 8, 1)))
         submit_form = self.form_class(initial={
             'submissionUserId': request.user.id
         })
