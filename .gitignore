@@ -5,6 +5,7 @@ db.sqlite3
 .lock
 .DS_Store
 .mypy_cache/
+*.log
 
 settings.json
 /CSSANet/data/*
