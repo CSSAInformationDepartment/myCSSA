@@ -4,6 +4,8 @@ from PublicSite import views as Views
 from Library.SiteManagement import LoadPagetoRegister
 
 from PhotoCompetition import public_urls as PhotoCompetitionPublicUrls
+from RecruitAPI import public_urls as RecruitAPIPublicUrls
+
 app_name = "PublicSite"
 urlpatterns = [
     path('', Views.index, name='index'),
@@ -21,5 +23,6 @@ urlpatterns = [
 
     ### Apps Extension Urls
     path('app/photo-competition/', include(PhotoCompetitionPublicUrls,  namespace='PhotoCompetition')),
+    path('app/recruit-api/', include(RecruitAPIPublicUrls, namespace="RecruitAPI")),
 
 ]

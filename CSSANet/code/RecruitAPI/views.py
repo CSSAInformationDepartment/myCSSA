@@ -248,4 +248,3 @@ class JobListAPIViewSet(ReadOnlyModelViewSet):
     queryset = models.JobList.objects.all()
     serializer_class = (serializers.JobListSerializers)
     authentication_classes = (SessionAuthentication, TokenAuthentication)
-    permission_classes = (IsAuthenticated)
