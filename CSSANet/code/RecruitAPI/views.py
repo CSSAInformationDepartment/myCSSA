@@ -18,6 +18,17 @@ from django.utils.html import escape
 from pytz import timezone
 from CSSANet.settings import TIME_ZONE
 
+from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.viewsets import ReadOnlyModelViewSet
+from rest_framework.views import APIView
+from rest_framework.authentication import SessionAuthentication, TokenAuthentication
+from rest_framework.permissions import IsAuthenticated, DjangoModelPermissions
+from rest_framework.exceptions import ValidationError
+
+import django_filters
+from . import models, forms, serializers
+from UserAuthAPI.models import User, UserProfile
 from mail_owl.utils import AutoMailSender
 
 
@@ -231,3 +242,10 @@ class InterviewListJsonView(LoginRequiredMixin, PermissionRequiredMixin, BaseDat
         if search:
             qs = qs.filter(Q(resume__user__email__istartswith=search))
         return qs
+        
+class JobListAPIViewSet(ReadOnlyModelViewSet):
+   
+    queryset = models.JobList.objects.all()
+    serializer_class = (serializers.JobListSerializers)
+    authentication_classes = (SessionAuthentication, TokenAuthentication)
+    permission_classes = (IsAuthenticated)
