@@ -3,7 +3,7 @@ from django.core.exceptions import ValidationError
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
 from django.db.models import Q
-
+import datetime
 from PhotoCompetition import models
 class CandidateSubmissionForm(forms.ModelForm):
     '''
@@ -30,7 +30,7 @@ class CandidateSubmissionForm(forms.ModelForm):
         #     & Q(categoryType=category_type)).first()
 
         check_duplication = models.Submission.objects.filter(Q(submissionUserId=user_id)
-            & Q(themeType=theme_type)).count()
+            & Q(themeType=theme_type) & Q(submissionTime__date__gt=datetime.date(2019, 8, 1))).count()
 
         if check_duplication>=2:
             raise ValidationError(_(mark_safe('<li>您已在该类别有过提交记录</li>')), code='duplicated submission in the same category')
