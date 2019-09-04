@@ -11,6 +11,6 @@ urlpatterns = [
     path('api/vote/',views.VoteSubmissionControlAPI.as_view(),name='vote-photo'),
     path('submit/', views.CandidateSubmissionView.as_view(), name="submit-photo"),
     path('vote/',views.AxiosTestView.as_view(), name='vote'),
-    
+    path('result-display/',views.resultDisplay.as_view(), name='result-display')
 ]
 
