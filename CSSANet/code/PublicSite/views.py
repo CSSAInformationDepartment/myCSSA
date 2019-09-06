@@ -185,6 +185,32 @@ def EventDetails(request, eventID):
     print(now_time)
     return render(request,'PublicSite/eventDetails.html',{'events':event, 'now_time':now_time})
 
+########Start###################### Event API for mobile App ########################################
+from rest_framework.views import APIView
+from django.shortcuts import Http404, HttpResponse, HttpResponseRedirect
+from rest_framework.response import Response
+from django.core import serializers
+
+class MobileEventAPI(APIView):
+   
+    def get(self, request, format=None):
+        # pk = request.GET.get('pk')
+        # if pk is None:
+        #     return Response(data=None, status=status.HTTP_400_BAD_REQUEST)
+        # approved_submission = models.ApprovedSubmission.objects.filter(submission__pk = pk).first()   
+        # res = serializers.SubmissionSelectionControlSerializers()
+        # if approved_submission:
+        #     res = serializers.SubmissionSelectionControlSerializers(approved_submission)
+        timezone.activate('Australia/Melbourne')
+        now_time = timezone.now()
+        eventsPast=eventModels.Event.objects.filter(eventActualStTime__lt=now_time).order_by("eventActualStTime")
+        
+        data = serializers.serialize("json",eventsPast) # 直接序列化成json形式
+        return HttpResponse(data,content_type="application/json")
+
+
+
+########End######################## Event API for mobile App ########################################
 
 def Blogs(request):
     # 找openToPublic为true的
