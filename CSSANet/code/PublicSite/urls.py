@@ -21,6 +21,7 @@ urlpatterns = [
 
     ### Apps Extension Urls
     path('app/photo-competition/', include(PhotoCompetitionPublicUrls,  namespace='PhotoCompetition')),
-    path('mobile-api/event', Views.MobileEventAPI.as_view(), name='EventForMobileAPI'),
+    path('mobile-api/events-past', Views.MobilePastEventAPI.as_view(), name='PastEventForMobileAPI'),
+    path('mobile-api/events-future', Views.MobileFutureEventAPI.as_view(), name='FutureEventForMobileAPI'),
 
 ]

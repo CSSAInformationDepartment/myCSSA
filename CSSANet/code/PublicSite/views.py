@@ -1,6 +1,5 @@
 from typing import Dict, List
 from django.shortcuts import render,reverse, get_object_or_404
-from django.http import JsonResponse
 from PublicSite import models
 from UserAuthAPI import models as UserModels
 from BlogAPI import models as BlogModels
@@ -187,12 +186,31 @@ def EventDetails(request, eventID):
 
 ########Start###################### Event API for mobile App ########################################
 from rest_framework.views import APIView
-from django.shortcuts import Http404, HttpResponse, HttpResponseRedirect
-from rest_framework.response import Response
-from django.core import serializers
+from .serializers import EventsSerializer
+# from rest_framework.response import Response
+# from django.core import serializers
+# from django.core.serializers.json import DjangoJSONEncoder
 
-class MobileEventAPI(APIView):
-   
+class MobilePastEventAPI(APIView):
+    
+    def get(self, request, format=None):
+        timezone.activate('Australia/Melbourne')
+        now_time = timezone.now()
+        eventsPast= eventModels.Event.objects.filter(eventActualStTime__lt=now_time).order_by("eventActualStTime")    
+        
+        # queryset是实例集合，需要加 many=True ，如果是单个实例，可以不用加 many=True
+        serializer = EventsSerializer(eventsPast, many = True)
+        
+        # data = serializers.serialize("json",serializer.eventsPast) # 直接序列化成json形式
+
+        # 两种返回方法都行，下面一种需要设置，设定已标注
+        # return HttpResponse(json.dumps(serializer.data, cls=DjangoJSONEncoder),content_type="application/json")
+    
+        # In order to allow non-dict objects to be serialized set the safe parameter to False
+        return JsonResponse(serializer.data, safe=False)
+
+class MobileFutureEventAPI(APIView):
+       
     def get(self, request, format=None):
         # pk = request.GET.get('pk')
         # if pk is None:
@@ -205,8 +223,11 @@ class MobileEventAPI(APIView):
         now_time = timezone.now()
         eventsPast=eventModels.Event.objects.filter(eventActualStTime__lt=now_time).order_by("eventActualStTime")
         
+    
+
         data = serializers.serialize("json",eventsPast) # 直接序列化成json形式
         return HttpResponse(data,content_type="application/json")
+
 
 
 
