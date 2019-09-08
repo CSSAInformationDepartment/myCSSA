@@ -184,7 +184,7 @@ def EventDetails(request, eventID):
     print(now_time)
     return render(request,'PublicSite/eventDetails.html',{'events':event, 'now_time':now_time})
 
-########Start###################### Event API for mobile App ########################################
+########Start###################### Event API for mobile App ##################Start###################
 from rest_framework.views import APIView
 from .serializers import EventsSerializer
 # from rest_framework.response import Response
@@ -192,7 +192,6 @@ from .serializers import EventsSerializer
 # from django.core.serializers.json import DjangoJSONEncoder
 
 class MobilePastEventAPI(APIView):
-    
     def get(self, request, format=None):
         timezone.activate('Australia/Melbourne')
         now_time = timezone.now()
@@ -209,29 +208,17 @@ class MobilePastEventAPI(APIView):
         # In order to allow non-dict objects to be serialized set the safe parameter to False
         return JsonResponse(serializer.data, safe=False)
 
+
 class MobileFutureEventAPI(APIView):
-       
+    #原理同上   
     def get(self, request, format=None):
-        # pk = request.GET.get('pk')
-        # if pk is None:
-        #     return Response(data=None, status=status.HTTP_400_BAD_REQUEST)
-        # approved_submission = models.ApprovedSubmission.objects.filter(submission__pk = pk).first()   
-        # res = serializers.SubmissionSelectionControlSerializers()
-        # if approved_submission:
-        #     res = serializers.SubmissionSelectionControlSerializers(approved_submission)
         timezone.activate('Australia/Melbourne')
         now_time = timezone.now()
-        eventsPast=eventModels.Event.objects.filter(eventActualStTime__lt=now_time).order_by("eventActualStTime")
-        
-    
+        eventsFuture = eventModels.Event.objects.filter(eventActualStTime__gt=now_time).order_by("eventActualStTime")
+        serializer = EventsSerializer(eventsFuture, many = True)
+        return JsonResponse(serializer.data, safe=False)
 
-        data = serializers.serialize("json",eventsPast) # 直接序列化成json形式
-        return HttpResponse(data,content_type="application/json")
-
-
-
-
-########End######################## Event API for mobile App ########################################
+########End######################## Event API for mobile App ######################End##############
 
 def Blogs(request):
     # 找openToPublic为true的
