@@ -14,7 +14,7 @@ from django.views.decorators.cache import cache_page
 import json, math
 
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.http import JsonResponse, HttpResponseRedirect, HttpResponse, HttpResponseBadRequest
+from django.http import JsonResponse, HttpResponseRedirect, HttpResponse, HttpResponseBadRequest,Http404
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin
@@ -26,7 +26,6 @@ from django.views.generic import CreateView, UpdateView, FormView
 from django.contrib.auth.models import update_last_login
 from django.db.models import Q
 from django.core.exceptions import ObjectDoesNotExist
-from django.http import JsonResponse, HttpResponseRedirect, HttpResponse, Http404
 from django.contrib.auth.decorators import login_required
 
 from UserAuthAPI import models as UserModels
@@ -187,6 +186,8 @@ def EventDetails(request, eventID):
 ########Start###################### Event API for mobile App ##################Start###################
 from rest_framework.views import APIView
 from .serializers import EventsSerializer
+import base64
+from django.core.serializers.json import DjangoJSONEncoder
 # from rest_framework.response import Response
 # from django.core import serializers
 # from django.core.serializers.json import DjangoJSONEncoder
@@ -203,10 +204,12 @@ class MobilePastEventAPI(APIView):
         # data = serializers.serialize("json",serializer.eventsPast) # 直接序列化成json形式
 
         # 两种返回方法都行，下面一种需要设置，设定已标注
-        # return HttpResponse(json.dumps(serializer.data, cls=DjangoJSONEncoder),content_type="application/json")
-    
         # In order to allow non-dict objects to be serialized set the safe parameter to False
-        return JsonResponse(serializer.data, safe=False)
+        data = json.dumps(serializer.data, cls=DjangoJSONEncoder)
+        # 这里需要加encode()才能通过base64进行编码
+        data_encode = base64.b64encode(data.encode())
+        # return JsonResponse(serializer.data, safe=False)
+        return HttpResponse(data_encode, content_type="text/plain")
 
 
 class MobileFutureEventAPI(APIView):
@@ -216,7 +219,10 @@ class MobileFutureEventAPI(APIView):
         now_time = timezone.now()
         eventsFuture = eventModels.Event.objects.filter(eventActualStTime__gt=now_time).order_by("eventActualStTime")
         serializer = EventsSerializer(eventsFuture, many = True)
-        return JsonResponse(serializer.data, safe=False)
+        data = json.dumps(serializer.data, cls=DjangoJSONEncoder)
+        data_encode = base64.b64encode(data.encode())
+        return HttpResponse(data_encode, content_type="text/plain")
+
 
 ########End######################## Event API for mobile App ######################End##############
 
