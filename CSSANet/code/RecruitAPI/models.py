@@ -35,6 +35,9 @@ class JobList(models.Model):
 
     disabled = models.BooleanField(default=False, blank=True,null=True)
 
+    def get_absolute_url(self):
+        return reverse("myCSSAhub:RecruitAPI:job_detail", args=[str(self.jobId)])
+
 
 class Resume(models.Model):
     CVId = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)

@@ -1,17 +1,17 @@
 from django.urls import path, re_path, include
 from rest_framework import routers
-from . import views
+from .views import *
 
 app_name = "RecruitAPI"
 JobListAPIPublic = routers.DefaultRouter()
-JobListAPIPublic.register(r'job-list',views.JobListAPIViewSet)
+JobListAPIPublic.register(r'job-list', JobListAPIViewSet)
 
 urlpatterns = [
-    # path('api/',include(PhotoCompPublic.urls)),
-    # path('api/vote/',views.VoteSubmissionControlAPI.as_view(),name='vote-photo'),
-    # path('submit/', views.CandidateSubmissionView.as_view(), name="submit-photo"),
-    # path('vote/',views.AxiosTestView.as_view(), name='vote'),
+    # path('list/', JobListView.as_view(), name="job_list"),
+    # path('resume/', ResumeListView.as_view(), name="resume_list"),
+    # path('resume/<str:id>/detail/', ResumeDetailView.as_view(), name="resume_detail"),
+    # path('resume/<str:id>/add_to_interview/', AddInterviewView.as_view(), name="add_to_interview"),
     path('api/', include(JobListAPIPublic.urls)),
-    
+    path('jobs/<str:id>/detail/', JobDetailView.as_view(), name="job_detail")
 ]
 
