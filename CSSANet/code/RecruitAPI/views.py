@@ -249,22 +249,12 @@ class JobListAPIViewSet(ReadOnlyModelViewSet):
     serializer_class = (serializers.JobListSerializers)
     authentication_classes = (SessionAuthentication, TokenAuthentication)
 
-class JobDetailView(PermissionRequiredMixin, LoginRequiredMixin, View):
-    # login_url = '/hub/login/'
-    # permission_required = ('RecruitAPI.view_resume',)
+class JobDetailView(View):
     model = JobList
     template_name='RecruitAPI/job_detail.html'
 
     def get(self,request,*args, **kwargs):
         job_id = self.kwargs.get('id')
         job = get_object_or_404(JobList, jobId=job_id)
-        # if request.user.is_staff and (not job.isOpened):
-        #     job.isOpened = True
-        #     job.save()
-
-        info_headers = [{'name':'提交时间', 'dbAttr': 'timeOfCreate'},{'name':'申请职位', 'dbAttr': 'jobRelated.jobName'},
-            {'name':'主管部门', 'dbAttr': 'jobRelated.dept.deptTitle'},
-            {'name':'申请原因', 'dbAttr': 'reason'},{'name':'兴趣爱好', 'dbAttr': 'hobby'}, 
-            {'name':'校内经历', 'dbAttr': 'inSchoolExp'}, {'name':'其他信息/询问', 'dbAttr': 'additionMsg'}]
 
         return render(request, self.template_name)

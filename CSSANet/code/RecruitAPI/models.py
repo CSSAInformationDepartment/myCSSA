@@ -36,7 +36,7 @@ class JobList(models.Model):
     disabled = models.BooleanField(default=False, blank=True,null=True)
 
     def get_absolute_url(self):
-        return reverse("myCSSAhub:RecruitAPI:job_detail", args=[str(self.jobId)])
+        return reverse("PublicSite:RecruitAPI:job_detail", args=[str(self.jobId)])
 
 
 class Resume(models.Model):
