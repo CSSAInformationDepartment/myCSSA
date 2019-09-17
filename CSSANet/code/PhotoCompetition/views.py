@@ -60,6 +60,40 @@ class CandidateSubmissionView(LoginRequiredMixin, View):
         return render(request, self.template_name, {'form':submission})
 
 
+# class CandidateSubmissionView(LoginRequiredMixin, View):
+#     '''
+#     PhotoCompetition App - CandidateSubmissionView
+#     Written by Tianzhi (Eric) - 2019
+
+#     This view is for presenting the awarded photo form and retriving candidate's submission data
+#     '''
+#     login_url = '/hub/login/'
+#     template_name = 'PhotoCompetition/photoSubmit1.html' 
+#     form_class = forms.CandidateSubmissionForm
+
+#     def get(self, request, *args, **kwargs):
+#         '''
+#         Proceed GET request for the submission page
+#         '''
+#         prev_submission = models.Submission.objects.filter(submissionUserId__user=request.user.id)
+#         submit_form = self.form_class(initial={
+#             'submissionUserId': request.user.id
+#         })
+#         return render(request, self.template_name, {'form':submit_form, 'prev_submission':prev_submission})
+
+#     def post(self, request, *args, **kwargs):
+#         '''
+#         Proceed POST request for the submission page
+#         '''
+#         submission = self.form_class(data=request.POST or None, files=request.FILES)
+
+#         if submission.is_valid():
+#             submission.save()
+#             return HttpResponseRedirect(reverse('PublicSite:PhotoCompetition:submit-photo'))
+        
+#         return render(request, self.template_name, {'form':submission})
+
+
 class SubmissionListAPIViewSet(ReadOnlyModelViewSet):
     '''
     PhotoCompetition App - Admin - Submission List API 
@@ -251,6 +285,11 @@ class VoteSubmissionControlAPI(APIView):
         record = self.get_object(pk)
         record.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+class resultDisplay(View):
+
+    def get(self,request, *args, **kwargs):
+        return render(self.request, template_name='PhotoCompetition/result_display.html')
 
 
 ### FOR DEV Purpose only
