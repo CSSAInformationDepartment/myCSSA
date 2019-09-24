@@ -4,6 +4,8 @@ from PublicSite import views as Views
 from Library.SiteManagement import LoadPagetoRegister
 
 from PhotoCompetition import public_urls as PhotoCompetitionPublicUrls
+from EventAPI import public_urls as EventsPublicUrls
+
 app_name = "PublicSite"
 urlpatterns = [
     path('', Views.index, name='index'),
@@ -21,7 +23,6 @@ urlpatterns = [
 
     ### Apps Extension Urls
     path('app/photo-competition/', include(PhotoCompetitionPublicUrls,  namespace='PhotoCompetition')),
-    path('mobile-api/events-past', Views.MobilePastEventAPI.as_view(), name='PastEventForMobileAPI'),
-    path('mobile-api/events-future', Views.MobileFutureEventAPI.as_view(), name='FutureEventForMobileAPI'),
+    path('app/events/', include(EventsPublicUrls,  namespace='EventAPI')),
 
 ]

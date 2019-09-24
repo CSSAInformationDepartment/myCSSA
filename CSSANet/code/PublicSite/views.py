@@ -183,48 +183,6 @@ def EventDetails(request, eventID):
     print(now_time)
     return render(request,'PublicSite/eventDetails.html',{'events':event, 'now_time':now_time})
 
-########Start###################### Event API for mobile App ##################Start###################
-from rest_framework.views import APIView
-from .serializers import EventsSerializer
-import base64
-from django.core.serializers.json import DjangoJSONEncoder
-# from rest_framework.response import Response
-# from django.core import serializers
-# from django.core.serializers.json import DjangoJSONEncoder
-
-class MobilePastEventAPI(APIView):
-    def get(self, request, format=None):
-        timezone.activate('Australia/Melbourne')
-        now_time = timezone.now()
-        eventsPast= eventModels.Event.objects.filter(eventActualStTime__lt=now_time).order_by("eventActualStTime")    
-        
-        # queryset是实例集合，需要加 many=True ，如果是单个实例，可以不用加 many=True
-        serializer = EventsSerializer(eventsPast, many = True)
-        
-        # data = serializers.serialize("json",serializer.eventsPast) # 直接序列化成json形式
-
-        # 两种返回方法都行，下面一种需要设置，设定已标注
-        # In order to allow non-dict objects to be serialized set the safe parameter to False
-        data = json.dumps(serializer.data, cls=DjangoJSONEncoder)
-        # 这里需要加encode()才能通过base64进行编码
-        data_encode = base64.b64encode(data.encode())
-        # return JsonResponse(serializer.data, safe=False)
-        return HttpResponse(data_encode, content_type="text/plain")
-
-
-class MobileFutureEventAPI(APIView):
-    #原理同上   
-    def get(self, request, format=None):
-        timezone.activate('Australia/Melbourne')
-        now_time = timezone.now()
-        eventsFuture = eventModels.Event.objects.filter(eventActualStTime__gt=now_time).order_by("eventActualStTime")
-        serializer = EventsSerializer(eventsFuture, many = True)
-        data = json.dumps(serializer.data, cls=DjangoJSONEncoder)
-        data_encode = base64.b64encode(data.encode())
-        return HttpResponse(data_encode, content_type="text/plain")
-
-
-########End######################## Event API for mobile App ######################End##############
 
 def Blogs(request):
     # 找openToPublic为true的

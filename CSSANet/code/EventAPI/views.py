@@ -224,7 +224,6 @@ class TicketCheckInView(LoginRequiredMixin, PermissionRequiredMixin, View):
                         'message':"Empty Request"}
                     )
 
-
 class UserTicketListView(LoginRequiredMixin, View):
     login_url = '/hub/login/'
     template_name = 'EventAPI/user_ticket_list.html'
@@ -265,3 +264,45 @@ class EventListJsonView(LoginRequiredMixin, PermissionRequiredMixin, BaseDatatab
         if search:
             qs = qs.filter(Q(eventName__istartswith=search))
         return qs
+
+########Start###################### Event API for mobile App ##################Start###################
+from rest_framework.views import APIView
+from .serializers import EventsSerializer
+import base64, json
+from django.core.serializers.json import DjangoJSONEncoder
+# from rest_framework.response import Response
+# from django.core import serializers
+
+class MobilePastEventAPI(APIView):
+    def get(self, request, format=None):
+        sys_time.activate('Australia/Melbourne')
+        now_time = sys_time.now()
+        eventsPast= Event.objects.filter(eventActualStTime__lt=now_time).order_by("eventActualStTime")    
+        
+        # queryset是实例集合，需要加 many=True ，如果是单个实例，可以不用加 many=True
+        serializer = EventsSerializer(eventsPast, many = True)
+        
+        # data = serializers.serialize("json",serializer.eventsPast) # 直接序列化成json形式
+
+        # 两种返回方法都行，下面一种需要设置，设定已标注
+        # In order to allow non-dict objects to be serialized set the safe parameter to False
+        data = json.dumps(serializer.data, cls=DjangoJSONEncoder)
+        # 这里需要加encode()才能通过base64进行编码
+        data_encode = base64.b64encode(data.encode())
+        # return JsonResponse(serializer.data, safe=False)
+        return HttpResponse(data_encode, content_type="text/plain")
+
+
+class MobileFutureEventAPI(APIView):
+    #原理同上   
+    def get(self, request, format=None):
+        sys_time.activate('Australia/Melbourne')
+        now_time = sys_time.now()
+        eventsFuture = Event.objects.filter(eventActualStTime__gt=now_time).order_by("eventActualStTime")
+        serializer = EventsSerializer(eventsFuture, many = True)
+        data = json.dumps(serializer.data, cls=DjangoJSONEncoder)
+        data_encode = base64.b64encode(data.encode())
+        return HttpResponse(data_encode, content_type="text/plain")
+
+
+########End######################## Event API for mobile App ######################End##############
