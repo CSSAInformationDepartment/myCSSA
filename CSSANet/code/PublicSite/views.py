@@ -1,6 +1,5 @@
 from typing import Dict, List
 from django.shortcuts import render,reverse, get_object_or_404
-from django.http import JsonResponse
 from PublicSite import models
 from UserAuthAPI import models as UserModels
 from BlogAPI import models as BlogModels
@@ -15,7 +14,7 @@ from django.views.decorators.cache import cache_page
 import json, math
 
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.http import JsonResponse, HttpResponseRedirect, HttpResponse, HttpResponseBadRequest
+from django.http import JsonResponse, HttpResponseRedirect, HttpResponse, HttpResponseBadRequest,Http404
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin
@@ -27,7 +26,6 @@ from django.views.generic import CreateView, UpdateView, FormView
 from django.contrib.auth.models import update_last_login
 from django.db.models import Q
 from django.core.exceptions import ObjectDoesNotExist
-from django.http import JsonResponse, HttpResponseRedirect, HttpResponse, Http404
 from django.contrib.auth.decorators import login_required
 
 from UserAuthAPI import models as UserModels
