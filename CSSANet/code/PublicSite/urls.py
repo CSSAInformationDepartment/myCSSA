@@ -23,6 +23,8 @@ urlpatterns = [
 
     ### Apps Extension Urls
     path('app/photo-competition/', include(PhotoCompetitionPublicUrls,  namespace='PhotoCompetition')),
+
+    ### mobile app api
     path('app/events/', include(EventsPublicUrls,  namespace='EventAPI')),
 
 ]

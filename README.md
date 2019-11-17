@@ -42,6 +42,6 @@ Project Manager and Lead Engineer: Le (Josh). Lu (joshlubox@gmail.com)
 
 UI / UX Designer and Lead Front-end Developer : Mengyu (Caitlin) Jiang (icesymeng@gmail.com)
 
-Communication System Developer: Shenhai (Howie). Chen
+Communication System Developer: Shenhai (Howie). Chen (shenhai0910@gmail.com)
 
 Content Managament System Developer: Maoting (Brook). Zuo
