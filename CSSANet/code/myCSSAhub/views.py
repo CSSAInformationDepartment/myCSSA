@@ -658,3 +658,10 @@ def under_dev_notice(request):
     return render(request, 'myCSSAhub/under-dev-function.html')
 
 
+################################# LoginAPI for mobile ########################################
+# using token_authentication for mobile client
+
+from rest_framework.views import APIView
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+

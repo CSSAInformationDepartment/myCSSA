@@ -62,3 +62,12 @@ urlpatterns += [
     path('ajax/userlookup/', Views.UserLookup.as_view(), name="ajax_userLookup"),
     path('ajax/prize/get_pool/<str:id>/', LuckyDrawDataView.as_view(), name="luckydrawget"),
 ]
+
+
+## Mobile client API
+from rest_framework.authtoken import views
+from django.conf.urls import url
+
+urlpatterns += [
+    url(r'^api-token-auth/', views.obtain_auth_token)
+]
