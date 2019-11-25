@@ -42,3 +42,7 @@ urlpatterns = [
     re_path(r'^account/', include('allauth.urls')),
     re_path(r'^accounts/profile/$', RedirectView.as_view(url='/', permanent=True), name='profile-redirect'),
 ]
+
+
+
+

@@ -63,11 +63,15 @@ urlpatterns += [
     path('ajax/prize/get_pool/<str:id>/', LuckyDrawDataView.as_view(), name="luckydrawget"),
 ]
 
-
 ## Mobile client API
-from rest_framework.authtoken import views
 from django.conf.urls import url
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView, # 生成token
+    TokenRefreshView,     # refresh token
+)
+
 
 urlpatterns += [
-    url(r'^api-token-auth/', views.obtain_auth_token)
+    # url(r'^api-token-auth/', views.obtain_auth_token)
+    # path('jwt-auth/', views.obtain_jwt_token )
 ]

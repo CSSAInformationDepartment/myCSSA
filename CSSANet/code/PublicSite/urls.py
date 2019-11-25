@@ -28,3 +28,5 @@ urlpatterns = [
     path('app/events/', include(EventsPublicUrls,  namespace='EventAPI')),
 
 ]
+
+
