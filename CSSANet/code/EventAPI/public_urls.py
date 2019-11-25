@@ -4,9 +4,12 @@ from . import views
 
 app_name = "EventAPI"
 EventsPublic = routers.DefaultRouter()   
-# PhotoCompPublic.register(r'photos',views.ApprovedSubmissionsAPIViewSet)
-# EventsPublic.register(r'events-past',views.MobilePastEventAPI)
-# EventsPublic.register(r'events-future',views.MobileFutureEventAPI)
+
+# For mobile-app api
+# router = routers.SimpleRouter()
+# router.register('mobile-api', MobileAppViewSet, base_name="mobile_event") 注册路由
+# urlpatterns = router.urls
+
 
 urlpatterns = [
     path('mobile-api/',include(EventsPublic.urls)),
