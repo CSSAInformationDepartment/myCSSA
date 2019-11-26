@@ -33,7 +33,9 @@ urlpatterns = [
     path('hub/',include(HubUrl)),
     path('admin/', admin.site.urls),
     path('api/users/', include(AuthUrl)),
-    path('api/legacy/', include(LegacyUrl))
+    path('api/legacy/', include(LegacyUrl)),
+    # JWT 验证用
+    # path('auth/',include('rest_framework.urls')),
 ] 
 handler400 = 'PublicSite.views.bad_request'
 handler403 = 'PublicSite.views.permission_denied'
