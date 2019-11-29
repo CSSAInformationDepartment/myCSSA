@@ -25,6 +25,7 @@
 #                          DO NOT DISCLOSE!                                   #
 ###############################################################################
 
+from .models import UserProfile
 import random
 import string
 
@@ -56,6 +57,7 @@ except ImportError:
     raise ImportError("allauth needs to be added to INSTALLED_APPS.")
 
 UserModel = get_user_model()
+
 
 def getRandomStringSubFix():
     salt = ''.join(random.sample(string.ascii_letters + string.digits, 6))
@@ -128,7 +130,8 @@ class APILoginSerializer(serializers.Serializer):
             # Authentication without using allauth
             if email:
                 try:
-                    username = UserModel.objects.get(email__iexact=email).get_username()
+                    username = UserModel.objects.get(
+                        email__iexact=email).get_username()
                 except UserModel.DoesNotExist:
                     pass
 
@@ -150,12 +153,15 @@ class APILoginSerializer(serializers.Serializer):
             if app_settings.EMAIL_VERIFICATION == app_settings.EmailVerificationMethod.MANDATORY:
                 email_address = user.emailaddress_set.get(email=user.email)
                 if not email_address.verified:
-                    raise serializers.ValidationError(_('E-mail is not verified.'))
+                    raise serializers.ValidationError(
+                        _('E-mail is not verified.'))
 
         attrs['user'] = user
         return attrs
 
 # This enalbes the fundamental registration
+
+
 class AcccountInitRegisterSerializer(serializers.Serializer):
     email = serializers.EmailField(required=allauth_settings.EMAIL_REQUIRED)
     #firstNameEN = serializers.CharField(required=True, write_only=True)
@@ -172,7 +178,7 @@ class AcccountInitRegisterSerializer(serializers.Serializer):
                     _("Occupied E-mail Address."))
         return email
 
-    def validate_telNumber(self,telNumber):
+    def validate_telNumber(self, telNumber):
         #telNumber = get_adapter().get_user_search_fields("telNumber")
         telNumberChecker = models.User.objects.filter(telNumber=telNumber)
         if telNumberChecker.exists():
@@ -194,10 +200,10 @@ class AcccountInitRegisterSerializer(serializers.Serializer):
 
     def get_cleaned_data(self):
         return {
-    #        'first_name': self.validated_data.get('first_name', ''),
-    #        'last_name': self.validated_data.get('last_name', ''),
+            #        'first_name': self.validated_data.get('first_name', ''),
+            #        'last_name': self.validated_data.get('last_name', ''),
             'password1': self.validated_data.get('password1', ''),
-            'telNumber': self.validated_data.get('telNumber',''),
+            'telNumber': self.validated_data.get('telNumber', ''),
             'email': self.validated_data.get('email', ''),
         }
 
@@ -205,7 +211,8 @@ class AcccountInitRegisterSerializer(serializers.Serializer):
         adapter = get_adapter()
         user = adapter.new_user(request)
         self.cleaned_data = self.get_cleaned_data()
-        user.username = self.cleaned_data['email'].split('@')[0] + getRandomStringSubFix()
+        user.username = self.cleaned_data['email'].split(
+            '@')[0] + getRandomStringSubFix()
         user.telNumber = self.cleaned_data['telNumber']
         adapter.save_user(request, user, self)
         setup_user_email(request, user, [])
@@ -216,11 +223,19 @@ class AcccountInitRegisterSerializer(serializers.Serializer):
 class UserDetailSerializer(serializers.Serializer):
     class Meta:
         model = models.User
-        fields = ('id','firstNameEN','lastNameEN', 'gender',
-        'dateOfBirth', 'studentId','address', 'postcode', 'originate')
+        fields = ('id', 'firstNameEN', 'lastNameEN', 'gender',
+                  'dateOfBirth', 'studentId', 'address', 'postcode', 'originate')
 
         read_only_fields = ('id', )
 
     def update(self, validated_data, instance):
 
         return instance()
+
+
+# for JWT Test
+class UserProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        fields = ("user", "identiyConfirmed", "firstNameEN", "lastNameEN", "gender", "studentId", "membershipId",
+                  "address", "dateOfBirth")  # 模型中需要序列化的字段
+        model = UserProfile  # 指定模型类

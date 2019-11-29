@@ -44,5 +44,14 @@ urlpatterns = [
 ]
 
 
+################ test for JWT #########################
 
+from rest_framework.routers import SimpleRouter
 
+router = SimpleRouter()
+# router.register('userprofile', UserProfileViewSet, base_name="userprofiles") 
+urlpatterns = router.urls
+# urlpatterns = [
+  
+#    path()
+# ]
