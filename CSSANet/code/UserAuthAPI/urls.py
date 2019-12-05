@@ -1,5 +1,5 @@
 
-from django.urls import re_path
+from django.urls import re_path, path
 from django.conf.urls import include
 from django.contrib import admin
 from django.views.generic import TemplateView, RedirectView
@@ -47,11 +47,11 @@ urlpatterns = [
 ################ test for JWT #########################
 
 from rest_framework.routers import SimpleRouter
-
+from .views import UserProfileViewSet
 router = SimpleRouter()
-# router.register('userprofile', UserProfileViewSet, base_name="userprofiles") 
+router.register('userprofile', UserProfileViewSet, base_name="userprofiles") 
 urlpatterns = router.urls
-# urlpatterns = [
-  
-#    path()
+
+# urlpatterns = [  
+#    path(r'userprofile/', UserProfileViewSet, name="userprofiles"),
 # ]

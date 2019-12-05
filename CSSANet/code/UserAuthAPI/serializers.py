@@ -235,7 +235,8 @@ class UserDetailSerializer(serializers.Serializer):
 
 # for JWT Test
 class UserProfileSerializer(serializers.ModelSerializer):
+    #在设定用户只能处理自己的数据后，我们需要在序列化类中删除 user 字段。 ps:好像没有影响..
     class Meta:
-        fields = ("user", "identiyConfirmed", "firstNameEN", "lastNameEN", "gender", "studentId", "membershipId",
+        fields = ("identiyConfirmed", "firstNameEN", "lastNameEN", "gender", "studentId", "membershipId",
                   "address", "dateOfBirth")  # 模型中需要序列化的字段
         model = UserProfile  # 指定模型类

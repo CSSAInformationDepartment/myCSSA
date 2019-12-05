@@ -43,3 +43,36 @@ class EditUserDetails(generics.GenericAPIView):
 
 #class DuplicateEmailCheck(generics.GenericAPIView):
 #    queryset = models.UserProfile.objects.filter('')
+
+
+## for JWT test 
+from rest_framework import viewsets, permissions
+from .models import UserProfile
+from .serializers import UserProfileSerializer
+from rest_framework.exceptions import PermissionDenied
+
+class IsOwner(permissions.BasePermission): #用于权限校验。保证用户看不到别人的信息
+   
+   def has_object_permission(self, request, view, obj):
+       return obj.user == request.user
+
+class UserProfileViewSet(viewsets.ModelViewSet):
+   
+#    queryset = UserProfile.objects.all() # 指定 queryset
+   serializer_class = UserProfileSerializer # 指定序列化类
+   permission_class = (IsOwner,)
+   
+   # 确保用户只能看到自己的数据。
+   def get_queryset(self):
+       
+      user = self.request.user
+
+      if user.is_authenticated:
+        return UserProfile.objects.filter(user=user)
+
+      raise PermissionDenied()
+   
+   # 设置当前用户为当前对象的所有者
+   def perform_create(self, serializer):
+       serializer.save(user = self.request.user)
+
