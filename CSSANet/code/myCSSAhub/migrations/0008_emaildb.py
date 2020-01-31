@@ -20,8 +20,8 @@ class Migration(migrations.Migration):
                 ('content', models.CharField(max_length=200, null=True, verbose_name='email内容')),
                 ('title', models.CharField(max_length=200, null=True, verbose_name='email标题')),
                 ('add_date', models.DateTimeField(default=django.utils.timezone.now, verbose_name='信息加入时间')),
-                ('recID', models.ForeignKey(on_delete=None, related_name='接信者id', to=settings.AUTH_USER_MODEL)),
-                ('sendID', models.ForeignKey(on_delete=None, related_name='发信者id', to=settings.AUTH_USER_MODEL)),
+                ('recID', models.ForeignKey(on_delete=models.DO_NOTHING, related_name='接信者id', to=settings.AUTH_USER_MODEL)),
+                ('sendID', models.ForeignKey(on_delete=models.DO_NOTHING, related_name='发信者id', to=settings.AUTH_USER_MODEL)),
             ],
         ),
     ]
