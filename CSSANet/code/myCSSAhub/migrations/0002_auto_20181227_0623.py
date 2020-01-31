@@ -30,16 +30,16 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='notification',
             name='messageID',
-            field=models.ForeignKey(on_delete=None, to='myCSSAhub.NotificationText'),
+            field=models.ForeignKey(on_delete=models.DO_NOTHING, to='myCSSAhub.NotificationText'),
         ),
         migrations.AddField(
             model_name='notification',
             name='recID',
-            field=models.ForeignKey(on_delete=None, related_name='接受者id', to=settings.AUTH_USER_MODEL),
+            field=models.ForeignKey(on_delete=models.DO_NOTHING, related_name='接受者id', to=settings.AUTH_USER_MODEL),
         ),
         migrations.AddField(
             model_name='notification',
             name='sendID',
-            field=models.ForeignKey(on_delete=None, related_name='发送者id', to=settings.AUTH_USER_MODEL),
+            field=models.ForeignKey(on_delete=models.DO_NOTHING, related_name='发送者id', to=settings.AUTH_USER_MODEL),
         ),
     ]

@@ -55,7 +55,7 @@ class Migration(migrations.Migration):
                 ('academicRecId', models.AutoField(editable=False, primary_key=True, serialize=False)),
                 ('timeOfCreate', models.DateTimeField(auto_now_add=True)),
                 ('degree', models.CharField(choices=[('CR', 'Certificate'), ('DP', 'Diploma'), ('FN', 'Foundation'), ('BA', 'Bachelor'), ('MA', 'Master'), ('JD', 'Jurum Doctor'), ('MD', 'Medical Doctor'), ('PhD', 'Doctor of Philosophy')], default='BA', max_length=32, verbose_name='学位')),
-                ('uniMajor', models.ForeignKey(on_delete=None, to='UserAuthAPI.UniMajor', verbose_name='专业')),
+                ('uniMajor', models.ForeignKey(on_delete=models.DO_NOTHING, to='UserAuthAPI.UniMajor', verbose_name='专业')),
             ],
         ),
         migrations.CreateModel(
