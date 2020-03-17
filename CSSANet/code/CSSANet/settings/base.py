@@ -174,8 +174,6 @@ STATICFILES_FINDERS = [
 # Internationalization
 # https://docs.djangoproject.com/en/2.1/topics/i18n/
 
-LANGUAGE_CODE = 'zh-cn'
-
 USE_TZ = True
 
 TIME_ZONE = 'Australia/Melbourne'
@@ -183,6 +181,8 @@ TIME_ZONE = 'Australia/Melbourne'
 USE_I18N = True
 
 USE_L10N = True
+
+LANGUAGE_CODE = 'zh-hans'
 
 ### Logging configuration
 LOGGING = {

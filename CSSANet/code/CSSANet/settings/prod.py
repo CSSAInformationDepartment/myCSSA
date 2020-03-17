@@ -59,7 +59,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'myCSSA',
-        'USER': 'doadmin',
+        'USER': 'cssaweb',
         'PASSWORD': env_dist.get('DATABASE_PASSWD'),
         'HOST': env_dist.get('DATABASE_HOST'),
         'PORT': env_dist.get('DATABASE_PORT'),
