@@ -32,7 +32,7 @@ RUN chmod g+w /code
 WORKDIR /code
 COPY code/ /code/
 
-COPY code/supervisord.conf /etc/supervisord.conf
+COPY supervisord.conf /etc/supervisord.conf
 RUN chmod g+w /code/static
 RUN chmod g+w /code/media
 # RUN ls -la /code/*
