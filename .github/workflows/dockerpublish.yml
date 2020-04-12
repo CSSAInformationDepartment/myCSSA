@@ -2,9 +2,6 @@ name: Docker
 
 on:
   push:
-    branches:
-      - release
-
     # Publish `v1.2.3` tags as releases.
     tags:
       - R*
@@ -31,7 +28,7 @@ jobs:
             docker-compose --file ./CSSANet/docker-compose.test.yml build
             docker-compose --file ./CSSANet/docker-compose.test.yml run sut
           else
-            docker build ./CSSANet/. --file Dockerfile
+            docker build . --file ./CSSANet/Dockerfile
           fi
 
   # Push image to GitHub Packages.
@@ -47,7 +44,7 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Build image
-        run: docker build ./CSSANet/. --file Dockerfile --tag image
+        run: docker build . --file ./CSSANet/Dockerfile --tag image
 
       - name: Log into registry
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
