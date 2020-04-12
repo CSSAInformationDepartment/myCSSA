@@ -24,11 +24,12 @@ jobs:
 
       - name: Run tests
         run: |
-          if [ -f ./CSSANet/docker-compose.test.yml ]; then
-            docker-compose --file ./CSSANet/docker-compose.test.yml build
-            docker-compose --file ./CSSANet/docker-compose.test.yml run sut
+          cd CSSANet
+          if [ -f docker-compose.test.yml ]; then
+            docker-compose --file docker-compose.test.yml build
+            docker-compose --file docker-compose.test.yml run sut
           else
-            docker build . --file ./CSSANet/Dockerfile
+            docker build . --file Dockerfile
           fi
 
   # Push image to GitHub Packages.
@@ -44,7 +45,9 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Build image
-        run: docker build . --file ./CSSANet/Dockerfile --tag image
+        run: |
+          cd CSSANet 
+          docker build . --file Dockerfile --tag image
 
       - name: Log into registry
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
