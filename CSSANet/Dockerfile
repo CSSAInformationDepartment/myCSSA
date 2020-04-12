@@ -29,9 +29,10 @@ RUN rm -rf /var/cache/apk/*
 RUN mkdir /code
 RUN chmod g+w /code
 
-COPY supervisord.conf /etc/supervisord.conf
 WORKDIR /code
 COPY code/ /code/
+
+COPY code/supervisord.conf /etc/supervisord.conf
 RUN chmod g+w /code/static
 RUN chmod g+w /code/media
 RUN ls -la /code/*
