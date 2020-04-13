@@ -24,7 +24,6 @@ jobs:
 
       - name: Run tests
         run: |
-          cd CSSANet
           if [ -f docker-compose.test.yml ]; then
             docker-compose --file docker-compose.test.yml build
             docker-compose --file docker-compose.test.yml run sut
@@ -46,7 +45,6 @@ jobs:
 
       - name: Build image
         run: |
-          cd CSSANet 
           docker build . --file Dockerfile --tag image
 
       - name: Log into registry
