@@ -4,6 +4,8 @@ djangorestframework>=3.9.1
 
 django-datatables-view == 1.17.0
 
+djangorestframework_simplejwt
+
 django-rest-auth > 0.3.3
 
 django-allauth

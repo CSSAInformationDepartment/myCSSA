@@ -23,6 +23,25 @@ urlpatterns = [
 
     ### Apps Extension Urls
     path('app/photo-competition/', include(PhotoCompetitionPublicUrls,  namespace='PhotoCompetition')),
+
+    ### mobile app api
     path('app/events/', include(EventsPublicUrls,  namespace='EventAPI')),
 
 ]
+
+
+## Mobile client API
+from django.conf.urls import url
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView, # 生成token
+    TokenRefreshView,     # refresh token
+    TokenVerifyView,   # 无需访问签名密钥即可验证HMAC签名的令牌
+)
+# from .serializers import MyTokenObtainPairView
+
+
+urlpatterns += [
+    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+]
+
