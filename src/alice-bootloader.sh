@@ -21,30 +21,6 @@
 >&2 echo '#                             Version: 2.1b(C)                                #'
 >&2 echo '#                                                                             #'
 >&2 echo '###############################################################################'
-#sleep 1
-
-# TIMEOUT=15
-# QUIET=0
-
-# SQLCONNECTED='FALSE'
-
-# >&2 echo '[Bootloader] Checking Postgres'
-
-# until [ $SQLCONNECTED = 'TRUE' ] 
-# do
-#     SERVER=db
-#     PORT=5432
-#     `nc -z $SERVER $PORT`
-#     result1=$?
-#     if [  "$result1" != 0 ]; then
-#       >&2 echo '[Bootloader] Postgres is unavailable - Waiting for 3 sec and Retry'
-#       sleep 3
-#     else
-#         >&2 echo "[Bootloader] Postgres is up - Web Service Engine boot sequence initiated"
-#         SQLCONNECTED='TRUE'
-#     fi
-# done
-
 
 yes | python3 manage.py makemigrations || { echo '[Bootloader] Migr2ation Check Failure!';  exit 1;}
 
