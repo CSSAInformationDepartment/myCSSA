@@ -1,0 +1,38 @@
+Django == 3.0.2
+
+djangorestframework>=3.9.1
+
+django-datatables-view == 1.17.0
+
+django-rest-auth > 0.3.3
+
+django-allauth
+
+psycopg2-binary
+
+Pillow
+
+django-widget-tweaks
+
+django-filter
+
+gunicorn
+
+xlwt
+
+redis
+
+celery == 4.3
+
+sorl-thumbnail
+
+django-storages 
+
+boto3
+
+### For Development purpose only
+mypy
+
+names
+
+

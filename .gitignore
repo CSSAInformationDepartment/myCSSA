@@ -8,35 +8,34 @@ db.sqlite3
 *.log
 
 settings.json
-/CSSANet/data/*
-!/CSSANet/data/
-/CSSANet/code/static/*
-/CSSANet/code/media/*
+.data/*
+!.data/
+.src/static/*
+.src/media/*
 !.gitignore
 !.gitkeep
 Pipfile
 Pipfile.lock
-.CSSANet/Pipfile
-.CSSANet/Pipfile.lock
-CSSANet/CSSANet.code-workspace
-CSSANet/data/media
-CSSANet/data/static
-CSSANet/code/.mypy_cache
+.Pipfile
+.Pipfile.lock
+.CSSANet.code-workspace
+.data/media
+.data/static
+.src/.mypy_cache
 
 
 # Visual Studio Code Config
 .vscode/
-.CSSANet/.vscode/
 .vscode/settings.json
 .idea/
 
 # Visual Studio Local Dependency
 .vs/
 myCSSA/
-CSSANet/code/bin
-CSSANet/code/env
-CSSANet/code/obj
+.src/bin
+.src/env
+.src/obj
 .mypy_cache/
-CSSANet/code/celerybeat-schedule
-CSSANet/code/cssanet-sys.log
-CSSANet/code/supervisord.log
+.src/celerybeat-schedule
+.src/cssanet-sys.log
+.src/supervisord.log

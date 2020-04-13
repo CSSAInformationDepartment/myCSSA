@@ -1,0 +1,120 @@
+<footer class='footer'>
+<!-- bloc-20 -->
+{% load static %}
+{% load get_system_version %}
+<div class="bloc d-bloc none" id="bloc-20" style="background-color:RoyalBlue">
+	<div class="container bloc-sm">
+		<div class="row">
+			<div class="col-md-3 col-sm-6">
+				<h4 class="mg-md text-sm-left text-center tc-white">
+					Affiliate with
+					</h4>
+						<a href="https://umsu.unimelb.edu.au/">
+							<div class="mt-3 text-sm-left text-center">
+							<img src="{% static 'PublicSite/img/umsuLogo.png'%}"  class=" d-inline img-logo-style"/>
+							</div>
+						</a>
+						<a href="https://gsa.unimelb.edu.au/">
+							<div class="mt-3 text-sm-left text-center">
+								<img src="{% static 'PublicSite/img/gsaLogo.png'%}" class=" d-inline img-logo-style"/>
+							</div>
+						</a>
+			</div>
+
+			<div class="col-md-3 col-sm-6">
+				<h4 class="mg-md text-sm-left text-center tc-white">
+					Quick Links
+				</h4>
+					<div class="text-sm-left text-center">
+						<a class="tc-gray" href="https://www.unimelb.edu.au/">University of Melbourne Homepage</a>
+					</div>
+					<div class="text-sm-left text-center"> 
+						<a class="tc-gray" href="https://students.unimelb.edu.au/">Student information</a>
+					</div>
+					<div class="text-sm-left text-center">
+						<a class="tc-gray" href="https://auth.unimelb.edu.au/login/pages/login.jsp">MyUnimelb Student Portal</a>
+					</div>
+					<div class="text-sm-left text-center">
+						<a class="tc-gray" href="https://library.unimelb.edu.au/">Library</a>
+					</div>	
+			</div>
+
+			<div class="col-md-4 col-sm-6">
+				<h4 class="mg-md text-sm-left text-center tc-white">
+					Contact Mailbox
+				</h4>
+				<ul class="mg-md text-sm-left text-center">
+					<li><strong>President: </strong>president@cssaunimelb.com</li>
+					<li><strong>Public Relation: </strong>pr@cssaunimelb.com </li>
+					<li><strong>Event: </strong>activity@cssaunimelb.com </li>
+					<li><strong>Publicity: </strong>publicity@cssaunimelb.com </li>
+					<li><strong>IT & Dev Team: </strong>information@cssaunimelb.com </li>
+					<li><strong>Human Resources: </strong>hr@cssaunimelb.com</li>
+				</ul>
+			</div>
+
+			<div class="col-md-2 col-sm-6">
+				<h4 class="mg-md text-sm-left text-center tc-white">
+					Follow Up
+				</h4>
+				<div class="row">
+					<div class="col-4 col-sm-4">
+						<div class="text-center">
+							<a href="https://www.facebook.com/CSSAunimelb/"><span class="fa fa-facebook-official icon-md"></span></a>
+						</div>
+					</div>
+					<div class="col-4 col-sm-4">
+						<div class="text-center">
+							<a rel="qrcode-pops" data-container="body" data-toggle="popover" data-placement="top" data-img="{% static 'PublicSite/img/qrcode_wx.jpg'%}"><span class="fa fa-weixin icon-md"></span></a>
+						</div>
+					</div>
+					<div class="col-4 col-sm-4">
+						<div class="text-center">
+							<a href="https://www.weibo.com/cssaum"><span class="fa fa-weibo icon-md"></span></a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col mg-md d-bloc mx-auto text-center">
+				<a href="https://github.com/ShepherdMOZ/myCSSA">
+					<h6 class="text-center tc-white">系统版本 System Version：<strong>{% get_system_version %}</strong></h6>
+				</a>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- bloc-20 END -->
+
+<!-- bloc-30 -->
+<div class="bloc d-bloc" id="bloc-22" style="background-color:rgb(38, 38, 38)">
+	<div class="container">
+		<div class="row">
+			<div class="col">
+				<!-- <h6 class="mg-md text-lg-center">
+					本项目由 卢玏 设计管理 This Project is Designed &amp; Managed by Josh. Le. Lu
+				</h6>
+				<p class="mg-md text-lg-center h6-margin-top">
+					站点交互设计：蒋梦雨 UI/UX Design: Caitlin. Mengyu. Jiang
+				</p> -->
+				<h6 class="mg-md text-lg-center">
+					版权所有 墨尔本大学中国学生会 Copyrights @ Chinese Student and Scholars Association, University of Melbourne 2012 - 2019
+				</h6>
+				<p class="mg-md text-lg-center h6-margin-top">
+					由 信息技术部系统开发组 设计管理 Designed and Managed by Department of Information Technology, System Development Group
+				</p>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- bloc-30 END -->
+<script>
+$('a[rel=qrcode-pops]').popover({
+  html: true,
+  trigger: 'hover',
+  placement: 'bottom',
+  content: function(){return '<img src="'+$(this).data('img') + '" />';}
+});
+</script>
+</footer>
