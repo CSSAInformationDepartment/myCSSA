@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
+import datetime
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 DEBUG = False
@@ -44,6 +45,7 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
+    'social_django',
 
     'django.contrib.contenttypes',
     'django.contrib.sites',
@@ -71,7 +73,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'guard_angel.middleware.HttpRequestLogMiddleware',
+#    'guard_angel.middleware.HttpRequestLogMiddleware',
 ]
 
 ROOT_URLCONF = 'CSSANet.urls'
@@ -97,13 +99,17 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.BasicAuthentication',
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework.authentication.TokenAuthentication'
     ),
     'DEFAULT_FILTER_BACKENDS': (
         'django_filters.rest_framework.DjangoFilterBackend',
     ),
-    
-     'DEFAULT_PERMISSION_CLASSES':
-        ('rest_framework.permissions.IsAuthenticated',),
+    'DEFAULT_PARSER_CLASSES': (
+        'rest_framework.parsers.JSONParser', 
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated'
+    ),
 }
 
 
@@ -111,13 +117,16 @@ AUTH_USER_MODEL = 'UserAuthAPI.User'
 AUTH_PROFILE_MODULE = "UserAuthAPI.UserProfile"
 
 AUTHENTICATION_BACKENDS = (
+    'social_core.backends.weixin.WeixinOAuth2',
     # Needed to login by username in Django admin, regardless of `allauth`
-    'django.contrib.auth.backends.ModelBackend',
+    'UserAuthAPI.authBackend.ModelBackend'
 #    'UserAuthAPI.auth.EmailOrUsernameModelBackend',
-
-#    # `allauth` specific authentication methods, such as login by e-mail
-    'allauth.account.auth_backends.AuthenticationBackend',
 )
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': datetime.timedelta(days=7),
+    'REFRESH_TOKEN_LIFETIME': datetime.timedelta(days=30)
+}
 
 REST_AUTH_SERIALIZERS = {
     'LOGIN_SERIALIZER': 'UserAuthAPI.serializers.APILoginSerializer',
