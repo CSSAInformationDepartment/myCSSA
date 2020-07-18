@@ -92,6 +92,10 @@ SERVER_EMAIL = env_dist.get('SERVER_EMAIL')
 EMAIL_HOST_USER = env_dist.get('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = env_dist.get('EMAIL_HOST_PASSWORD')
 
+
+SOCIAL_AUTH_WEIXIN_KEY = ''
+SOCIAL_AUTH_WEIXIN_SECRET = ''
+
 try:
     from .local import *
 except:
