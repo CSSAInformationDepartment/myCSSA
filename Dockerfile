@@ -1,5 +1,5 @@
 
-FROM python:3.7.2-alpine3.8
+FROM python:3.8.4-alpine3.12
 EXPOSE 8000
 # Set environment varibles
 
@@ -21,7 +21,7 @@ RUN apk del tzdata
 
 
 ## Python Runtime
-RUN apk update && apk add postgresql-dev gcc python3-dev musl-dev
+RUN apk update && apk add postgresql-dev gcc python3-dev musl-dev libffi-dev openssl-dev
 RUN apk add jpeg-dev zlib-dev
 RUN rm -rf /var/cache/apk/*
 
