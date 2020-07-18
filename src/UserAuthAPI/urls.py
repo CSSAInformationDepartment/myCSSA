@@ -1,9 +1,11 @@
 
-from django.urls import re_path
+from django.urls import re_path, path
 from django.conf.urls import include
 from django.contrib import admin
 from django.views.generic import TemplateView, RedirectView
 import rest_auth.registration.urls
+
+from . import views 
 
 #from rest_framework_swagger.views import get_swagger_view
 app_name = "UserAuthAPI"
@@ -41,4 +43,5 @@ urlpatterns = [
     re_path(r'^rest-auth/registration/', include('rest_auth.registration.urls')),
     re_path(r'^account/', include('allauth.urls')),
     re_path(r'^accounts/profile/$', RedirectView.as_view(url='/', permanent=True), name='profile-redirect'),
+    path('login-user-info/', views.get_login_user_info, name='login-info')
 ]

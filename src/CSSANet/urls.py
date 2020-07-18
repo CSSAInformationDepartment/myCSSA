@@ -15,25 +15,27 @@ Including another URLconf
 """
 from django import views
 from django.conf import settings
-#from django.conf.urls.static import static
-
 from django.contrib import admin
 from django.urls import path,re_path ,include
+from django.conf.urls import handler400, handler403, handler404, handler500
+from django.views.defaults import server_error
+
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 from PublicSite import urls as PublicUrl
 from UserAuthAPI import urls as AuthUrl
 from LegacyDataAPI import urls as LegacyUrl
 from myCSSAhub import urls as HubUrl
-from django.conf.urls import handler400, handler403, handler404, handler500
-
-from django.views.defaults import server_error
 
 urlpatterns = [
     path('', include(PublicUrl)), 
     path('hub/',include(HubUrl)),
     path('admin/', admin.site.urls),
     path('api/users/', include(AuthUrl)),
-    path('api/legacy/', include(LegacyUrl))
+    path('api/legacy/', include(LegacyUrl)),
+    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('oauth/', include('social_django.urls', namespace='social'))
 ] 
 handler400 = 'PublicSite.views.bad_request'
 handler403 = 'PublicSite.views.permission_denied'
