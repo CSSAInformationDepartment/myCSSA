@@ -13,15 +13,16 @@
 #                             Version: 0.6a(C)                                #
 #                                                                             #
 ###############################################################################
-
+from django.contrib.auth import get_user_model, authenticate
 
 from rest_framework import authentication, permissions, status, response
+from rest_framework.parsers import JSONParser
 from rest_framework.response import Response, Serializer
 from rest_framework.decorators import api_view,permission_classes,authentication_classes
 from rest_framework.views import APIView
 from rest_framework.generics import GenericAPIView, ListCreateAPIView, ListAPIView
 from rest_framework.permissions import IsAuthenticated
-from django.contrib.auth import get_user_model, authenticate
+from rest_framework_simplejwt.tokens import RefreshToken
 
 from mail_owl.utils import AutoMailSender
 
@@ -49,42 +50,20 @@ class EditUserDetails(GenericAPIView):
             return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['POST'])
+@permission_classes([])
 def user_easy_registry_api(request):
-    account_form = forms.BasicSiginInForm(data=request.POST)
-    profile_form = forms.EasyRegistrationForm(data=request.POST)
-    academic_form = forms.UserAcademicForm(data=request.POST)
-    if account_form.is_valid() and profile_form.is_valid() and academic_form.is_valid():
-        account_register = account_form.save(commit=False)
-        profile = profile_form.save(commit=False)
-        profile.user = account_register
-        academic = academic_form.save(commit=False)
-        academic.userProfile = profile
-        if profile.membershipId and profile.membershipId != '':
-            profile.isValid = True
-        account_form.save()
-        profile.save()
-        academic.save()
+    data = JSONParser().parse(request)
+    serializer = serializers.UserEasyRegistrationSerializer(data=data)
+    if serializer.is_valid():
+        user = serializer.save()
+        refresh = RefreshToken.for_user(user)
+        res = {
+            "refresh": str(refresh),
+            "access": str(refresh.access_token),
+        }
+        return Response(res, status=status.HTTP_201_CREATED)
 
-        # 完成信息保存以后，发送注册成功的邮件
-        username = profile.get_full_EN_name()
-        target_email = account_register.email
-        mail_content = {'username':username}
-        confirm_mail = AutoMailSender(
-            title="注册成功！Registraion Successful",
-            mail_text="",
-            template_path="myCSSAhub/email/register_mail.html",
-            fill_in_context=mail_content,
-            to_address=target_email,
-        )
-        confirm_mail.send_now()
-
-    else:
-        return Response({
-            'success': False,
-            'errors': [dict(account_form.errors.items()), dict(profile_form.errors.items()), dict(academic_form.errors.items())]
-        })
-
-    return Response(status=status.HTTP_201_CREATED)
+    return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['GET'])
