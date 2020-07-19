@@ -96,6 +96,9 @@ def get_login_user_info(request):
     return Response({
         'firstname': userProfile.firstNameEN,
         'lastname': userProfile.lastNameEN,
+        'telNumber': loginUser.telNumber,
         'email_addr': loginUser.email,
+        'studentId': userProfile.studentId,
+        'membershipId': userProfile.membershipId,
         'avatarUrl': userProfile.avatar.url
     })
