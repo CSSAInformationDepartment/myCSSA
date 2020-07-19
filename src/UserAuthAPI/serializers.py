@@ -224,3 +224,76 @@ class UserDetailSerializer(serializers.Serializer):
     def update(self, validated_data, instance):
 
         return instance()
+
+class UserEasyRegistrationSerializer(serializers.Serializer):
+    genderChoice = (
+        ('Male', 'Male'),
+        ('Female', 'Female'),
+        ('Other', 'Other')
+    )
+
+    degreeChoice = (
+        ('CR', 'Certificate'),
+        ('DP', 'Diploma'),
+        ('FN', 'Foundation'),
+        ('BA', 'Bachelor'),
+        ('MA', 'Master'),
+        ('JD', 'Jurum Doctor'),
+        ('MD', 'Medical Doctor'),
+        ('PhD', 'Doctor of Philosophy'),
+    )
+
+    email = serializers.EmailField(required=True)
+    telNumber = serializers.CharField(required=True)
+    password = serializers.CharField(required=True)
+
+    firstNameEN = serializers.CharField(required=True)
+    lastNameEN = serializers.CharField(required=True)
+    gender = serializers.ChoiceField(choices=genderChoice, required=True)
+    dateOfBirth = serializers.DateField(required=True)
+    studentId = serializers.CharField(required=True, max_length=8)
+    degree = serializers.ChoiceField(choices=degreeChoice, required=True)
+    uniMajor = serializers.CharField(max_length=100, required=True)
+
+    def validate_telNumber(self, value):
+        data_telNumber = value
+        # 对于澳洲号码的验证
+        if data_telNumber[0:2] == '04':
+            if len(data_telNumber) != 10:
+                raise serializers.ValidationError(_("Invalid Mobile Phone Number"))
+        # 对于中国号码的验证
+        elif data_telNumber[0:3] == '+861':
+            if len(data_telNumber) != 14:
+                raise serializers.ValidationError(_('Invalid Mobile Phone Number'))
+        else:
+            raise serializers.ValidationError(_('Invalid Mobile Phone Number'))
+
+        return value
+
+    def create(self,validated_data):
+        new_user = models.User.objects.create_user(
+            validated_data.get('email'),
+            validated_data.get('telNumber'),
+            validated_data.get('password')
+        )
+        
+        profile = models.UserProfile.objects.create(
+            user = new_user,
+            identiyConfirmed = False,
+            isValid = False,
+            firstNameEN = validated_data.get('firstNameEN'),
+            lastNameEN = validated_data.get('lastNameEN'),
+            studentId = validated_data.get('studentId'),
+            dateOfBirth = validated_data.get('dateOfBirth')
+        )
+
+        models.UserAcademic.objects.create(
+            userProfile = profile,
+            degree = validated_data.get('degree'),
+            uniMajor = validated_data.get('uniMajor') 
+        )
+
+        return new_user
+
+
+
