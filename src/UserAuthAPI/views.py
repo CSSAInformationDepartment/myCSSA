@@ -79,5 +79,5 @@ def get_login_user_info(request):
         'email_addr': loginUser.email,
         'studentId': userProfile.studentId,
         'membershipId': userProfile.membershipId,
-        'avatarUrl': userProfile.avatar.url if userProfile.avatar is not None else 'None'
+        'avatarUrl': userProfile.avatar.url if userProfile.avatar else 'None'
     })
