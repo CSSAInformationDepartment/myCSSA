@@ -27,6 +27,7 @@
 
 import random
 import string
+import re
 
 from rest_framework import serializers, exceptions
 from rest_auth.serializers import LoginSerializer
@@ -257,16 +258,35 @@ class UserEasyRegistrationSerializer(serializers.Serializer):
 
     def validate_telNumber(self, value):
         data_telNumber = value
-        # 对于澳洲号码的验证
-        if data_telNumber[0:2] == '04':
-            if len(data_telNumber) != 10:
+        if (data_telNumber[0:2] != '04' and data_telNumber[0:4] != '+861')\
+            or (data_telNumber[0:2] == '04' and len(data_telNumber) != 10)\
+            or (data_telNumber[0:4] == '+861' and len(data_telNumber) != 14):
                 raise serializers.ValidationError(_("Invalid Mobile Phone Number"))
-        # 对于中国号码的验证
-        elif data_telNumber[0:3] == '+861':
-            if len(data_telNumber) != 14:
-                raise serializers.ValidationError(_('Invalid Mobile Phone Number'))
-        else:
-            raise serializers.ValidationError(_('Invalid Mobile Phone Number'))
+        
+        userQuery = models.User.objects.filter(telNumber=value).first()
+        if userQuery is not None:
+            raise serializers.ValidationError(_("The contact number has been occupied by exisiting account. Contact support for further information."))
+        
+        return value
+
+    def validate_email(self, value):
+        regex = r'^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
+        if(not re.search(regex, value)): 
+            raise serializers.ValidationError(_('Invalid email Address'))
+
+        userQuery = models.User.objects.filter(email=value).first()
+        if userQuery is not None:
+            raise serializers.ValidationError(_("The email address has been occupied by exisiting account. Contact support for further information."))
+
+        return value
+
+    def validate_studentId(self, value):
+        if not(len(value) >= 6 and len(value) <= 8):
+            raise serializers.ValidationError(_('Invalid student ID'))
+        
+        userQuery = models.UserProfile.objects.filter(studentId=value).first()
+        if userQuery is not None:
+            raise serializers.ValidationError(_("The student ID has been occupied by exisiting account. Contact support for further information."))
 
         return value
 
