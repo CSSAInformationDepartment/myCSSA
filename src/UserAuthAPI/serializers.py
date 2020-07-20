@@ -258,7 +258,7 @@ class UserEasyRegistrationSerializer(serializers.Serializer):
 
     def validate_telNumber(self, value):
         data_telNumber = value
-        if (data_telNumber[0:2] != '04' or data_telNumber[0:4] != '+861')\
+        if (data_telNumber[0:2] != '04' and data_telNumber[0:4] != '+861')\
             or (data_telNumber[0:2] == '04' and len(data_telNumber) != 10)\
             or (data_telNumber[0:4] == '+861' and len(data_telNumber) != 14):
                 raise serializers.ValidationError(_("Invalid Mobile Phone Number"))
