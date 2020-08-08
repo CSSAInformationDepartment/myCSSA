@@ -258,8 +258,8 @@ class UserEasyRegistrationSerializer(serializers.Serializer):
 
     def validate_telNumber(self, value):
         data_telNumber = value
-        if (not (data_telNumber[0:2] != '04' or data_telNumber[0:4] != '+861' or \
-                data_telNumber[0:4] != '0861' or data_telNumber[0:3] != '861') 
+        if (not(data_telNumber[0:2] == '04' or data_telNumber[0:4] == '+861' or \
+                data_telNumber[0:4] == '0861' or data_telNumber[0:3] == '861') 
             or (data_telNumber[0:2] == '04' and len(data_telNumber) != 10)\
             or (data_telNumber[0:4] == '+861' and len(data_telNumber) != 14)\
             or (data_telNumber[0:4] == '0861' and len(data_telNumber) != 14)\
