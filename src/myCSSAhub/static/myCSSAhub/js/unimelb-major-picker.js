@@ -73,5 +73,9 @@
   {
     "name": "Engineering",
     "abbreviation": "Engineering"
+  },
+  {
+    "name": "Psychology",
+    "namabbreviatione": "Psychology"
   }
 ]
