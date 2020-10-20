@@ -263,7 +263,7 @@ class UserEasyRegistrationSerializer(serializers.Serializer):
             or (data_telNumber[0:2] == '04' and len(data_telNumber) != 10)\
             or (data_telNumber[0:4] == '+861' and len(data_telNumber) != 14)\
             or (data_telNumber[0:4] == '0861' and len(data_telNumber) != 14)\
-            or (data_telNumber[0:4] == '861' and len(data_telNumber) != 13):
+            or (data_telNumber[0:4] == '861' and len(data_telNumber) != 13)):
                 raise serializers.ValidationError(_("Invalid Mobile Phone Number"))
         
         userQuery = models.User.objects.filter(telNumber=value).first()
