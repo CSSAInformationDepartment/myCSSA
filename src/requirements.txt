@@ -22,6 +22,8 @@ xlwt
 
 redis
 
+vine == 1.3.0
+
 celery == 4.3
 
 sorl-thumbnail
