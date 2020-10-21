@@ -258,9 +258,12 @@ class UserEasyRegistrationSerializer(serializers.Serializer):
 
     def validate_telNumber(self, value):
         data_telNumber = value
-        if (data_telNumber[0:2] != '04' and data_telNumber[0:4] != '+861')\
+        if (not(data_telNumber[0:2] == '04' or data_telNumber[0:4] == '+861' or \
+                data_telNumber[0:4] == '0861' or data_telNumber[0:3] == '861') 
             or (data_telNumber[0:2] == '04' and len(data_telNumber) != 10)\
-            or (data_telNumber[0:4] == '+861' and len(data_telNumber) != 14):
+            or (data_telNumber[0:4] == '+861' and len(data_telNumber) != 14)\
+            or (data_telNumber[0:4] == '0861' and len(data_telNumber) != 14)\
+            or (data_telNumber[0:4] == '861' and len(data_telNumber) != 13)):
                 raise serializers.ValidationError(_("Invalid Mobile Phone Number"))
         
         userQuery = models.User.objects.filter(telNumber=value).first()
@@ -270,7 +273,7 @@ class UserEasyRegistrationSerializer(serializers.Serializer):
         return value
 
     def validate_email(self, value):
-        regex = r'^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
+        regex = r'^[a-zA-Z0-9]+[\._]?[a-zA-Z0-9]+[@]\w+[.]\w{2,3}$'
         if(not re.search(regex, value)): 
             raise serializers.ValidationError(_('Invalid email Address'))
 
@@ -291,6 +294,11 @@ class UserEasyRegistrationSerializer(serializers.Serializer):
         return value
 
     def create(self,validated_data):
+        if validated_data.get('telNumber').startswith('0861'):
+            validated_data['telNumber'] = '+' + validated_data['telNumber'][1:]
+        elif validated_data.get('telNumber').startswith('861'):
+            validated_data['telNumber'] = '+' + validated_data['telNumber']
+
         new_user = models.User.objects.create_user(
             validated_data.get('email'),
             validated_data.get('telNumber'),
