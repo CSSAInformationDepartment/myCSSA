@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'PhotoCompetition',
     'PrizeAPI',
     'mail_owl',
+    'MobileAppAPI',
 
 
     ## RESTful Support
