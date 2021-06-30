@@ -14,15 +14,6 @@ from myCSSAhub.forms import MerchantsForm
 # Reference: https://gist.github.com/leemac/bf0cef7ad214cfc950dd
 
 def Merchants(request):
-    user = request.user
-    if user.has_perm('can_change_discount_merchants'):
-        print('Yes')
-    else:
-        print('No')
-
-
-    merchants = HubModels.DiscountMerchant.objects.filter(merchant_type='折扣商家')
-    jsonRes = []
     for merchant in merchants:
         jsonObj = dict(id=merchant.merchant_id, name=merchant.merchant_name, sale=merchant.merchant_description, \
                        location=merchant.merchant_address, img=str(merchant.merchant_image.url))
@@ -70,4 +61,20 @@ def UpdateMerchants(request):
             return HttpResponseForbidden("No permission")
 
 # def UpdateSponsors(request):
-    #
+
+def AddMerchants(request):
+    if request.method == 'POST':
+        user = request.user
+        # check permission
+        if user.has_perm('can_add_discount_merchants'):
+            have_update = False
+            form = MerchantsForm(data=request.POST or None,
+                                   files=request.FILES or None)
+            if form.is_valid():
+                form.save()
+                have_update = True
+
+            return HttpResponse(json.dumps({'update': have_update}), content_type='application/json')
+
+        else:
+            return HttpResponseForbidden("No permission")
