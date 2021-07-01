@@ -8,6 +8,7 @@ from django.urls import path
 from MobileAppAPI import views as Views
 
 app_name = "MobileAppAPI"
+
 urlpatterns = [
     path('get_merchants/', Views.Merchants, name="get_merchants"),
     path('get_sponsors/', Views.Sponsors, name="get_sponsers"),

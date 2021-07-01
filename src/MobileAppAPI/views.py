@@ -14,6 +14,8 @@ from myCSSAhub.forms import MerchantsForm
 # Reference: https://gist.github.com/leemac/bf0cef7ad214cfc950dd
 
 def Merchants(request):
+    merchants = DiscountMerchant.objects.filter(merchant_type='折扣商家')
+    jsonRes = []
     for merchant in merchants:
         jsonObj = dict(id=merchant.merchant_id, name=merchant.merchant_name, sale=merchant.merchant_description, \
                        location=merchant.merchant_address, img=str(merchant.merchant_image.url))
@@ -22,7 +24,7 @@ def Merchants(request):
 
 
 def Sponsors(request):
-    merchants = HubModels.DiscountMerchant.objects.filter(merchant_type='赞助商家')
+    merchants = DiscountMerchant.objects.filter(merchant_type='赞助商家')
     jsonRes = []
     for merchant in merchants:
         jsonObj = dict(id=merchant.merchant_id, name=merchant.merchant_name, details=merchant.merchant_description, \
@@ -32,31 +34,26 @@ def Sponsors(request):
 
 # 为了保证网站的安全，我们开启了CSRF验证，这要求在发送POST请求时要带上CSRF值
 # 需要带CSRF的有三个地方：
-# 1. Post Form里有一个 {"csrfmiddlewaretoken": $CSRF_TOKEN$}
+# 1. Post Form里有一个 {"csrf_token": $CSRF_TOKEN$}
 # 2. Request的Header里有一个 {"X-CSRFToken": $CSRF_TOKEN$}
-# 3. Request的Header里有一个{"Cookie": "csrftokenk=$CSRF_TOKEN$;sessionid=%SESSION_ID%"}
+# 3. Request的Header里有一个{"Cookie": "csrftoken=$CSRF_TOKEN$;sessionid=%SESSION_ID%"}
 
 def UpdateMerchants(request):
     if request.method == 'POST':
         user = request.user
         # check permission
-
         if user.has_perm('can_change_discount_merchants'):
             have_update = False
-            data = request.POST
-            profileID = data.get('id')
+            profileID = request.POST.get('id')
             obj = get_object_or_404(DiscountMerchant, merchant_id=profileID)
             # return HttpResponse(json.dumps(obj.merchant_name), content_type='application/json')
-
             form = MerchantsForm(data=request.POST or None,
                                    files=request.FILES or None,
                                    instance=obj)
             if form.is_valid():
                 form.save()
                 have_update = True
-
             return HttpResponse(json.dumps({'update': have_update}), content_type='application/json')
-
         else:
             return HttpResponseForbidden("No permission")
 
@@ -73,8 +70,8 @@ def AddMerchants(request):
             if form.is_valid():
                 form.save()
                 have_update = True
-
             return HttpResponse(json.dumps({'update': have_update}), content_type='application/json')
-
         else:
             return HttpResponseForbidden("No permission")
+
+# def AddSponsors(request):
