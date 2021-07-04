@@ -36,7 +36,7 @@ djangorestframework-simplejwt
 
 social-auth-app-django
 
-cryptography == 3.1.1
+cryptography == 3.3.2
 
 ### For Development purpose only
 mypy
