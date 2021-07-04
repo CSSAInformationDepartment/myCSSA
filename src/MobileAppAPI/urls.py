@@ -13,7 +13,7 @@ urlpatterns = [
     path('get_merchants/', Views.Merchants, name="get_merchants"),
     path('get_sponsors/', Views.Sponsors, name="get_sponsers"),
     path('update_merchants/', Views.UpdateMerchants, name="update_merchants"),
-    # path('update_sponsors/', Views.UpdateSponsors, name="update_sponsers"),
+    path('update_sponsors/', Views.UpdateMerchants, name="update_sponsers"),
     path('add_merchants/', Views.AddMerchants, name="add_merchants"),
-    # path('add_sponsors/', Views.AddSponsors, name="add_sponsers")
+    path('add_sponsors/', Views.AddMerchants, name="add_sponsers")
 ]

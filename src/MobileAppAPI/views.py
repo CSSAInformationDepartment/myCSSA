@@ -1,19 +1,18 @@
-from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseForbidden
-from django.http import JsonResponse
 import json
 
-# Create your views here.
-
-from django.shortcuts import render, get_object_or_404, redirect
-from django.db import models
+from django.shortcuts import get_object_or_404
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
 
 from myCSSAhub.models import *
 from myCSSAhub.forms import MerchantsForm
 
 # Reference: https://gist.github.com/leemac/bf0cef7ad214cfc950dd
 
+# This function is used for getting all merchants
 def Merchants(request):
+    # Filter function is like "WHERE" in SQL to filter data
     merchants = DiscountMerchant.objects.filter(merchant_type='折扣商家')
     jsonRes = []
     for merchant in merchants:
@@ -22,7 +21,7 @@ def Merchants(request):
         jsonRes.append(jsonObj)
     return HttpResponse(json.dumps(jsonRes), content_type='application/json')
 
-
+# This function is used for getting all sponsors
 def Sponsors(request):
     merchants = DiscountMerchant.objects.filter(merchant_type='赞助商家')
     jsonRes = []
@@ -32,46 +31,43 @@ def Sponsors(request):
         jsonRes.append(jsonObj)
     return HttpResponse(json.dumps(jsonRes), content_type='application/json')
 
-# 为了保证网站的安全，我们开启了CSRF验证，这要求在发送POST请求时要带上CSRF值
-# 需要带CSRF的有三个地方：
-# 1. Post Form里有一个 {"csrf_token": $CSRF_TOKEN$}
-# 2. Request的Header里有一个 {"X-CSRFToken": $CSRF_TOKEN$}
-# 3. Request的Header里有一个{"Cookie": "csrftoken=$CSRF_TOKEN$;sessionid=%SESSION_ID%"}
-
+# Specify the POST request, and authenticated user
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+# This function is to update merchant/sponsor's information
 def UpdateMerchants(request):
-    if request.method == 'POST':
-        user = request.user
-        # check permission
-        if user.has_perm('can_change_discount_merchants'):
-            have_update = False
-            profileID = request.POST.get('id')
-            obj = get_object_or_404(DiscountMerchant, merchant_id=profileID)
-            # return HttpResponse(json.dumps(obj.merchant_name), content_type='application/json')
-            form = MerchantsForm(data=request.POST or None,
-                                   files=request.FILES or None,
-                                   instance=obj)
-            if form.is_valid():
-                form.save()
-                have_update = True
-            return HttpResponse(json.dumps({'update': have_update}), content_type='application/json')
-        else:
-            return HttpResponseForbidden("No permission")
+    user = request.user
+    # Check permission
+    if user.has_perm('can_change_discount_merchants'):
+        have_update = False
+        request_data = json.loads(request.body)
+        profileID = request_data.get('id')
+        # Get the record to update
+        obj = get_object_or_404(DiscountMerchant, merchant_id=profileID)
+        form = MerchantsForm(data=request_data or None,
+                               files=request.FILES or None,
+                               instance=obj)
+        # Validate form, and save the update
+        if form.is_valid():
+            form.save()
+            have_update = True
+        return HttpResponse(json.dumps({'update': have_update}), content_type='application/json')
+    else:
+        return HttpResponseForbidden("No permission")
 
-# def UpdateSponsors(request):
-
+# Similar to previous one, but without getting existed record
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def AddMerchants(request):
-    if request.method == 'POST':
-        user = request.user
-        # check permission
-        if user.has_perm('can_add_discount_merchants'):
-            have_update = False
-            form = MerchantsForm(data=request.POST or None,
-                                   files=request.FILES or None)
-            if form.is_valid():
-                form.save()
-                have_update = True
-            return HttpResponse(json.dumps({'update': have_update}), content_type='application/json')
-        else:
-            return HttpResponseForbidden("No permission")
-
-# def AddSponsors(request):
+    user = request.user
+    if user.has_perm('can_add_discount_merchants'):
+        have_update = False
+        request_data = json.loads(request.body)
+        form = MerchantsForm(data=request_data or None,
+                               files=request.FILES or None)
+        if form.is_valid():
+            form.save()
+            have_update = True
+        return HttpResponse(json.dumps({'update': have_update}), content_type='application/json')
+    else:
+        return HttpResponseForbidden("No permission")
