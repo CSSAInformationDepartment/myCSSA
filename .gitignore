@@ -23,6 +23,7 @@ Pipfile.lock
 .data/static
 .src/.mypy_cache
 
+/src/CSSANet/settings/local.py
 
 # Visual Studio Code Config
 .vscode/

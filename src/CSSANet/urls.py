@@ -26,6 +26,7 @@ from PublicSite import urls as PublicUrl
 from UserAuthAPI import urls as AuthUrl
 from LegacyDataAPI import urls as LegacyUrl
 from myCSSAhub import urls as HubUrl
+from MobileAppAPI import urls as MobileUrl
 
 urlpatterns = [
     path('', include(PublicUrl)), 
@@ -35,7 +36,8 @@ urlpatterns = [
     path('api/legacy/', include(LegacyUrl)),
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-    path('oauth/', include('social_django.urls', namespace='social'))
+    path('oauth/', include('social_django.urls', namespace='social')),
+    path('mobile/', include(MobileUrl))
 ] 
 handler400 = 'PublicSite.views.bad_request'
 handler403 = 'PublicSite.views.permission_denied'
