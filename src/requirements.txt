@@ -8,7 +8,7 @@ django-rest-auth > 0.3.3
 
 django-allauth
 
-psycopg2-binary
+psycopg2-binary == 2.8.6
 
 Pillow
 
