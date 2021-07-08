@@ -45,23 +45,3 @@ class Content(models.Model):
     text = models.TextField('帖子正文', max_length=20000) # TODO: 决定一个长度
 
     imageUrls = ArrayField(models.URLField(), verbose_name='帖子中出现的url')
-
-class Notification(models.Model):
-    userId = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
-    targetId = models.ForeignKey(Post, null=True, on_delete=models.CASCADE)
-    data = models.JSONField('JSON')
-
-    notificationTypeChoices = [] # TODO: 决定类型
-    type = CharField('通知类型', choices=notificationTypeChoices)
-
-class FavouritePost(models.Model):
-    userId = models.ForeignKey(UserProfile, primary_key=True, on_delete=models.CASCADE)
-    postId = models.ForeignKey(Post, primary_key=True, on_delete=models.CASCADE)
-
-class Report(models.Model):
-    createdBy = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
-    targetId = models.ForeignKey(Post, on_delete=models.CASCADE)
-    reason = models.TextField('举报原因', max_length=1000) # TODO: 决定一个长度
-    
-    reportTypeChoices = [] # TODO: 决定类型
-    type = CharField('举报类型', choices=reportTypeChoices)
