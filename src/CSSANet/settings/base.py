@@ -56,6 +56,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'drf_yasg', # swagger
+
     ## Server add-in
     'gunicorn',
     'widget_tweaks',
@@ -248,5 +250,7 @@ LOGGING = {
 }
 ADMINS = [('Master Inbox', 'information@cssaunimelb.com'), ('Lead Engineer', 'joshlubox@gmail.com')]
 
-
+SWAGGER_SETTINGS = {
+    'USE_SESSION_AUTH': False,
+}
 

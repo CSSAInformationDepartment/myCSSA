@@ -21,7 +21,6 @@ from django.conf.urls import handler400, handler403, handler404, handler500
 from django.views.defaults import server_error
 
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
-import CommunityAPI
 
 from PublicSite import urls as PublicUrl
 from UserAuthAPI import urls as AuthUrl
@@ -29,6 +28,21 @@ from LegacyDataAPI import urls as LegacyUrl
 from myCSSAhub import urls as HubUrl
 from MobileAppAPI import urls as MobileUrl
 from CommunityAPI import urls as CommunityUrl
+
+from drf_yasg.views import get_schema_view
+from drf_yasg import openapi
+from rest_framework import permissions
+
+schema_view = get_schema_view(
+   openapi.Info(
+      title="CSSANet API",
+      default_version='v1',
+      description="The document of the api of cssanet",
+   ),
+   public=True,
+   authentication_classes=[],
+   permission_classes=[permissions.AllowAny],
+)
 
 urlpatterns = [
     path('', include(PublicUrl)), 
@@ -41,6 +55,10 @@ urlpatterns = [
     path('oauth/', include('social_django.urls', namespace='social')),
     path('mobile/', include(MobileUrl)),
     path('api/community/', include(CommunityUrl)),
+
+    re_path(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),
+    re_path(r'^swagger/$', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+    re_path(r'^redoc/$', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
 ] 
 handler400 = 'PublicSite.views.bad_request'
 handler403 = 'PublicSite.views.permission_denied'
