@@ -15,7 +15,41 @@ ALLOWED_HOSTS = ['10.0.2.2','*']
 #     }
 # }
 
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'cssadev',
+        'USER': 'dev_general',
+        'PASSWORD': 'cwGlU8j1DS',
+        'HOST': 'dev.cssaunimelb.com',
+        'PORT': '43961'
+    }
+}
 
+## S3 Elastic Storage Configuration
+
+AWS_DEFAULT_ACL = None
+AWS_ACCESS_KEY_ID = 's3dev'
+AWS_SECRET_ACCESS_KEY = 'kdj3iqkU6UumYchEKx4OJpQzzcj0vrWx'
+AWS_STORAGE_BUCKET_NAME = 's3dev'
+AWS_S3_ENDPOINT = 'devcdn.cssaunimelb.com'
+AWS_S3_ENDPOINT_URL = f'https://{AWS_S3_ENDPOINT}'
+AWS_S3_OBJECT_PARAMETERS = {
+    'CacheControl': 'max-age=86400',
+}
+AWS_QUERYSTRING_AUTH = True
+
+AWS_STATIC_LOCATION = 'static'
+AWS_MEDIA_LOCATION = 'media'
+
+AWS_S3_CUSTOM_DOMAIN = f'{AWS_S3_ENDPOINT}/{AWS_STORAGE_BUCKET_NAME}'
+
+# S3 static settings
+STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{AWS_STATIC_LOCATION}/'
+STATICFILES_STORAGE = 'Library.backends.storages.PublicStaticStorage'
+# S3 public media settings
+MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{AWS_MEDIA_LOCATION}/'
+DEFAULT_FILE_STORAGE = 'Library.backends.storages.PublicMediaStorage'
 
 CELERY_BROKER_URL = 'redis://redis:6379'
 CELERY_RESULT_BACKEND = 'redis://redis:6379'
