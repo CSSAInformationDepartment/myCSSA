@@ -36,7 +36,7 @@ INSTALLED_APPS = [
     'PrizeAPI',
     'mail_owl',
     'MobileAppAPI',
-
+    'CommunityAPI',
 
     ## RESTful Support
     'rest_framework',
