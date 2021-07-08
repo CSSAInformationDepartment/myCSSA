@@ -56,8 +56,11 @@ class Notification(models.Model):
     type = CharField('通知类型', choices=notificationTypeChoices)
 
 class FavouritePost(models.Model):
-    userId = models.ForeignKey(UserProfile, primary_key=True, on_delete=models.CASCADE)
-    postId = models.ForeignKey(Post, primary_key=True, on_delete=models.CASCADE)
+    userId = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+    postId = models.ForeignKey(Post, on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together=(("userId","postId"),)
 
 class Report(models.Model):
     createdBy = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
