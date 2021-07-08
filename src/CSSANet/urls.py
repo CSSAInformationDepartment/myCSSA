@@ -21,12 +21,14 @@ from django.conf.urls import handler400, handler403, handler404, handler500
 from django.views.defaults import server_error
 
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+import CommunityAPI
 
 from PublicSite import urls as PublicUrl
 from UserAuthAPI import urls as AuthUrl
 from LegacyDataAPI import urls as LegacyUrl
 from myCSSAhub import urls as HubUrl
 from MobileAppAPI import urls as MobileUrl
+from CommunityAPI import urls as CommunityUrl
 
 urlpatterns = [
     path('', include(PublicUrl)), 
@@ -37,7 +39,8 @@ urlpatterns = [
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('oauth/', include('social_django.urls', namespace='social')),
-    path('mobile/', include(MobileUrl))
+    path('mobile/', include(MobileUrl)),
+    path('api/community/', include(CommunityUrl)),
 ] 
 handler400 = 'PublicSite.views.bad_request'
 handler403 = 'PublicSite.views.permission_denied'
