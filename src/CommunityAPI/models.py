@@ -43,7 +43,8 @@ class Post(models.Model):
     viewCount = models.IntegerField('访问次数', default=0)
 
 class Content(models.Model):
-    postId = models.OneToOneField(Post, primary_key=True, on_delete=models.CASCADE)
+    # django 对复合主键的支持不大好，这里就不把它当成主键了。
+    postId = models.ForeignKey(Post, on_delete=models.CASCADE)
     # 其实这里不需要 previousContentID
 
     text = models.TextField('帖子正文', max_length=20000) # TODO: 决定一个长度
