@@ -4,5 +4,5 @@ from . import models
 
 class TagSerializer(serializers.ModelSerializer):
     class Meta:
-        model = models.Post
+        model = models.Tag
         fields = ['id', 'title']
