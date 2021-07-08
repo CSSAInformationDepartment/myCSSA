@@ -59,7 +59,7 @@ class Notification(models.Model):
     read = models.BooleanField('用户是否已读该通知', default=False)
 
     notificationTypeChoices = [] # TODO: 决定类型
-    type = CharField('通知类型', choices=notificationTypeChoices)
+    type = CharField('通知类型', choices=notificationTypeChoices, max_length=100)
 
 class FavouritePost(models.Model):
     userId = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
@@ -77,4 +77,4 @@ class Report(models.Model):
     resolvedBy = models.ForeignKey(UserProfile, null=True, on_delete=models.SET_NULL)
     
     reportTypeChoices = [] # TODO: 决定类型
-    type = CharField('举报类型', choices=reportTypeChoices)
+    type = CharField('举报类型', choices=reportTypeChoices, max_length=100)
