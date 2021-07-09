@@ -1,7 +1,8 @@
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
+from django.db.models.fields import CharField
 
-from UserAuthAPI.models import UserProfile
+from UserAuthAPI.models import User, UserProfile
 
 # Create your models here.
 class Tag(models.Model):
@@ -51,3 +52,29 @@ class Content(models.Model):
 
     imageUrls = ArrayField(models.URLField(), verbose_name='帖子中出现的url')
 
+class Notification(models.Model):
+    userId = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+    targetId = models.ForeignKey(Post, null=True, on_delete=models.CASCADE)
+    data = models.JSONField('使用JSON表示额外的数据， 其格式根据type来变化')
+    read = models.BooleanField('用户是否已读该通知', default=False)
+
+    notificationTypeChoices = [] # TODO: 决定类型
+    type = CharField('通知类型', choices=notificationTypeChoices, max_length=100)
+
+class FavouritePost(models.Model):
+    userId = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+    postId = models.ForeignKey(Post, on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together=(("userId","postId"),)
+
+class Report(models.Model):
+    createdBy = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+    targetId = models.ForeignKey(Post, on_delete=models.CASCADE)
+    reason = models.TextField('举报原因', max_length=1000) # TODO: 决定一个长度
+
+    resolved = models.BooleanField('是否已处理', default=False)
+    resolvedBy = models.ForeignKey(UserProfile, null=True, on_delete=models.SET_NULL)
+    
+    reportTypeChoices = [] # TODO: 决定类型
+    type = CharField('举报类型', choices=reportTypeChoices, max_length=100)
