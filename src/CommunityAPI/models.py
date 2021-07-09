@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.postgres.fields import ArrayField
 from django.db.models.fields import CharField
 
-from UserAuthAPI.models import User, UserProfile
+from UserAuthAPI.models import UserProfile
 
 # Create your models here.
 class Tag(models.Model):
@@ -66,15 +66,21 @@ class FavouritePost(models.Model):
     postId = models.ForeignKey(Post, on_delete=models.CASCADE)
 
     class Meta:
-        unique_together=(("userId","postId"),)
+        constraints = [
+            models.UniqueConstraint(fields=['userId', 'postId'], name='userId_postId')
+        ]
+
 
 class Report(models.Model):
-    createdBy = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+    createdBy = models.ForeignKey(UserProfile, on_delete=models.CASCADE,
+        related_name='%(class)s_created_by')
+
     targetId = models.ForeignKey(Post, on_delete=models.CASCADE)
     reason = models.TextField('举报原因', max_length=1000) # TODO: 决定一个长度
 
     resolved = models.BooleanField('是否已处理', default=False)
-    resolvedBy = models.ForeignKey(UserProfile, null=True, on_delete=models.SET_NULL)
+    resolvedBy = models.ForeignKey(UserProfile, null=True, on_delete=models.SET_NULL,
+        related_name='%(class)s_resolved_by')
     
     reportTypeChoices = [] # TODO: 决定类型
     type = CharField('举报类型', choices=reportTypeChoices, max_length=100)
