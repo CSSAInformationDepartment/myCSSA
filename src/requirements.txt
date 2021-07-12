@@ -38,6 +38,8 @@ social-auth-app-django
 
 cryptography >= 3.3.2
 
+drf-yasg[validation] # swagger
+
 ### For Development purpose only
 mypy
 

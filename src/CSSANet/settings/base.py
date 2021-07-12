@@ -36,7 +36,7 @@ INSTALLED_APPS = [
     'PrizeAPI',
     'mail_owl',
     'MobileAppAPI',
-
+    'CommunityAPI',
 
     ## RESTful Support
     'rest_framework',
@@ -55,6 +55,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    'drf_yasg', # swagger
 
     ## Server add-in
     'gunicorn',
@@ -248,5 +250,7 @@ LOGGING = {
 }
 ADMINS = [('Master Inbox', 'information@cssaunimelb.com'), ('Lead Engineer', 'joshlubox@gmail.com')]
 
-
+SWAGGER_SETTINGS = {
+    'USE_SESSION_AUTH': False,
+}
 
