@@ -4,6 +4,9 @@ from django.db.models.fields import CharField
 
 from UserAuthAPI.models import UserProfile
 
+POST_CONTENT_LENGTH = 20000 # TODO: 决定一个长度
+POST_TITLE_LENGTH = 100
+
 # Create your models here.
 class Tag(models.Model):
     title = models.CharField('标签标题', max_length=16)
@@ -48,7 +51,8 @@ class Content(models.Model):
     postId = models.ForeignKey(Post, on_delete=models.CASCADE)
     # 其实这里不需要 previousContentID
 
-    text = models.TextField('帖子正文', max_length=20000) # TODO: 决定一个长度
+    title = models.CharField('标题', max_length=POST_TITLE_LENGTH, default='')
+    text = models.TextField('帖子正文', max_length=POST_CONTENT_LENGTH, default='')
 
     imageUrls = ArrayField(models.URLField(), verbose_name='帖子中出现的url')
 
