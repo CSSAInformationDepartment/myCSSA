@@ -18,7 +18,7 @@ def resolve_username(profile: UserProfile) -> str:
     # 暂时用用户的全名来当作用户名
     return profile['lastNameCN'] + profile['firstNameCN']
 
-class PostReadSerializer(serializers.ModelSerializer):
+class ReadPostSerializer(serializers.ModelSerializer):
     """
     只用来处理文章的读取
     """

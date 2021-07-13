@@ -20,7 +20,7 @@ class PostReadViewSet(viewsets.ReadOnlyModelViewSet):
     读取帖子
     """
 
-    serializer_class = serializers.PostReadSerializer
+    serializer_class = serializers.ReadPostSerializer
     permission_classes = [permissions.AllowAny]
     
     def get_queryset(self):
