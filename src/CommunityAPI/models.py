@@ -55,7 +55,7 @@ class Content(models.Model):
     title = models.CharField('标题', max_length=POST_TITLE_LENGTH, default='')
     text = models.TextField('帖子正文', max_length=POST_CONTENT_LENGTH, default='')
 
-    imageUrls = ArrayField(models.URLField(), verbose_name='帖子中出现的url')
+    imageUrls = ArrayField(models.URLField(), verbose_name='帖子中出现的url', blank=True)
 
     editedTime = models.DateTimeField('当前Content的创建时间（Post的修改时间）', default=now)
     editedBy = models.ForeignKey(UserProfile, null=True, on_delete=models.SET_NULL,

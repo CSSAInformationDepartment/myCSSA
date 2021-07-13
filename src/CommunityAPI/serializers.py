@@ -43,7 +43,7 @@ class ReadPostSerializer(serializers.ModelSerializer):
         repr['content'] = self.content.to_representation(contentModel)
 
         # 如果是读取文章列表，只保留正文的前25个汉字
-        if not self.content['view'].detail:
+        if not self.context['view'].detail:
             repr['content']['text'] = repr['content']['text'][:self.SUMMARY_TEXT_LENGTH]
 
 
@@ -63,7 +63,7 @@ class EditPostSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
 
-        userId = self.content['request'].user.id
+        userId = self.context['request'].user.id
 
         post = models.Post.objects.create(
             createdBy=userId,
@@ -81,7 +81,7 @@ class EditPostSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
 
-        userId = self.content['request'].user.id
+        userId = self.context['request'].user.id
 
         models.Content.objects.create(
             postId=instance.id,
