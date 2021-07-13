@@ -12,7 +12,8 @@ class TagSerializer(serializers.ModelSerializer):
 class ContentSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Content
-        fields = ['title', 'text', 'imageUrls', 'editedTime']
+        fields = ['title', 'text', 'imageUrls']
+        read_only_fields = ['editedTime']
 
 def resolve_username(profile: UserProfile) -> str:
     # 暂时用用户的全名来当作用户名
@@ -50,3 +51,42 @@ class ReadPostSerializer(serializers.ModelSerializer):
         repr['createdBy'] = resolve_username(userProfile)
 
         return repr
+
+class EditPostSerializer(serializers.ModelSerializer):
+    content = ContentSerializer()
+
+    class Meta:
+        model = models.Post
+        fields = ['tagId', 'viewableToGuest',
+            # 正常情况下我们不需要再声明下面的field，但是不这么搞的话 drf_yasg 会报错
+            'content']
+
+    def create(self, validated_data):
+
+        userId = self.content['request'].user.id
+
+        post = models.Post.objects.create(
+            createdBy=userId,
+            tagId=validated_data['tagId'],
+            viewableToGuest=validated_data['viewableToGuest']
+        )
+
+        models.Content.objects.create(
+            postId=post.id,
+            editedBy=userId,
+            **validated_data['content']
+        )
+
+        return post
+
+    def update(self, instance, validated_data):
+
+        userId = self.content['request'].user.id
+
+        models.Content.objects.create(
+            postId=instance.id,
+            editedBy=userId,
+            **validated_data['content']
+        )
+
+        return instance
