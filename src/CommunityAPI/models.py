@@ -1,8 +1,10 @@
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
 from django.db.models.fields import CharField
+from django.utils.timezone import now
 
 from UserAuthAPI.models import UserProfile
+
 
 POST_CONTENT_LENGTH = 20000 # TODO: 决定一个长度
 POST_TITLE_LENGTH = 100
@@ -13,7 +15,6 @@ class Tag(models.Model):
 
 class Post(models.Model):
     tagId = models.ForeignKey(Tag, on_delete=models.CASCADE)
-    contentId = models.ForeignKey('Content', on_delete=models.CASCADE)
 
     '''
     以下的两个外键决定了这个Post到底是主贴还是回复
@@ -55,6 +56,10 @@ class Content(models.Model):
     text = models.TextField('帖子正文', max_length=POST_CONTENT_LENGTH, default='')
 
     imageUrls = ArrayField(models.URLField(), verbose_name='帖子中出现的url')
+
+    editedTime = models.DateTimeField('当前Content的创建时间（Post的修改时间）', default=now)
+    editedBy = models.ForeignKey(UserProfile, null=True, on_delete=models.SET_NULL,
+        related_name='%(class)s_edited_by')
 
 class Notification(models.Model):
     userId = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
