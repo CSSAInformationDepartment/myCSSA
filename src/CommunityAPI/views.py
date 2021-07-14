@@ -16,6 +16,8 @@ from CommunityAPI.permissions import IsOwner
 from .serializers import TagSerializer, EditPostSerializer, ReadPostSerializer
 from .models import Post, Tag
 
+# 相关的后端开发文档参见： https://dev.cssaunimelb.com/doc/rest-framework-sSVw9rou1R
+
 class TagViewSet(viewsets.ReadOnlyModelViewSet):
     """
     APIs to allow tags being read
@@ -27,7 +29,8 @@ class TagViewSet(viewsets.ReadOnlyModelViewSet):
 class PostViewSet(viewsets.ReadOnlyModelViewSet, mixins.DestroyModelMixin):
     """
     GET: 获取帖子
-    POST: 添加帖子
+        其中，有分页的 GET 只返回截取正文的前 50 个字符
+        通过ID读取到的文章则包含全文。
     DELETE: 删除帖子
     """
 
@@ -53,12 +56,16 @@ class PostViewSet(viewsets.ReadOnlyModelViewSet, mixins.DestroyModelMixin):
 
     def get_permissions(self):
         if self.action == 'destroy':
-            return [IsOwner()]
+            # 对于自动生成的方法（比如这里的destroy），需要在这里指定权限
+            # 权限必须是一个实例，而上面的 permission_classes 必须是类名
+            return [IsOwner()] 
         else:
             return super().get_permissions()
 
+    # 在swagger文档里的条目定义：
     @swagger_auto_schema(method='POST', operation_description='添加一个帖子',
         request_body=EditPostSerializer, responses={201: ReadPostSerializer})
+    # 给 rest_framework 用的view定义（这两个decorator的顺序不能反）
     @action(methods=['POST'], detail=False, url_path='create', url_name='create_post',
         serializer_class=EditPostSerializer,
         permission_classes=[permissions.IsAuthenticated])
@@ -71,6 +78,8 @@ class PostViewSet(viewsets.ReadOnlyModelViewSet, mixins.DestroyModelMixin):
 
     def perform_destroy(self, instance: Post):
         instance.deleted = True
+        # 通过后缀名 _id 可以直接传 id。不加后缀的时候需要传进去一个 model instance
+        # 不知道为啥， request.user 不能直接传，只能用它的id
         instance.deletedBy_id = self.request.user.id
         instance.save()
 
@@ -85,6 +94,7 @@ class PostViewSet(viewsets.ReadOnlyModelViewSet, mixins.DestroyModelMixin):
         serializer.is_valid(raise_exception=True)
         post = serializer.save()
 
+        # 从 super().update 里复制来的代码（估计是缓存用的）
         if getattr(instance, '_prefetched_objects_cache', None):
             # If 'prefetch_related' has been applied to a queryset, we need to
             # forcibly invalidate the prefetch cache on the instance.
