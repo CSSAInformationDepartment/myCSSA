@@ -16,8 +16,8 @@ from rest_framework.response import Response
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from CommunityAPI.permissions import IsOwner
-from .serializers import TagSerializer, EditPostSerializer, ReadPostSerializer
-from .models import Post, Tag
+from .serializers import TagSerializer, EditPostSerializer, ReadPostSerializer, FavouritePostSerializer
+from .models import Post, Tag, FavouritePost
 
 class TagViewSet(viewsets.ReadOnlyModelViewSet):
     """
@@ -27,12 +27,16 @@ class TagViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = TagSerializer
     permission_classes = [permissions.AllowAny]
 
-class FavouritePostViewSet(viewsets.ModelViewSet):
-    serializer_class = serializers.FavouritePostSerializer
+class FavouritePostViewSet(
+    mixins.CreateModelMixin,
+    mixins.DestroyModelMixin,
+    mixins.ListModelMixin,
+    viewsets.GenericViewSet):
+    queryset = FavouritePost.objects.all()
+    serializer_class = FavouritePostSerializer
     permission_classes = [permissions.IsAuthenticated]
     def get_queryset(self):
-        queryset = FavouritePost.objects.all()
-        query_set = queryset.filter(UserId=self.request.user.id)
+        query_set = self.queryset.filter(userId=self.request.user.id)
         return query_set
 
 class PostViewSet(viewsets.ReadOnlyModelViewSet, mixins.DestroyModelMixin):

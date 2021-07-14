@@ -13,7 +13,15 @@ class TagSerializer(serializers.ModelSerializer):
 class FavouritePostSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.FavouritePost
-        fields = ['userId', 'postId']
+        fields = ['postId']
+    
+    def create(self, validated_data):
+        user = self.context['request'].user.id
+
+        models.FavouritePost.create(
+            user=user,
+            postId=validated_data['postId']
+        )
         
 class ContentSerializer(serializers.ModelSerializer):
     class Meta:
