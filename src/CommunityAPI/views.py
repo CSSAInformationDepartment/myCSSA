@@ -14,10 +14,13 @@ from drf_yasg.utils import swagger_auto_schema
 from rest_framework.fields import empty
 from rest_framework.response import Response
 from rest_framework_simplejwt.authentication import JWTAuthentication
+from CommunityAPI.paginations import PostResultsSetPagination
 
 from CommunityAPI.permissions import IsOwner
 from .serializers import TagSerializer, EditPostSerializer, ReadPostSerializer, FavouritePostSerializer
 from .models import Post, Tag, FavouritePost
+
+# 相关的后端开发文档参见： https://dev.cssaunimelb.com/doc/rest-framework-sSVw9rou1R
 
 class TagViewSet(viewsets.ReadOnlyModelViewSet):
     """
@@ -42,13 +45,15 @@ class FavouritePostViewSet(
 class PostViewSet(viewsets.ReadOnlyModelViewSet, mixins.DestroyModelMixin):
     """
     GET: 获取帖子
-    POST: 添加帖子
+        其中，有分页的 GET 只返回截取正文的前 50 个字符
+        通过ID读取到的文章则包含全文。
     DELETE: 删除帖子
     """
 
     serializer_class = ReadPostSerializer
     permission_classes = [permissions.AllowAny]
     authentication_classes = (JWTAuthentication,)
+    pagination_class = PostResultsSetPagination
     
     def get_queryset(self):
         query = Post.objects.filter(
@@ -58,15 +63,25 @@ class PostViewSet(viewsets.ReadOnlyModelViewSet, mixins.DestroyModelMixin):
             replyToComment=None,
             )
 
-        if not self.request.user:
+        if self.request.user.is_anonymous:
             query = query.filter(viewableToGuest=True)
 
         # 如果想要这个功能的话，可以在这里让管理员能看见被屏蔽和删除的文章
 
         return query.order_by('-createTime')
 
+    def get_permissions(self):
+        if self.action == 'destroy':
+            # 对于自动生成的方法（比如这里的destroy），需要在这里指定权限
+            # 权限必须是一个实例，而上面的 permission_classes 必须是类名
+            return [IsOwner()] 
+        else:
+            return super().get_permissions()
+
+    # 在swagger文档里的条目定义：
     @swagger_auto_schema(method='POST', operation_description='添加一个帖子',
         request_body=EditPostSerializer, responses={201: ReadPostSerializer})
+    # 给 rest_framework 用的view定义（这两个decorator的顺序不能反）
     @action(methods=['POST'], detail=False, url_path='create', url_name='create_post',
         serializer_class=EditPostSerializer,
         permission_classes=[permissions.IsAuthenticated])
@@ -77,13 +92,14 @@ class PostViewSet(viewsets.ReadOnlyModelViewSet, mixins.DestroyModelMixin):
         result = self._create_serializer(ReadPostSerializer, instance=post).data
         return Response(data=result, status=status.HTTP_201_CREATED)
 
-
     def perform_destroy(self, instance: Post):
         instance.deleted = True
-        instance.deletedBy = self.request.user.id
+        # 通过后缀名 _id 可以直接传 id。不加后缀的时候需要传进去一个 model instance
+        # 不知道为啥， request.user 不能直接传，只能用它的id
+        instance.deletedBy_id = self.request.user.id
         instance.save()
 
-    @swagger_auto_schema(method='POST', operation_description='修改帖子',
+    @swagger_auto_schema(method='POST', operation_description='修改帖子，不能修改 tag 和 viewableToGuest',
         request_body=EditPostSerializer, responses={202: ReadPostSerializer})
     @action(methods=['POST'], detail=True, url_path='edit', url_name='edit_post',
         serializer_class=EditPostSerializer, permission_classes=[IsOwner])
@@ -94,6 +110,7 @@ class PostViewSet(viewsets.ReadOnlyModelViewSet, mixins.DestroyModelMixin):
         serializer.is_valid(raise_exception=True)
         post = serializer.save()
 
+        # 从 super().update 里复制来的代码（估计是缓存用的）
         if getattr(instance, '_prefetched_objects_cache', None):
             # If 'prefetch_related' has been applied to a queryset, we need to
             # forcibly invalidate the prefetch cache on the instance.
