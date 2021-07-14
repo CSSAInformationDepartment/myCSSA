@@ -42,12 +42,18 @@ class PostViewSet(viewsets.ReadOnlyModelViewSet, mixins.DestroyModelMixin):
             replyToComment=None,
             )
 
-        if not self.request.user:
+        if self.request.user.is_anonymous:
             query = query.filter(viewableToGuest=True)
 
         # 如果想要这个功能的话，可以在这里让管理员能看见被屏蔽和删除的文章
 
         return query.order_by('-createTime')
+
+    def get_permissions(self):
+        if self.action == 'destroy':
+            return [IsOwner()]
+        else:
+            return super().get_permissions()
 
     @swagger_auto_schema(method='POST', operation_description='添加一个帖子',
         request_body=EditPostSerializer, responses={201: ReadPostSerializer})
@@ -61,13 +67,12 @@ class PostViewSet(viewsets.ReadOnlyModelViewSet, mixins.DestroyModelMixin):
         result = self._create_serializer(ReadPostSerializer, instance=post).data
         return Response(data=result, status=status.HTTP_201_CREATED)
 
-
     def perform_destroy(self, instance: Post):
         instance.deleted = True
-        instance.deletedBy = self.request.user.id
+        instance.deletedBy_id = self.request.user.id
         instance.save()
 
-    @swagger_auto_schema(method='POST', operation_description='修改帖子',
+    @swagger_auto_schema(method='POST', operation_description='修改帖子，不能修改 tag 和 viewableToGuest',
         request_body=EditPostSerializer, responses={202: ReadPostSerializer})
     @action(methods=['POST'], detail=True, url_path='edit', url_name='edit_post',
         serializer_class=EditPostSerializer, permission_classes=[IsOwner])

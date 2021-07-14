@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from django.db.transaction import atomic
 
 from UserAuthAPI.models import UserProfile
 
@@ -17,7 +18,7 @@ class ContentSerializer(serializers.ModelSerializer):
 
 def resolve_username(profile: UserProfile) -> str:
     # 暂时用用户的全名来当作用户名
-    return profile['lastNameCN'] + profile['firstNameCN']
+    return profile.firstNameEN + ' ' + profile.lastNameEN
 
 class ReadPostSerializer(serializers.ModelSerializer):
     """
@@ -32,48 +33,52 @@ class ReadPostSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Post
-        fields = ['id', 'tagId', 'createTime', 'viewCount', 
+        fields = ['id', 'tag_id', 'createTime', 'viewCount', 'viewableToGuest',
             # 正常情况下我们不需要再声明下面两个field，但是不这么搞的话 drf_yasg 会报错
             'content', 'createdBy']
 
     def to_representation(self, instance: models.Post):
         repr = super().to_representation(instance)
 
-        contentModel = models.Content.objects.filter(postId=instance['id']).order_by('-editTime')
-        repr['content'] = self.content.to_representation(contentModel)
+        contentModel = models.Content.objects.filter(post=instance).order_by('-editedTime').first()
+        repr['content'] = self.fields['content'].to_representation(contentModel)
 
         # 如果是读取文章列表，只保留正文的前25个汉字
         if not self.context['view'].detail:
             repr['content']['text'] = repr['content']['text'][:self.SUMMARY_TEXT_LENGTH]
 
 
-        userProfile = UserProfile.objects.get(pk=instance['createdBy'])
-        repr['createdBy'] = resolve_username(userProfile)
+        repr['createdBy'] = resolve_username(instance.createdBy)
 
         return repr
 
 class EditPostSerializer(serializers.ModelSerializer):
+    """
+    处理帖子的添加和修改。
+    对于主贴而言，只有在添加的时候 tag 和 viewableToGuest 有效。其他情况下这两个字段没有用。
+    """
     content = ContentSerializer()
 
     class Meta:
         model = models.Post
-        fields = ['tagId', 'viewableToGuest',
+        fields = ['tag', 'viewableToGuest',
             # 正常情况下我们不需要再声明下面的field，但是不这么搞的话 drf_yasg 会报错
             'content']
 
+    @atomic
     def create(self, validated_data):
 
-        userId = self.context['request'].user.id
+        userProfile: UserProfile = self.context['request'].user
 
         post = models.Post.objects.create(
-            createdBy=userId,
-            tagId=validated_data['tagId'],
+            createdBy_id=userProfile.pk,
+            tag=validated_data['tag'],
             viewableToGuest=validated_data['viewableToGuest']
         )
 
         models.Content.objects.create(
-            postId=post.id,
-            editedBy=userId,
+            post=post,
+            editedBy_id=userProfile.pk,
             **validated_data['content']
         )
 
@@ -81,11 +86,12 @@ class EditPostSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
 
-        userId = self.context['request'].user.id
+        userProfile = self.context['request'].user
+        # TODO: update tag and viewable to guest?
 
         models.Content.objects.create(
-            postId=instance.id,
-            editedBy=userId,
+            post=instance,
+            editedBy_id=userProfile.pk,
             **validated_data['content']
         )
 
