@@ -25,5 +25,5 @@ class FavouritePostViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
     def get_queryset(self):
         queryset = self.queryset
-        query_set = queryset.filter(UserId=self.request.user)
+        query_set = queryset.filter(UserId=self.request.user.id)
         return query_set
