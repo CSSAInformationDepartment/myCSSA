@@ -14,7 +14,7 @@ class Tag(models.Model):
     title = models.CharField('标签标题', max_length=16)
 
 class Post(models.Model):
-    tagId = models.ForeignKey(Tag, on_delete=models.CASCADE)
+    tag = models.ForeignKey(Tag, on_delete=models.CASCADE)
 
     '''
     以下的两个外键决定了这个Post到底是主贴还是回复
@@ -49,7 +49,7 @@ class Post(models.Model):
 
 class Content(models.Model):
     # django 对复合主键的支持不大好，这里就不把它当成主键了。
-    postId = models.ForeignKey(Post, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
     # 其实这里不需要 previousContentID
 
     title = models.CharField('标题', max_length=POST_TITLE_LENGTH, default='')
@@ -62,8 +62,8 @@ class Content(models.Model):
         related_name='%(class)s_edited_by')
 
 class Notification(models.Model):
-    userId = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
-    targetId = models.ForeignKey(Post, null=True, on_delete=models.CASCADE)
+    user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+    targetPost = models.ForeignKey(Post, null=True, on_delete=models.CASCADE)
     data = models.JSONField('使用JSON表示额外的数据， 其格式根据type来变化')
     read = models.BooleanField('用户是否已读该通知', default=False)
 
@@ -71,8 +71,8 @@ class Notification(models.Model):
     type = CharField('通知类型', choices=notificationTypeChoices, max_length=100)
 
 class FavouritePost(models.Model):
-    userId = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
-    postId = models.ForeignKey(Post, on_delete=models.CASCADE)
+    user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
 
     class Meta:
         constraints = [
@@ -84,7 +84,7 @@ class Report(models.Model):
     createdBy = models.ForeignKey(UserProfile, on_delete=models.CASCADE,
         related_name='%(class)s_created_by')
 
-    targetId = models.ForeignKey(Post, on_delete=models.CASCADE)
+    targetPost = models.ForeignKey(Post, on_delete=models.CASCADE)
     reason = models.TextField('举报原因', max_length=1000) # TODO: 决定一个长度
 
     resolved = models.BooleanField('是否已处理', default=False)
