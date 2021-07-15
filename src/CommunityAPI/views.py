@@ -1,3 +1,4 @@
+from django.http.response import JsonResponse
 from django.shortcuts import render
 
 # Create your views here.
@@ -13,8 +14,8 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from CommunityAPI.paginations import PostResultsSetPagination
 
 from CommunityAPI.permissions import IsOwner
-from .serializers import TagSerializer, EditPostSerializer, ReadPostSerializer
-from .models import Post, Tag
+from .serializers import TagSerializer, EditPostSerializer, ReadPostSerializer, NotificationSerializer
+from .models import Notification, Post, Tag
 
 # 相关的后端开发文档参见： https://dev.cssaunimelb.com/doc/rest-framework-sSVw9rou1R
 
@@ -25,6 +26,7 @@ class TagViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Tag.objects.all().order_by('id')
     serializer_class = TagSerializer
     permission_classes = [permissions.AllowAny]
+
 
 class PostViewSet(viewsets.ReadOnlyModelViewSet, mixins.DestroyModelMixin):
     """
@@ -110,3 +112,14 @@ class PostViewSet(viewsets.ReadOnlyModelViewSet, mixins.DestroyModelMixin):
         """
         return serializer(instance=instance, data=data, 
             context=self.get_serializer_context())
+
+class UnreadNotificationViewSet(viewsets.ReadOnlyModelViewSet):
+     # 在swagger文档里的条目定义：
+    @swagger_auto_schema(method='Get', operation_description='显示未读消息',
+        request_body= NotificationSerializer)
+    def showUnreadNotification(request):
+        if request.method == 'Get':
+            UnreadNotification = Notification.objects.filter(read = False)
+            serializer = NotificationSerializer(UnreadNotification, many = True)
+            return JsonResponse(serializer.data, safe = False)
+
