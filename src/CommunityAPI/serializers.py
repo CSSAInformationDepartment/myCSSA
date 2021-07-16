@@ -14,15 +14,18 @@ class TagSerializer(serializers.ModelSerializer):
 class FavouritePostSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.FavouritePost
-        fields = ['postId']
-    
-    def create(self, validated_data):
-        user = self.context['request'].user.id
+        fields = ['post']
 
-        models.FavouritePost.create(
-            user=user,
-            postId=validated_data['postId']
+    @atomic
+    def create(self, validated_data):
+        userProfile: UserProfile = self.context['request'].user
+
+        favourite = models.FavouritePost.objects.create(
+            user_id=userProfile.pk,
+            post=validated_data['post']
         )
+
+        return favourite
         
 class ContentSerializer(serializers.ModelSerializer):
     class Meta:

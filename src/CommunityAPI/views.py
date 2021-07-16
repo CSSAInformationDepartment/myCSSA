@@ -35,12 +35,38 @@ class FavouritePostViewSet(
     mixins.DestroyModelMixin,
     mixins.ListModelMixin,
     viewsets.GenericViewSet):
+    '''
+    GET: 返回当前用户的收藏
+    POST: 添加收藏
+    DELETE: 取消收藏
+    '''
     queryset = FavouritePost.objects.all()
     serializer_class = FavouritePostSerializer
     permission_classes = [permissions.IsAuthenticated]
+    authentication_classes = (JWTAuthentication,)
+
     def get_queryset(self):
-        query_set = self.queryset.filter(userId=self.request.user.id)
+        query_set = self.queryset.filter(user=self.request.user.id) # 这里会按照收藏的顺序返回
         return query_set
+
+    def create(self, request):
+        serializer = FavouritePostSerializer(data=request.data, context={'request': request})
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def destroy(self, request,  *args, **kwargs):
+        print(request.data)
+        user = self.request.user.id
+        post = kwargs['pk']
+        try:
+            instance = FavouritePost.objects.get(user=user,post=post)
+            instance.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        except:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
 
 class PostViewSet(viewsets.ReadOnlyModelViewSet, mixins.DestroyModelMixin):
     """
