@@ -14,7 +14,8 @@ class Tag(models.Model):
     title = models.CharField('标签标题', max_length=16)
 
 class Post(models.Model):
-    tag = models.ForeignKey(Tag, on_delete=models.CASCADE)
+    # 标签。如果是回复，这里是null
+    tag = models.ForeignKey(Tag, on_delete=models.CASCADE, null=True)
 
     '''
     以下的两个外键决定了这个Post到底是主贴还是回复
