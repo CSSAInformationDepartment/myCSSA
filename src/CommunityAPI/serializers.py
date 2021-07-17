@@ -16,6 +16,8 @@ class ContentSerializer(serializers.ModelSerializer):
         fields = ['title', 'text', 'imageUrls']
         read_only_fields = ['editedTime']
 
+
+
 def resolve_username(profile: UserProfile) -> str:
     # 暂时用用户的全名来当作用户名
     return profile.firstNameEN + ' ' + profile.lastNameEN
@@ -96,3 +98,13 @@ class EditPostSerializer(serializers.ModelSerializer):
         )
 
         return instance
+    
+
+    
+
+        
+class NotificationSerializer(serializers.ModelSerializer):
+   
+    model = models.Notification
+    fields = ['user', 'targetPost','data', 'type', 'read']
+    
