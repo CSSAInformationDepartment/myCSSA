@@ -83,7 +83,7 @@ class ReadPostSerializer(PostSerializerMixin, serializers.ModelSerializer):
 
     class Meta:
         model = models.Post
-        fields = ['id', 'tag_id', 'createTime', 'viewCount', 'viewableToGuest',
+        fields = ['id', 'tag', 'createTime', 'viewCount', 'viewableToGuest',
             # 正常情况下我们不需要再声明下面两个field，但是不这么搞的话 drf_yasg 会报错
             'content', 'createdBy']
 
