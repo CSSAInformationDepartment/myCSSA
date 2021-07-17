@@ -17,7 +17,7 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from CommunityAPI.paginations import PostResultsSetPagination
 
 from CommunityAPI.permissions import IsOwner
-from .serializers import TagSerializer, EditMainPostSerializer, ReadMainPostSerializer, FavouritePostSerializer
+from .serializers import EditCommentSerializer, ReadCommentSerializer, TagSerializer, EditMainPostSerializer, ReadMainPostSerializer, FavouritePostSerializer, get_main_post_from_url
 from .models import Post, Tag, FavouritePost
 
 # 相关的后端开发文档参见： https://dev.cssaunimelb.com/doc/rest-framework-sSVw9rou1R
@@ -96,7 +96,7 @@ class PostViewSetBase(viewsets.ReadOnlyModelViewSet, mixins.DestroyModelMixin):
         return serializer(instance=instance, data=data, 
             context=self.get_serializer_context())
 
-    def edit_post_base(self, request, pk=None, 
+    def edit_post_base(self, request,
         edit_serializer=EditMainPostSerializer,
         read_serializer=ReadMainPostSerializer):
 
@@ -115,12 +115,25 @@ class PostViewSetBase(viewsets.ReadOnlyModelViewSet, mixins.DestroyModelMixin):
         result = self.create_serializer(read_serializer, instance=post).data
         return Response(data=result, status=status.HTTP_202_ACCEPTED)
 
+    def create_post_base(self, request, 
+        edit_serializer=EditMainPostSerializer,
+        read_serializer=ReadMainPostSerializer):
+
+        serializer = self.create_serializer(edit_serializer, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        post = serializer.save()
+        result = self.create_serializer(read_serializer, instance=post).data
+        return Response(data=result, status=status.HTTP_201_CREATED)
+
 class MainPostViewSet(PostViewSetBase):
     """
-    GET: 获取帖子
-        其中，有分页的 GET 只返回截取正文的前 50 个字符
-        通过ID读取到的文章则包含全文。
-    DELETE: 删除帖子
+    主贴的增删改查
+
+    retrive: 获取一个帖子的全文
+
+    list: 获取帖子的列表，其中，正文只包括前50个字符。
+
+    destroy: 删除帖子
     """
 
     serializer_class = ReadMainPostSerializer
@@ -148,15 +161,53 @@ class MainPostViewSet(PostViewSetBase):
         serializer_class=EditMainPostSerializer,
         permission_classes=[permissions.IsAuthenticated])
     def create_post(self, request):
-        serializer = self.create_serializer(EditMainPostSerializer, data=request.data)
-        serializer.is_valid(raise_exception=True)
-        post = serializer.save()
-        result = self.create_serializer(ReadMainPostSerializer, instance=post).data
-        return Response(data=result, status=status.HTTP_201_CREATED)
+        return self.create_post_base(request, EditMainPostSerializer, ReadMainPostSerializer)
 
     @swagger_auto_schema(method='POST', operation_description='修改帖子，不能修改 tag 和 viewableToGuest',
         request_body=EditMainPostSerializer, responses={202: ReadMainPostSerializer})
     @action(methods=['POST'], detail=True, url_path='edit', url_name='edit_post',
         serializer_class=EditMainPostSerializer, permission_classes=[IsOwner])
     def edit_post(self, request, pk=None):
-        return self.edit_post_base(request, pk, EditMainPostSerializer, ReadMainPostSerializer)
+        return self.edit_post_base(request, EditMainPostSerializer, ReadMainPostSerializer)
+
+class CommentViewSet(PostViewSetBase):
+    """
+    一级评论的增删改查
+
+    list: 根据 post_id 获取其一级评论（全文）
+
+    retrive: 获取某一个评论的数据。必须同时指定 post_id 和 id
+
+    destroy: 删除某个一级评论（post_id必须对应）
+    """
+
+    serializer_class = ReadCommentSerializer
+
+    def get_queryset(self):
+        mainPost = get_main_post_from_url(self)
+
+        query = Post.objects.filter(
+            censored=False, 
+            deleted=False, 
+            replyToId=mainPost, 
+            replyToComment=None,
+            )
+
+        # 如果想要这个功能的话，可以在这里让管理员能看见被屏蔽和删除的文章
+
+        return query.order_by('createTime')
+
+    @swagger_auto_schema(method='POST', operation_description='添加一个评论',
+        request_body=EditCommentSerializer, responses={201: ReadCommentSerializer})
+    @action(methods=['POST'], detail=False, url_path='create', url_name='create_comment',
+        serializer_class=EditCommentSerializer,
+        permission_classes=[permissions.IsAuthenticated])
+    def create_post(self, request, post_id=None): # 我们在url里定义了 post_id，这里就必须要声明，否则会报错
+        return self.create_post_base(request, EditCommentSerializer, ReadCommentSerializer)
+
+    @swagger_auto_schema(method='POST', operation_description='修改回复',
+        request_body=EditCommentSerializer, responses={202: ReadCommentSerializer})
+    @action(methods=['POST'], detail=True, url_path='edit', url_name='edit_comment',
+        serializer_class=EditCommentSerializer, permission_classes=[IsOwner])
+    def edit_post(self, request, pk=None, post_id=None):
+        return self.edit_post_base(request, EditCommentSerializer, ReadCommentSerializer)

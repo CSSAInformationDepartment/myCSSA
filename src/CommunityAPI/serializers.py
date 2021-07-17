@@ -1,6 +1,8 @@
 from django.contrib.postgres import fields
+from django.core.exceptions import ValidationError
 from rest_framework import serializers
 from django.db.transaction import atomic
+from rest_framework.views import APIView
 
 from UserAuthAPI.models import UserProfile
 
@@ -69,7 +71,6 @@ class PostSerializerMixin:
             **validated_data['content']
         )
 
-
 class ReadMainPostSerializer(PostSerializerMixin, serializers.ModelSerializer):
     """
     只用来处理主贴的读取
@@ -130,4 +131,70 @@ class EditMainPostSerializer(PostSerializerMixin, serializers.ModelSerializer):
 
         self.create_content(validated_data, instance)
 
+        return instance
+
+class ReadCommentSerializer(PostSerializerMixin, serializers.ModelSerializer):
+    """
+    处理一级评论的读取
+    """
+
+    content = ContentSerializer(read_only=True)
+
+    createdBy = serializers.CharField()
+
+    class Meta:
+        model = models.Post
+        fields = ['id', 'createTime',
+            # 正常情况下我们不需要再声明下面两个field，但是不这么搞的话 drf_yasg 会报错
+            'content', 'createdBy']
+
+    def to_representation(self, instance: models.Post):
+        repr = super().to_representation(instance)
+        self.fill_representation(repr, instance)
+        return repr
+
+def get_main_post_from_url(view: APIView) -> models.Post:
+    """
+    从url中获取主贴对象，并确保其没有被屏蔽或删除。
+    如果对象不合法，将抛出 ValidationError
+    """
+
+    postId = view.kwargs['post_id']
+
+    mainPost: models.Post = models.Post.objects.filter(pk=postId).first()
+    if not mainPost or mainPost.deleted or mainPost.censored:
+        raise serializers.ValidationError('帖子不存在、已被删除或被屏蔽')
+
+    return mainPost
+
+class EditCommentSerializer(PostSerializerMixin, serializers.Serializer):
+    """
+    处理一级评论的添加和修改
+    """
+
+    content = ContentSerializer()
+
+    @atomic
+    def create(self, validated_data):
+
+        userProfile: UserProfile = self.context['request'].user
+        mainPost = get_main_post_from_url(self.context['view'])
+
+        if mainPost.replyToComment or mainPost.replyToId:
+            raise serializers.ValidationError(f'只能给主贴回复，但帖子id={mainPost.pk}不是主贴')
+
+        post = models.Post.objects.create(
+            createdBy_id=userProfile.pk,
+            replyToId=mainPost,
+            replyToComment=None,
+            # 对评论不需要检查
+            viewableToGuest=True,
+        )
+
+        self.create_content(validated_data, post)
+
+        return post
+
+    def update(self, instance, validated_data):
+        self.create_content(validated_data, instance)
         return instance
