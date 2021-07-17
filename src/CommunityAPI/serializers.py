@@ -1,3 +1,4 @@
+from django.contrib.postgres import fields
 from rest_framework import serializers
 from django.db.transaction import atomic
 
@@ -10,6 +11,22 @@ class TagSerializer(serializers.ModelSerializer):
         model = models.Tag
         fields = ['id', 'title']
 
+class FavouritePostSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.FavouritePost
+        fields = ['post']
+
+    @atomic
+    def create(self, validated_data):
+        userProfile: UserProfile = self.context['request'].user
+
+        favourite = models.FavouritePost.objects.create(
+            user_id=userProfile.pk,
+            post=validated_data['post']
+        )
+
+        return favourite
+        
 class ContentSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Content
