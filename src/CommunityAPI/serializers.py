@@ -30,10 +30,31 @@ class FavouritePostSerializer(serializers.ModelSerializer):
         return favourite
         
 class ContentSerializer(serializers.ModelSerializer):
+
+    TEXT_LENGTH_MIN=1
+    TITLE_LENGTH_MIN=1
+
     class Meta:
         model = models.Content
-        fields = ['title', 'text', 'imageUrls']
+        fields = ['title', 'text', 'imageUrls', 'editedTime']
         read_only_fields = ['editedTime']
+
+    def validate(self, attrs: dict):
+        title = attrs.get('title')
+        if self.context['view'].basename == 'post':
+            if not title:
+                raise ValidationError({'title': '主贴必须有标题'})
+            elif len(title) < self.TITLE_LENGTH_MIN:
+                raise ValidationError({'title': f'主贴标题长度必须大于等于 {self.TITLE_LENGTH_MIN}'})
+        else:
+            if title != None:
+                raise ValidationError({'title': '回复不能有标题'})
+
+        text = attrs.get('text', None)
+        if text == None or len(text) < self.TEXT_LENGTH_MIN:
+            raise ValidationError({'text': f'帖子正文长度必须大于等于 {self.TEXT_LENGTH_MIN}'})
+
+        return super().validate(attrs)
 
 def resolve_username(profile: UserProfile) -> str:
     # 暂时用用户的全名来当作用户名
