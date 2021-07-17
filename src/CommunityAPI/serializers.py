@@ -37,7 +37,40 @@ def resolve_username(profile: UserProfile) -> str:
     # 暂时用用户的全名来当作用户名
     return profile.firstNameEN + ' ' + profile.lastNameEN
 
-class ReadPostSerializer(serializers.ModelSerializer):
+class PostSerializerMixin:
+    """
+    提供一些主贴和评论都会用到的公共方法
+    """
+
+    def fill_representation(self, repr, instance: models.Post):
+        """
+        向返回的json填充以下数据：
+        帖子正文
+        发帖的用户名
+        """
+
+        contentModel = models.Content.objects.filter(post=instance).order_by('-editedTime').first()
+        repr['content'] = self.fields['content'].to_representation(contentModel)
+
+        repr['createdBy'] = resolve_username(instance.createdBy)
+
+    def create_content(self, validated_data, post: models.Post):
+        """
+        从输入的json创建一个新的content版本
+        """
+
+        userProfile: UserProfile = self.context['request'].user
+
+        # TODO: 上传图片之类的代码写在这里
+
+        return models.Content.objects.create(
+            post=post,
+            editedBy_id=userProfile.pk,
+            **validated_data['content']
+        )
+
+
+class ReadPostSerializer(PostSerializerMixin, serializers.ModelSerializer):
     """
     只用来处理文章的读取
     """
@@ -56,20 +89,15 @@ class ReadPostSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance: models.Post):
         repr = super().to_representation(instance)
-
-        contentModel = models.Content.objects.filter(post=instance).order_by('-editedTime').first()
-        repr['content'] = self.fields['content'].to_representation(contentModel)
+        self.fill_representation(repr, instance)
 
         # 如果是读取文章列表，只保留正文的前25个汉字
         if not self.context['view'].detail:
             repr['content']['text'] = repr['content']['text'][:self.SUMMARY_TEXT_LENGTH]
 
-
-        repr['createdBy'] = resolve_username(instance.createdBy)
-
         return repr
 
-class EditPostSerializer(serializers.ModelSerializer):
+class EditPostSerializer(PostSerializerMixin, serializers.ModelSerializer):
     """
     处理帖子的添加和修改。
     对于主贴而言，只有在添加的时候 tag 和 viewableToGuest 有效。其他情况下这两个字段没有用。
@@ -93,23 +121,14 @@ class EditPostSerializer(serializers.ModelSerializer):
             viewableToGuest=validated_data['viewableToGuest']
         )
 
-        models.Content.objects.create(
-            post=post,
-            editedBy_id=userProfile.pk,
-            **validated_data['content']
-        )
+        self.create_content(validated_data, post)
 
         return post
 
     def update(self, instance, validated_data):
 
-        userProfile = self.context['request'].user
         # TODO: update tag and viewable to guest?
 
-        models.Content.objects.create(
-            post=instance,
-            editedBy_id=userProfile.pk,
-            **validated_data['content']
-        )
+        self.create_content(validated_data, instance)
 
         return instance
