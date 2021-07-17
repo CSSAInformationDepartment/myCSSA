@@ -17,7 +17,7 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from CommunityAPI.paginations import PostResultsSetPagination
 
 from CommunityAPI.permissions import IsOwner
-from .serializers import TagSerializer, EditPostSerializer, ReadPostSerializer, FavouritePostSerializer
+from .serializers import TagSerializer, EditMainPostSerializer, ReadMainPostSerializer, FavouritePostSerializer
 from .models import Post, Tag, FavouritePost
 
 # 相关的后端开发文档参见： https://dev.cssaunimelb.com/doc/rest-framework-sSVw9rou1R
@@ -97,8 +97,8 @@ class PostViewSetBase(viewsets.ReadOnlyModelViewSet, mixins.DestroyModelMixin):
             context=self.get_serializer_context())
 
     def edit_post_base(self, request, pk=None, 
-        edit_serializer=EditPostSerializer,
-        read_serializer=ReadPostSerializer):
+        edit_serializer=EditMainPostSerializer,
+        read_serializer=ReadMainPostSerializer):
 
         instance = self.get_object()
         serializer = self.create_serializer(edit_serializer, 
@@ -115,7 +115,7 @@ class PostViewSetBase(viewsets.ReadOnlyModelViewSet, mixins.DestroyModelMixin):
         result = self.create_serializer(read_serializer, instance=post).data
         return Response(data=result, status=status.HTTP_202_ACCEPTED)
 
-class PostViewSet(PostViewSetBase):
+class MainPostViewSet(PostViewSetBase):
     """
     GET: 获取帖子
         其中，有分页的 GET 只返回截取正文的前 50 个字符
@@ -123,7 +123,7 @@ class PostViewSet(PostViewSetBase):
     DELETE: 删除帖子
     """
 
-    serializer_class = ReadPostSerializer
+    serializer_class = ReadMainPostSerializer
     
     def get_queryset(self):
         query = Post.objects.filter(
@@ -142,21 +142,21 @@ class PostViewSet(PostViewSetBase):
 
     # 在swagger文档里的条目定义：
     @swagger_auto_schema(method='POST', operation_description='添加一个帖子',
-        request_body=EditPostSerializer, responses={201: ReadPostSerializer})
+        request_body=EditMainPostSerializer, responses={201: ReadMainPostSerializer})
     # 给 rest_framework 用的view定义（这两个decorator的顺序不能反）
     @action(methods=['POST'], detail=False, url_path='create', url_name='create_post',
-        serializer_class=EditPostSerializer,
+        serializer_class=EditMainPostSerializer,
         permission_classes=[permissions.IsAuthenticated])
     def create_post(self, request):
-        serializer = self.create_serializer(EditPostSerializer, data=request.data)
+        serializer = self.create_serializer(EditMainPostSerializer, data=request.data)
         serializer.is_valid(raise_exception=True)
         post = serializer.save()
-        result = self.create_serializer(ReadPostSerializer, instance=post).data
+        result = self.create_serializer(ReadMainPostSerializer, instance=post).data
         return Response(data=result, status=status.HTTP_201_CREATED)
 
     @swagger_auto_schema(method='POST', operation_description='修改帖子，不能修改 tag 和 viewableToGuest',
-        request_body=EditPostSerializer, responses={202: ReadPostSerializer})
+        request_body=EditMainPostSerializer, responses={202: ReadMainPostSerializer})
     @action(methods=['POST'], detail=True, url_path='edit', url_name='edit_post',
-        serializer_class=EditPostSerializer, permission_classes=[IsOwner])
+        serializer_class=EditMainPostSerializer, permission_classes=[IsOwner])
     def edit_post(self, request, pk=None):
-        return self.edit_post_base(request, pk, EditPostSerializer, ReadPostSerializer)
+        return self.edit_post_base(request, pk, EditMainPostSerializer, ReadMainPostSerializer)

@@ -70,9 +70,9 @@ class PostSerializerMixin:
         )
 
 
-class ReadPostSerializer(PostSerializerMixin, serializers.ModelSerializer):
+class ReadMainPostSerializer(PostSerializerMixin, serializers.ModelSerializer):
     """
-    只用来处理文章的读取
+    只用来处理主贴的读取
     """
 
     SUMMARY_TEXT_LENGTH = 50 # 25个汉字
@@ -97,10 +97,9 @@ class ReadPostSerializer(PostSerializerMixin, serializers.ModelSerializer):
 
         return repr
 
-class EditPostSerializer(PostSerializerMixin, serializers.ModelSerializer):
+class EditMainPostSerializer(PostSerializerMixin, serializers.ModelSerializer):
     """
-    处理帖子的添加和修改。
-    对于主贴而言，只有在添加的时候 tag 和 viewableToGuest 有效。其他情况下这两个字段没有用。
+    处理主贴的添加和修改。
     """
     content = ContentSerializer()
 
