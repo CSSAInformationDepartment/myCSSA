@@ -17,5 +17,6 @@ urlpatterns = [
     path('', include(router.urls)),
     path('post/<int:post_id>/', include(comment_router.urls)),
     path('comment/<int:comment_id>/', include(subcomment_router.urls)),
+    
 
 ]

@@ -229,12 +229,7 @@ class CommentViewSet(PostViewSetBase):
     def create_post(self, request, post_id=None): # 我们在url里定义了 post_id，这里就必须要声明，否则会报错
         return self.create_post_base(request, EditCommentSerializer, ReadCommentSerializer)
 
-    @swagger_auto_schema(method='POST', operation_description='修改回复',
-        request_body=EditCommentSerializer, responses={202: ReadCommentSerializer})
-    @action(methods=['POST'], detail=True, url_path='edit', url_name='edit_comment',
-        serializer_class=EditCommentSerializer, permission_classes=[IsOwner])
-    def edit_post(self, request, pk=None, post_id=None):
-        return self.edit_post_base(request, EditCommentSerializer, ReadCommentSerializer)
+   
 
 
 class UnreadNotificationViewSet(viewsets.ReadOnlyModelViewSet):
@@ -246,19 +241,14 @@ class UnreadNotificationViewSet(viewsets.ReadOnlyModelViewSet):
         query = Notification.objects.filter(user_id = self.request.user.id , read = False) 
         return query
     # 在swagger文档里的条目定义：
-    @swagger_auto_schema(method='POST', operation_description='设为已读',
-        request_body=NotificationSerializer)
+    @swagger_auto_schema(method='POST', operation_description='设为已读')
     # 给 rest_framework 用的view定义（这两个decorator的顺序不能反）
-    @action(methods=['POST'], detail=False, url_path='readedNotification', url_name='mark_notification',
-        serializer_class=NotificationSerializer,
+    @action(methods=['POST'], detail=True, url_path='read', url_name='mark_notification',
         permission_classes=[permissions.IsAuthenticated])
+    
     def mark_notification(self):
         notification = self.get_object()
-        serializer = NotificationSerializer(read = True)
-        if serializer.is_valid():
-            notification.read = True
-            notification.save()
-            return Response({'status': 'marked read'})
-        else:
-            return Response(serializer.errors,
-                            status=status.HTTP_400_BAD_REQUEST)
+       
+        notification.read = True
+        notification.save()
+       
