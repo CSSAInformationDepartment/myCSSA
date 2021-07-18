@@ -216,6 +216,26 @@ class CommentViewSet(PostViewSetBase):
         return self.edit_post_base(request, EditCommentSerializer, ReadCommentSerializer)
     
 
+
+
+            
+
+    @swagger_auto_schema(method='POST', operation_description='添加一个评论',
+        request_body=EditCommentSerializer, responses={201: ReadCommentSerializer})
+    @action(methods=['POST'], detail=False, url_path='create', url_name='create_comment',
+        serializer_class=EditCommentSerializer,
+        permission_classes=[permissions.IsAuthenticated])
+    def create_post(self, request, post_id=None): # 我们在url里定义了 post_id，这里就必须要声明，否则会报错
+        return self.create_post_base(request, EditCommentSerializer, ReadCommentSerializer)
+
+    @swagger_auto_schema(method='POST', operation_description='修改回复',
+        request_body=EditCommentSerializer, responses={202: ReadCommentSerializer})
+    @action(methods=['POST'], detail=True, url_path='edit', url_name='edit_comment',
+        serializer_class=EditCommentSerializer, permission_classes=[IsOwner])
+    def edit_post(self, request, pk=None, post_id=None):
+        return self.edit_post_base(request, EditCommentSerializer, ReadCommentSerializer)
+
+
 class UnreadNotificationViewSet(viewsets.ReadOnlyModelViewSet):
      # 在swagger文档里的条目定义：
     @swagger_auto_schema(method='Get', operation_description='查看未读消息',
@@ -226,4 +246,6 @@ class UnreadNotificationViewSet(viewsets.ReadOnlyModelViewSet):
         if request.method == 'Get':
             UnreadNotification = Notification.objects.filter(read = False)
             serializer = NotificationSerializer(UnreadNotification, many = True)
-            return JsonResponse(serializer.data, safe = False)
+
+        
+        return JsonResponse(serializer.data, safe = False)
