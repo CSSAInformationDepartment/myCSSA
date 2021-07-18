@@ -6,15 +6,16 @@ from django.utils.timezone import now
 from UserAuthAPI.models import UserProfile
 
 
-POST_CONTENT_LENGTH = 20000 # TODO: 决定一个长度
-POST_TITLE_LENGTH = 100
+POST_CONTENT_LENGTH_MAX = 20000 # TODO: 决定一个长度
+POST_TITLE_LENGTH_MAX = 100
 
 # Create your models here.
 class Tag(models.Model):
     title = models.CharField('标签标题', max_length=16)
 
 class Post(models.Model):
-    tag = models.ForeignKey(Tag, on_delete=models.CASCADE)
+    # 标签。如果是回复，这里是null
+    tag = models.ForeignKey(Tag, on_delete=models.CASCADE, null=True)
 
     '''
     以下的两个外键决定了这个Post到底是主贴还是回复
@@ -24,9 +25,9 @@ class Post(models.Model):
     3级回复（跟3级显示在一起）: replyToID = 1级回复ID, replyToComment = 回复的Post 的 ID
     '''
     # 这里只能用字符串 'Post'，因为程序执行到这里的时候这个类还没定义完毕
-    replyToId = models.OneToOneField('Post', null=True, on_delete=models.SET_NULL,
+    replyToId = models.ForeignKey('Post', null=True, on_delete=models.SET_NULL,
         related_name='%(class)s_reply_to_id') 
-    replyToComment = models.OneToOneField('Post', null=True, on_delete=models.SET_NULL,
+    replyToComment = models.ForeignKey('Post', null=True, on_delete=models.SET_NULL,
         related_name='%(class)s_reply_to_comment') 
 
     viewableToGuest = models.BooleanField('未登录用户是否可见')
@@ -52,8 +53,8 @@ class Content(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     # 其实这里不需要 previousContentID
 
-    title = models.CharField('标题', max_length=POST_TITLE_LENGTH, default='')
-    text = models.TextField('帖子正文', max_length=POST_CONTENT_LENGTH, default='')
+    title = models.CharField('标题', max_length=POST_TITLE_LENGTH_MAX, null=True, default=None)
+    text = models.TextField('帖子正文', max_length=POST_CONTENT_LENGTH_MAX, default='')
 
     imageUrls = ArrayField(models.URLField(), verbose_name='帖子中出现的url', blank=True)
 
