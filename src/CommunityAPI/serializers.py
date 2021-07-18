@@ -13,6 +13,11 @@ class TagSerializer(serializers.ModelSerializer):
         model = models.Tag
         fields = ['id', 'title']
 
+class NotificationSerializer(serializers.ModelSerializer):
+   
+        model = models.Notification
+        fields = ['user', 'targetPost','data', 'type', 'read']
+
 class FavouritePostSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.FavouritePost
@@ -219,3 +224,5 @@ class EditCommentSerializer(PostSerializerMixin, serializers.Serializer):
     def update(self, instance, validated_data):
         self.create_content(validated_data, instance)
         return instance
+    
+    
