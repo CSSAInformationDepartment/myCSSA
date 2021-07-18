@@ -1,3 +1,4 @@
+from django.db.models import query
 from django.db.models.query import QuerySet
 from django.http import response, JsonResponse
 from django.shortcuts import render
@@ -237,15 +238,9 @@ class CommentViewSet(PostViewSetBase):
 
 
 class UnreadNotificationViewSet(viewsets.ReadOnlyModelViewSet):
-     # 在swagger文档里的条目定义：
-    @swagger_auto_schema(method='Get', operation_description='查看未读消息',
-        request_body=NotificationSerializer, responses={200})
-    @action(methods=['Get'], detail=True, url_path='read', url_name='read_notification',
-        serializer_class= NotificationSerializer)
-    def showUnreadNotification(request):
-        if request.method == 'Get':
-            UnreadNotification = Notification.objects.filter(read = False)
-            serializer = NotificationSerializer(UnreadNotification, many = True)
-
-        
-        return JsonResponse(serializer.data, safe = False)
+    serializer_class = NotificationSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    authentication_classes = (JWTAuthentication)
+    def get_queryset(self):
+        query = Notification.objects.filter(read = False) 
+        return query

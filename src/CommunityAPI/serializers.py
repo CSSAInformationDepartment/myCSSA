@@ -16,7 +16,7 @@ class TagSerializer(serializers.ModelSerializer):
 class NotificationSerializer(serializers.ModelSerializer):
    
         model = models.Notification
-        fields = ['user', 'targetPost','data', 'type', 'read']
+        fields = ['targetPost','data', 'type', 'read']
 
 class FavouritePostSerializer(serializers.ModelSerializer):
     class Meta:
