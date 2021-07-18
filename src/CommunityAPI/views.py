@@ -15,7 +15,7 @@ from drf_yasg.utils import swagger_auto_schema
 from rest_framework.fields import empty
 from rest_framework.response import Response
 from rest_framework_simplejwt.authentication import JWTAuthentication
-from CommunityAPI.paginations import PostResultsSetPagination
+from CommunityAPI.paginations import PostResultsSetPagination, UnreadNotificationSetPagination
 
 from CommunityAPI.permissions import IsOwner
 from .serializers import EditCommentSerializer, ReadCommentSerializer, TagSerializer, EditMainPostSerializer, ReadMainPostSerializer, FavouritePostSerializer,NotificationSerializer, get_main_post_from_url
@@ -240,7 +240,25 @@ class CommentViewSet(PostViewSetBase):
 class UnreadNotificationViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = NotificationSerializer
     permission_classes = [permissions.IsAuthenticated]
-    authentication_classes = (JWTAuthentication)
+    authentication_classes = (JWTAuthentication,)
+    pagination_class = UnreadNotificationSetPagination
     def get_queryset(self):
-        query = Notification.objects.filter(read = False) 
+        query = Notification.objects.filter(user_id = self.request.user.id , read = False) 
         return query
+    # 在swagger文档里的条目定义：
+    @swagger_auto_schema(method='POST', operation_description='设为已读',
+        request_body=NotificationSerializer)
+    # 给 rest_framework 用的view定义（这两个decorator的顺序不能反）
+    @action(methods=['POST'], detail=False, url_path='readedNotification', url_name='mark_notification',
+        serializer_class=NotificationSerializer,
+        permission_classes=[permissions.IsAuthenticated])
+    def mark_notification(self):
+        notification = self.get_object()
+        serializer = NotificationSerializer(read = True)
+        if serializer.is_valid():
+            notification.read = True
+            notification.save()
+            return Response({'status': 'marked read'})
+        else:
+            return Response(serializer.errors,
+                            status=status.HTTP_400_BAD_REQUEST)
