@@ -107,7 +107,7 @@ class ReadMainPostSerializer(PostSerializerMixin, serializers.ModelSerializer):
 
     content = ContentSerializer(read_only=True)
 
-    createdBy = serializers.CharField()
+    createdBy = serializers.CharField(label='创建者的用户名')
 
     class Meta:
         model = models.Post
@@ -167,7 +167,7 @@ class ReadCommentSerializer(PostSerializerMixin, serializers.ModelSerializer):
 
     content = ContentSerializer(read_only=True)
 
-    createdBy = serializers.CharField()
+    createdBy = serializers.CharField(label='创建者的用户名')
 
     class Meta:
         model = models.Post
