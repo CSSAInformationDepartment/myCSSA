@@ -1,7 +1,3 @@
-from django.db.models import query
-from django.db.models.query import QuerySet
-from django.http import response, JsonResponse
-from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
@@ -13,12 +9,16 @@ from rest_framework import status, viewsets, permissions, mixins
 from rest_framework.decorators import action, permission_classes
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework.fields import empty
-from rest_framework.response import Response
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from CommunityAPI.paginations import PostResultsSetPagination, UnreadNotificationSetPagination
 
 from CommunityAPI.permissions import IsOwner
-from .serializers import EditCommentSerializer, ReadCommentSerializer, TagSerializer, EditMainPostSerializer, ReadMainPostSerializer, FavouritePostSerializer,NotificationSerializer, get_main_post_from_url
+from .serializers import (
+    EditCommentSerializer, ReadCommentSerializer, TagSerializer, 
+    EditMainPostSerializer, ReadMainPostSerializer, FavouritePostSerializer,
+    NotificationSerializer, get_post_from_url, EditSubCommentSerializer, 
+    ReadSubCommentSerializer, verify_comment, verify_main_post
+    )
 from .models import Post, Tag, FavouritePost, Notification
 
 # 相关的后端开发文档参见： https://dev.cssaunimelb.com/doc/rest-framework-sSVw9rou1R
@@ -36,18 +36,24 @@ class FavouritePostViewSet(
     mixins.DestroyModelMixin,
     mixins.ListModelMixin,
     viewsets.GenericViewSet):
+
     '''
     GET: 返回当前用户的收藏
     POST: 添加收藏
     DELETE: 取消收藏
     '''
-    queryset = FavouritePost.objects.all()
+
     serializer_class = FavouritePostSerializer
     permission_classes = [permissions.IsAuthenticated]
     authentication_classes = (JWTAuthentication,)
 
     def get_queryset(self):
-        query_set = self.queryset.filter(user=self.request.user.id) # 这里会按照收藏的顺序返回
+
+        if getattr(self, 'swagger_fake_view', False):
+            # queryset just for schema generation metadata
+            return FavouritePost.objects.none()
+
+        query_set = FavouritePost.objects.filter(user=self.request.user.id) # 这里会按照收藏的顺序返回
         return query_set
 
     def create(self, request):
@@ -142,6 +148,11 @@ class MainPostViewSet(PostViewSetBase):
     serializer_class = ReadMainPostSerializer
     
     def get_queryset(self):
+
+        if getattr(self, 'swagger_fake_view', False):
+            # queryset just for schema generation metadata
+            return Post.objects.none()
+
         query = Post.objects.filter(
             censored=False, 
             deleted=False, 
@@ -192,7 +203,13 @@ class CommentViewSet(PostViewSetBase):
     serializer_class = ReadCommentSerializer
 
     def get_queryset(self):
-        mainPost = get_main_post_from_url(self)
+
+        if getattr(self, 'swagger_fake_view', False):
+            # queryset just for schema generation metadata
+            return Post.objects.none()
+
+        mainPost = get_post_from_url(self)
+        verify_main_post(mainPost)
 
         query = Post.objects.filter(
             censored=False, 
@@ -227,7 +244,12 @@ class UnreadNotificationViewSet(viewsets.ReadOnlyModelViewSet):
     pagination_class = UnreadNotificationSetPagination
     
     def get_queryset(self):
-        query = Notification.objects.filter(user_id = self.request.user.id , read = False) 
+
+        if getattr(self, 'swagger_fake_view', False):
+            # queryset just for schema generation metadata
+            return Notification.objects.none()
+
+        query = Notification.objects.filter(user_id=self.request.user.id, read=False) 
         return query
       
     # 在swagger文档里的条目定义：
@@ -240,3 +262,51 @@ class UnreadNotificationViewSet(viewsets.ReadOnlyModelViewSet):
         notification.read = True
         notification.save()
        
+class SubCommentViewSet(PostViewSetBase):
+    """
+    二级（及以上）回复的增删改查
+
+    list: 根据 comment_id 获取某个一级评论下的所有评论（全文）
+
+    retrive: 获取某一个评论的数据。必须同时指定 comment_id 和 id
+
+    destroy: 删除某个评论（comment_id 必须对应）
+    """
+
+    serializer_class = ReadSubCommentSerializer
+
+    def get_queryset(self):
+
+        if getattr(self, 'swagger_fake_view', False):
+            # queryset just for schema generation metadata
+            return Post.objects.none()
+
+        comment = get_post_from_url(self, 'comment_id')
+        verify_comment(comment)
+
+        query = Post.objects.filter(
+            censored=False, 
+            deleted=False, 
+            # replyToId != None
+            replyToComment=comment,
+            )
+
+        # 如果想要这个功能的话，可以在这里让管理员能看见被屏蔽和删除的文章
+
+        return query.order_by('createTime')
+
+    @swagger_auto_schema(method='POST', operation_description='添加一个评论，用 replyTo 指定回复的对象，'
+        '它必须跟本评论属于同一个一级评论。想要直接回复给一级评论，请将 replyTo 指定为 comment_id',
+        request_body=EditSubCommentSerializer, responses={201: ReadSubCommentSerializer})
+    @action(methods=['POST'], detail=False, url_path='create', url_name='create_subcomment',
+        serializer_class=EditSubCommentSerializer,
+        permission_classes=[permissions.IsAuthenticated])
+    def create_post(self, request, comment_id=None): # 我们在url里定义了 post_id，这里就必须要声明，否则会报错
+        return self.create_post_base(request, EditSubCommentSerializer, ReadSubCommentSerializer)
+
+    @swagger_auto_schema(method='POST', operation_description='修改回复，无法修改 replyTo',
+        request_body=EditSubCommentSerializer, responses={202: ReadSubCommentSerializer})
+    @action(methods=['POST'], detail=True, url_path='edit', url_name='edit_subcomment',
+        serializer_class=EditSubCommentSerializer, permission_classes=[IsOwner])
+    def edit_post(self, request, pk=None, comment_id=None):
+        return self.edit_post_base(request, EditSubCommentSerializer, ReadSubCommentSerializer)
