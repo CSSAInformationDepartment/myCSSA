@@ -82,6 +82,8 @@ class PostSerializerMixin:
         从输入的json创建一个新的content版本
         """
 
+        
+
         userProfile: UserProfile = self.context['request'].user
 
         # TODO: 上传图片之类的代码写在这里
@@ -218,4 +220,20 @@ class EditCommentSerializer(PostSerializerMixin, serializers.Serializer):
 
     def update(self, instance, validated_data):
         self.create_content(validated_data, instance)
+        return instance
+
+class CensorSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Post
+        fields = ['censored']
+
+    @atomic
+    def update(self, instance,validated_data):
+        userProfile: UserProfile = self.context['request'].user
+        instance.censored=validated_data['censored']
+        if validated_data['censored']:
+            instance.censoredBy_id=userProfile.pk
+        else:
+            instance.censoredBy_id=None
+        instance.save()
         return instance

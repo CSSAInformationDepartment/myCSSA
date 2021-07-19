@@ -6,6 +6,7 @@ router = routers.DefaultRouter()
 router.register(r'favouriteposts', views.FavouritePostViewSet)
 router.register(r'tag', views.TagViewSet)
 router.register(r'post', views.MainPostViewSet, 'post')
+router.register(r'post', views.CensorViewSet, 'censor')
 
 comment_router = routers.DefaultRouter()
 comment_router.register(r'comment', views.CommentViewSet, 'comment')

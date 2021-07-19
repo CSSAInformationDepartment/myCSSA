@@ -16,8 +16,8 @@ from rest_framework.response import Response
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from CommunityAPI.paginations import PostResultsSetPagination
 
-from CommunityAPI.permissions import IsOwner
-from .serializers import EditCommentSerializer, ReadCommentSerializer, TagSerializer, EditMainPostSerializer, ReadMainPostSerializer, FavouritePostSerializer, get_main_post_from_url
+from CommunityAPI.permissions import IsOwner, IsAdmin
+from .serializers import EditCommentSerializer, ReadCommentSerializer, TagSerializer, EditMainPostSerializer, ReadMainPostSerializer, FavouritePostSerializer, get_main_post_from_url, CensorSerializer
 from .models import Post, Tag, FavouritePost
 
 # 相关的后端开发文档参见： https://dev.cssaunimelb.com/doc/rest-framework-sSVw9rou1R
@@ -56,7 +56,7 @@ class FavouritePostViewSet(
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def destroy(self, request,  *args, **kwargs):
+    def destroy(self, request, *args, **kwargs):
         print(request.data)
         user = self.request.user.id
         post = kwargs['pk']
@@ -211,3 +211,19 @@ class CommentViewSet(PostViewSetBase):
         serializer_class=EditCommentSerializer, permission_classes=[IsOwner])
     def edit_post(self, request, pk=None, post_id=None):
         return self.edit_post_base(request, EditCommentSerializer, ReadCommentSerializer)
+    
+class CensorViewSet(viewsets.GenericViewSet):
+    queryset = Post.objects.all()
+    authentication_classes = (JWTAuthentication,)
+    @swagger_auto_schema(method='POST', operation_description='审核帖子, true为屏蔽，false为解除屏蔽',
+        request_body=CensorSerializer)
+    @action(methods=['POST'], detail=True, url_path='censor', url_name='censor_post',
+        serializer_class=CensorSerializer,
+        permission_classes=[IsOwner])
+    def censor_post(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = CensorSerializer(instance=instance, data=request.data, context={'request': request})
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
