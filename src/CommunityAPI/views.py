@@ -134,7 +134,7 @@ class MainPostViewSet(PostViewSetBase):
 
     retrive: 获取一个帖子的全文
 
-    list: 获取帖子的列表，其中，正文只包括前50个字符。
+    list: 获取帖子的列表，其中，正文只包括前50个字符。tag参数可以指定对应类别，若不指定则返回所有类别的帖子
 
     destroy: 删除帖子
     """
@@ -152,6 +152,10 @@ class MainPostViewSet(PostViewSetBase):
         if self.request.user.is_anonymous:
             query = query.filter(viewableToGuest=True)
 
+        # 允许通过tag参数来获取指定类别的文章
+        tag = self.request.GET.get('tag')
+        if tag:
+            query = query.filter(tag=tag)
 
         # 如果想要这个功能的话，可以在这里让管理员能看见被屏蔽和删除的文章
 
@@ -215,14 +219,6 @@ class CommentViewSet(PostViewSetBase):
         serializer_class=EditCommentSerializer, permission_classes=[IsOwner])
     def edit_post(self, request, pk=None, post_id=None):
         return self.edit_post_base(request, EditCommentSerializer, ReadCommentSerializer)
-    
-
-
-
-            
-
-   
-
 
 class UnreadNotificationViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = NotificationSerializer
@@ -233,12 +229,12 @@ class UnreadNotificationViewSet(viewsets.ReadOnlyModelViewSet):
     def get_queryset(self):
         query = Notification.objects.filter(user_id = self.request.user.id , read = False) 
         return query
+      
     # 在swagger文档里的条目定义：
     @swagger_auto_schema(method='POST', operation_description='设为已读')
     # 给 rest_framework 用的view定义（这两个decorator的顺序不能反）
     @action(methods=['POST'], detail=True, url_path='read', url_name='mark_notification',
         permission_classes=[permissions.IsAuthenticated])
-    
     def mark_notification(self):
         notification = self.get_object()
         notification.read = True
