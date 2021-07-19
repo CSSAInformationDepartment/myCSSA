@@ -1,5 +1,5 @@
 from django.contrib.postgres import fields
-from django.core.exceptions import ValidationError
+from rest_framework.serializers import ValidationError
 from rest_framework import serializers
 from django.db.transaction import atomic
 from rest_framework.views import APIView
@@ -206,6 +206,13 @@ def get_post_from_url(view: APIView, key_name='post_id') -> models.Post:
     postId = view.kwargs[key_name]
     return get_post_by_id(postId)
 
+def verify_main_post(post: models.Post):
+    """
+    确保本帖子是主贴，否则抛出异常
+    """
+    if post.replyToComment or post.replyToId:
+        raise serializers.ValidationError(f'只能给主贴回复，但帖子id={post.pk}不是主贴')
+
 class EditCommentSerializer(PostSerializerMixin, serializers.Serializer):
     """
     处理一级评论的添加和修改
@@ -218,9 +225,7 @@ class EditCommentSerializer(PostSerializerMixin, serializers.Serializer):
 
         userProfile: UserProfile = self.context['request'].user
         mainPost = get_post_from_url(self.context['view'])
-
-        if mainPost.replyToComment or mainPost.replyToId:
-            raise serializers.ValidationError(f'只能给主贴回复，但帖子id={mainPost.pk}不是主贴')
+        verify_main_post(mainPost)
 
         post = models.Post.objects.create(
             createdBy_id=userProfile.pk,
@@ -247,19 +252,26 @@ class ReadSubCommentSerializer(PostSerializerMixin, serializers.ModelSerializer)
 
     createdBy = serializers.CharField(label='创建者的用户名')
 
-    replyToUser = serializers.CharField(label='回复的对象的用户名')
+    replyToUser = serializers.CharField(label='回复的对象的用户名', read_only=True)
 
     class Meta:
         model = models.Post
-        fields = ['id', 'createTime',
+        fields = ['id', 'createTime', 'replyToId',
             # 正常情况下我们不需要再声明下面两个field，但是不这么搞的话 drf_yasg 会报错
             'content', 'createdBy', 'replyToUser']
 
     def to_representation(self, instance: models.Post):
         repr = super().to_representation(instance)
         self.fill_representation(repr, instance)
-        repr['replyToUser'] = resolve_username(instance.replyToId)
+        repr['replyToUser'] = resolve_username(instance.replyToId.createdBy)
         return repr
+
+def verify_comment(post: models.Post):
+    """
+    确保post是一个一级评论，否则抛出异常
+    """
+    if not post.replyToId or post.replyToComment:
+        raise ValidationError(f'comment_id 必须是一个一级回复，而id={post.pk}不是')
 
 class EditSubCommentSerializer(PostSerializerMixin, serializers.Serializer):
     """
@@ -276,14 +288,16 @@ class EditSubCommentSerializer(PostSerializerMixin, serializers.Serializer):
 
         userProfile: UserProfile = self.context['request'].user
         comment = get_post_from_url(self.context['view'], 'comment_id')
-
-        if not comment.replyToId or comment.replyToComment:
-            raise ValidationError(f'comment_id 必须是一个一级回复，而id={comment.pk}不是')
+        verify_comment(comment)
 
         replyTarget = get_post_by_id(validated_data['replyTo'])
-        if replyTarget.replyToComment.pk != comment.pk:
-            raise ValidationError(f'replyTo 指定的回复目标跟本评论不属于同一个一级评论。其目标'
-                'id={replyTarget.replyToComment.pk}')
+        if comment == replyTarget:
+            pass
+        elif not replyTarget.replyToId or not replyTarget.replyToComment:
+            raise ValidationError('replyTo 指定的回复目标不能是主贴或一级评论，除非 replyTo = comment_id')
+        elif replyTarget.replyToComment.pk != comment.pk:
+            raise ValidationError('replyTo 指定的回复目标跟本评论不属于同一个一级评论。其目标'
+                f'id={replyTarget.replyToComment.pk}')
 
         post = models.Post.objects.create(
             createdBy_id=userProfile.pk,

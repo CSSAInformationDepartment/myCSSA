@@ -22,7 +22,7 @@ from .serializers import (
     EditCommentSerializer, ReadCommentSerializer, TagSerializer, 
     EditMainPostSerializer, ReadMainPostSerializer, FavouritePostSerializer,
     NotificationSerializer, get_post_from_url, EditSubCommentSerializer, 
-    ReadSubCommentSerializer
+    ReadSubCommentSerializer, verify_comment, verify_main_post
     )
 from .models import Post, Tag, FavouritePost, Notification
 
@@ -203,6 +203,7 @@ class CommentViewSet(PostViewSetBase):
             return Post.objects.none()
 
         mainPost = get_post_from_url(self)
+        verify_main_post(mainPost)
 
         query = Post.objects.filter(
             censored=False, 
@@ -269,13 +270,14 @@ class SubCommentViewSet(PostViewSetBase):
             # queryset just for schema generation metadata
             return Post.objects.none()
 
-        mainPost = get_post_from_url(self, 'comment_id')
+        comment = get_post_from_url(self, 'comment_id')
+        verify_comment(comment)
 
         query = Post.objects.filter(
             censored=False, 
             deleted=False, 
             # replyToId != None
-            replyToComment=mainPost,
+            replyToComment=comment,
             )
 
         # 如果想要这个功能的话，可以在这里让管理员能看见被屏蔽和删除的文章
@@ -283,7 +285,7 @@ class SubCommentViewSet(PostViewSetBase):
         return query.order_by('createTime')
 
     @swagger_auto_schema(method='POST', operation_description='添加一个评论，用 replyTo 指定回复的对象，'
-        '它必须跟本评论属于同一个一级评论',
+        '它必须跟本评论属于同一个一级评论。想要直接回复给一级评论，请将 replyTo 指定为 comment_id',
         request_body=EditSubCommentSerializer, responses={201: ReadSubCommentSerializer})
     @action(methods=['POST'], detail=False, url_path='create', url_name='create_subcomment',
         serializer_class=EditSubCommentSerializer,
