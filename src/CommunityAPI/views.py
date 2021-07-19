@@ -221,14 +221,6 @@ class CommentViewSet(PostViewSetBase):
 
             
 
-    @swagger_auto_schema(method='POST', operation_description='添加一个评论',
-        request_body=EditCommentSerializer, responses={201: ReadCommentSerializer})
-    @action(methods=['POST'], detail=False, url_path='create', url_name='create_comment',
-        serializer_class=EditCommentSerializer,
-        permission_classes=[permissions.IsAuthenticated])
-    def create_post(self, request, post_id=None): # 我们在url里定义了 post_id，这里就必须要声明，否则会报错
-        return self.create_post_base(request, EditCommentSerializer, ReadCommentSerializer)
-
    
 
 
@@ -237,6 +229,7 @@ class UnreadNotificationViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
     authentication_classes = (JWTAuthentication,)
     pagination_class = UnreadNotificationSetPagination
+    
     def get_queryset(self):
         query = Notification.objects.filter(user_id = self.request.user.id , read = False) 
         return query
@@ -248,7 +241,6 @@ class UnreadNotificationViewSet(viewsets.ReadOnlyModelViewSet):
     
     def mark_notification(self):
         notification = self.get_object()
-       
         notification.read = True
         notification.save()
        
