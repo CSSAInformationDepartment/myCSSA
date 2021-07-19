@@ -36,7 +36,8 @@ class ContentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Content
-        fields = ['title', 'text', 'imageUrls', 'editedTime']
+        fields = ['title', 'text', 'editedTime']
+        # fields = ['title', 'text', 'imageUrls', 'editedTime']
         read_only_fields = ['editedTime']
 
     def validate(self, attrs: dict):
