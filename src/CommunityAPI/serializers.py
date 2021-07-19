@@ -180,19 +180,25 @@ class ReadCommentSerializer(PostSerializerMixin, serializers.ModelSerializer):
         self.fill_representation(repr, instance)
         return repr
 
-def get_main_post_from_url(view: APIView) -> models.Post:
+def get_post_by_id(id: int) -> models.Post:
     """
-    从url中获取主贴对象，并确保其没有被屏蔽或删除。
+    根据id获取一个帖子或评论对象，并确保其没有被屏蔽或删除。
     如果对象不合法，将抛出 ValidationError
     """
-
-    postId = view.kwargs['post_id']
-
-    mainPost: models.Post = models.Post.objects.filter(pk=postId).first()
+    mainPost: models.Post = models.Post.objects.filter(pk=id).first()
     if not mainPost or mainPost.deleted or mainPost.censored:
-        raise serializers.ValidationError('帖子不存在、已被删除或被屏蔽')
+        raise serializers.ValidationError(f'帖子(id={id})不存在、已被删除或被屏蔽')
 
     return mainPost
+
+
+def get_post_from_url(view: APIView, key_name='post_id') -> models.Post:
+    """
+    从url中获取一个帖子或评论对象，并确保其没有被屏蔽或删除。
+    如果对象不合法，将抛出 ValidationError
+    """
+    postId = view.kwargs[key_name]
+    return get_post_by_id(postId)
 
 class EditCommentSerializer(PostSerializerMixin, serializers.Serializer):
     """
@@ -205,7 +211,7 @@ class EditCommentSerializer(PostSerializerMixin, serializers.Serializer):
     def create(self, validated_data):
 
         userProfile: UserProfile = self.context['request'].user
-        mainPost = get_main_post_from_url(self.context['view'])
+        mainPost = get_post_from_url(self.context['view'])
 
         if mainPost.replyToComment or mainPost.replyToId:
             raise serializers.ValidationError(f'只能给主贴回复，但帖子id={mainPost.pk}不是主贴')
@@ -225,5 +231,67 @@ class EditCommentSerializer(PostSerializerMixin, serializers.Serializer):
     def update(self, instance, validated_data):
         self.create_content(validated_data, instance)
         return instance
-    
-    
+
+class ReadSubCommentSerializer(PostSerializerMixin, serializers.ModelSerializer):
+    """
+    处理二级及以上评论的读取
+    """
+
+    content = ContentSerializer(read_only=True)
+
+    createdBy = serializers.CharField(label='创建者的用户名')
+
+    replyToUser = serializers.CharField(label='回复的对象的用户名')
+
+    class Meta:
+        model = models.Post
+        fields = ['id', 'createTime',
+            # 正常情况下我们不需要再声明下面两个field，但是不这么搞的话 drf_yasg 会报错
+            'content', 'createdBy', 'replyToUser']
+
+    def to_representation(self, instance: models.Post):
+        repr = super().to_representation(instance)
+        self.fill_representation(repr, instance)
+        repr['replyToUser'] = resolve_username(instance.replyToId)
+        return repr
+
+class EditSubCommentSerializer(PostSerializerMixin, serializers.Serializer):
+    """
+    处理二级及以上评论的添加和修改
+    """
+
+    content = ContentSerializer()
+
+    replyTo = serializers.IntegerField(label='要回复的评论的id；只在添加新评论时有效，其他情况下会'
+        '忽略此值')
+
+    @atomic
+    def create(self, validated_data):
+
+        userProfile: UserProfile = self.context['request'].user
+        comment = get_post_from_url(self.context['view'], 'comment_id')
+
+        if not comment.replyToId or comment.replyToComment:
+            raise ValidationError(f'comment_id 必须是一个一级回复，而id={comment.pk}不是')
+
+        replyTarget = get_post_by_id(validated_data['replyTo'])
+        if replyTarget.replyToComment.pk != comment.pk:
+            raise ValidationError(f'replyTo 指定的回复目标跟本评论不属于同一个一级评论。其目标'
+                'id={replyTarget.replyToComment.pk}')
+
+        post = models.Post.objects.create(
+            createdBy_id=userProfile.pk,
+            replyToId=replyTarget,
+            replyToComment=comment,
+            # 对评论不需要检查
+            viewableToGuest=True,
+        )
+
+        self.create_content(validated_data, post)
+
+        return post
+
+    def update(self, instance, validated_data):
+        # 不能更新 replyTo
+        self.create_content(validated_data, instance)
+        return instance
