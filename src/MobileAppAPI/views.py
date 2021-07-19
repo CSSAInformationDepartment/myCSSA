@@ -64,7 +64,6 @@ def UpdateMerchants(request):
             return HttpResponse(json.dumps({'update': have_update}), content_type='application/json')
 
         elif request.method == "GET":
-            print(request.GET)
             profileID = request.GET.get('id')
             # Get the record to update
             merchant = get_object_or_404(DiscountMerchant, merchant_id=profileID)

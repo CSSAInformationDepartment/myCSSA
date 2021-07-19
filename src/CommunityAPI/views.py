@@ -131,7 +131,7 @@ class MainPostViewSet(PostViewSetBase):
 
     retrive: 获取一个帖子的全文
 
-    list: 获取帖子的列表，其中，正文只包括前50个字符。
+    list: 获取帖子的列表，其中，正文只包括前50个字符。tag参数可以指定对应类别，若不指定则返回所有类别的帖子
 
     destroy: 删除帖子
     """
@@ -148,6 +148,11 @@ class MainPostViewSet(PostViewSetBase):
 
         if self.request.user.is_anonymous:
             query = query.filter(viewableToGuest=True)
+
+        # 允许通过tag参数来获取指定类别的文章
+        tag = self.request.GET.get('tag')
+        if tag:
+            query = query.filter(tag=tag)
 
         # 如果想要这个功能的话，可以在这里让管理员能看见被屏蔽和删除的文章
 
