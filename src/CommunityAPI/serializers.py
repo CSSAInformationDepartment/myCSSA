@@ -60,7 +60,13 @@ class ContentSerializer(serializers.ModelSerializer):
         if text == None or len(text) < self.TEXT_LENGTH_MIN:
             raise ValidationError({'text': f'帖子正文长度必须大于等于 {self.TEXT_LENGTH_MIN}'})
 
-        return super().validate(attrs)
+        ret = super().validate(attrs)
+
+        # 如果没有这一个field，代表没有图片
+        if not ret.get('imageUrls'):
+            ret['imageUrls'] = []
+
+        return ret
 
 def resolve_username(profile: UserProfile) -> str:
     # 暂时用用户的全名来当作用户名
