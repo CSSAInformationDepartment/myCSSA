@@ -1,7 +1,3 @@
-from django.db.models import query
-from django.db.models.query import QuerySet
-from django.http import response, JsonResponse
-from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
@@ -13,7 +9,6 @@ from rest_framework import status, viewsets, permissions, mixins
 from rest_framework.decorators import action, permission_classes
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework.fields import empty
-from rest_framework.response import Response
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from CommunityAPI.paginations import PostResultsSetPagination, UnreadNotificationSetPagination
 
@@ -41,18 +36,24 @@ class FavouritePostViewSet(
     mixins.DestroyModelMixin,
     mixins.ListModelMixin,
     viewsets.GenericViewSet):
+
     '''
     GET: 返回当前用户的收藏
     POST: 添加收藏
     DELETE: 取消收藏
     '''
-    queryset = FavouritePost.objects.all()
+
     serializer_class = FavouritePostSerializer
     permission_classes = [permissions.IsAuthenticated]
     authentication_classes = (JWTAuthentication,)
 
     def get_queryset(self):
-        query_set = self.queryset.filter(user=self.request.user.id) # 这里会按照收藏的顺序返回
+
+        if getattr(self, 'swagger_fake_view', False):
+            # queryset just for schema generation metadata
+            return FavouritePost.objects.none()
+
+        query_set = FavouritePost.objects.filter(user=self.request.user.id) # 这里会按照收藏的顺序返回
         return query_set
 
     def create(self, request):
@@ -147,6 +148,11 @@ class MainPostViewSet(PostViewSetBase):
     serializer_class = ReadMainPostSerializer
     
     def get_queryset(self):
+
+        if getattr(self, 'swagger_fake_view', False):
+            # queryset just for schema generation metadata
+            return Post.objects.none()
+
         query = Post.objects.filter(
             censored=False, 
             deleted=False, 
@@ -238,7 +244,12 @@ class UnreadNotificationViewSet(viewsets.ReadOnlyModelViewSet):
     pagination_class = UnreadNotificationSetPagination
     
     def get_queryset(self):
-        query = Notification.objects.filter(user_id = self.request.user.id , read = False) 
+
+        if getattr(self, 'swagger_fake_view', False):
+            # queryset just for schema generation metadata
+            return Notification.objects.none()
+
+        query = Notification.objects.filter(user_id=self.request.user.id, read=False) 
         return query
       
     # 在swagger文档里的条目定义：
