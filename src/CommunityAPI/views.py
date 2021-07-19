@@ -1,5 +1,6 @@
+from django.db.models import query
 from django.db.models.query import QuerySet
-from django.http import response
+from django.http import response, JsonResponse
 from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -14,11 +15,11 @@ from drf_yasg.utils import swagger_auto_schema
 from rest_framework.fields import empty
 from rest_framework.response import Response
 from rest_framework_simplejwt.authentication import JWTAuthentication
-from CommunityAPI.paginations import PostResultsSetPagination
+from CommunityAPI.paginations import PostResultsSetPagination, UnreadNotificationSetPagination
 
 from CommunityAPI.permissions import IsOwner
-from .serializers import EditCommentSerializer, ReadCommentSerializer, TagSerializer, EditMainPostSerializer, ReadMainPostSerializer, FavouritePostSerializer, get_main_post_from_url
-from .models import Post, Tag, FavouritePost
+from .serializers import EditCommentSerializer, ReadCommentSerializer, TagSerializer, EditMainPostSerializer, ReadMainPostSerializer, FavouritePostSerializer,NotificationSerializer, get_main_post_from_url
+from .models import Post, Tag, FavouritePost, Notification
 
 # 相关的后端开发文档参见： https://dev.cssaunimelb.com/doc/rest-framework-sSVw9rou1R
 
@@ -125,6 +126,8 @@ class PostViewSetBase(viewsets.ReadOnlyModelViewSet, mixins.DestroyModelMixin):
         result = self.create_serializer(read_serializer, instance=post).data
         return Response(data=result, status=status.HTTP_201_CREATED)
 
+
+
 class MainPostViewSet(PostViewSetBase):
     """
     主贴的增删改查
@@ -216,3 +219,24 @@ class CommentViewSet(PostViewSetBase):
         serializer_class=EditCommentSerializer, permission_classes=[IsOwner])
     def edit_post(self, request, pk=None, post_id=None):
         return self.edit_post_base(request, EditCommentSerializer, ReadCommentSerializer)
+
+class UnreadNotificationViewSet(viewsets.ReadOnlyModelViewSet):
+    serializer_class = NotificationSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    authentication_classes = (JWTAuthentication,)
+    pagination_class = UnreadNotificationSetPagination
+    
+    def get_queryset(self):
+        query = Notification.objects.filter(user_id = self.request.user.id , read = False) 
+        return query
+      
+    # 在swagger文档里的条目定义：
+    @swagger_auto_schema(method='POST', operation_description='设为已读')
+    # 给 rest_framework 用的view定义（这两个decorator的顺序不能反）
+    @action(methods=['POST'], detail=True, url_path='read', url_name='mark_notification',
+        permission_classes=[permissions.IsAuthenticated])
+    def mark_notification(self):
+        notification = self.get_object()
+        notification.read = True
+        notification.save()
+       
