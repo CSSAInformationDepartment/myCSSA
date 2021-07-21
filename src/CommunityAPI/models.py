@@ -48,6 +48,13 @@ class Post(models.Model):
 
     viewCount = models.IntegerField('访问次数', default=0)
 
+class PostImage(models.Model):
+    id = models.UUIDField(primary_key=True)
+    image = models.ImageField(verbose_name='用户上传的图片', upload_to='uploads/community/post_image')
+    uploader = models.ForeignKey(UserProfile, on_delete=models.DO_NOTHING,
+        related_name='%(class)s_uploader')
+    uploadTime = models.DateTimeField('本图片的上传时间', default=now)
+
 class Content(models.Model):
     # django 对复合主键的支持不大好，这里就不把它当成主键了。
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
@@ -56,7 +63,7 @@ class Content(models.Model):
     title = models.CharField('标题', max_length=POST_TITLE_LENGTH_MAX, null=True, default=None)
     text = models.TextField('帖子正文', max_length=POST_CONTENT_LENGTH_MAX, default='')
 
-    imageUrls = ArrayField(models.URLField(), verbose_name='帖子中出现的url', blank=True)
+    images = models.ManyToManyField(PostImage, verbose_name='帖子关联的图片')
 
     editedTime = models.DateTimeField('当前Content的创建时间（Post的修改时间）', default=now)
     editedBy = models.ForeignKey(UserProfile, null=True, on_delete=models.SET_NULL,
