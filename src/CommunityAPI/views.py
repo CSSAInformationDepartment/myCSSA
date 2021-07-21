@@ -326,7 +326,7 @@ class ImageUploadView(APIView):
                             in_=openapi.IN_FORM,
                             type=openapi.TYPE_FILE,
                             required=True,
-                            description="要上传的图片"
+                            description="要上传的图片，大小不能超过10M"
                             )],
         operation_description='上传一个图片', responses={201: PostImageSerializer})
     @action(detail=False, methods=['post'])
