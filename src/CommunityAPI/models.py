@@ -13,6 +13,9 @@ POST_TITLE_LENGTH_MAX = 100
 class Tag(models.Model):
     title = models.CharField('标签标题', max_length=16)
 
+    def __str__(self) -> str:
+        return self.title
+
 class Post(models.Model):
     # 标签。如果是回复，这里是null
     tag = models.ForeignKey(Tag, on_delete=models.CASCADE, null=True)
