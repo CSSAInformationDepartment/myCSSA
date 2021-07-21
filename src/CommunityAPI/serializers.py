@@ -48,17 +48,25 @@ class PostImageSerializer(serializers.ModelSerializer):
         request = self.context['request']
         return request.build_absolute_uri(instance.image.url)
 
-class ContentSerializer(serializers.ModelSerializer):
-
-    TEXT_LENGTH_MIN=1
-    TITLE_LENGTH_MIN=1
-
+class ReadContentSerializer(serializers.ModelSerializer):
     images = PostImageSerializer(many=True, read_only=True)
 
     class Meta:
         model = models.Content
         fields = ['title', 'text', 'editedTime', 'images']
-        read_only_fields = ['editedTime']
+
+
+class EditContentSerializer(serializers.ModelSerializer):
+
+    TEXT_LENGTH_MIN=1
+    TITLE_LENGTH_MIN=1
+
+    images = serializers.ListField(write_only=True, child=serializers.UUIDField(
+        label='图片的UUID列表，想要增删图片，修改这个列表即可。'))
+
+    class Meta:
+        model = models.Content
+        fields = ['title', 'text', 'images']
 
     def validate(self, attrs: dict):
         title = attrs.get('title')
@@ -75,19 +83,7 @@ class ContentSerializer(serializers.ModelSerializer):
         if text == None or len(text) < self.TEXT_LENGTH_MIN:
             raise ValidationError({'text': f'帖子正文长度必须大于等于 {self.TEXT_LENGTH_MIN}'})
 
-        ret = super().validate(attrs)
-
-        # 如果没有这一个field，代表没有图片
-        if not ret.get('images'):
-            ret['images'] = []
-
-        # 输入的时候是一个id列表
-        images = ret['images']
-        for i in len(images):
-            if type(images[i]) is dict:
-                images[i] = images[i]['id']
-
-        return ret
+        return super().validate(attrs)
 
 def resolve_username(profile: UserProfile) -> str:
     # 暂时用用户的全名来当作用户名
@@ -117,11 +113,16 @@ class PostSerializerMixin:
 
         userProfile: UserProfile = self.context['request'].user
 
-        return models.Content.objects.create(
+        content = validated_data['content']
+        images = content.pop('images')
+
+        contentModel: models.Content = models.Content.objects.create(
             post=post,
             editedBy_id=userProfile.pk,
-            **validated_data['content']
+            **content
         )
+        contentModel.images.set(images)
+        return contentModel
 
 class ReadMainPostSerializer(PostSerializerMixin, serializers.ModelSerializer):
     """
@@ -130,7 +131,7 @@ class ReadMainPostSerializer(PostSerializerMixin, serializers.ModelSerializer):
 
     SUMMARY_TEXT_LENGTH = 50 # 25个汉字
 
-    content = ContentSerializer(read_only=True)
+    content = ReadContentSerializer(read_only=True)
 
     createdBy = serializers.CharField(label='创建者的用户名')
 
@@ -154,7 +155,7 @@ class EditMainPostSerializer(PostSerializerMixin, serializers.ModelSerializer):
     """
     处理主贴的添加和修改。
     """
-    content = ContentSerializer()
+    content = EditContentSerializer()
 
     class Meta:
         model = models.Post
@@ -190,7 +191,7 @@ class ReadCommentSerializer(PostSerializerMixin, serializers.ModelSerializer):
     处理一级评论的读取
     """
 
-    content = ContentSerializer(read_only=True)
+    content = ReadContentSerializer(read_only=True)
 
     createdBy = serializers.CharField(label='创建者的用户名')
 
@@ -237,7 +238,7 @@ class EditCommentSerializer(PostSerializerMixin, serializers.Serializer):
     处理一级评论的添加和修改
     """
 
-    content = ContentSerializer()
+    content = EditContentSerializer()
 
     @atomic
     def create(self, validated_data):
@@ -267,7 +268,7 @@ class ReadSubCommentSerializer(PostSerializerMixin, serializers.ModelSerializer)
     处理二级及以上评论的读取
     """
 
-    content = ContentSerializer(read_only=True)
+    content = ReadContentSerializer(read_only=True)
 
     createdBy = serializers.CharField(label='创建者的用户名')
 
@@ -297,7 +298,7 @@ class EditSubCommentSerializer(PostSerializerMixin, serializers.Serializer):
     处理二级及以上评论的添加和修改
     """
 
-    content = ContentSerializer()
+    content = EditContentSerializer()
 
     replyTo = serializers.IntegerField(label='要回复的评论的id；只在添加新评论时有效，其他情况下会'
         '忽略此值')
