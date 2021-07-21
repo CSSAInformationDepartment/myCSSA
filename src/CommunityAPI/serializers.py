@@ -60,9 +60,10 @@ class EditContentSerializer(serializers.ModelSerializer):
 
     TEXT_LENGTH_MIN=1
     TITLE_LENGTH_MIN=1
+    IMAGE_MAX_LENGTH=3
 
-    images = serializers.ListField(write_only=True, child=serializers.UUIDField(
-        label='图片的UUID列表，想要增删图片，修改这个列表即可。'))
+    images = serializers.ListField(write_only=True, max_length=IMAGE_MAX_LENGTH,
+        child=serializers.UUIDField(label='图片的UUID列表，想要增删图片，修改这个列表即可。'))
 
     class Meta:
         model = models.Content
