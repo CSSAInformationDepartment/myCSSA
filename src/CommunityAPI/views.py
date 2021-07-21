@@ -1,4 +1,6 @@
 from rest_framework.decorators import api_view
+from rest_framework.exceptions import ParseError
+from rest_framework.parsers import MultiPartParser
 from rest_framework.response import Response
 
 # Create your views here.
@@ -8,18 +10,21 @@ from typing import TypeVar, Callable
 from rest_framework import status, viewsets, permissions, mixins
 from rest_framework.decorators import action, permission_classes
 from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
 from rest_framework.fields import empty
+from rest_framework.views import APIView
 from rest_framework_simplejwt.authentication import JWTAuthentication
-from CommunityAPI.paginations import PostResultsSetPagination, UnreadNotificationSetPagination
+import uuid
 
+from CommunityAPI.paginations import PostResultsSetPagination, UnreadNotificationSetPagination
 from CommunityAPI.permissions import IsOwner
 from .serializers import (
-    EditCommentSerializer, ReadCommentSerializer, TagSerializer, 
+    EditCommentSerializer, PostImageSerializer, ReadCommentSerializer, TagSerializer, 
     EditMainPostSerializer, ReadMainPostSerializer, FavouritePostSerializer,
     NotificationSerializer, get_post_from_url, EditSubCommentSerializer, 
     ReadSubCommentSerializer, verify_comment, verify_main_post
     )
-from .models import Post, Tag, FavouritePost, Notification
+from .models import Post, PostImage, Tag, FavouritePost, Notification
 
 # 相关的后端开发文档参见： https://dev.cssaunimelb.com/doc/rest-framework-sSVw9rou1R
 
@@ -131,8 +136,6 @@ class PostViewSetBase(viewsets.ReadOnlyModelViewSet, mixins.DestroyModelMixin):
         post = serializer.save()
         result = self.create_serializer(read_serializer, instance=post).data
         return Response(data=result, status=status.HTTP_201_CREATED)
-
-
 
 class MainPostViewSet(PostViewSetBase):
     """
@@ -310,3 +313,30 @@ class SubCommentViewSet(PostViewSetBase):
         serializer_class=EditSubCommentSerializer, permission_classes=[IsOwner])
     def edit_post(self, request, pk=None, comment_id=None):
         return self.edit_post_base(request, EditSubCommentSerializer, ReadSubCommentSerializer)
+
+class ImageUploadView(APIView):
+    parser_classes = (MultiPartParser,)
+    permission_classes = [permissions.IsAuthenticated]
+    authentication_classes = (JWTAuthentication,)
+
+    # from https://stackoverflow.com/a/45566729 and https://github.com/axnsan12/drf-yasg/issues/600
+    @swagger_auto_schema(
+        manual_parameters=[openapi.Parameter(
+                            name="file",
+                            in_=openapi.IN_FORM,
+                            type=openapi.TYPE_FILE,
+                            required=True,
+                            description="要上传的图片"
+                            )],
+        operation_description='上传一个图片', responses={201: PostImageSerializer})
+    @action(detail=False, methods=['post'])
+    def post(self, request, **kwargs):
+        try:
+            file = request.data['file']
+        except KeyError:
+            raise ParseError('Request has no resource file attached')
+
+        image = PostImage.objects.create(id=uuid.uuid4(), uploader_id=request.user.id, image=file)
+        output = PostImageSerializer(image, context={'request': request})
+
+        return Response(output.data, status=status.HTTP_201_CREATED)
