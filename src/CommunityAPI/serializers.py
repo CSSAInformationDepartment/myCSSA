@@ -4,6 +4,7 @@ from rest_framework import serializers
 from django.db.transaction import atomic
 from rest_framework.views import APIView
 from drf_yasg.utils import swagger_serializer_method
+from sorl.thumbnail import get_thumbnail
 
 from UserAuthAPI.models import UserProfile
 
@@ -37,16 +38,31 @@ class FavouritePostSerializer(serializers.ModelSerializer):
         
 class PostImageSerializer(serializers.ModelSerializer):
 
-    url = serializers.SerializerMethodField('getImageUrl')
+    url = serializers.SerializerMethodField('getImageUrl', label='原图的url')
+    thumbnail = serializers.SerializerMethodField('getThumbnail', label='缩略图（显示在图片列表里）的url，大小为 50x50')
+    small = serializers.SerializerMethodField('getSmall', label='压缩图的url，最大为 300x300')
 
     class Meta:
         model = models.PostImage
-        fields = ['id', 'url']
+        fields = ['id', 'url', 'thumbnail', 'small']
+
+    def _buildAbsoluteUrl(self, image):
+        request = self.context['request']
+        return request.build_absolute_uri(image.url)
 
     @swagger_serializer_method(serializer_or_field=serializers.URLField)
     def getImageUrl(self, instance: models.PostImage):
-        request = self.context['request']
-        return request.build_absolute_uri(instance.image.url)
+        return self._buildAbsoluteUrl(instance.image)
+
+    @swagger_serializer_method(serializer_or_field=serializers.URLField)
+    def getThumbnail(self, instance):
+        image = get_thumbnail(instance.image, '50x50', crop='center', quality=99)
+        return self._buildAbsoluteUrl(image)
+
+    @swagger_serializer_method(serializer_or_field=serializers.URLField)
+    def getSmall(self, instance):
+        image = get_thumbnail(instance.image, '300x300', crop='noop', quality=99)
+        return self._buildAbsoluteUrl(image)
 
 class ReadContentSerializer(serializers.ModelSerializer):
     images = PostImageSerializer(many=True, read_only=True)

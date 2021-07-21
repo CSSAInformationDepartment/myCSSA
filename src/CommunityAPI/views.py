@@ -7,7 +7,7 @@ from rest_framework.response import Response
 
 from typing import TypeVar, Callable
 
-from rest_framework import status, viewsets, permissions, mixins
+from rest_framework import serializers, status, viewsets, permissions, mixins
 from rest_framework.decorators import action, permission_classes
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
@@ -326,7 +326,7 @@ class ImageUploadView(APIView):
                             in_=openapi.IN_FORM,
                             type=openapi.TYPE_FILE,
                             required=True,
-                            description="要上传的图片"
+                            description="要上传的图片，大小不能超过10M"
                             )],
         operation_description='上传一个图片', responses={201: PostImageSerializer})
     @action(detail=False, methods=['post'])
@@ -335,6 +335,9 @@ class ImageUploadView(APIView):
             file = request.data['file']
         except KeyError:
             raise ParseError('Request has no resource file attached')
+
+        if file.size > 10485760:
+            raise serializers.ValidationError("The maximum file size that can be uploaded is 10MB")
 
         image = PostImage.objects.create(id=uuid.uuid4(), uploader_id=request.user.id, image=file)
         output = PostImageSerializer(image, context={'request': request})
