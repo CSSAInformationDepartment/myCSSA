@@ -45,7 +45,7 @@ class PostImageSerializer(serializers.ModelSerializer):
 
     @swagger_serializer_method(serializer_or_field=serializers.URLField)
     def getImageUrl(self, instance: models.PostImage):
-        request = self.context.get("request")
+        request = self.context['request']
         return request.build_absolute_uri(instance.image.url)
 
 class ContentSerializer(serializers.ModelSerializer):
