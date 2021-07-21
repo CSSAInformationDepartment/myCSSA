@@ -3,6 +3,7 @@ from rest_framework.serializers import ValidationError
 from rest_framework import serializers
 from django.db.transaction import atomic
 from rest_framework.views import APIView
+from drf_yasg.utils import swagger_serializer_method
 
 from UserAuthAPI.models import UserProfile
 
@@ -34,15 +35,29 @@ class FavouritePostSerializer(serializers.ModelSerializer):
 
         return favourite
         
+class PostImageSerializer(serializers.ModelSerializer):
+
+    url = serializers.SerializerMethodField('getImageUrl')
+
+    class Meta:
+        model = models.PostImage
+        fields = ['id', 'url']
+
+    @swagger_serializer_method(serializer_or_field=serializers.URLField)
+    def getImageUrl(self, instance: models.PostImage):
+        request = self.context.get("request")
+        return request.build_absolute_uri(instance.image.url)
+
 class ContentSerializer(serializers.ModelSerializer):
 
     TEXT_LENGTH_MIN=1
     TITLE_LENGTH_MIN=1
 
+    images = PostImageSerializer(many=True, read_only=True)
+
     class Meta:
         model = models.Content
-        fields = ['title', 'text', 'editedTime']
-        # fields = ['title', 'text', 'imageUrls', 'editedTime']
+        fields = ['title', 'text', 'editedTime', 'images']
         read_only_fields = ['editedTime']
 
     def validate(self, attrs: dict):
@@ -63,8 +78,14 @@ class ContentSerializer(serializers.ModelSerializer):
         ret = super().validate(attrs)
 
         # 如果没有这一个field，代表没有图片
-        if not ret.get('imageUrls'):
-            ret['imageUrls'] = []
+        if not ret.get('images'):
+            ret['images'] = []
+
+        # 输入的时候是一个id列表
+        images = ret['images']
+        for i in len(images):
+            if type(images[i]) is dict:
+                images[i] = images[i]['id']
 
         return ret
 
@@ -95,8 +116,6 @@ class PostSerializerMixin:
         """
 
         userProfile: UserProfile = self.context['request'].user
-
-        # TODO: 上传图片之类的代码写在这里
 
         return models.Content.objects.create(
             post=post,
