@@ -1,7 +1,7 @@
 from django.db import models
-from django.contrib.postgres.fields import ArrayField
 from django.db.models.fields import CharField
 from django.utils.timezone import now
+from sorl.thumbnail import ImageField as SorlImageField
 
 from UserAuthAPI.models import UserProfile
 
@@ -53,7 +53,7 @@ class Post(models.Model):
 
 class PostImage(models.Model):
     id = models.UUIDField(primary_key=True)
-    image = models.ImageField(verbose_name='用户上传的图片', upload_to='uploads/community/post_image')
+    image = SorlImageField(verbose_name='用户上传的图片', upload_to='uploads/community/post_image')
     uploader = models.ForeignKey(UserProfile, on_delete=models.DO_NOTHING,
         related_name='%(class)s_uploader')
     uploadTime = models.DateTimeField('本图片的上传时间', default=now)
