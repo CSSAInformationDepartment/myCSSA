@@ -1,7 +1,6 @@
-from django.db.models.query import QuerySet
-from django.http import response
-from django.shortcuts import render
 from rest_framework.decorators import api_view
+from rest_framework.exceptions import ParseError
+from rest_framework.parsers import MultiPartParser
 from rest_framework.response import Response
 from django.contrib.auth.mixins import PermissionRequiredMixin, AccessMixin
 
@@ -10,17 +9,25 @@ from django.contrib.auth.mixins import PermissionRequiredMixin, AccessMixin
 
 from typing import TypeVar, Callable
 
-from rest_framework import status, viewsets, permissions, mixins
+from rest_framework import serializers, status, viewsets, permissions, mixins
 from rest_framework.decorators import action, permission_classes
 from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
 from rest_framework.fields import empty
-from rest_framework.response import Response
+from rest_framework.views import APIView
 from rest_framework_simplejwt.authentication import JWTAuthentication
-from CommunityAPI.paginations import PostResultsSetPagination
+import uuid
+from CommunityAPI.filters import IsOwnerFilterBackend
 
+from CommunityAPI.paginations import PostResultsSetPagination, UnreadNotificationSetPagination
 from CommunityAPI.permissions import IsOwner
-from .serializers import EditCommentSerializer, ReadCommentSerializer, TagSerializer, EditMainPostSerializer, ReadMainPostSerializer, FavouritePostSerializer, get_main_post_from_url, CensorSerializer
-from .models import Post, Tag, FavouritePost
+from .serializers import (
+    EditCommentSerializer, PostImageSerializer, ReadCommentSerializer, TagSerializer, 
+    EditMainPostSerializer, ReadMainPostSerializer, FavouritePostSerializer,
+    NotificationSerializer, get_post_from_url, EditSubCommentSerializer, 
+    ReadSubCommentSerializer, verify_comment, verify_main_post, CensorSerializer
+    )
+from .models import Post, PostImage, Tag, FavouritePost, Notification
 
 # 相关的后端开发文档参见： https://dev.cssaunimelb.com/doc/rest-framework-sSVw9rou1R
 
@@ -37,18 +44,24 @@ class FavouritePostViewSet(
     mixins.DestroyModelMixin,
     mixins.ListModelMixin,
     viewsets.GenericViewSet):
+
     '''
     GET: 返回当前用户的收藏
     POST: 添加收藏
     DELETE: 取消收藏
     '''
-    queryset = FavouritePost.objects.all()
+
     serializer_class = FavouritePostSerializer
     permission_classes = [permissions.IsAuthenticated]
     authentication_classes = (JWTAuthentication,)
 
     def get_queryset(self):
-        query_set = self.queryset.filter(user=self.request.user.id) # 这里会按照收藏的顺序返回
+
+        if getattr(self, 'swagger_fake_view', False):
+            # queryset just for schema generation metadata
+            return FavouritePost.objects.none()
+
+        query_set = FavouritePost.objects.filter(user=self.request.user.id) # 这里会按照收藏的顺序返回
         return query_set
 
     def create(self, request):
@@ -73,6 +86,7 @@ class PostViewSetBase(viewsets.ReadOnlyModelViewSet, mixins.DestroyModelMixin):
     permission_classes = [permissions.AllowAny]
     authentication_classes = (JWTAuthentication,)
     pagination_class = PostResultsSetPagination
+    filter_backends = [IsOwnerFilterBackend]
 
     def get_permissions(self):
         if self.action == 'destroy':
@@ -133,7 +147,7 @@ class MainPostViewSet(PostViewSetBase):
 
     retrive: 获取一个帖子的全文
 
-    list: 获取帖子的列表，其中，正文只包括前50个字符。
+    list: 获取帖子的列表，其中，正文只包括前50个字符。tag参数可以指定对应类别，若不指定则返回所有类别的帖子
 
     destroy: 删除帖子
     """
@@ -141,6 +155,11 @@ class MainPostViewSet(PostViewSetBase):
     serializer_class = ReadMainPostSerializer
     
     def get_queryset(self):
+
+        if getattr(self, 'swagger_fake_view', False):
+            # queryset just for schema generation metadata
+            return Post.objects.none()
+
         query = Post.objects.filter(
             censored=False, 
             deleted=False, 
@@ -150,6 +169,11 @@ class MainPostViewSet(PostViewSetBase):
 
         if self.request.user.is_anonymous:
             query = query.filter(viewableToGuest=True)
+
+        # 允许通过tag参数来获取指定类别的文章
+        tag = self.request.GET.get('tag')
+        if tag:
+            query = query.filter(tag=tag)
 
         # 如果想要这个功能的话，可以在这里让管理员能看见被屏蔽和删除的文章
 
@@ -186,7 +210,13 @@ class CommentViewSet(PostViewSetBase):
     serializer_class = ReadCommentSerializer
 
     def get_queryset(self):
-        mainPost = get_main_post_from_url(self)
+
+        if getattr(self, 'swagger_fake_view', False):
+            # queryset just for schema generation metadata
+            return Post.objects.none()
+
+        mainPost = get_post_from_url(self)
+        verify_main_post(mainPost)
 
         query = Post.objects.filter(
             censored=False, 
@@ -230,3 +260,107 @@ class CensorViewSet(viewsets.GenericViewSet, PermissionRequiredMixin, AccessMixi
             serializer.save()
             return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
         return Response(status=status.HTTP_400_BAD_REQUEST)
+
+class UnreadNotificationViewSet(viewsets.ReadOnlyModelViewSet):
+    serializer_class = NotificationSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    authentication_classes = (JWTAuthentication,)
+    pagination_class = UnreadNotificationSetPagination
+    
+    def get_queryset(self):
+
+        if getattr(self, 'swagger_fake_view', False):
+            # queryset just for schema generation metadata
+            return Notification.objects.none()
+
+        query = Notification.objects.filter(user_id=self.request.user.id, read=False) 
+        return query
+      
+    # 在swagger文档里的条目定义：
+    @swagger_auto_schema(method='POST', operation_description='设为已读')
+    # 给 rest_framework 用的view定义（这两个decorator的顺序不能反）
+    @action(methods=['POST'], detail=True, url_path='read', url_name='mark_notification',
+        permission_classes=[permissions.IsAuthenticated])
+    def mark_notification(self):
+        notification = self.get_object()
+        notification.read = True
+        notification.save()
+       
+class SubCommentViewSet(PostViewSetBase):
+    """
+    二级（及以上）回复的增删改查
+
+    list: 根据 comment_id 获取某个一级评论下的所有评论（全文）
+
+    retrive: 获取某一个评论的数据。必须同时指定 comment_id 和 id
+
+    destroy: 删除某个评论（comment_id 必须对应）
+    """
+
+    serializer_class = ReadSubCommentSerializer
+
+    def get_queryset(self):
+
+        if getattr(self, 'swagger_fake_view', False):
+            # queryset just for schema generation metadata
+            return Post.objects.none()
+
+        comment = get_post_from_url(self, 'comment_id')
+        verify_comment(comment)
+
+        query = Post.objects.filter(
+            censored=False, 
+            deleted=False, 
+            # replyToId != None
+            replyToComment=comment,
+            )
+
+        # 如果想要这个功能的话，可以在这里让管理员能看见被屏蔽和删除的文章
+
+        return query.order_by('createTime')
+
+    @swagger_auto_schema(method='POST', operation_description='添加一个评论，用 replyTo 指定回复的对象，'
+        '它必须跟本评论属于同一个一级评论。想要直接回复给一级评论，请将 replyTo 指定为 comment_id',
+        request_body=EditSubCommentSerializer, responses={201: ReadSubCommentSerializer})
+    @action(methods=['POST'], detail=False, url_path='create', url_name='create_subcomment',
+        serializer_class=EditSubCommentSerializer,
+        permission_classes=[permissions.IsAuthenticated])
+    def create_post(self, request, comment_id=None): # 我们在url里定义了 post_id，这里就必须要声明，否则会报错
+        return self.create_post_base(request, EditSubCommentSerializer, ReadSubCommentSerializer)
+
+    @swagger_auto_schema(method='POST', operation_description='修改回复，无法修改 replyTo',
+        request_body=EditSubCommentSerializer, responses={202: ReadSubCommentSerializer})
+    @action(methods=['POST'], detail=True, url_path='edit', url_name='edit_subcomment',
+        serializer_class=EditSubCommentSerializer, permission_classes=[IsOwner])
+    def edit_post(self, request, pk=None, comment_id=None):
+        return self.edit_post_base(request, EditSubCommentSerializer, ReadSubCommentSerializer)
+
+class ImageUploadView(APIView):
+    parser_classes = (MultiPartParser,)
+    permission_classes = [permissions.IsAuthenticated]
+    authentication_classes = (JWTAuthentication,)
+
+    # from https://stackoverflow.com/a/45566729 and https://github.com/axnsan12/drf-yasg/issues/600
+    @swagger_auto_schema(
+        manual_parameters=[openapi.Parameter(
+                            name="file",
+                            in_=openapi.IN_FORM,
+                            type=openapi.TYPE_FILE,
+                            required=True,
+                            description="要上传的图片，大小不能超过10M"
+                            )],
+        operation_description='上传一个图片', responses={201: PostImageSerializer})
+    @action(detail=False, methods=['post'])
+    def post(self, request, **kwargs):
+        try:
+            file = request.data['file']
+        except KeyError:
+            raise ParseError('Request has no resource file attached')
+
+        if file.size > 10485760:
+            raise serializers.ValidationError("The maximum file size that can be uploaded is 10MB")
+
+        image = PostImage.objects.create(id=uuid.uuid4(), uploader_id=request.user.id, image=file)
+        output = PostImageSerializer(image, context={'request': request})
+
+        return Response(output.data, status=status.HTTP_201_CREATED)
