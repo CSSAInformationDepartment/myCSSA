@@ -1,3 +1,4 @@
+from django.contrib import postgres
 from django.contrib.postgres import fields
 from rest_framework.serializers import ValidationError
 from rest_framework import serializers
@@ -20,21 +21,6 @@ class NotificationSerializer(serializers.ModelSerializer):
         model = models.Notification
         fields = ['targetPost','data', 'type', 'read']
 
-class FavouritePostSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.FavouritePost
-        fields = ['post']
-
-    @atomic
-    def create(self, validated_data):
-        userProfile: UserProfile = self.context['request'].user
-
-        favourite = models.FavouritePost.objects.create(
-            user_id=userProfile.pk,
-            post=validated_data['post']
-        )
-
-        return favourite
         
 class PostImageSerializer(serializers.ModelSerializer):
 
@@ -369,3 +355,25 @@ class CensorSerializer(serializers.ModelSerializer):
         else:
             instance.censoredBy_id=None
         instance.save()
+
+class FavouriteDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Post
+        fields = ['tag', 'createTime', 'viewCount', 'viewableToGuest']
+
+class FavouritePostSerializer(serializers.ModelSerializer):
+    post_details = FavouriteDetailSerializer(read_only=True)
+    class Meta:
+        model = models.FavouritePost
+        fields = ['post_id','post_details']
+
+    @atomic
+    def create(self, validated_data):
+        userProfile: UserProfile = self.context['request'].user
+
+        favourite = models.FavouritePost.objects.create(
+            user_id=userProfile.pk,
+            post=validated_data['post']
+        )
+
+        return favourite
