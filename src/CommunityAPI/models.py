@@ -50,11 +50,6 @@ class Post(models.Model):
     # last edit time: read from content
 
     viewCount = models.IntegerField('访问次数', default=0)
-
-    class Meta:
-        permissions = (
-            ("can_censor_post", "Can censor posts"),
-        )
         
 class PostImage(models.Model):
     id = models.UUIDField(primary_key=True)

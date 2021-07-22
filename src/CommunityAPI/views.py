@@ -4,6 +4,7 @@ from rest_framework.parsers import MultiPartParser
 from rest_framework.response import Response
 from django.contrib.auth.mixins import PermissionRequiredMixin, AccessMixin
 from UserAuthAPI.models import UserProfile
+from django.db.transaction import atomic
 
 # Create your views here.
 
@@ -62,7 +63,7 @@ class FavouritePostViewSet(
 
         query_set = FavouritePost.objects.filter(user=self.request.user.id) # 这里会按照收藏的顺序返回
         return query_set
-
+    @atomic
     @swagger_auto_schema(method='PUT', operation_description='添加收藏',
         request_body=None, responses={202: FavouritePostSerializer})
     @action(methods=['PUT'], detail=True, url_path='add', url_name='add_favouritepost',
@@ -70,7 +71,7 @@ class FavouritePostViewSet(
     def add_favouritepost(self, request, pk=None):
         userProfile: UserProfile = self.request.user
         post = pk
-        favourite = models.FavouritePost.objects.get(user=self.request.user.id,post=post)
+        favourite = models.FavouritePost.objects.filter(user=self.request.user.id,post=post).first()
         if favourite:
             return Response(status=status.HTTP_202_ACCEPTED)
         favourite = models.FavouritePost.objects.create(

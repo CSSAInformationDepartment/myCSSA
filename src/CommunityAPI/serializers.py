@@ -348,14 +348,3 @@ class FavouritePostSerializer(serializers.ModelSerializer):
         fields = ['post']
         depth = 1
         detail = False
-        
-    @atomic
-    def create(self, validated_data):
-        userProfile: UserProfile = self.context['request'].user
-
-        favourite = models.FavouritePost.objects.create(
-            user_id=userProfile.pk,
-            post=validated_data['post']
-        )
-
-        return favourite
