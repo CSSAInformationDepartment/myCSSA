@@ -3,12 +3,12 @@ from rest_framework.exceptions import ParseError
 from rest_framework.parsers import MultiPartParser
 from rest_framework.response import Response
 from django.contrib.auth.mixins import PermissionRequiredMixin, AccessMixin
-
+from UserAuthAPI.models import UserProfile
 
 # Create your views here.
 
 from typing import TypeVar, Callable
-
+from . import models
 from rest_framework import serializers, status, viewsets, permissions, mixins
 from rest_framework.decorators import action, permission_classes
 from drf_yasg.utils import swagger_auto_schema
@@ -25,7 +25,7 @@ from .serializers import (
     EditCommentSerializer, PostImageSerializer, ReadCommentSerializer, TagSerializer, 
     EditMainPostSerializer, ReadMainPostSerializer, FavouritePostSerializer,
     NotificationSerializer, get_post_from_url, EditSubCommentSerializer, 
-    ReadSubCommentSerializer, verify_comment, verify_main_post, CensorSerializer
+    ReadSubCommentSerializer, verify_comment, verify_main_post
     )
 from .models import Post, PostImage, Tag, FavouritePost, Notification
 
@@ -40,7 +40,6 @@ class TagViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = [permissions.AllowAny]
 
 class FavouritePostViewSet(
-    mixins.CreateModelMixin,
     mixins.DestroyModelMixin,
     mixins.ListModelMixin,
     viewsets.GenericViewSet):
@@ -64,12 +63,21 @@ class FavouritePostViewSet(
         query_set = FavouritePost.objects.filter(user=self.request.user.id) # 这里会按照收藏的顺序返回
         return query_set
 
-    def create(self, request):
-        serializer = FavouritePostSerializer(data=request.data, context={'request': request})
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    @swagger_auto_schema(method='PUT', operation_description='添加收藏',
+        request_body=None, responses={202: FavouritePostSerializer})
+    @action(methods=['PUT'], detail=True, url_path='add', url_name='add_favouritepost',
+        serializer_class=None, permission_classes=[permissions.IsAuthenticated])
+    def add_favouritepost(self, request, pk=None):
+        userProfile: UserProfile = self.request.user
+        post = pk
+        favourite = models.FavouritePost.objects.get(user=self.request.user.id,post=post)
+        if favourite:
+            return Response(status=status.HTTP_202_ACCEPTED)
+        favourite = models.FavouritePost.objects.create(
+            user_id=userProfile.pk,
+            post_id=post
+        )
+        return Response(status=status.HTTP_202_ACCEPTED)
 
     def destroy(self, request, *args, **kwargs):
         print(request.data)
@@ -243,23 +251,6 @@ class CommentViewSet(PostViewSetBase):
         serializer_class=EditCommentSerializer, permission_classes=[IsOwner])
     def edit_post(self, request, pk=None, post_id=None):
         return self.edit_post_base(request, EditCommentSerializer, ReadCommentSerializer)
-    
-class CensorViewSet(viewsets.GenericViewSet, PermissionRequiredMixin, AccessMixin):
-    permission_required = ('CommunityAPI.can_censor_post',)
-    queryset = Post.objects.all()
-    authentication_classes = (JWTAuthentication,)
-    @swagger_auto_schema(method='POST', operation_description='审核帖子, true为屏蔽，false为解除屏蔽',
-        request_body=CensorSerializer)
-    @action(methods=['POST'], detail=True, url_path='censor', url_name='censor_post',
-        serializer_class=CensorSerializer,
-        permission_classes=[permissions.IsAuthenticated])
-    def censor_post(self, request, *args, **kwargs):
-        instance = self.get_object()
-        serializer = CensorSerializer(instance=instance, data=request.data, context={'request': request})
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
-        return Response(status=status.HTTP_400_BAD_REQUEST)
 
 class UnreadNotificationViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = NotificationSerializer

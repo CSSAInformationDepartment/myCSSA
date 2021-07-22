@@ -341,32 +341,14 @@ class EditSubCommentSerializer(PostSerializerMixin, serializers.Serializer):
         self.create_content(validated_data, instance)
         return instance
 
-class CensorSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.Post
-        fields = ['censored']
-
-    @atomic
-    def update(self, instance,validated_data):
-        userProfile: UserProfile = self.context['request'].user
-        instance.censored=validated_data['censored']
-        if validated_data['censored']:
-            instance.censoredBy_id=userProfile.pk
-        else:
-            instance.censoredBy_id=None
-        instance.save()
-
-class FavouriteDetailSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.Post
-        fields = ['tag', 'createTime', 'viewCount', 'viewableToGuest']
-
 class FavouritePostSerializer(serializers.ModelSerializer):
-    post_details = FavouriteDetailSerializer(read_only=True)
+    post = ReadMainPostSerializer(read_only=True)
     class Meta:
         model = models.FavouritePost
-        fields = ['post_id','post_details']
-
+        fields = ['post']
+        depth = 1
+        detail = False
+        
     @atomic
     def create(self, validated_data):
         userProfile: UserProfile = self.context['request'].user
