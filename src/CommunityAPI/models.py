@@ -48,6 +48,11 @@ class Post(models.Model):
 
     viewCount = models.IntegerField('访问次数', default=0)
 
+    class Meta:
+        permissions = (
+            ("can_censor_post", "Can censor posts"),
+        )
+
 class Content(models.Model):
     # django 对复合主键的支持不大好，这里就不把它当成主键了。
     post = models.ForeignKey(Post, on_delete=models.CASCADE)

@@ -3,6 +3,8 @@ from django.http import response
 from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from django.contrib.auth.mixins import PermissionRequiredMixin, AccessMixin
+
 
 # Create your views here.
 
@@ -16,7 +18,7 @@ from rest_framework.response import Response
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from CommunityAPI.paginations import PostResultsSetPagination
 
-from CommunityAPI.permissions import IsOwner, IsAdmin
+from CommunityAPI.permissions import IsOwner
 from .serializers import EditCommentSerializer, ReadCommentSerializer, TagSerializer, EditMainPostSerializer, ReadMainPostSerializer, FavouritePostSerializer, get_main_post_from_url, CensorSerializer
 from .models import Post, Tag, FavouritePost
 
@@ -212,14 +214,15 @@ class CommentViewSet(PostViewSetBase):
     def edit_post(self, request, pk=None, post_id=None):
         return self.edit_post_base(request, EditCommentSerializer, ReadCommentSerializer)
     
-class CensorViewSet(viewsets.GenericViewSet):
+class CensorViewSet(viewsets.GenericViewSet, PermissionRequiredMixin, AccessMixin):
+    permission_required = ('CommunityAPI.can_censor_post',)
     queryset = Post.objects.all()
     authentication_classes = (JWTAuthentication,)
     @swagger_auto_schema(method='POST', operation_description='审核帖子, true为屏蔽，false为解除屏蔽',
         request_body=CensorSerializer)
     @action(methods=['POST'], detail=True, url_path='censor', url_name='censor_post',
         serializer_class=CensorSerializer,
-        permission_classes=[IsOwner])
+        permission_classes=[permissions.IsAuthenticated])
     def censor_post(self, request, *args, **kwargs):
         instance = self.get_object()
         serializer = CensorSerializer(instance=instance, data=request.data, context={'request': request})
