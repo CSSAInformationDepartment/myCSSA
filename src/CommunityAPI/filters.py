@@ -28,3 +28,26 @@ class IsOwnerFilterBackend(BaseFilterBackend):
                 )
             )
         ]
+
+class TagFilter(BaseFilterBackend):
+    """
+    Filter the posts belonged to assigned tags.
+    """
+    def filter_queryset(self, request: HttpRequest, queryset, view):
+        if not request.query_params.get('tag'):
+            return queryset
+
+        return queryset.filter(tag=request.query_params.get('tag'))
+
+    def get_schema_fields(self, view):
+        return [
+            coreapi.Field(
+                name='tag',
+                required=False,
+                location='query',
+                schema=coreschema.String(
+                    title='Post标签',
+                    description='选择标签后，只返回对应标签的posts',
+                )
+            )
+        ]
