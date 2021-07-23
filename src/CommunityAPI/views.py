@@ -63,9 +63,10 @@ class FavouritePostViewSet(
 
         query_set = FavouritePost.objects.filter(user=self.request.user.id) # 这里会按照收藏的顺序返回
         return query_set
+
     @atomic
     @swagger_auto_schema(method='PUT', operation_description='添加收藏',
-        request_body=None, responses={202: 'ACCEPTED'})
+        request_body=None, responses={202: ''})
     @action(methods=['PUT'], detail=True, url_path='add', url_name='add_favouritepost',
         serializer_class=None, permission_classes=[permissions.IsAuthenticated])
     def add_favouritepost(self, request, pk=None):
