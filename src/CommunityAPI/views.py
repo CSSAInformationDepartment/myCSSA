@@ -20,7 +20,7 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 import uuid
 from CommunityAPI.filters import IsOwnerFilterBackend, TagFilter
 
-from CommunityAPI.paginations import PostResultsSetPagination, UnreadNotificationSetPagination
+from CommunityAPI.paginations import PostResultsSetPagination, NotificationSetPagination
 from CommunityAPI.permissions import IsOwner
 from .serializers import (
     EditCommentSerializer, PostImageSerializer, ReadCommentSerializer, TagSerializer, 
@@ -280,7 +280,7 @@ class CommentViewSet(PostViewSetBase):
     def edit_post(self, request, pk=None, post_id=None):
         return self.edit_post_base(request, EditCommentSerializer, ReadCommentSerializer)
 
-class UnreadNotificationViewSet(viewsets.ReadOnlyModelViewSet):
+class NotificationViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = NotificationSerializer
     permission_classes = [permissions.IsAuthenticated]
     authentication_classes = (JWTAuthentication,)
