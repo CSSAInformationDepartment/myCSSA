@@ -26,6 +26,7 @@ from .serializers import (
     ReadSubCommentSerializer, verify_comment, verify_main_post
     )
 from .models import Post, PostImage, Tag, FavouritePost, Notification
+from django.db.transaction import atomic
 
 # 相关的后端开发文档参见： https://dev.cssaunimelb.com/doc/rest-framework-sSVw9rou1R
 
@@ -189,6 +190,20 @@ class MainPostViewSet(PostViewSetBase):
         serializer_class=EditMainPostSerializer, permission_classes=[IsOwner])
     def edit_post(self, request, pk=None):
         return self.edit_post_base(request, EditMainPostSerializer, ReadMainPostSerializer)
+
+    @swagger_auto_schema(method='POST', operation_description='为帖子的浏览量+1',
+        request_body=None, responses={202: 'Add view count successfully'})
+    @action(methods=['POST'], detail=True, url_path='add-view-count', url_name='add_view_count',
+        serializer_class=None, permission_classes=[])
+    @atomic
+    def add_view_count(self, request, pk=None):
+        post = Post.objects.filter(pk=pk).first()
+        if post:
+            post.viewCount = post.viewCount + 1
+            post.save(update_fields=['viewCount'])
+            return Response(status=status.HTTP_202_ACCEPTED)
+        else:
+            return Response(status=status.HTTP_404_NOT_FOUND)
 
 class CommentViewSet(PostViewSetBase):
     """
