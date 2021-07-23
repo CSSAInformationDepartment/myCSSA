@@ -109,6 +109,12 @@ class PostSerializerMixin:
 
         repr['createdBy'] = resolve_username(instance.createdBy)
 
+        avatar = instance.createdBy.avatar
+        if avatar:
+            repr['creatorAvatar'] = avatar.url
+        else:
+            repr['creatorAvatar'] = None
+
     def create_content(self, validated_data, post: models.Post):
         """
         从输入的json创建一个新的content版本
@@ -139,12 +145,13 @@ class ReadMainPostSerializer(PostSerializerMixin, serializers.ModelSerializer):
     content = ReadContentSerializer(read_only=True)
 
     createdBy = serializers.CharField(label='创建者的用户名')
+    creatorAvatar = serializers.URLField(label='创建者的头像', read_only=True, allow_null=True)
 
     class Meta:
         model = models.Post
         fields = ['id', 'tag', 'createTime', 'viewCount', 'viewableToGuest',
             # 正常情况下我们不需要再声明下面两个field，但是不这么搞的话 drf_yasg 会报错
-            'content', 'createdBy']
+            'content', 'createdBy', 'creatorAvatar',]
 
     def to_representation(self, instance: models.Post):
         repr = super().to_representation(instance)
@@ -199,12 +206,13 @@ class ReadCommentSerializer(PostSerializerMixin, serializers.ModelSerializer):
     content = ReadContentSerializer(read_only=True)
 
     createdBy = serializers.CharField(label='创建者的用户名')
+    creatorAvatar = serializers.URLField(label='创建者的头像', read_only=True, allow_null=True)
 
     class Meta:
         model = models.Post
         fields = ['id', 'createTime',
             # 正常情况下我们不需要再声明下面两个field，但是不这么搞的话 drf_yasg 会报错
-            'content', 'createdBy']
+            'content', 'createdBy', 'creatorAvatar',]
 
     def to_representation(self, instance: models.Post):
         repr = super().to_representation(instance)
@@ -276,6 +284,7 @@ class ReadSubCommentSerializer(PostSerializerMixin, serializers.ModelSerializer)
     content = ReadContentSerializer(read_only=True)
 
     createdBy = serializers.CharField(label='创建者的用户名')
+    creatorAvatar = serializers.URLField(label='创建者的头像', read_only=True, allow_null=True)
 
     replyToUser = serializers.CharField(label='回复的对象的用户名', read_only=True)
 
@@ -283,7 +292,7 @@ class ReadSubCommentSerializer(PostSerializerMixin, serializers.ModelSerializer)
         model = models.Post
         fields = ['id', 'createTime', 'replyToId',
             # 正常情况下我们不需要再声明下面两个field，但是不这么搞的话 drf_yasg 会报错
-            'content', 'createdBy', 'replyToUser']
+            'content', 'createdBy', 'creatorAvatar', 'replyToUser']
 
     def to_representation(self, instance: models.Post):
         repr = super().to_representation(instance)
