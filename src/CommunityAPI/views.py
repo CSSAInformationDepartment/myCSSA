@@ -1,5 +1,6 @@
 from rest_framework.decorators import api_view
 from rest_framework.exceptions import ParseError
+from rest_framework.generics import get_object_or_404
 from rest_framework.parsers import MultiPartParser
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
@@ -198,7 +199,7 @@ class MainPostViewSet(PostViewSetBase):
         serializer_class=None, permission_classes=[AllowAny])
     @atomic
     def add_view_count(self, request, pk=None):
-        post = Post.objects.filter(pk=pk).first()
+        post = get_object_or_404(Post, pk=pk)
         if post:
             post.viewCount = post.viewCount + 1
             post.save(update_fields=['viewCount'])
