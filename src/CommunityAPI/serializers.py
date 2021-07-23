@@ -152,8 +152,8 @@ class ReadMainPostSerializer(PostSerializerMixin, serializers.ModelSerializer):
     createdBy = serializers.CharField(label='创建者的用户名')
     creatorAvatar = serializers.URLField(label='创建者的头像', read_only=True, allow_null=True)
 
-    favouriteCount = serializers.SerializerMethodField()
-    isFavourite = serializers.SerializerMethodField()
+    favouriteCount = serializers.SerializerMethodField(label='收藏该帖子的人的数量')
+    isFavourite = serializers.SerializerMethodField(label='本人是否已收藏，如果用户未登录，这里也是false')
 
     class Meta:
         model = models.Post
@@ -162,15 +162,9 @@ class ReadMainPostSerializer(PostSerializerMixin, serializers.ModelSerializer):
             'content', 'createdBy', 'creatorAvatar', 'favouriteCount', 'isFavourite']
 
     def get_favouriteCount(self, instance) -> int:
-        '''
-        收藏该帖子的人的数量
-        '''
         return models.FavouritePost.objects.filter(post=instance).count()
 
     def get_isFavourite(self, instance) -> bool:
-        '''
-        本人是否已收藏，如果用户未登录，这里也是false
-        '''
         user = self.context['request'].user
         return False if user.is_anonymous else \
             models.FavouritePost.objects.filter(post=instance, user_id=user.id).exists()
