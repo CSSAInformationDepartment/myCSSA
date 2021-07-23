@@ -1,6 +1,7 @@
 from rest_framework.decorators import api_view
 from rest_framework.exceptions import ParseError
 from rest_framework.parsers import MultiPartParser
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
 # Create your views here.
@@ -194,7 +195,7 @@ class MainPostViewSet(PostViewSetBase):
     @swagger_auto_schema(method='POST', operation_description='为帖子的浏览量+1',
         request_body=None, responses={202: 'Add view count successfully'})
     @action(methods=['POST'], detail=True, url_path='add-view-count', url_name='add_view_count',
-        serializer_class=None, permission_classes=[])
+        serializer_class=None, permission_classes=[AllowAny])
     @atomic
     def add_view_count(self, request, pk=None):
         post = Post.objects.filter(pk=pk).first()
