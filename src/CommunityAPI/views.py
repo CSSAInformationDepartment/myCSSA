@@ -26,7 +26,7 @@ from .serializers import (
     EditCommentSerializer, PostImageSerializer, ReadCommentSerializer, TagSerializer, 
     EditMainPostSerializer, ReadMainPostSerializer, FavouritePostSerializer,
     NotificationSerializer, get_post_from_url, EditSubCommentSerializer, 
-    ReadSubCommentSerializer, verify_comment, verify_main_post
+    ReadSubCommentSerializer, resolve_post_content, resolve_username, verify_comment, verify_main_post
     )
 from .models import Post, PostImage, Tag, FavouritePost, Notification
 
@@ -140,15 +140,36 @@ class PostViewSetBase(viewsets.ReadOnlyModelViewSet, mixins.DestroyModelMixin):
         result = self.create_serializer(read_serializer, instance=post).data
         return Response(data=result, status=status.HTTP_202_ACCEPTED)
 
-    def create_post_base(self, request, 
-        edit_serializer=EditMainPostSerializer,
-        read_serializer=ReadMainPostSerializer):
-
+    def create_post_instance(self, request, edit_serializer) -> Post:
         serializer = self.create_serializer(edit_serializer, data=request.data)
         serializer.is_valid(raise_exception=True)
-        post = serializer.save()
+        return serializer.save()
+
+    def create_post_response(self, post, read_serializer):
         result = self.create_serializer(read_serializer, instance=post).data
         return Response(data=result, status=status.HTTP_201_CREATED)
+
+    def create_reply_notification(self, target: Post, replier: Post, main_post: Post):
+        """
+        创建一个回复通知。
+
+        参数之间的关系如下：
+        replier --回复给-> target --它们的主贴为-> main_post
+        """
+        CONTENT_TEXT_LENGTH = 20
+
+        return Notification.objects.create(
+            user=target.createdBy,
+            targetPost=replier,
+            type=Notification.REPLY,
+            data={
+                'replier_username': resolve_username(replier.createdBy),
+                'replier_avatar': replier.createdBy.avatar.url if replier.createdBy.avatar else None,
+                'main_post_tag_id': main_post.tag_id,
+                'main_post_title': resolve_post_content(main_post).title,
+                'reply_content_summary': resolve_post_content(replier).text[:CONTENT_TEXT_LENGTH]
+            },
+            )
 
 class MainPostViewSet(PostViewSetBase):
     """
@@ -192,7 +213,8 @@ class MainPostViewSet(PostViewSetBase):
         serializer_class=EditMainPostSerializer,
         permission_classes=[permissions.IsAuthenticated])
     def create_post(self, request):
-        return self.create_post_base(request, EditMainPostSerializer, ReadMainPostSerializer)
+        post = self.create_post_instance(request, EditMainPostSerializer)
+        return self.create_post_response(post, ReadMainPostSerializer)
 
     @swagger_auto_schema(method='POST', operation_description='修改帖子，不能修改 tag 和 viewableToGuest',
         request_body=EditMainPostSerializer, responses={202: ReadMainPostSerializer})
@@ -240,7 +262,13 @@ class CommentViewSet(PostViewSetBase):
         serializer_class=EditCommentSerializer,
         permission_classes=[permissions.IsAuthenticated])
     def create_post(self, request, post_id=None): # 我们在url里定义了 post_id，这里就必须要声明，否则会报错
-        return self.create_post_base(request, EditCommentSerializer, ReadCommentSerializer)
+        post = self.create_post_instance(request, EditCommentSerializer)
+
+        # 给被回复方添加通知
+        target: Post = post.replyToId
+        self.create_reply_notification(target, post, target)
+
+        return self.create_post_response(post, ReadCommentSerializer)
 
     @swagger_auto_schema(method='POST', operation_description='修改回复',
         request_body=EditCommentSerializer, responses={202: ReadCommentSerializer})
@@ -314,7 +342,14 @@ class SubCommentViewSet(PostViewSetBase):
         serializer_class=EditSubCommentSerializer,
         permission_classes=[permissions.IsAuthenticated])
     def create_post(self, request, comment_id=None): # 我们在url里定义了 post_id，这里就必须要声明，否则会报错
-        return self.create_post_base(request, EditSubCommentSerializer, ReadSubCommentSerializer)
+        post = self.create_post_instance(request, EditSubCommentSerializer)
+
+        # 给被回复方添加通知
+        target: Post = post.replyToId
+        mainPost: Post = post.replyToComment.replyToId
+        self.create_reply_notification(target, post, mainPost)
+
+        return self.create_post_response(post, ReadSubCommentSerializer)
 
     @swagger_auto_schema(method='POST', operation_description='修改回复，无法修改 replyTo',
         request_body=EditSubCommentSerializer, responses={202: ReadSubCommentSerializer})
