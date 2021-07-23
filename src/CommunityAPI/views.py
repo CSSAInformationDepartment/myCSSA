@@ -82,7 +82,6 @@ class FavouritePostViewSet(
         return Response(status=status.HTTP_202_ACCEPTED)
 
     def destroy(self, request, *args, **kwargs):
-        print(request.data)
         user = self.request.user.id
         post = kwargs['pk']
         try:
