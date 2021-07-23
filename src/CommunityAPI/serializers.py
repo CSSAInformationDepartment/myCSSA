@@ -1,3 +1,4 @@
+from django.contrib import postgres
 from django.contrib.postgres import fields
 from rest_framework.serializers import ValidationError
 from rest_framework import serializers
@@ -20,21 +21,6 @@ class NotificationSerializer(serializers.ModelSerializer):
         model = models.Notification
         fields = ['targetPost','data', 'type', 'read']
 
-class FavouritePostSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.FavouritePost
-        fields = ['post']
-
-    @atomic
-    def create(self, validated_data):
-        userProfile: UserProfile = self.context['request'].user
-
-        favourite = models.FavouritePost.objects.create(
-            user_id=userProfile.pk,
-            post=validated_data['post']
-        )
-
-        return favourite
         
 class PostImageSerializer(serializers.ModelSerializer):
 
@@ -127,6 +113,8 @@ class PostSerializerMixin:
         """
         从输入的json创建一个新的content版本
         """
+
+        
 
         userProfile: UserProfile = self.context['request'].user
 
@@ -352,3 +340,11 @@ class EditSubCommentSerializer(PostSerializerMixin, serializers.Serializer):
         # 不能更新 replyTo
         self.create_content(validated_data, instance)
         return instance
+
+class FavouritePostSerializer(serializers.ModelSerializer):
+    post = ReadMainPostSerializer(read_only=True)
+    class Meta:
+        model = models.FavouritePost
+        fields = ['post']
+        depth = 1
+        detail = False

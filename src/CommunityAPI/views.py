@@ -2,11 +2,14 @@ from rest_framework.decorators import api_view
 from rest_framework.exceptions import ParseError
 from rest_framework.parsers import MultiPartParser
 from rest_framework.response import Response
+from django.contrib.auth.mixins import PermissionRequiredMixin, AccessMixin
+from UserAuthAPI.models import UserProfile
+from django.db.transaction import atomic
 
 # Create your views here.
 
 from typing import TypeVar, Callable
-
+from . import models
 from rest_framework import serializers, status, viewsets, permissions, mixins
 from rest_framework.decorators import action, permission_classes
 from drf_yasg.utils import swagger_auto_schema
@@ -38,7 +41,6 @@ class TagViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = [permissions.AllowAny]
 
 class FavouritePostViewSet(
-    mixins.CreateModelMixin,
     mixins.DestroyModelMixin,
     mixins.ListModelMixin,
     viewsets.GenericViewSet):
@@ -62,15 +64,24 @@ class FavouritePostViewSet(
         query_set = FavouritePost.objects.filter(user=self.request.user.id) # 这里会按照收藏的顺序返回
         return query_set
 
-    def create(self, request):
-        serializer = FavouritePostSerializer(data=request.data, context={'request': request})
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    @atomic
+    @swagger_auto_schema(method='PUT', operation_description='添加收藏',
+        request_body=None, responses={202: ''})
+    @action(methods=['PUT'], detail=True, url_path='add', url_name='add_favouritepost',
+        serializer_class=None, permission_classes=[permissions.IsAuthenticated])
+    def add_favouritepost(self, request, pk=None):
+        userProfile: UserProfile = self.request.user
+        post = pk
+        favourite = models.FavouritePost.objects.filter(user=self.request.user.id,post=post).first()
+        if favourite:
+            return Response(status=status.HTTP_202_ACCEPTED)
+        favourite = models.FavouritePost.objects.create(
+            user_id=userProfile.pk,
+            post_id=post
+        )
+        return Response(status=status.HTTP_202_ACCEPTED)
 
-    def destroy(self, request,  *args, **kwargs):
-        print(request.data)
+    def destroy(self, request, *args, **kwargs):
         user = self.request.user.id
         post = kwargs['pk']
         try:

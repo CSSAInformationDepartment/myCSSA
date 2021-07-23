@@ -5,7 +5,7 @@ from . import views
 router = routers.DefaultRouter()
 router.register(r'favouriteposts', views.FavouritePostViewSet, 'favouriteposts')
 router.register(r'tag', views.TagViewSet)
-router.register(r'post', views.MainPostViewSet, 'post'),
+router.register(r'post', views.MainPostViewSet, 'post')
 router.register(r'notification', views.UnreadNotificationViewSet, 'notification')
 
 comment_router = routers.DefaultRouter()

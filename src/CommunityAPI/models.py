@@ -50,7 +50,7 @@ class Post(models.Model):
     # last edit time: read from content
 
     viewCount = models.IntegerField('访问次数', default=0)
-
+        
 class PostImage(models.Model):
     id = models.UUIDField(primary_key=True)
     image = SorlImageField(verbose_name='用户上传的图片', upload_to='uploads/community/post_image')
