@@ -149,25 +149,28 @@ class PostViewSetBase(viewsets.ReadOnlyModelViewSet, mixins.DestroyModelMixin):
         result = self.create_serializer(read_serializer, instance=post).data
         return Response(data=result, status=status.HTTP_201_CREATED)
 
-    def create_reply_notification(self, target: Post, replier: Post, main_post: Post):
+    def create_reply_notification(self, 
+        target: Post, replier: Post, comment: Post, main_post: Post):
         """
         创建一个回复通知。
 
         参数之间的关系如下：
-        replier --回复给-> target --它们的主贴为-> main_post
+        replier --回复给-> target --它们属于哪个一级评论-> comment --它们的主贴为-> main_post
         """
         CONTENT_TEXT_LENGTH = 20
 
         return Notification.objects.create(
             user=target.createdBy,
-            targetPost=replier,
+            targetPost=target,
             type=Notification.REPLY,
             data={
                 'replier_username': resolve_username(replier.createdBy),
                 'replier_avatar': replier.createdBy.avatar.url if replier.createdBy.avatar else None,
+                'main_post_id': main_post.pk,
                 'main_post_tag_id': main_post.tag_id,
                 'main_post_title': resolve_post_content(main_post).title,
-                'reply_content_summary': resolve_post_content(replier).text[:CONTENT_TEXT_LENGTH]
+                'reply_content_summary': resolve_post_content(replier).text[:CONTENT_TEXT_LENGTH],
+                'comment_id': comment.pk,
             },
             )
 
@@ -266,7 +269,7 @@ class CommentViewSet(PostViewSetBase):
 
         # 给被回复方添加通知
         target: Post = post.replyToId
-        self.create_reply_notification(target, post, target)
+        self.create_reply_notification(target, post, post, target)
 
         return self.create_post_response(post, ReadCommentSerializer)
 
@@ -346,8 +349,9 @@ class SubCommentViewSet(PostViewSetBase):
 
         # 给被回复方添加通知
         target: Post = post.replyToId
-        mainPost: Post = post.replyToComment.replyToId
-        self.create_reply_notification(target, post, mainPost)
+        comment: Post = post.replyToComment
+        mainPost: Post = comment.replyToId
+        self.create_reply_notification(target, post, comment, mainPost)
 
         return self.create_post_response(post, ReadSubCommentSerializer)
 
