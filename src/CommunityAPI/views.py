@@ -199,13 +199,10 @@ class MainPostViewSet(PostViewSetBase):
         serializer_class=None, permission_classes=[AllowAny])
     @atomic
     def add_view_count(self, request, pk=None):
-        post = get_object_or_404(Post, pk=pk)
-        if post:
-            post.viewCount = post.viewCount + 1
-            post.save(update_fields=['viewCount'])
-            return Response(status=status.HTTP_202_ACCEPTED)
-        else:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+        post = self.get_object()
+        post.viewCount = post.viewCount + 1
+        post.save(update_fields=['viewCount'])
+        return Response(status=status.HTTP_202_ACCEPTED)
 
 class CommentViewSet(PostViewSetBase):
     """
