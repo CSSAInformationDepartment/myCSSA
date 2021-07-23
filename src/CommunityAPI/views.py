@@ -65,7 +65,7 @@ class FavouritePostViewSet(
         return query_set
     @atomic
     @swagger_auto_schema(method='PUT', operation_description='添加收藏',
-        request_body=None, responses={202: FavouritePostSerializer})
+        request_body=None, responses={202: 'ACCEPTED'})
     @action(methods=['PUT'], detail=True, url_path='add', url_name='add_favouritepost',
         serializer_class=None, permission_classes=[permissions.IsAuthenticated])
     def add_favouritepost(self, request, pk=None):
