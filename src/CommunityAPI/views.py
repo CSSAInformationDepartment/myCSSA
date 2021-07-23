@@ -284,7 +284,8 @@ class NotificationViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = NotificationSerializer
     permission_classes = [permissions.IsAuthenticated]
     authentication_classes = (JWTAuthentication,)
-    pagination_class = UnreadNotificationSetPagination
+    pagination_class = NotificationSetPagination
+    filterset_fields = ['read']
     
     def get_queryset(self):
 
@@ -292,7 +293,7 @@ class NotificationViewSet(viewsets.ReadOnlyModelViewSet):
             # queryset just for schema generation metadata
             return Notification.objects.none()
 
-        query = Notification.objects.filter(user_id=self.request.user.id, read=False) 
+        query = Notification.objects.filter(user_id=self.request.user.id) 
         return query
       
     # 在swagger文档里的条目定义：
