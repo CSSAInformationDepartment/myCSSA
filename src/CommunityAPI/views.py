@@ -20,13 +20,13 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 import uuid
 from CommunityAPI.filters import IsOwnerFilterBackend, TagFilter
 
-from CommunityAPI.paginations import PostResultsSetPagination, UnreadNotificationSetPagination
+from CommunityAPI.paginations import PostResultsSetPagination, NotificationSetPagination
 from CommunityAPI.permissions import IsOwner
 from .serializers import (
     EditCommentSerializer, PostImageSerializer, ReadCommentSerializer, TagSerializer, 
     EditMainPostSerializer, ReadMainPostSerializer, FavouritePostSerializer,
     NotificationSerializer, get_post_from_url, EditSubCommentSerializer, 
-    ReadSubCommentSerializer, verify_comment, verify_main_post
+    ReadSubCommentSerializer, resolve_post_content, resolve_username, verify_comment, verify_main_post
     )
 from .models import Post, PostImage, Tag, FavouritePost, Notification
 
@@ -140,15 +140,39 @@ class PostViewSetBase(viewsets.ReadOnlyModelViewSet, mixins.DestroyModelMixin):
         result = self.create_serializer(read_serializer, instance=post).data
         return Response(data=result, status=status.HTTP_202_ACCEPTED)
 
-    def create_post_base(self, request, 
-        edit_serializer=EditMainPostSerializer,
-        read_serializer=ReadMainPostSerializer):
-
+    def create_post_instance(self, request, edit_serializer) -> Post:
         serializer = self.create_serializer(edit_serializer, data=request.data)
         serializer.is_valid(raise_exception=True)
-        post = serializer.save()
+        return serializer.save()
+
+    def create_post_response(self, post, read_serializer):
         result = self.create_serializer(read_serializer, instance=post).data
         return Response(data=result, status=status.HTTP_201_CREATED)
+
+    def create_reply_notification(self, 
+        target: Post, replier: Post, comment: Post, main_post: Post):
+        """
+        创建一个回复通知。
+
+        参数之间的关系如下：
+        replier --回复给-> target --它们属于哪个一级评论-> comment --它们的主贴为-> main_post
+        """
+        CONTENT_TEXT_LENGTH = 20
+
+        return Notification.objects.create(
+            user=target.createdBy,
+            targetPost=target,
+            type=Notification.REPLY,
+            data={
+                'replier_username': resolve_username(replier.createdBy),
+                'replier_avatar': replier.createdBy.avatar.url if replier.createdBy.avatar else None,
+                'main_post_id': main_post.pk,
+                'main_post_tag_id': main_post.tag_id,
+                'main_post_title': resolve_post_content(main_post).title,
+                'reply_content_summary': resolve_post_content(replier).text[:CONTENT_TEXT_LENGTH],
+                'comment_id': comment.pk,
+            },
+            )
 
 class MainPostViewSet(PostViewSetBase):
     """
@@ -192,7 +216,8 @@ class MainPostViewSet(PostViewSetBase):
         serializer_class=EditMainPostSerializer,
         permission_classes=[permissions.IsAuthenticated])
     def create_post(self, request):
-        return self.create_post_base(request, EditMainPostSerializer, ReadMainPostSerializer)
+        post = self.create_post_instance(request, EditMainPostSerializer)
+        return self.create_post_response(post, ReadMainPostSerializer)
 
     @swagger_auto_schema(method='POST', operation_description='修改帖子，不能修改 tag 和 viewableToGuest',
         request_body=EditMainPostSerializer, responses={202: ReadMainPostSerializer})
@@ -240,7 +265,13 @@ class CommentViewSet(PostViewSetBase):
         serializer_class=EditCommentSerializer,
         permission_classes=[permissions.IsAuthenticated])
     def create_post(self, request, post_id=None): # 我们在url里定义了 post_id，这里就必须要声明，否则会报错
-        return self.create_post_base(request, EditCommentSerializer, ReadCommentSerializer)
+        post = self.create_post_instance(request, EditCommentSerializer)
+
+        # 给被回复方添加通知
+        target: Post = post.replyToId
+        self.create_reply_notification(target, post, post, target)
+
+        return self.create_post_response(post, ReadCommentSerializer)
 
     @swagger_auto_schema(method='POST', operation_description='修改回复',
         request_body=EditCommentSerializer, responses={202: ReadCommentSerializer})
@@ -249,11 +280,12 @@ class CommentViewSet(PostViewSetBase):
     def edit_post(self, request, pk=None, post_id=None):
         return self.edit_post_base(request, EditCommentSerializer, ReadCommentSerializer)
 
-class UnreadNotificationViewSet(viewsets.ReadOnlyModelViewSet):
+class NotificationViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = NotificationSerializer
     permission_classes = [permissions.IsAuthenticated]
     authentication_classes = (JWTAuthentication,)
-    pagination_class = UnreadNotificationSetPagination
+    pagination_class = NotificationSetPagination
+    filterset_fields = ['read']
     
     def get_queryset(self):
 
@@ -261,18 +293,18 @@ class UnreadNotificationViewSet(viewsets.ReadOnlyModelViewSet):
             # queryset just for schema generation metadata
             return Notification.objects.none()
 
-        query = Notification.objects.filter(user_id=self.request.user.id, read=False) 
+        query = Notification.objects.filter(user_id=self.request.user.id) 
         return query
       
-    # 在swagger文档里的条目定义：
-    @swagger_auto_schema(method='POST', operation_description='设为已读')
-    # 给 rest_framework 用的view定义（这两个decorator的顺序不能反）
-    @action(methods=['POST'], detail=True, url_path='read', url_name='mark_notification',
+    @swagger_auto_schema(method='PUT', operation_description='设为已读',
+        request_body=None, responses={202: '成功'})
+    @action(methods=['PUT'], detail=True, url_path='read', url_name='mark_notification',
         permission_classes=[permissions.IsAuthenticated])
-    def mark_notification(self):
+    def mark_notification(self, pk=None):
         notification = self.get_object()
         notification.read = True
         notification.save()
+        return Response(status=status.HTTP_202_ACCEPTED)
        
 class SubCommentViewSet(PostViewSetBase):
     """
@@ -314,7 +346,15 @@ class SubCommentViewSet(PostViewSetBase):
         serializer_class=EditSubCommentSerializer,
         permission_classes=[permissions.IsAuthenticated])
     def create_post(self, request, comment_id=None): # 我们在url里定义了 post_id，这里就必须要声明，否则会报错
-        return self.create_post_base(request, EditSubCommentSerializer, ReadSubCommentSerializer)
+        post = self.create_post_instance(request, EditSubCommentSerializer)
+
+        # 给被回复方添加通知
+        target: Post = post.replyToId
+        comment: Post = post.replyToComment
+        mainPost: Post = comment.replyToId
+        self.create_reply_notification(target, post, comment, mainPost)
+
+        return self.create_post_response(post, ReadSubCommentSerializer)
 
     @swagger_auto_schema(method='POST', operation_description='修改回复，无法修改 replyTo',
         request_body=EditSubCommentSerializer, responses={202: ReadSubCommentSerializer})

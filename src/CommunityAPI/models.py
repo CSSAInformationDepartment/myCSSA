@@ -78,7 +78,13 @@ class Notification(models.Model):
     data = models.JSONField('使用JSON表示额外的数据， 其格式根据type来变化')
     read = models.BooleanField('用户是否已读该通知', default=False)
 
-    notificationTypeChoices = [] # TODO: 决定类型
+    # 列出所有类型，防止打错字
+    REPLY = 'REPLY'
+    # End
+
+    notificationTypeChoices = [
+        (REPLY, '回复')
+    ]
     type = CharField('通知类型', choices=notificationTypeChoices, max_length=100)
 
 class FavouritePost(models.Model):

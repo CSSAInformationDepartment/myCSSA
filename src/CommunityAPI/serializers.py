@@ -19,7 +19,7 @@ class TagSerializer(serializers.ModelSerializer):
 class NotificationSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Notification
-        fields = ['targetPost','data', 'type', 'read']
+        fields = ['id', 'targetPost','data', 'type', 'read']
 
         
 class PostImageSerializer(serializers.ModelSerializer):
@@ -92,6 +92,11 @@ def resolve_username(profile: UserProfile) -> str:
     # 暂时用用户的全名来当作用户名
     return profile.firstNameEN + ' ' + profile.lastNameEN
 
+def resolve_post_content(post: models.Post) -> models.Content:
+    content = models.Content.objects.filter(post=post).order_by('-editedTime').first()
+    assert content, '一个Post必定有一个Content'
+    return content
+
 class PostSerializerMixin:
     """
     提供一些主贴和评论都会用到的公共方法
@@ -104,7 +109,7 @@ class PostSerializerMixin:
         发帖的用户名
         """
 
-        contentModel = models.Content.objects.filter(post=instance).order_by('-editedTime').first()
+        contentModel = resolve_post_content(instance)
         repr['content'] = self.fields['content'].to_representation(contentModel)
 
         repr['createdBy'] = resolve_username(instance.createdBy)
