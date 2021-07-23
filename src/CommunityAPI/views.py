@@ -296,15 +296,15 @@ class NotificationViewSet(viewsets.ReadOnlyModelViewSet):
         query = Notification.objects.filter(user_id=self.request.user.id) 
         return query
       
-    # 在swagger文档里的条目定义：
-    @swagger_auto_schema(method='POST', operation_description='设为已读')
-    # 给 rest_framework 用的view定义（这两个decorator的顺序不能反）
-    @action(methods=['POST'], detail=True, url_path='read', url_name='mark_notification',
+    @swagger_auto_schema(method='PUT', operation_description='设为已读',
+        request_body=None, responses={202: '成功'})
+    @action(methods=['PUT'], detail=True, url_path='read', url_name='mark_notification',
         permission_classes=[permissions.IsAuthenticated])
-    def mark_notification(self):
+    def mark_notification(self, pk=None):
         notification = self.get_object()
         notification.read = True
         notification.save()
+        return Response(status=status.HTTP_202_ACCEPTED)
        
 class SubCommentViewSet(PostViewSetBase):
     """

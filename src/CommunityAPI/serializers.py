@@ -19,7 +19,7 @@ class TagSerializer(serializers.ModelSerializer):
 class NotificationSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Notification
-        fields = ['targetPost','data', 'type', 'read']
+        fields = ['id', 'targetPost','data', 'type', 'read']
 
         
 class PostImageSerializer(serializers.ModelSerializer):
