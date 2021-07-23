@@ -1,6 +1,8 @@
 from rest_framework.decorators import api_view
 from rest_framework.exceptions import ParseError
+from rest_framework.generics import get_object_or_404
 from rest_framework.parsers import MultiPartParser
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from django.contrib.auth.mixins import PermissionRequiredMixin, AccessMixin
 from UserAuthAPI.models import UserProfile
@@ -29,6 +31,7 @@ from .serializers import (
     ReadSubCommentSerializer, resolve_post_content, resolve_username, verify_comment, verify_main_post
     )
 from .models import Post, PostImage, Tag, FavouritePost, Notification
+from django.db.transaction import atomic
 
 # 相关的后端开发文档参见： https://dev.cssaunimelb.com/doc/rest-framework-sSVw9rou1R
 
@@ -225,6 +228,17 @@ class MainPostViewSet(PostViewSetBase):
         serializer_class=EditMainPostSerializer, permission_classes=[IsOwner])
     def edit_post(self, request, pk=None):
         return self.edit_post_base(request, EditMainPostSerializer, ReadMainPostSerializer)
+
+    @swagger_auto_schema(method='POST', operation_description='为帖子的浏览量+1',
+        request_body=None, responses={202: 'Add view count successfully'})
+    @action(methods=['POST'], detail=True, url_path='add-view-count', url_name='add_view_count',
+        serializer_class=None, permission_classes=[AllowAny])
+    @atomic
+    def add_view_count(self, request, pk=None):
+        post = self.get_object()
+        post.viewCount = post.viewCount + 1
+        post.save(update_fields=['viewCount'])
+        return Response(status=status.HTTP_202_ACCEPTED)
 
 class CommentViewSet(PostViewSetBase):
     """
