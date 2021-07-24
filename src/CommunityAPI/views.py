@@ -46,9 +46,9 @@ class FavouritePostViewSet(
     viewsets.GenericViewSet):
 
     '''
-    GET: 返回当前用户的收藏
-    POST: 添加收藏
-    DELETE: 取消收藏
+    list: 返回当前用户的收藏列表
+
+    destroy: 取消收藏
     '''
 
     serializer_class = FavouritePostSerializer
@@ -61,8 +61,8 @@ class FavouritePostViewSet(
             # queryset just for schema generation metadata
             return FavouritePost.objects.none()
 
-        query_set = FavouritePost.objects.filter(user=self.request.user.id) # 这里会按照收藏的顺序返回
-        return query_set
+        query_set = FavouritePost.objects.filter(user=self.request.user.id).exclude(post__censored=True).exclude(post__deleted=True) # 这里会按照收藏的顺序返回
+        return query_set.reverse()
 
     @atomic
     @swagger_auto_schema(method='PUT', operation_description='添加收藏',
@@ -392,3 +392,28 @@ class ImageUploadView(APIView):
         output = PostImageSerializer(image, context={'request': request})
 
         return Response(output.data, status=status.HTTP_201_CREATED)
+
+class CensorViewSet(viewsets.GenericViewSet, PermissionRequiredMixin):
+    permission_classes = [permissions.IsAuthenticated]
+    authentication_classes = (JWTAuthentication,)
+    permission_required= ('censor_post',)
+    queryset=models.Post.objects.all()
+    @swagger_auto_schema(method='POST', operation_description='屏蔽帖子',
+        request_body=None, responses={202: ''})
+    @action(methods=['POST'], detail=True, url_path='cenosr', url_name='censor_post',
+        serializer_class=None, permission_classes=[permissions.IsAuthenticated])
+    def censor_post(self, request, pk=None):
+        instance = self.get_object()
+        instance.censored=True
+        instance.save()
+        Notification.objects.create(
+            user=instance.createdBy,
+            targetPost=instance,
+            type=Notification.REPLY,
+            data={
+                'main_post_id': instance.pk,
+                'main_post_tag_id': instance.tag_id,
+                'main_post_title': resolve_post_content(instance).title,                
+            },
+            )
+        return Response(status=status.HTTP_202_ACCEPTED)
