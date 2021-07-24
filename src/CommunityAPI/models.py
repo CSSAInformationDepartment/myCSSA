@@ -90,7 +90,7 @@ class Notification(models.Model):
 
     notificationTypeChoices = [
         (REPLY, '回复'),
-        (CENSOR, '驳回')
+        (CENSOR, '屏蔽')
     ]
     type = CharField('通知类型', choices=notificationTypeChoices, max_length=100)
 

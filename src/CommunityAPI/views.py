@@ -64,8 +64,9 @@ class FavouritePostViewSet(
             # queryset just for schema generation metadata
             return FavouritePost.objects.none()
 
-        query_set = FavouritePost.objects.filter(user=self.request.user.id).exclude(post__censored=True).exclude(post__deleted=True) # 这里会按照收藏的顺序返回
-        return query_set.reverse()
+        query_set = FavouritePost.objects.filter(user=self.request.user.id, post__censored=False, post__deleted=False)
+
+        return query_set
 
     @atomic
     @swagger_auto_schema(method='PUT', operation_description='添加收藏',
@@ -412,22 +413,40 @@ class CensorViewSet(viewsets.GenericViewSet, PermissionRequiredMixin):
     authentication_classes = (JWTAuthentication,)
     permission_required= ('censor_post',)
     queryset=models.Post.objects.all()
+
+    @atomic
     @swagger_auto_schema(method='POST', operation_description='屏蔽帖子',
-        request_body=None, responses={202: ''})
+        request_body=None, responses={202: '处理成功'})
     @action(methods=['POST'], detail=True, url_path='cenosr', url_name='censor_post',
         serializer_class=None, permission_classes=[permissions.IsAuthenticated])
     def censor_post(self, request, pk=None):
         instance = self.get_object()
         instance.censored=True
         instance.save()
+        CONTENT_TEXT_LENGTH = 20
+        
+        if not instance.replyToId:
+            data={
+                'type': 'main_post',
+                'post_id': instance.pk,
+                'post_tag_id': instance.tag_id,
+                'post_title': resolve_post_content(instance).title, 
+                'content_summary': resolve_post_content(instance).text[:CONTENT_TEXT_LENGTH],              
+            }
+        else:
+            data={
+                'type': 'comment',
+                'main_post_id': instance.replyToId.id, 
+                'main_post_title': resolve_post_content(instance.replyToId).title, 
+                'comment_id': instance.pk,
+                'content_summary': resolve_post_content(instance).text[:CONTENT_TEXT_LENGTH],                
+            }
+
         Notification.objects.create(
             user=instance.createdBy,
             targetPost=instance,
-            type=Notification.REPLY,
-            data={
-                'main_post_id': instance.pk,
-                'main_post_tag_id': instance.tag_id,
-                'main_post_title': resolve_post_content(instance).title,                
-            },
+            type=Notification.CENSOR,
+            data=data,
             )
+            
         return Response(status=status.HTTP_202_ACCEPTED)
