@@ -152,11 +152,22 @@ class ReadMainPostSerializer(PostSerializerMixin, serializers.ModelSerializer):
     createdBy = serializers.CharField(label='创建者的用户名')
     creatorAvatar = serializers.URLField(label='创建者的头像', read_only=True, allow_null=True)
 
+    favouriteCount = serializers.SerializerMethodField(label='收藏该帖子的人的数量')
+    isFavourite = serializers.SerializerMethodField(label='本人是否已收藏，如果用户未登录，这里也是false')
+
     class Meta:
         model = models.Post
         fields = ['id', 'tag', 'createTime', 'viewCount', 'viewableToGuest',
             # 正常情况下我们不需要再声明下面两个field，但是不这么搞的话 drf_yasg 会报错
-            'content', 'createdBy', 'creatorAvatar',]
+            'content', 'createdBy', 'creatorAvatar', 'favouriteCount', 'isFavourite']
+
+    def get_favouriteCount(self, instance) -> int:
+        return models.FavouritePost.objects.filter(post=instance).count()
+
+    def get_isFavourite(self, instance) -> bool:
+        user = self.context['request'].user
+        return False if user.is_anonymous else \
+            models.FavouritePost.objects.filter(post=instance, user_id=user.id).exists()
 
     def to_representation(self, instance: models.Post):
         repr = super().to_representation(instance)
