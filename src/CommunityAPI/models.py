@@ -47,6 +47,11 @@ class Post(models.Model):
     createdBy = models.ForeignKey(UserProfile, null=True, on_delete=models.SET_NULL,
         related_name='%(class)s_created_by')
 
+    class Meta:
+        permissions = (
+            ("censor_post", "Can censor post"),
+        )
+
     # last edit time: read from content
 
     viewCount = models.IntegerField('访问次数', default=0)
@@ -80,10 +85,12 @@ class Notification(models.Model):
 
     # 列出所有类型，防止打错字
     REPLY = 'REPLY'
+    CENSOR = 'CENSOR'
     # End
 
     notificationTypeChoices = [
-        (REPLY, '回复')
+        (REPLY, '回复'),
+        (CENSOR, '屏蔽')
     ]
     type = CharField('通知类型', choices=notificationTypeChoices, max_length=100)
 
