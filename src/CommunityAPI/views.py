@@ -433,11 +433,19 @@ class CensorViewSet(viewsets.GenericViewSet, PermissionRequiredMixin):
                 'post_title': resolve_post_content(instance).title, 
                 'content_summary': resolve_post_content(instance).text[:CONTENT_TEXT_LENGTH],              
             }
-        else:
+        elif not instance.replyToComment:
             data={
                 'type': 'comment',
                 'main_post_id': instance.replyToId.id, 
                 'main_post_title': resolve_post_content(instance.replyToId).title, 
+                'comment_id': instance.pk,
+                'content_summary': resolve_post_content(instance).text[:CONTENT_TEXT_LENGTH],                
+            }
+        else:
+            data={
+                'type': 'comment',
+                'main_post_id': instance.replyToComment.replyToId.id, 
+                'main_post_title': resolve_post_content(instance.replyToComment.replyToId).title, 
                 'comment_id': instance.pk,
                 'content_summary': resolve_post_content(instance).text[:CONTENT_TEXT_LENGTH],                
             }
