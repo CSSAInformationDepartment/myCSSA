@@ -1,9 +1,11 @@
+from django.contrib import postgres
 from django.contrib.postgres import fields
 from rest_framework.serializers import ValidationError
 from rest_framework import serializers
 from django.db.transaction import atomic
 from rest_framework.views import APIView
 from drf_yasg.utils import swagger_serializer_method
+from sorl.thumbnail import get_thumbnail
 
 from UserAuthAPI.models import UserProfile
 
@@ -17,36 +19,36 @@ class TagSerializer(serializers.ModelSerializer):
 class NotificationSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Notification
-        fields = ['targetPost','data', 'type', 'read']
+        fields = ['id', 'targetPost','data', 'type', 'read']
 
-class FavouritePostSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.FavouritePost
-        fields = ['post']
-
-    @atomic
-    def create(self, validated_data):
-        userProfile: UserProfile = self.context['request'].user
-
-        favourite = models.FavouritePost.objects.create(
-            user_id=userProfile.pk,
-            post=validated_data['post']
-        )
-
-        return favourite
         
 class PostImageSerializer(serializers.ModelSerializer):
 
-    url = serializers.SerializerMethodField('getImageUrl')
+    url = serializers.SerializerMethodField('getImageUrl', label='原图的url')
+    thumbnail = serializers.SerializerMethodField('getThumbnail', label='缩略图（显示在图片列表里）的url，大小为 50x50')
+    small = serializers.SerializerMethodField('getSmall', label='压缩图的url，最大为 300x300')
 
     class Meta:
         model = models.PostImage
-        fields = ['id', 'url']
+        fields = ['id', 'url', 'thumbnail', 'small']
+
+    def _buildAbsoluteUrl(self, image):
+        request = self.context['request']
+        return request.build_absolute_uri(image.url)
 
     @swagger_serializer_method(serializer_or_field=serializers.URLField)
     def getImageUrl(self, instance: models.PostImage):
-        request = self.context['request']
-        return request.build_absolute_uri(instance.image.url)
+        return self._buildAbsoluteUrl(instance.image)
+
+    @swagger_serializer_method(serializer_or_field=serializers.URLField)
+    def getThumbnail(self, instance):
+        image = get_thumbnail(instance.image, '50x50', crop='center', quality=99)
+        return self._buildAbsoluteUrl(image)
+
+    @swagger_serializer_method(serializer_or_field=serializers.URLField)
+    def getSmall(self, instance):
+        image = get_thumbnail(instance.image, '300x300', crop='noop', quality=99)
+        return self._buildAbsoluteUrl(image)
 
 class ReadContentSerializer(serializers.ModelSerializer):
     images = PostImageSerializer(many=True, read_only=True)
@@ -90,6 +92,11 @@ def resolve_username(profile: UserProfile) -> str:
     # 暂时用用户的全名来当作用户名
     return profile.firstNameEN + ' ' + profile.lastNameEN
 
+def resolve_post_content(post: models.Post) -> models.Content:
+    content = models.Content.objects.filter(post=post).order_by('-editedTime').first()
+    assert content, '一个Post必定有一个Content'
+    return content
+
 class PostSerializerMixin:
     """
     提供一些主贴和评论都会用到的公共方法
@@ -102,15 +109,23 @@ class PostSerializerMixin:
         发帖的用户名
         """
 
-        contentModel = models.Content.objects.filter(post=instance).order_by('-editedTime').first()
+        contentModel = resolve_post_content(instance)
         repr['content'] = self.fields['content'].to_representation(contentModel)
 
         repr['createdBy'] = resolve_username(instance.createdBy)
+
+        avatar = instance.createdBy.avatar
+        if avatar:
+            repr['creatorAvatar'] = avatar.url
+        else:
+            repr['creatorAvatar'] = None
 
     def create_content(self, validated_data, post: models.Post):
         """
         从输入的json创建一个新的content版本
         """
+
+        
 
         userProfile: UserProfile = self.context['request'].user
 
@@ -135,12 +150,24 @@ class ReadMainPostSerializer(PostSerializerMixin, serializers.ModelSerializer):
     content = ReadContentSerializer(read_only=True)
 
     createdBy = serializers.CharField(label='创建者的用户名')
+    creatorAvatar = serializers.URLField(label='创建者的头像', read_only=True, allow_null=True)
+
+    favouriteCount = serializers.SerializerMethodField(label='收藏该帖子的人的数量')
+    isFavourite = serializers.SerializerMethodField(label='本人是否已收藏，如果用户未登录，这里也是false')
 
     class Meta:
         model = models.Post
         fields = ['id', 'tag', 'createTime', 'viewCount', 'viewableToGuest',
             # 正常情况下我们不需要再声明下面两个field，但是不这么搞的话 drf_yasg 会报错
-            'content', 'createdBy']
+            'content', 'createdBy', 'creatorAvatar', 'favouriteCount', 'isFavourite']
+
+    def get_favouriteCount(self, instance) -> int:
+        return models.FavouritePost.objects.filter(post=instance).count()
+
+    def get_isFavourite(self, instance) -> bool:
+        user = self.context['request'].user
+        return False if user.is_anonymous else \
+            models.FavouritePost.objects.filter(post=instance, user_id=user.id).exists()
 
     def to_representation(self, instance: models.Post):
         repr = super().to_representation(instance)
@@ -195,12 +222,13 @@ class ReadCommentSerializer(PostSerializerMixin, serializers.ModelSerializer):
     content = ReadContentSerializer(read_only=True)
 
     createdBy = serializers.CharField(label='创建者的用户名')
+    creatorAvatar = serializers.URLField(label='创建者的头像', read_only=True, allow_null=True)
 
     class Meta:
         model = models.Post
         fields = ['id', 'createTime',
             # 正常情况下我们不需要再声明下面两个field，但是不这么搞的话 drf_yasg 会报错
-            'content', 'createdBy']
+            'content', 'createdBy', 'creatorAvatar',]
 
     def to_representation(self, instance: models.Post):
         repr = super().to_representation(instance)
@@ -272,6 +300,7 @@ class ReadSubCommentSerializer(PostSerializerMixin, serializers.ModelSerializer)
     content = ReadContentSerializer(read_only=True)
 
     createdBy = serializers.CharField(label='创建者的用户名')
+    creatorAvatar = serializers.URLField(label='创建者的头像', read_only=True, allow_null=True)
 
     replyToUser = serializers.CharField(label='回复的对象的用户名', read_only=True)
 
@@ -279,7 +308,7 @@ class ReadSubCommentSerializer(PostSerializerMixin, serializers.ModelSerializer)
         model = models.Post
         fields = ['id', 'createTime', 'replyToId',
             # 正常情况下我们不需要再声明下面两个field，但是不这么搞的话 drf_yasg 会报错
-            'content', 'createdBy', 'replyToUser']
+            'content', 'createdBy', 'creatorAvatar', 'replyToUser']
 
     def to_representation(self, instance: models.Post):
         repr = super().to_representation(instance)
@@ -336,3 +365,11 @@ class EditSubCommentSerializer(PostSerializerMixin, serializers.Serializer):
         # 不能更新 replyTo
         self.create_content(validated_data, instance)
         return instance
+
+class FavouritePostSerializer(serializers.ModelSerializer):
+    post = ReadMainPostSerializer(read_only=True)
+    class Meta:
+        model = models.FavouritePost
+        fields = ['post']
+        depth = 1
+        detail = False

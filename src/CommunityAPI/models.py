@@ -1,7 +1,7 @@
 from django.db import models
-from django.contrib.postgres.fields import ArrayField
 from django.db.models.fields import CharField
 from django.utils.timezone import now
+from sorl.thumbnail import ImageField as SorlImageField
 
 from UserAuthAPI.models import UserProfile
 
@@ -12,6 +12,9 @@ POST_TITLE_LENGTH_MAX = 100
 # Create your models here.
 class Tag(models.Model):
     title = models.CharField('标签标题', max_length=16)
+
+    def __str__(self) -> str:
+        return self.title
 
 class Post(models.Model):
     # 标签。如果是回复，这里是null
@@ -47,10 +50,10 @@ class Post(models.Model):
     # last edit time: read from content
 
     viewCount = models.IntegerField('访问次数', default=0)
-
+        
 class PostImage(models.Model):
     id = models.UUIDField(primary_key=True)
-    image = models.ImageField(verbose_name='用户上传的图片', upload_to='uploads/community/post_image')
+    image = SorlImageField(verbose_name='用户上传的图片', upload_to='uploads/community/post_image')
     uploader = models.ForeignKey(UserProfile, on_delete=models.DO_NOTHING,
         related_name='%(class)s_uploader')
     uploadTime = models.DateTimeField('本图片的上传时间', default=now)
@@ -75,7 +78,13 @@ class Notification(models.Model):
     data = models.JSONField('使用JSON表示额外的数据， 其格式根据type来变化')
     read = models.BooleanField('用户是否已读该通知', default=False)
 
-    notificationTypeChoices = [] # TODO: 决定类型
+    # 列出所有类型，防止打错字
+    REPLY = 'REPLY'
+    # End
+
+    notificationTypeChoices = [
+        (REPLY, '回复')
+    ]
     type = CharField('通知类型', choices=notificationTypeChoices, max_length=100)
 
 class FavouritePost(models.Model):
