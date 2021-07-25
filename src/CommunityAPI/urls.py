@@ -20,4 +20,5 @@ urlpatterns = [
     path('imageupload', views.ImageUploadView.as_view()),
     path('post/<int:post_id>/', include(comment_router.urls)),
     path('comment/<int:comment_id>/', include(subcomment_router.urls)),
+    path('user-info', views.UserInformationView.as_view())
 ]
