@@ -27,10 +27,10 @@ from CommunityAPI.permissions import IsOwner
 from .serializers import (
     EditCommentSerializer, PostImageSerializer, ReadCommentSerializer, TagSerializer, 
     EditMainPostSerializer, ReadMainPostSerializer, FavouritePostSerializer,
-    NotificationSerializer, get_post_from_url, EditSubCommentSerializer, 
+    NotificationSerializer, UserInformationSerializer, get_post_from_url, EditSubCommentSerializer, 
     ReadSubCommentSerializer, resolve_post_content, resolve_username, verify_comment, verify_main_post
     )
-from .models import Post, PostImage, Tag, FavouritePost, Notification
+from .models import Post, PostImage, Tag, FavouritePost, Notification, UserInformation
 from django.db.transaction import atomic
 
 # 相关的后端开发文档参见： https://dev.cssaunimelb.com/doc/rest-framework-sSVw9rou1R
@@ -458,3 +458,36 @@ class CensorViewSet(viewsets.GenericViewSet, PermissionRequiredMixin):
             )
             
         return Response(status=status.HTTP_202_ACCEPTED)
+
+class UserInformationView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+    authentication_classes = (JWTAuthentication,)
+
+    @swagger_auto_schema(operation_summary='获取我的信息（信息不存在时返回404）',
+        responses={200: UserInformationSerializer, 404: '用户信息不存在'})
+    def get(self, request):
+        info = get_object_or_404(UserInformation.objects.all(), 
+            user_id=request.user.id)
+
+        return Response(
+            UserInformationSerializer(info).data, 
+            status=status.HTTP_200_OK)
+
+    @swagger_auto_schema(operation_summary='更新我的信息',
+        request_body=UserInformationSerializer, responses={202: '更新成功'})
+    @atomic
+    def put(self, request):
+        instance = UserInformation.objects.filter(user_id=request.user.id).first()
+        serializer = UserInformationSerializer(data=request.data, instance=instance)
+        serializer.is_valid(raise_exception=True)
+
+        serializer.save(user_id=request.user.id)
+
+        return Response(status=status.HTTP_202_ACCEPTED)
+
+    def delete(self, request):
+        """
+        删除我的信息
+        """
+        UserInformation.objects.filter(user_id=request.user.id).delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)

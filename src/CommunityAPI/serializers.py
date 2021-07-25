@@ -373,3 +373,8 @@ class FavouritePostSerializer(serializers.ModelSerializer):
         fields = ['post']
         depth = 1
         detail = False
+
+class UserInformationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.UserInformation
+        fields = ['username', 'avatarUrl']
