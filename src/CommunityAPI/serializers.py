@@ -1,3 +1,4 @@
+from typing import Optional
 from django.contrib import postgres
 from django.contrib.postgres import fields
 from rest_framework.serializers import ValidationError
@@ -89,8 +90,21 @@ class EditContentSerializer(serializers.ModelSerializer):
         return super().validate(attrs)
 
 def resolve_username(profile: UserProfile) -> str:
-    # 暂时用用户的全名来当作用户名
-    return profile.firstNameEN + ' ' + profile.lastNameEN
+    info = models.UserInformation.objects.filter(user_id=profile.pk).first()
+    if info:
+        return info.username
+    else:
+        # 用用户的全名来当作用户名
+        return profile.firstNameEN + ' ' + profile.lastNameEN
+
+def resolve_avatar(profile: UserProfile) -> Optional[str]:
+    info = models.UserInformation.objects.filter(user_id=profile.pk).first()
+    if info:
+        return info.avatarUrl
+    elif profile.avatar:
+        return profile.avatar.url
+    else:
+        return None
 
 def resolve_post_content(post: models.Post) -> models.Content:
     content = models.Content.objects.filter(post=post).order_by('-editedTime').first()
@@ -113,19 +127,12 @@ class PostSerializerMixin:
         repr['content'] = self.fields['content'].to_representation(contentModel)
 
         repr['createdBy'] = resolve_username(instance.createdBy)
-
-        avatar = instance.createdBy.avatar
-        if avatar:
-            repr['creatorAvatar'] = avatar.url
-        else:
-            repr['creatorAvatar'] = None
+        repr['creatorAvatar'] = resolve_avatar(instance.createdBy)
 
     def create_content(self, validated_data, post: models.Post):
         """
         从输入的json创建一个新的content版本
         """
-
-        
 
         userProfile: UserProfile = self.context['request'].user
 

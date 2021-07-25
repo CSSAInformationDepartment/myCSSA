@@ -28,7 +28,7 @@ from .serializers import (
     EditCommentSerializer, PostImageSerializer, ReadCommentSerializer, TagSerializer, 
     EditMainPostSerializer, ReadMainPostSerializer, FavouritePostSerializer,
     NotificationSerializer, UserInformationSerializer, get_post_from_url, EditSubCommentSerializer, 
-    ReadSubCommentSerializer, resolve_post_content, resolve_username, verify_comment, verify_main_post
+    ReadSubCommentSerializer, resolve_avatar, resolve_post_content, resolve_username, verify_comment, verify_main_post
     )
 from .models import Post, PostImage, Tag, FavouritePost, Notification, UserInformation
 from django.db.transaction import atomic
@@ -169,7 +169,7 @@ class PostViewSetBase(viewsets.ReadOnlyModelViewSet, mixins.DestroyModelMixin):
             type=Notification.REPLY,
             data={
                 'replier_username': resolve_username(replier.createdBy),
-                'replier_avatar': replier.createdBy.avatar.url if replier.createdBy.avatar else None,
+                'replier_avatar': resolve_avatar(replier.createdBy),
                 'main_post_id': main_post.pk,
                 'main_post_tag_id': main_post.tag_id,
                 'main_post_title': resolve_post_content(main_post).title,
