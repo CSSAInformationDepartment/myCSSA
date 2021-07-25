@@ -65,7 +65,7 @@ INSTALLED_APPS = [
     'guard_angel',
     'storages',
     'redis',
-    
+    'sorl.thumbnail',
 ]
 
 MIDDLEWARE = [

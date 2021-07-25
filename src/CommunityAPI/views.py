@@ -1,33 +1,45 @@
-from django.db.models import query
-from django.db.models.query import QuerySet
-from django.http import response, JsonResponse
-from django.shortcuts import render
 from rest_framework.decorators import api_view
+from rest_framework.exceptions import ParseError
+from rest_framework.generics import get_object_or_404
+from rest_framework.parsers import MultiPartParser
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
-<<<<<<< Updated upstream
 
-=======
 from django.contrib.auth.mixins import PermissionRequiredMixin, AccessMixin
 from UserAuthAPI.models import UserProfile
 from django.db.transaction import atomic
 from django.http import JsonResponse, HttpResponse
 from rest_framework.parsers import JSONParser
->>>>>>> Stashed changes
+
+from django.contrib.auth.mixins import PermissionRequiredMixin, AccessMixin
+from UserAuthAPI.models import UserProfile
+from django.db.transaction import atomic
+
+
 # Create your views here.
 
 from typing import TypeVar, Callable
-
-from rest_framework import status, viewsets, permissions, mixins
+from . import models
+from rest_framework import serializers, status, viewsets, permissions, mixins
 from rest_framework.decorators import action, permission_classes
 from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
 from rest_framework.fields import empty
-from rest_framework.response import Response
+from rest_framework.views import APIView
 from rest_framework_simplejwt.authentication import JWTAuthentication
-from CommunityAPI.paginations import PostResultsSetPagination, UnreadNotificationSetPagination
+import uuid
+from CommunityAPI.filters import IsOwnerFilterBackend, TagFilter
 
+from CommunityAPI.paginations import PostResultsSetPagination, NotificationSetPagination
 from CommunityAPI.permissions import IsOwner
-from .serializers import EditCommentSerializer, ReadCommentSerializer, TagSerializer, EditMainPostSerializer, ReadMainPostSerializer, FavouritePostSerializer,NotificationSerializer, get_main_post_from_url
-from .models import Post, Tag, FavouritePost, Notification
+from .serializers import (
+    EditCommentSerializer, PostImageSerializer, ReadCommentSerializer, TagSerializer, 
+    EditMainPostSerializer, ReadMainPostSerializer, FavouritePostSerializer,
+    NotificationSerializer, get_post_from_url, EditSubCommentSerializer, 
+    ReadSubCommentSerializer, resolve_post_content, resolve_username, verify_comment, verify_main_post
+    )
+from .models import Post, PostImage, Tag, FavouritePost, Notification
+from django.db.transaction import atomic
 
 # 相关的后端开发文档参见： https://dev.cssaunimelb.com/doc/rest-framework-sSVw9rou1R
 
@@ -40,33 +52,48 @@ class TagViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = [permissions.AllowAny]
 
 class FavouritePostViewSet(
-    mixins.CreateModelMixin,
     mixins.DestroyModelMixin,
     mixins.ListModelMixin,
     viewsets.GenericViewSet):
+
     '''
-    GET: 返回当前用户的收藏
-    POST: 添加收藏
-    DELETE: 取消收藏
+    list: 返回当前用户的收藏列表
+
+    destroy: 取消收藏
     '''
-    queryset = FavouritePost.objects.all()
+
     serializer_class = FavouritePostSerializer
     permission_classes = [permissions.IsAuthenticated]
     authentication_classes = (JWTAuthentication,)
 
     def get_queryset(self):
-        query_set = self.queryset.filter(user=self.request.user.id) # 这里会按照收藏的顺序返回
+
+        if getattr(self, 'swagger_fake_view', False):
+            # queryset just for schema generation metadata
+            return FavouritePost.objects.none()
+
+        query_set = FavouritePost.objects.filter(user=self.request.user.id, post__censored=False, post__deleted=False)
+
         return query_set
 
-    def create(self, request):
-        serializer = FavouritePostSerializer(data=request.data, context={'request': request})
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    @atomic
+    @swagger_auto_schema(method='PUT', operation_description='添加收藏',
+        request_body=None, responses={202: '创建成功'})
+    @action(methods=['PUT'], detail=True, url_path='add', url_name='add_favouritepost',
+        serializer_class=None, permission_classes=[permissions.IsAuthenticated])
+    def add_favouritepost(self, request, pk=None):
+        userProfile: UserProfile = self.request.user
+        post = pk
+        favourite = models.FavouritePost.objects.filter(user=self.request.user.id,post=post).first()
+        if favourite:
+            return Response(status=status.HTTP_202_ACCEPTED)
+        favourite = models.FavouritePost.objects.create(
+            user_id=userProfile.pk,
+            post_id=post
+        )
+        return Response(status=status.HTTP_202_ACCEPTED)
 
-    def destroy(self, request,  *args, **kwargs):
-        print(request.data)
+    def destroy(self, request, *args, **kwargs):
         user = self.request.user.id
         post = kwargs['pk']
         try:
@@ -80,6 +107,7 @@ class PostViewSetBase(viewsets.ReadOnlyModelViewSet, mixins.DestroyModelMixin):
     permission_classes = [permissions.AllowAny]
     authentication_classes = (JWTAuthentication,)
     pagination_class = PostResultsSetPagination
+    filter_backends = [IsOwnerFilterBackend]
 
     def get_permissions(self):
         if self.action == 'destroy':
@@ -124,17 +152,39 @@ class PostViewSetBase(viewsets.ReadOnlyModelViewSet, mixins.DestroyModelMixin):
         result = self.create_serializer(read_serializer, instance=post).data
         return Response(data=result, status=status.HTTP_202_ACCEPTED)
 
-    def create_post_base(self, request, 
-        edit_serializer=EditMainPostSerializer,
-        read_serializer=ReadMainPostSerializer):
-
+    def create_post_instance(self, request, edit_serializer) -> Post:
         serializer = self.create_serializer(edit_serializer, data=request.data)
         serializer.is_valid(raise_exception=True)
-        post = serializer.save()
+        return serializer.save()
+
+    def create_post_response(self, post, read_serializer):
         result = self.create_serializer(read_serializer, instance=post).data
         return Response(data=result, status=status.HTTP_201_CREATED)
 
+    def create_reply_notification(self, 
+        target: Post, replier: Post, comment: Post, main_post: Post):
+        """
+        创建一个回复通知。
 
+        参数之间的关系如下：
+        replier --回复给-> target --它们属于哪个一级评论-> comment --它们的主贴为-> main_post
+        """
+        CONTENT_TEXT_LENGTH = 20
+
+        return Notification.objects.create(
+            user=target.createdBy,
+            targetPost=target,
+            type=Notification.REPLY,
+            data={
+                'replier_username': resolve_username(replier.createdBy),
+                'replier_avatar': replier.createdBy.avatar.url if replier.createdBy.avatar else None,
+                'main_post_id': main_post.pk,
+                'main_post_tag_id': main_post.tag_id,
+                'main_post_title': resolve_post_content(main_post).title,
+                'reply_content_summary': resolve_post_content(replier).text[:CONTENT_TEXT_LENGTH],
+                'comment_id': comment.pk,
+            },
+            )
 
 class MainPostViewSet(PostViewSetBase):
     """
@@ -142,14 +192,20 @@ class MainPostViewSet(PostViewSetBase):
 
     retrive: 获取一个帖子的全文
 
-    list: 获取帖子的列表，其中，正文只包括前50个字符。tag参数可以指定对应类别，若不指定则返回所有类别的帖子
+    list: 获取帖子的列表，其中，正文只包括前50个字符。
 
     destroy: 删除帖子
     """
 
     serializer_class = ReadMainPostSerializer
+    filter_backends = PostViewSetBase.filter_backends + [TagFilter]
     
     def get_queryset(self):
+
+        if getattr(self, 'swagger_fake_view', False):
+            # queryset just for schema generation metadata
+            return Post.objects.none()
+
         query = Post.objects.filter(
             censored=False, 
             deleted=False, 
@@ -159,11 +215,6 @@ class MainPostViewSet(PostViewSetBase):
 
         if self.request.user.is_anonymous:
             query = query.filter(viewableToGuest=True)
-
-        # 允许通过tag参数来获取指定类别的文章
-        tag = self.request.GET.get('tag')
-        if tag:
-            query = query.filter(tag=tag)
 
         # 如果想要这个功能的话，可以在这里让管理员能看见被屏蔽和删除的文章
 
@@ -177,7 +228,8 @@ class MainPostViewSet(PostViewSetBase):
         serializer_class=EditMainPostSerializer,
         permission_classes=[permissions.IsAuthenticated])
     def create_post(self, request):
-        return self.create_post_base(request, EditMainPostSerializer, ReadMainPostSerializer)
+        post = self.create_post_instance(request, EditMainPostSerializer)
+        return self.create_post_response(post, ReadMainPostSerializer)
 
     @swagger_auto_schema(method='POST', operation_description='修改帖子，不能修改 tag 和 viewableToGuest',
         request_body=EditMainPostSerializer, responses={202: ReadMainPostSerializer})
@@ -185,6 +237,17 @@ class MainPostViewSet(PostViewSetBase):
         serializer_class=EditMainPostSerializer, permission_classes=[IsOwner])
     def edit_post(self, request, pk=None):
         return self.edit_post_base(request, EditMainPostSerializer, ReadMainPostSerializer)
+
+    @swagger_auto_schema(method='POST', operation_description='为帖子的浏览量+1',
+        request_body=None, responses={202: 'Add view count successfully'})
+    @action(methods=['POST'], detail=True, url_path='add-view-count', url_name='add_view_count',
+        serializer_class=None, permission_classes=[AllowAny])
+    @atomic
+    def add_view_count(self, request, pk=None):
+        post = self.get_object()
+        post.viewCount = post.viewCount + 1
+        post.save(update_fields=['viewCount'])
+        return Response(status=status.HTTP_202_ACCEPTED)
 
 class CommentViewSet(PostViewSetBase):
     """
@@ -200,7 +263,13 @@ class CommentViewSet(PostViewSetBase):
     serializer_class = ReadCommentSerializer
 
     def get_queryset(self):
-        mainPost = get_main_post_from_url(self)
+
+        if getattr(self, 'swagger_fake_view', False):
+            # queryset just for schema generation metadata
+            return Post.objects.none()
+
+        mainPost = get_post_from_url(self)
+        verify_main_post(mainPost)
 
         query = Post.objects.filter(
             censored=False, 
@@ -219,7 +288,13 @@ class CommentViewSet(PostViewSetBase):
         serializer_class=EditCommentSerializer,
         permission_classes=[permissions.IsAuthenticated])
     def create_post(self, request, post_id=None): # 我们在url里定义了 post_id，这里就必须要声明，否则会报错
-        return self.create_post_base(request, EditCommentSerializer, ReadCommentSerializer)
+        post = self.create_post_instance(request, EditCommentSerializer)
+
+        # 给被回复方添加通知
+        target: Post = post.replyToId
+        self.create_reply_notification(target, post, post, target)
+
+        return self.create_post_response(post, ReadCommentSerializer)
 
     @swagger_auto_schema(method='POST', operation_description='修改回复',
         request_body=EditCommentSerializer, responses={202: ReadCommentSerializer})
@@ -228,40 +303,33 @@ class CommentViewSet(PostViewSetBase):
     def edit_post(self, request, pk=None, post_id=None):
         return self.edit_post_base(request, EditCommentSerializer, ReadCommentSerializer)
 
-class UnreadNotificationViewSet(viewsets.ReadOnlyModelViewSet):
+class NotificationViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = NotificationSerializer
     permission_classes = [permissions.IsAuthenticated]
     authentication_classes = (JWTAuthentication,)
-    pagination_class = UnreadNotificationSetPagination
+    pagination_class = NotificationSetPagination
+    filterset_fields = ['read']
     
     def get_queryset(self):
-<<<<<<< Updated upstream
-        query = Notification.objects.filter(user_id = self.request.user.id , read = False) 
-=======
+        query = Notification.objects.filter(user_id=self.request.user.id).filter(read = False)
 
         if getattr(self, 'swagger_fake_view', False):
             # queryset just for schema generation metadata
             return Notification.objects.none()
 
-        query = Notification.objects.filter(user_id=self.request.user.id).filter(read = False)
+
+        
         # serializer = NotificationSerializer(query, many=True)
         # return JsonResponse(serializer.data, safe = False)
->>>>>>> Stashed changes
+
         return query
 
       
-    # 在swagger文档里的条目定义：
-    @swagger_auto_schema(method='POST', operation_description='设为已读')
-    # 给 rest_framework 用的view定义（这两个decorator的顺序不能反）
-    @action(methods=['POST'], detail=True, url_path='read', url_name='mark_notification',
+    @swagger_auto_schema(method='PUT', operation_description='设为已读',
+        request_body=None, responses={202: '成功'})
+    @action(methods=['PUT'], detail=True, url_path='read', url_name='mark_notification',
         permission_classes=[permissions.IsAuthenticated])
-<<<<<<< Updated upstream
-    def mark_notification(self):
-        notification = self.get_object()
-        notification.read = True
-        notification.save()
-       
-=======
+
     def mark_notification(self,request, pk):
         try:
             notification = Notification.objects.get(pk=pk)
@@ -271,7 +339,8 @@ class UnreadNotificationViewSet(viewsets.ReadOnlyModelViewSet):
         serializer = NotificationSerializer(notification)
         notification.read = True
         notification.save()
-        return  JsonResponse(serializer.data)
+        return   Response(status=status.HTTP_202_ACCEPTED)
+
        
 class SubCommentViewSet(PostViewSetBase):
     """
@@ -359,4 +428,54 @@ class ImageUploadView(APIView):
         output = PostImageSerializer(image, context={'request': request})
 
         return Response(output.data, status=status.HTTP_201_CREATED)
->>>>>>> Stashed changes
+
+class CensorViewSet(viewsets.GenericViewSet, PermissionRequiredMixin):
+    permission_classes = [permissions.IsAuthenticated]
+    authentication_classes = (JWTAuthentication,)
+    permission_required= ('censor_post',)
+    queryset=models.Post.objects.all()
+
+    @atomic
+    @swagger_auto_schema(method='POST', operation_description='屏蔽帖子',
+        request_body=None, responses={202: '处理成功'})
+    @action(methods=['POST'], detail=True, url_path='cenosr', url_name='censor_post',
+        serializer_class=None, permission_classes=[permissions.IsAuthenticated])
+    def censor_post(self, request, pk=None):
+        instance = self.get_object()
+        instance.censored=True
+        instance.save()
+        CONTENT_TEXT_LENGTH = 20
+        
+        if not instance.replyToId:
+            data={
+                'type': 'main_post',
+                'post_id': instance.pk,
+                'post_tag_id': instance.tag_id,
+                'post_title': resolve_post_content(instance).title, 
+                'content_summary': resolve_post_content(instance).text[:CONTENT_TEXT_LENGTH],              
+            }
+        elif not instance.replyToComment:
+            data={
+                'type': 'comment',
+                'main_post_id': instance.replyToId.id, 
+                'main_post_title': resolve_post_content(instance.replyToId).title, 
+                'comment_id': instance.pk,
+                'content_summary': resolve_post_content(instance).text[:CONTENT_TEXT_LENGTH],                
+            }
+        else:
+            data={
+                'type': 'comment',
+                'main_post_id': instance.replyToComment.replyToId.id, 
+                'main_post_title': resolve_post_content(instance.replyToComment.replyToId).title, 
+                'comment_id': instance.pk,
+                'content_summary': resolve_post_content(instance).text[:CONTENT_TEXT_LENGTH],                
+            }
+
+        Notification.objects.create(
+            user=instance.createdBy,
+            targetPost=instance,
+            type=Notification.CENSOR,
+            data=data,
+            )
+            
+        return Response(status=status.HTTP_202_ACCEPTED)
