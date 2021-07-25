@@ -4,7 +4,15 @@ from django.http import response, JsonResponse
 from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+<<<<<<< Updated upstream
 
+=======
+from django.contrib.auth.mixins import PermissionRequiredMixin, AccessMixin
+from UserAuthAPI.models import UserProfile
+from django.db.transaction import atomic
+from django.http import JsonResponse, HttpResponse
+from rest_framework.parsers import JSONParser
+>>>>>>> Stashed changes
 # Create your views here.
 
 from typing import TypeVar, Callable
@@ -227,16 +235,128 @@ class UnreadNotificationViewSet(viewsets.ReadOnlyModelViewSet):
     pagination_class = UnreadNotificationSetPagination
     
     def get_queryset(self):
+<<<<<<< Updated upstream
         query = Notification.objects.filter(user_id = self.request.user.id , read = False) 
+=======
+
+        if getattr(self, 'swagger_fake_view', False):
+            # queryset just for schema generation metadata
+            return Notification.objects.none()
+
+        query = Notification.objects.filter(user_id=self.request.user.id).filter(read = False)
+        # serializer = NotificationSerializer(query, many=True)
+        # return JsonResponse(serializer.data, safe = False)
+>>>>>>> Stashed changes
         return query
+
       
     # 在swagger文档里的条目定义：
     @swagger_auto_schema(method='POST', operation_description='设为已读')
     # 给 rest_framework 用的view定义（这两个decorator的顺序不能反）
     @action(methods=['POST'], detail=True, url_path='read', url_name='mark_notification',
         permission_classes=[permissions.IsAuthenticated])
+<<<<<<< Updated upstream
     def mark_notification(self):
         notification = self.get_object()
         notification.read = True
         notification.save()
        
+=======
+    def mark_notification(self,request, pk):
+        try:
+            notification = Notification.objects.get(pk=pk)
+        except Notification.DoesNotExist:
+            return HttpResponse(status=404)
+
+        serializer = NotificationSerializer(notification)
+        notification.read = True
+        notification.save()
+        return  JsonResponse(serializer.data)
+       
+class SubCommentViewSet(PostViewSetBase):
+    """
+    二级（及以上）回复的增删改查
+
+    list: 根据 comment_id 获取某个一级评论下的所有评论（全文）
+
+    retrive: 获取某一个评论的数据。必须同时指定 comment_id 和 id
+
+    destroy: 删除某个评论（comment_id 必须对应）
+    """
+
+    serializer_class = ReadSubCommentSerializer
+
+    def get_queryset(self):
+
+        if getattr(self, 'swagger_fake_view', False):
+            # queryset just for schema generation metadata
+            return Post.objects.none()
+
+        comment = get_post_from_url(self, 'comment_id')
+        verify_comment(comment)
+
+        query = Post.objects.filter(
+            censored=False, 
+            deleted=False, 
+            # replyToId != None
+            replyToComment=comment,
+            )
+
+        # 如果想要这个功能的话，可以在这里让管理员能看见被屏蔽和删除的文章
+
+        return query.order_by('createTime')
+
+    @swagger_auto_schema(method='POST', operation_description='添加一个评论，用 replyTo 指定回复的对象，'
+        '它必须跟本评论属于同一个一级评论。想要直接回复给一级评论，请将 replyTo 指定为 comment_id',
+        request_body=EditSubCommentSerializer, responses={201: ReadSubCommentSerializer})
+    @action(methods=['POST'], detail=False, url_path='create', url_name='create_subcomment',
+        serializer_class=EditSubCommentSerializer,
+        permission_classes=[permissions.IsAuthenticated])
+    def create_post(self, request, comment_id=None): # 我们在url里定义了 post_id，这里就必须要声明，否则会报错
+        post = self.create_post_instance(request, EditSubCommentSerializer)
+
+        # 给被回复方添加通知
+        target: Post = post.replyToId
+        comment: Post = post.replyToComment
+        mainPost: Post = comment.replyToId
+        self.create_reply_notification(target, post, comment, mainPost)
+
+        return self.create_post_response(post, ReadSubCommentSerializer)
+
+    @swagger_auto_schema(method='POST', operation_description='修改回复，无法修改 replyTo',
+        request_body=EditSubCommentSerializer, responses={202: ReadSubCommentSerializer})
+    @action(methods=['POST'], detail=True, url_path='edit', url_name='edit_subcomment',
+        serializer_class=EditSubCommentSerializer, permission_classes=[IsOwner])
+    def edit_post(self, request, pk=None, comment_id=None):
+        return self.edit_post_base(request, EditSubCommentSerializer, ReadSubCommentSerializer)
+
+class ImageUploadView(APIView):
+    parser_classes = (MultiPartParser,)
+    permission_classes = [permissions.IsAuthenticated]
+    authentication_classes = (JWTAuthentication,)
+
+    # from https://stackoverflow.com/a/45566729 and https://github.com/axnsan12/drf-yasg/issues/600
+    @swagger_auto_schema(
+        manual_parameters=[openapi.Parameter(
+                            name="file",
+                            in_=openapi.IN_FORM,
+                            type=openapi.TYPE_FILE,
+                            required=True,
+                            description="要上传的图片，大小不能超过10M"
+                            )],
+        operation_description='上传一个图片', responses={201: PostImageSerializer})
+    @action(detail=False, methods=['post'])
+    def post(self, request, **kwargs):
+        try:
+            file = request.data['file']
+        except KeyError:
+            raise ParseError('Request has no resource file attached')
+
+        if file.size > 10485760:
+            raise serializers.ValidationError("The maximum file size that can be uploaded is 10MB")
+
+        image = PostImage.objects.create(id=uuid.uuid4(), uploader_id=request.user.id, image=file)
+        output = PostImageSerializer(image, context={'request': request})
+
+        return Response(output.data, status=status.HTTP_201_CREATED)
+>>>>>>> Stashed changes
