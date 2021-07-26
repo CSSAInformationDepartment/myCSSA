@@ -314,7 +314,7 @@ class NotificationViewSet(viewsets.ReadOnlyModelViewSet):
     @swagger_auto_schema(method='PUT', operation_description='设为已读',
         request_body=None, responses={202: '成功'})
     @action(methods=['PUT'], detail=True, url_path='read', url_name='mark_notification',
-        permission_classes=[permissions.IsAuthenticated])
+        serializer_class = None, permission_classes=[permissions.IsAuthenticated])
     @atomic
     def mark_notification(self, request, pk=None):
         notification = self.get_object()
