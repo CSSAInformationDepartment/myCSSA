@@ -182,7 +182,7 @@ class MainPostViewSet(PostViewSetBase):
     """
     主贴的增删改查
 
-    retrive: 获取一个帖子的全文
+    retrieve: 获取一个帖子的全文
 
     list: 获取帖子的列表，其中，正文只包括前50个字符。
 
@@ -247,7 +247,7 @@ class CommentViewSet(PostViewSetBase):
 
     list: 根据 post_id 获取其一级评论（全文）
 
-    retrive: 获取某一个评论的数据。必须同时指定 post_id 和 id
+    retrieve: 获取某一个评论的数据。必须同时指定 post_id 和 id
 
     destroy: 删除某个一级评论（post_id必须对应）
     """
@@ -327,7 +327,7 @@ class SubCommentViewSet(PostViewSetBase):
 
     list: 根据 comment_id 获取某个一级评论下的所有评论（全文）
 
-    retrive: 获取某一个评论的数据。必须同时指定 comment_id 和 id
+    retrieve: 获取某一个评论的数据。必须同时指定 comment_id 和 id
 
     destroy: 删除某个评论（comment_id 必须对应）
     """
