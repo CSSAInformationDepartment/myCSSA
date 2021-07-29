@@ -413,7 +413,7 @@ class ImageUploadView(APIView):
 
 class CensorViewSet(viewsets.GenericViewSet):
     permission_classes = [CanCensorPost]
-    authentication_classes = (JWTAuthentication,)
+    authentication_classes = (JWTAuthentication, SessionAuthentication)
     queryset=models.Post.objects.filter(deleted=False)
 
     NOTIFICATION_CONTENT_TEXT_LENGTH = 20
