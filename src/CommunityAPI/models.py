@@ -118,6 +118,11 @@ class Report(models.Model):
     reportTypeChoices = [] # TODO: 决定类型
     type = CharField('举报类型', choices=reportTypeChoices, max_length=100)
 
+    class Meta:
+        permissions = (
+            ("can_handle_report", "Can handle report"),
+        )
+
 class UserInformation(models.Model):
 
     USERNAME_MAX_LENGTH = 30

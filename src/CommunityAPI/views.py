@@ -23,14 +23,15 @@ import uuid
 from CommunityAPI.filters import IsOwnerFilterBackend, TagFilter
 
 from CommunityAPI.paginations import PostResultsSetPagination, NotificationSetPagination
-from CommunityAPI.permissions import IsOwner
+from CommunityAPI.permissions import IsOwner, CanHandleReport
 from .serializers import (
     EditCommentSerializer, PostImageSerializer, ReadCommentSerializer, TagSerializer, 
     EditMainPostSerializer, ReadMainPostSerializer, FavouritePostSerializer,
     NotificationSerializer, UserInformationSerializer, get_post_from_url, EditSubCommentSerializer, 
-    ReadSubCommentSerializer, resolve_avatar, resolve_post_content, resolve_username, verify_comment, verify_main_post
+    ReadSubCommentSerializer, resolve_avatar, resolve_post_content, resolve_username, verify_comment, verify_main_post, 
+    ReportSerializer, CreateReportSerializer
     )
-from .models import Post, PostImage, Tag, FavouritePost, Notification, UserInformation
+from .models import Post, PostImage, Report, Tag, FavouritePost, Notification, UserInformation
 from django.db.transaction import atomic
 
 # 相关的后端开发文档参见： https://dev.cssaunimelb.com/doc/rest-framework-sSVw9rou1R
@@ -417,7 +418,7 @@ class CensorViewSet(viewsets.GenericViewSet, PermissionRequiredMixin):
 
     @atomic
     @swagger_auto_schema(method='POST', operation_description='屏蔽帖子',
-        request_body=None, responses={202: '处理成功'})
+        request_body=None, responses={202: '处理成功', 401: '未授权'})
     @action(methods=['POST'], detail=True, url_path='cenosr', url_name='censor_post',
         serializer_class=None, permission_classes=[permissions.IsAuthenticated])
     def censor_post(self, request, pk=None):
@@ -425,30 +426,36 @@ class CensorViewSet(viewsets.GenericViewSet, PermissionRequiredMixin):
         instance.censored=True
         instance.save()
         CONTENT_TEXT_LENGTH = 20
-        
+
+        if not request.user.has_perm('censor_post'):
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+
         if not instance.replyToId:
             data={
                 'type': 'main_post',
-                'post_id': instance.pk,
-                'post_tag_id': instance.tag_id,
-                'post_title': resolve_post_content(instance).title, 
-                'content_summary': resolve_post_content(instance).text[:CONTENT_TEXT_LENGTH],              
+                'main_post_id': instance.pk,
+                'main_post_tag_id': instance.tag_id,
+                'main_post_title': resolve_post_content(instance.replyToId).title, 
+                'content_summary': resolve_post_content(instance).text[:CONTENT_TEXT_LENGTH],      
+                'reason': '其他理由',     
             }
         elif not instance.replyToComment:
             data={
                 'type': 'comment',
                 'main_post_id': instance.replyToId.id, 
+                'main_post_tag_id': instance.replyToId.tag_id,
                 'main_post_title': resolve_post_content(instance.replyToId).title, 
-                'comment_id': instance.pk,
-                'content_summary': resolve_post_content(instance).text[:CONTENT_TEXT_LENGTH],                
+                'content_summary': resolve_post_content(instance).text[:CONTENT_TEXT_LENGTH],      
+                'reason': '其他理由',      
             }
         else:
             data={
-                'type': 'comment',
+                'type': 'subcomment',
                 'main_post_id': instance.replyToComment.replyToId.id, 
+                'main_post_tag_id': instance.replyToComment.replyToId.tag_id,
                 'main_post_title': resolve_post_content(instance.replyToComment.replyToId).title, 
-                'comment_id': instance.pk,
-                'content_summary': resolve_post_content(instance).text[:CONTENT_TEXT_LENGTH],                
+                'content_summary': resolve_post_content(instance).text[:CONTENT_TEXT_LENGTH],      
+                'reason': '其他理由',             
             }
 
         Notification.objects.create(
@@ -492,3 +499,25 @@ class UserInformationView(APIView):
         """
         UserInformation.objects.filter(user_id=request.user.id).delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+class ReportViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
+    permission_classes = [permissions.IsAuthenticated]
+    authentication_classes = (JWTAuthentication,)
+    serializer_class = ReportSerializer
+    queryset = Report.objects.filter()
+
+    @atomic
+    @swagger_auto_schema(method='POST', operation_description='举报帖子',
+        request_body=None, responses={202: '举报成功'})
+    @action(methods=['POST'], detail=False, url_path='create', url_name='report_post',
+        serializer_class=CreateReportSerializer, permission_classes=[permissions.IsAuthenticated])
+    def report_post(self, request):
+        userProfile: UserProfile = self.request.user
+        print(request.data)
+        Report.objects.create(
+            createdBy_id = userProfile.pk, 
+            targetPost_id = request.data['targetPost'], 
+            reason = request.data['reason'], 
+            type=request.data['type']
+        )
+        return Response(status=status.HTTP_200_OK)

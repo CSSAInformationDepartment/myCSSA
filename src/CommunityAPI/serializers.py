@@ -393,3 +393,9 @@ class ReportSerializer(serializers.ModelSerializer):
         fields = '__all__'
         read_only_fields = ['createdBy', 'resolved', 'resolvedBy', 'targetPost']
         depth = 1
+
+class CreateReportSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.Report
+        fields = ('targetPost', 'reason', 'type')
