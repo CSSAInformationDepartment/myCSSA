@@ -19,6 +19,7 @@ from drf_yasg import openapi
 from rest_framework.fields import empty
 from rest_framework.views import APIView
 from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework.authentication import SessionAuthentication
 import uuid
 from CommunityAPI.filters import IsOwnerFilterBackend, TagFilter
 
@@ -411,7 +412,7 @@ class ImageUploadView(APIView):
 
 class CensorViewSet(viewsets.GenericViewSet, PermissionRequiredMixin):
     permission_classes = [permissions.IsAuthenticated]
-    authentication_classes = (JWTAuthentication,)
+    authentication_classes = (JWTAuthentication, SessionAuthentication)
     permission_required= ('censor_post',)
     queryset=models.Post.objects.all()
 
@@ -423,6 +424,7 @@ class CensorViewSet(viewsets.GenericViewSet, PermissionRequiredMixin):
     def censor_post(self, request, pk=None):
         instance = self.get_object()
         instance.censored=True
+        instance.censoredBy=request.user.userprofile
         instance.save()
         CONTENT_TEXT_LENGTH = 20
         

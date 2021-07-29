@@ -16,15 +16,27 @@
 <p>在这个页面可以显示帖子的全文，无论是否被屏蔽或删除，都能显示出来</p>
 
 {% comment %} 
-TODO: 
-加一个input，可以让用户输入post id
+TODO:
 
 给这个页面加上权限控制（可能需要添加一个新权限）
 
+在 src\myCSSAhub\templates\myCSSAhub\component\_sidemenu.html 里加上这一页（需要判断权限）
+
+DONE:
+
+加一个input，可以让用户输入post id
+
 在这里添加一个按钮，让管理员可以一键屏蔽此文章（调用 censor api）
 
-在 src\myCSSAhub\templates\myCSSAhub\component\_sidemenu.html 里加上这一页（需要判断权限）
 {% endcomment %}
+<div style="display: flex; flex-direction: row; margin-bottom: 20px;">
+    <form action="">
+      帖子ID: <input type="number" name="id" min="1">
+        <input type="submit">
+    </form>
+
+    <button style="margin-left: 20vw" type="submit" id="btn_censor"> 屏蔽{{id}} </button>
+</div>
 
 {% if not post %}
 <p>没有id为 {{id}} 的帖子</p>
@@ -82,3 +94,33 @@ TODO:
 {% endif %}
 
 {% endblock pageContent %}
+
+{% block ExtraJS %}
+
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+<script>
+
+function GetQueryString(name){
+     var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+     var r = window.location.search.substr(1).match(reg);
+     if(r!=null)return  unescape(r[2]); return null;
+}
+
+$('#btn_censor').click(function(){
+    var post_id = GetQueryString("id")
+    var bearer_token = "Bearer " + localStorage.getItem("access");
+    axios.defaults.xsrfCookieName = 'csrftoken'
+    axios.defaults.xsrfHeaderName = "X-CSRFTOKEN"
+    axios.post("/api/community/all-post/"+post_id+"/cenosr/", {
+                csrftoken: csrftoken,
+                Authorization: bearer_token
+            })
+    .then(function(response){
+        console.log(response)
+    });
+
+});
+</script>
+
+{% endblock ExtraJS %}
