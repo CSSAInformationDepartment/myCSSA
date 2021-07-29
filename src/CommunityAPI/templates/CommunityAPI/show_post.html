@@ -1,0 +1,84 @@
+{% extends 'myCSSAhub/component/_layout.html' %}
+
+{% block pageTitle %}
+帖子正文
+{% endblock pageTitle %}
+
+{% block BreadcrumbPath %}
+  <li class="breadcrumb-item">圈子</li>
+  <li class="breadcrumb-item active">
+    <a href="{% url 'myCSSAhub:CommunityAPI:show_post' %}">帖子正文</a>
+  </li>
+{% endblock BreadcrumbPath %}
+
+{% block pageContent %}
+
+<p>在这个页面可以显示帖子的全文，无论是否被屏蔽或删除，都能显示出来</p>
+
+{% comment %} 
+TODO: 
+加一个input，可以让用户输入post id
+
+给这个页面加上权限控制（可能需要添加一个新权限）
+
+在这里添加一个按钮，让管理员可以一键屏蔽此文章（调用 censor api）
+
+在 src\myCSSAhub\templates\myCSSAhub\component\_sidemenu.html 里加上这一页（需要判断权限）
+{% endcomment %}
+
+{% if not post %}
+<p>没有id为 {{id}} 的帖子</p>
+
+{% else %}
+
+<div class="row">
+    <div class="col-lg-6 col-md-12 col-sm-12">
+        <div class="card">
+            <div class="card-header">
+            <i class="fa fa-align-justify"></i> 帖子
+            </div>
+            <div class="card-body">
+                <div class="list-group">
+
+                    <div class="list-group-item">
+                        <div class="d-felx w-100 justify-content-between">
+                            <h5 class="mb-1">标题</h5>
+                        </div>
+                        <p class="mb-1">
+                            {{content.title}}
+                        </p>
+                    </div>
+
+                    <div class="list-group-item">
+                        <div class="d-felx w-100 justify-content-between">
+                            <h5 class="mb-1">正文</h5>
+                        </div>
+                        <p class="mb-1">
+                            {{content.text}}
+                        </p>
+                    </div>
+
+                    <div class="list-group-item">
+                        <div class="d-felx w-100 justify-content-between">
+                            <h5 class="mb-1">图片</h5>
+                        </div>
+                        <p class="mb-1">
+                            <ul>
+                            {% for image in content.images.all %}
+                            <li> <a href="{{image.image.url}}">{{image.id}}</a> </li>
+                            {% endfor %}
+                            </ul>
+                        </p>
+                    </div>
+
+                    {% comment %} 在这里加上其他的field {% endcomment %}
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endif %}
+
+{% endblock pageContent %}
