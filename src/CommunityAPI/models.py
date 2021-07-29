@@ -86,11 +86,13 @@ class Notification(models.Model):
     # 列出所有类型，防止打错字
     REPLY = 'REPLY'
     CENSOR = 'CENSOR'
+    DECENSOR = 'DECENSOR'
     # End
 
     notificationTypeChoices = [
         (REPLY, '回复'),
-        (CENSOR, '屏蔽')
+        (CENSOR, '屏蔽'),
+        (DECENSOR, '解除屏蔽'),
     ]
     type = CharField('通知类型', choices=notificationTypeChoices, max_length=100)
 
@@ -117,6 +119,11 @@ class Report(models.Model):
     
     reportTypeChoices = [] # TODO: 决定类型
     type = CharField('举报类型', choices=reportTypeChoices, max_length=100)
+
+    class Meta:
+        permissions = (
+            ("can_handle_report", "Can handle report"),
+        )
 
 class UserInformation(models.Model):
 
