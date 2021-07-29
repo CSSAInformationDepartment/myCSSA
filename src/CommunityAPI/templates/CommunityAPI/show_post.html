@@ -156,16 +156,16 @@ function GetQueryString(name){
 $('#btn_censor').click(function(){
     axios.defaults.xsrfCookieName = 'csrftoken'
     axios.defaults.xsrfHeaderName = "X-CSRFTOKEN"
-    axios.post("/api/community/all-post/{{id}}/cenosr/", {
+    axios.post("/api/community/all-post/{{id}}/censor/", {
                 csrftoken: csrftoken
             })
     .then(function(response){
-        if(response.status == 202) {
-            alert("屏蔽成功！");
-        } else{
-            alert("屏蔽失败！找找信息部！");
-        }
-    });
+        location.reload()
+    })
+    .catch(function(err) {
+        alert('屏蔽失败，请找信息部')
+        alert(err.response.data)
+    })
 });
 </script>
 
