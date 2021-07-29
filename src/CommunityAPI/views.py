@@ -1,5 +1,5 @@
 from rest_framework.decorators import api_view
-from rest_framework.exceptions import ParseError
+from rest_framework.exceptions import ParseError, ValidationError
 from rest_framework.generics import get_object_or_404
 from rest_framework.parsers import MultiPartParser
 from rest_framework.permissions import AllowAny
@@ -23,7 +23,7 @@ import uuid
 from CommunityAPI.filters import IsOwnerFilterBackend, TagFilter
 
 from CommunityAPI.paginations import PostResultsSetPagination, NotificationSetPagination
-from CommunityAPI.permissions import IsOwner, CanHandleReport
+from CommunityAPI.permissions import CanCensorPost, IsOwner, CanHandleReport
 from .serializers import (
     EditCommentSerializer, PostImageSerializer, ReadCommentSerializer, TagSerializer, 
     EditMainPostSerializer, ReadMainPostSerializer, FavouritePostSerializer,
@@ -410,59 +410,88 @@ class ImageUploadView(APIView):
 
         return Response(output.data, status=status.HTTP_201_CREATED)
 
-class CensorViewSet(viewsets.GenericViewSet, PermissionRequiredMixin):
-    permission_classes = [permissions.IsAuthenticated]
+class CensorViewSet(viewsets.GenericViewSet):
+    permission_classes = [CanCensorPost]
     authentication_classes = (JWTAuthentication,)
-    permission_required= ('censor_post',)
-    queryset=models.Post.objects.all()
+    queryset=models.Post.objects.filter(deleted=False)
+
+    NOTIFICATION_CONTENT_TEXT_LENGTH = 20
+
+    def _create_notification_data(self, instance: Post):
+        if not instance.replyToId:
+            return {
+                'type': 'main_post',
+                'main_post_id': instance.pk,
+                'main_post_tag_id': instance.tag_id,
+                'main_post_title': resolve_post_content(instance).title, 
+                'content_summary': resolve_post_content(instance).text[:self.NOTIFICATION_CONTENT_TEXT_LENGTH],      
+            }
+        elif not instance.replyToComment:
+            return {
+                'type': 'comment',
+                'main_post_id': instance.replyToId.id, 
+                'main_post_tag_id': instance.replyToId.tag_id,
+                'main_post_title': resolve_post_content(instance.replyToId).title, 
+                'content_summary': resolve_post_content(instance).text[:self.NOTIFICATION_CONTENT_TEXT_LENGTH],      
+            }
+        else:
+            return {
+                'type': 'subcomment',
+                'main_post_id': instance.replyToComment.replyToId.id, 
+                'main_post_tag_id': instance.replyToComment.replyToId.tag_id,
+                'main_post_title': resolve_post_content(instance.replyToComment.replyToId).title, 
+                'content_summary': resolve_post_content(instance).text[:self.NOTIFICATION_CONTENT_TEXT_LENGTH],      
+            }
 
     @atomic
     @swagger_auto_schema(method='POST', operation_description='屏蔽帖子',
         request_body=None, responses={202: '处理成功', 401: '未授权'})
     @action(methods=['POST'], detail=True, url_path='censor', url_name='censor_post',
-        serializer_class=None, permission_classes=[permissions.IsAuthenticated])
+        serializer_class=None)
     def censor_post(self, request, pk=None):
-        instance = self.get_object()
+        instance: Post = self.get_object()
+
+        if instance.censored:
+            raise ValidationError('帖子已经被屏蔽，不能再次屏蔽')
+
         instance.censored=True
+        instance.censoredBy_id=request.user.id
         instance.save()
-        CONTENT_TEXT_LENGTH = 20
-
-        if not request.user.has_perm('censor_post'):
-            return Response(status=status.HTTP_401_UNAUTHORIZED)
-
-        if not instance.replyToId:
-            data={
-                'type': 'main_post',
-                'main_post_id': instance.pk,
-                'main_post_tag_id': instance.tag_id,
-                'main_post_title': resolve_post_content(instance.replyToId).title, 
-                'content_summary': resolve_post_content(instance).text[:CONTENT_TEXT_LENGTH],      
-                'reason': '其他理由',     
-            }
-        elif not instance.replyToComment:
-            data={
-                'type': 'comment',
-                'main_post_id': instance.replyToId.id, 
-                'main_post_tag_id': instance.replyToId.tag_id,
-                'main_post_title': resolve_post_content(instance.replyToId).title, 
-                'content_summary': resolve_post_content(instance).text[:CONTENT_TEXT_LENGTH],      
-                'reason': '其他理由',      
-            }
-        else:
-            data={
-                'type': 'subcomment',
-                'main_post_id': instance.replyToComment.replyToId.id, 
-                'main_post_tag_id': instance.replyToComment.replyToId.tag_id,
-                'main_post_title': resolve_post_content(instance.replyToComment.replyToId).title, 
-                'content_summary': resolve_post_content(instance).text[:CONTENT_TEXT_LENGTH],      
-                'reason': '其他理由',             
-            }
 
         Notification.objects.create(
             user=instance.createdBy,
             targetPost=instance,
             type=Notification.CENSOR,
-            data=data,
+            data={
+                **self._create_notification_data(instance),
+                'reason': '其他理由',      
+            },
+            )
+            
+        return Response(status=status.HTTP_202_ACCEPTED)
+
+    @atomic
+    @swagger_auto_schema(method='POST', operation_description='取消帖子屏蔽',
+        request_body=None, responses={202: '处理成功', 401: '未授权'})
+    @action(methods=['POST'], detail=True, url_path='decensor',
+        serializer_class=None)
+    def decensor_post(self, request, pk=None):
+        instance: Post = self.get_object()
+
+        if not instance.censored:
+            raise ValidationError('帖子还未被屏蔽，不能解除屏蔽')
+
+        instance.censored=False
+        instance.censoredBy=None
+        instance.save()
+
+        Notification.objects.create(
+            user=instance.createdBy,
+            targetPost=instance,
+            type=Notification.DECENSOR,
+            data={
+                **self._create_notification_data(instance),
+            },
             )
             
         return Response(status=status.HTTP_202_ACCEPTED)
