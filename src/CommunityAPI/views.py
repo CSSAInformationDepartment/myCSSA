@@ -419,7 +419,7 @@ class CensorViewSet(viewsets.GenericViewSet, PermissionRequiredMixin):
     @atomic
     @swagger_auto_schema(method='POST', operation_description='屏蔽帖子',
         request_body=None, responses={202: '处理成功', 401: '未授权'})
-    @action(methods=['POST'], detail=True, url_path='cenosr', url_name='censor_post',
+    @action(methods=['POST'], detail=True, url_path='censor', url_name='censor_post',
         serializer_class=None, permission_classes=[permissions.IsAuthenticated])
     def censor_post(self, request, pk=None):
         instance = self.get_object()
@@ -501,7 +501,7 @@ class UserInformationView(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 class ReportViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [CanHandleReport]
     authentication_classes = (JWTAuthentication,)
     serializer_class = ReportSerializer
     queryset = Report.objects.filter()
