@@ -35,7 +35,13 @@ DONE:
         <input type="submit">
     </form>
 
-    <button style="margin-left: 20vw" type="submit" id="btn_censor"> 屏蔽{{id}} </button>
+    {% if post %}
+        {% if post.censored %}
+            <button style="margin-left: 20vw" type="submit" id="btn_cancel_censor"> 已被封禁 </button>
+        {% else %}
+            <button style="margin-left: 20vw" type="submit" id="btn_censor"> 屏蔽 </button>
+        {% endif %}
+    {% endif %}
 </div>
 
 {% if not post %}
@@ -78,6 +84,7 @@ DONE:
                             <ul>
                             {% for image in content.images.all %}
                             <li> <a href="{{image.image.url}}">{{image.id}}</a> </li>
+                            <img src="{{image.image.url}}"/ >
                             {% endfor %}
                             </ul>
                         </p>
@@ -108,18 +115,18 @@ function GetQueryString(name){
 }
 
 $('#btn_censor').click(function(){
-    var post_id = GetQueryString("id")
-    var bearer_token = "Bearer " + localStorage.getItem("access");
     axios.defaults.xsrfCookieName = 'csrftoken'
     axios.defaults.xsrfHeaderName = "X-CSRFTOKEN"
-    axios.post("/api/community/all-post/"+post_id+"/cenosr/", {
-                csrftoken: csrftoken,
-                Authorization: bearer_token
+    axios.post("/api/community/all-post/{{id}}/cenosr/", {
+                csrftoken: csrftoken
             })
     .then(function(response){
-        console.log(response)
+        if(response.status == 202) {
+            alert("屏蔽成功！");
+        } else{
+            alert("屏蔽失败！找找信息部！");
+        }
     });
-
 });
 </script>
 
