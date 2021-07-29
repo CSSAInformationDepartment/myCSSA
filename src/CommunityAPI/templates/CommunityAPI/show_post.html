@@ -15,6 +15,10 @@
 
 <p>在这个页面可以显示帖子的全文，无论是否被屏蔽或删除，都能显示出来</p>
 
+<p>在下面的输入框中输入帖子ID可以直接查看某个帖子的内容（也可以查看评论）</p>
+
+<p>某些字段可能为空，比如评论就没有tag和标题</p>
+
 {% comment %} 
 TODO: 
 加一个input，可以让用户输入post id
@@ -32,7 +36,7 @@ TODO:
 {% else %}
 
 <div class="row">
-    <div class="col-lg-6 col-md-12 col-sm-12">
+    <div class="col-lg-12">
         <div class="card">
             <div class="card-header">
             <i class="fa fa-align-justify"></i> 帖子
@@ -71,7 +75,42 @@ TODO:
                         </p>
                     </div>
 
-                    {% comment %} 在这里加上其他的field {% endcomment %}
+                    <div class="list-group-item">
+                        <div class="d-felx w-100 justify-content-between">
+                            <h5 class="mb-1">回复给</h5>
+                        </div>
+                        <p class="mb-1">
+                            {% if post.replyToId %}
+                            <a href="{% url 'myCSSAhub:CommunityAPI:show_post' %}?id={{post.replyToId.pk}}">
+                                {{post.replyToId.pk}}
+                            </a>
+                            {% endif %}
+                        </p>
+                    </div>
+
+                    <div class="list-group-item">
+                        <div class="d-felx w-100 justify-content-between">
+                            <h5 class="mb-1">所属一级评论（只有二级及以上评论才有本字段）</h5>
+                        </div>
+                        <p class="mb-1">
+                            {% if post.replyToComment %}
+                            <a href="{% url 'myCSSAhub:CommunityAPI:show_post' %}?id={{post.replyToComment.pk}}">
+                                {{post.replyToComment.pk}}
+                            </a>
+                            {% endif %}
+                        </p>
+                    </div>
+
+                    {% for title, value in post_fields %}
+                    <div class="list-group-item">
+                        <div class="d-felx w-100 justify-content-between">
+                            <h5 class="mb-1">{{title}}</h5>
+                        </div>
+                        <p class="mb-1">
+                            {{value}}
+                        </p>
+                    </div>
+                    {% endfor %}
 
                 </div>
             </div>
