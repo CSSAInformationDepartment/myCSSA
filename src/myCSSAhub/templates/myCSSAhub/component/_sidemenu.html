@@ -191,6 +191,13 @@
                 </li>
               {% endif %}
 
+              {% if perms.CommunityAPI.change_post %}
+                <li class="nav-item">
+                  <a class="nav-link" href="{% url 'myCSSAhub:CommunityAPI:show_post' %}">
+                    <i class="nav-icon fa fa-camera-retro"></i> 圈子审核 </a>
+                </li>
+              {% endif %}
+
 
               {% endif %}
           </ul>
