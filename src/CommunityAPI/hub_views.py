@@ -16,15 +16,18 @@ def pk(instance):
 class ShowPostView(LoginRequiredMixin, TemplateView):
     login_url = '/hub/login/'
     template_name = 'CommunityAPI/show_post.html'
+    permission_required = ('CommunityAPI.censor_post')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        
+
         id = self.request.GET.get('id', 0)
         post: Post = Post.objects.filter(id=id).first()
+
         if post:
             return {
                 **context,
+                'id': id,
                 'post': post,
                 'content': resolve_post_content(post),
                 'post_fields': [
