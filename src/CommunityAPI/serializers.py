@@ -385,3 +385,11 @@ class UserInformationSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.UserInformation
         fields = ['username', 'avatarUrl']
+
+class ReportSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.Report
+        fields = '__all__'
+        read_only_fields = ['createdBy', 'resolved', 'resolvedBy', 'targetPost']
+        depth = 1
