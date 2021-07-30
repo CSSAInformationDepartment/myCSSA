@@ -9,6 +9,7 @@ from EventAPI import urls as EventUrls
 from FlexForm import urls as FlexFormUrls
 from CommunicateManager import urls as CommUrls
 from PhotoCompetition import hub_urls as PhotoCompUrls
+from CommunityAPI import hub_urls as CommunityUrls
 
 from PrizeAPI.views import (LuckyDrawDataView,LuckyDrawEventView,LuckyDrawView)
 
@@ -51,6 +52,7 @@ urlpatterns += [
     path('flexform/', include(FlexFormUrls, namespace="FlexForm")),
     path('communication/',include(CommUrls, namespace='Comm')),
     path('photo-competition/', include(PhotoCompUrls, namespace='PhotoComp')),
+    path('community/', include(CommunityUrls, namespace='CommunityAPI')),
 ]
 
 ## Internal AJAX path

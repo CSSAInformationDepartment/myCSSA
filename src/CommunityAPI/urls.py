@@ -8,6 +8,7 @@ router.register(r'tag', views.TagViewSet)
 router.register(r'post', views.MainPostViewSet, 'post')
 router.register(r'notification', views.NotificationViewSet, 'notification')
 router.register(r'all-post', views.CensorViewSet, 'censor')
+router.register(r'report', views.ReportViewSet, 'report')
 
 comment_router = routers.DefaultRouter()
 comment_router.register(r'comment', views.CommentViewSet, 'comment')
@@ -20,4 +21,5 @@ urlpatterns = [
     path('imageupload', views.ImageUploadView.as_view()),
     path('post/<int:post_id>/', include(comment_router.urls)),
     path('comment/<int:comment_id>/', include(subcomment_router.urls)),
+    path('user-info', views.UserInformationView.as_view())
 ]
