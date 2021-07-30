@@ -87,6 +87,28 @@ class FavouritePostViewSet(
         )
         return Response(status=status.HTTP_202_ACCEPTED)
 
+    def create_reply_notification(self, 
+        favoritePost: Post, creator: Post.createdy, favoriteUser: UserProfile):
+     
+        CONTENT_TEXT_LENGTH = 20
+
+        return Notification.objects.create(
+            user = creator,
+            targetPost = favoritePost,
+            type=Notification.Favorite,
+            data={
+
+                'favorite_username': resolve_username(favoriteUser),
+                'favorite_avatar': resolve_avatar(favoriteUser),
+              
+                "target_post_tag": favoritePost.tag,
+                'target_post_title': resolve_post_content(favoritePost).title,
+            
+                
+            },
+            )
+
+
     def destroy(self, request, *args, **kwargs):
         user = self.request.user.id
         post = kwargs['pk']
@@ -154,6 +176,8 @@ class PostViewSetBase(viewsets.ReadOnlyModelViewSet, mixins.DestroyModelMixin):
     def create_post_response(self, post, read_serializer):
         result = self.create_serializer(read_serializer, instance=post).data
         return Response(data=result, status=status.HTTP_201_CREATED)
+    
+   
 
     def create_reply_notification(self, 
         target: Post, replier: Post, comment: Post, main_post: Post):

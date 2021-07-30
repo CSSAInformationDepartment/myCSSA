@@ -40,3 +40,15 @@
   'reason': '封禁的理由',
 }
 ```
+
+### 'FAVORITE' 被收藏的通知
+回的数据中， `targetPost` 为收藏的目标的id。
+
+`data` 字段中包含了前端可以使用的数据，其格式如下：
+
+```python
+{'favorite_username': 收藏者的username
+  'favorite_avatar': 收藏者的头像
+  "target_post_tag": 被收藏帖子的的tag
+  'target_post_title': 被收藏帖子的title
+}
