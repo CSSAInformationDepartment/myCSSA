@@ -427,17 +427,17 @@ class CensorViewSet(viewsets.GenericViewSet, PermissionRequiredMixin):
         instance.save()
         CONTENT_TEXT_LENGTH = 20
 
-        if not request.user.has_perm('censor_post'):
-            return Response(status=status.HTTP_401_UNAUTHORIZED)
+        """ if not request.user.has_perm('censor_post'):
+            return Response(status=status.HTTP_401_UNAUTHORIZED) """
 
         if not instance.replyToId:
             data={
                 'type': 'main_post',
                 'main_post_id': instance.pk,
                 'main_post_tag_id': instance.tag_id,
-                'main_post_title': resolve_post_content(instance.replyToId).title, 
+                'main_post_title': resolve_post_content(instance).title, 
                 'content_summary': resolve_post_content(instance).text[:CONTENT_TEXT_LENGTH],      
-                'reason': '其他理由',     
+                'reason': '其他理由', 
             }
         elif not instance.replyToComment:
             data={
@@ -446,7 +446,7 @@ class CensorViewSet(viewsets.GenericViewSet, PermissionRequiredMixin):
                 'main_post_tag_id': instance.replyToId.tag_id,
                 'main_post_title': resolve_post_content(instance.replyToId).title, 
                 'content_summary': resolve_post_content(instance).text[:CONTENT_TEXT_LENGTH],      
-                'reason': '其他理由',      
+                'reason': '其他理由', 
             }
         else:
             data={
