@@ -1,0 +1,172 @@
+{% extends 'myCSSAhub/component/_layout.html' %}
+
+{% block pageTitle %}
+帖子正文
+{% endblock pageTitle %}
+
+{% block BreadcrumbPath %}
+  <li class="breadcrumb-item">圈子</li>
+  <li class="breadcrumb-item active">
+    <a href="{% url 'myCSSAhub:CommunityAPI:show_post' %}">帖子正文</a>
+  </li>
+{% endblock BreadcrumbPath %}
+
+{% block pageContent %}
+
+<p>在这个页面可以显示帖子的全文，无论是否被屏蔽或删除，都能显示出来</p>
+
+<p>在下面的输入框中输入帖子ID可以直接查看某个帖子的内容（也可以查看评论）</p>
+
+<p>某些字段可能为空，比如评论就没有tag和标题</p>
+
+{% comment %} 
+TODO:
+
+给这个页面加上权限控制（可能需要添加一个新权限）   (大佬这个还要做么？是否就在view那边做了就好了)
+
+DONE:
+
+加一个input，可以让用户输入post id
+
+在这里添加一个按钮，让管理员可以一键屏蔽此文章（调用 censor api）
+
+在 src\myCSSAhub\templates\myCSSAhub\component\_sidemenu.html 里加上这一页（需要判断权限）
+
+{% endcomment %}
+<div style="display: flex; flex-direction: row; margin-bottom: 20px;">
+    <form action="">
+      帖子ID: <input type="number" name="id" min="1">
+        <input type="submit">
+    </form>
+
+    {% if post %}
+        {% if post.censored %}
+            <button style="margin-left: 20vw" type="submit" id="btn_cancel_censor"> 已被封禁 </button>
+        {% else %}
+            <button style="margin-left: 20vw" type="submit" id="btn_censor"> 屏蔽 </button>
+        {% endif %}
+    {% endif %}
+</div>
+
+{% if not post %}
+<p>没有id为 {{id}} 的帖子</p>
+
+{% else %}
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header">
+            <i class="fa fa-align-justify"></i> 帖子
+            </div>
+            <div class="card-body">
+                <div class="list-group">
+
+                    <div class="list-group-item">
+                        <div class="d-felx w-100 justify-content-between">
+                            <h5 class="mb-1">标题</h5>
+                        </div>
+                        <p class="mb-1">
+                            {{content.title}}
+                        </p>
+                    </div>
+
+                    <div class="list-group-item">
+                        <div class="d-felx w-100 justify-content-between">
+                            <h5 class="mb-1">正文</h5>
+                        </div>
+                        <p class="mb-1">
+                            {{content.text}}
+                        </p>
+                    </div>
+
+                    <div class="list-group-item">
+                        <div class="d-felx w-100 justify-content-between">
+                            <h5 class="mb-1">图片</h5>
+                        </div>
+                        <p class="mb-1">
+                            <ul>
+                            {% for image in content.images.all %}
+                            <li> <a href="{{image.image.url}}">{{image.id}}</a> </li>
+                            <img src="{{image.image.url}}"/ >
+                            {% endfor %}
+                            </ul>
+                        </p>
+                    </div>
+
+                    <div class="list-group-item">
+                        <div class="d-felx w-100 justify-content-between">
+                            <h5 class="mb-1">回复给</h5>
+                        </div>
+                        <p class="mb-1">
+                            {% if post.replyToId %}
+                            <a href="{% url 'myCSSAhub:CommunityAPI:show_post' %}?id={{post.replyToId.pk}}">
+                                {{post.replyToId.pk}}
+                            </a>
+                            {% endif %}
+                        </p>
+                    </div>
+
+                    <div class="list-group-item">
+                        <div class="d-felx w-100 justify-content-between">
+                            <h5 class="mb-1">所属一级评论（只有二级及以上评论才有本字段）</h5>
+                        </div>
+                        <p class="mb-1">
+                            {% if post.replyToComment %}
+                            <a href="{% url 'myCSSAhub:CommunityAPI:show_post' %}?id={{post.replyToComment.pk}}">
+                                {{post.replyToComment.pk}}
+                            </a>
+                            {% endif %}
+                        </p>
+                    </div>
+
+                    {% for title, value in post_fields %}
+                    <div class="list-group-item">
+                        <div class="d-felx w-100 justify-content-between">
+                            <h5 class="mb-1">{{title}}</h5>
+                        </div>
+                        <p class="mb-1">
+                            {{value}}
+                        </p>
+                    </div>
+                    {% endfor %}
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endif %}
+
+{% endblock pageContent %}
+
+{% block ExtraJS %}
+
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+<script>
+
+function GetQueryString(name){
+     var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+     var r = window.location.search.substr(1).match(reg);
+     if(r!=null)return  unescape(r[2]); return null;
+}
+
+$('#btn_censor').click(function(){
+    axios.defaults.xsrfCookieName = 'csrftoken'
+    axios.defaults.xsrfHeaderName = "X-CSRFTOKEN"
+    axios.post("/api/community/all-post/{{id}}/censor/", {
+                csrftoken: csrftoken
+            })
+    .then(function(response){
+        location.reload()
+    })
+    .catch(function(err) {
+        alert('屏蔽失败，请找信息部')
+        alert(err.response.data)
+    })
+});
+</script>
+
+{% endblock ExtraJS %}

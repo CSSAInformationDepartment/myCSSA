@@ -129,6 +129,10 @@ class PostSerializerMixin:
         repr['createdBy'] = resolve_username(instance.createdBy)
         repr['creatorAvatar'] = resolve_avatar(instance.createdBy)
 
+    def get_my(self, instance) -> bool:
+        user: UserProfile = self.context['request'].user
+        return instance.createdBy_id == user.id if user.is_authenticated else False
+
     def create_content(self, validated_data, post: models.Post):
         """
         从输入的json创建一个新的content版本
@@ -162,11 +166,13 @@ class ReadMainPostSerializer(PostSerializerMixin, serializers.ModelSerializer):
     favouriteCount = serializers.SerializerMethodField(label='收藏该帖子的人的数量')
     isFavourite = serializers.SerializerMethodField(label='本人是否已收藏，如果用户未登录，这里也是false')
 
+    my = serializers.SerializerMethodField(label='是否是我的帖子')
+
     class Meta:
         model = models.Post
         fields = ['id', 'tag', 'createTime', 'viewCount', 'viewableToGuest',
             # 正常情况下我们不需要再声明下面两个field，但是不这么搞的话 drf_yasg 会报错
-            'content', 'createdBy', 'creatorAvatar', 'favouriteCount', 'isFavourite']
+            'content', 'createdBy', 'creatorAvatar', 'favouriteCount', 'isFavourite', 'my']
 
     def get_favouriteCount(self, instance) -> int:
         return models.FavouritePost.objects.filter(post=instance).count()
@@ -231,11 +237,13 @@ class ReadCommentSerializer(PostSerializerMixin, serializers.ModelSerializer):
     createdBy = serializers.CharField(label='创建者的用户名')
     creatorAvatar = serializers.URLField(label='创建者的头像', read_only=True, allow_null=True)
 
+    my = serializers.SerializerMethodField(label='是否是我的帖子')
+
     class Meta:
         model = models.Post
         fields = ['id', 'createTime',
             # 正常情况下我们不需要再声明下面两个field，但是不这么搞的话 drf_yasg 会报错
-            'content', 'createdBy', 'creatorAvatar',]
+            'content', 'createdBy', 'creatorAvatar', 'my']
 
     def to_representation(self, instance: models.Post):
         repr = super().to_representation(instance)
@@ -311,11 +319,13 @@ class ReadSubCommentSerializer(PostSerializerMixin, serializers.ModelSerializer)
 
     replyToUser = serializers.CharField(label='回复的对象的用户名', read_only=True)
 
+    my = serializers.SerializerMethodField(label='是否是我的帖子')
+
     class Meta:
         model = models.Post
         fields = ['id', 'createTime', 'replyToId',
             # 正常情况下我们不需要再声明下面两个field，但是不这么搞的话 drf_yasg 会报错
-            'content', 'createdBy', 'creatorAvatar', 'replyToUser']
+            'content', 'createdBy', 'creatorAvatar', 'replyToUser', 'my']
 
     def to_representation(self, instance: models.Post):
         repr = super().to_representation(instance)
