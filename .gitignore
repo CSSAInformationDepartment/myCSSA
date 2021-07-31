@@ -14,8 +14,6 @@ settings.json
 .src/media/*
 !.gitignore
 !.gitkeep
-Pipfile
-Pipfile.lock
 .Pipfile
 .Pipfile.lock
 .CSSANet.code-workspace
