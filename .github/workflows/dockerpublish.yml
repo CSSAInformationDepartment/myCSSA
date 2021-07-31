@@ -26,13 +26,13 @@ jobs:
         run: docker build . --file Dockerfile --tag image
         
       - name: Smoke test
-        run: docker run image python manage.py check
+        run: docker run image python manage.py check --settings=CSSANet.settings.ci
 
   # Push image to GitHub Packages.
   # See also https://docs.docker.com/docker-hub/builds/
   push:
     # Ensure test job passes before pushing image.
-    # needs: test
+    needs: test
 
     runs-on: ubuntu-latest
     if: github.event_name == 'push'
