@@ -1,10 +1,11 @@
-FROM python:3.9.6-alpine3.14
+
+FROM python:3.8.4-alpine3.12
 EXPOSE 8000
 # Set environment varibles
 
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
-ENV PYTHONPATH=/usr/local/lib/python3.9/site-packages/:/code/
+ENV PYTHONPATH=/usr/local/lib/python3.7/site-packages/:/code/
 
 
 # System dependency installation
