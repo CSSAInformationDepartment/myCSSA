@@ -22,9 +22,11 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Run tests
-        # 冒烟测试
-        run: docker build . --file Dockerfile            
+      - name: Build image
+        run: docker build . --file Dockerfile --tag image
+        
+      - name: Smoke test
+        run: docker run image python manage.py check
 
   # Push image to GitHub Packages.
   # See also https://docs.docker.com/docker-hub/builds/
