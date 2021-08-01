@@ -18,10 +18,25 @@ class TagSerializer(serializers.ModelSerializer):
         fields = ['id', 'title']
 
 class NotificationSerializer(serializers.ModelSerializer):
+
+    senderUsername = serializers.SerializerMethodField(label='发送者的用户名')
+    senderAvatar = serializers.SerializerMethodField(label='发送者的头像地址')
+
     class Meta:
         model = models.Notification
-        fields = ['id', 'targetPost','data', 'type', 'read']
+        fields = ['id', 'targetPost','data', 'type', 'read',
+            'senderUsername', 'senderAvatar']
 
+    def get_senderUsername(self, instance) -> Optional[str]:
+        if not instance.sender:
+            return None
+        return resolve_username(instance.sender)
+
+    @swagger_serializer_method(serializer_or_field=serializers.URLField)
+    def get_senderAvatar(self, instance):
+        if not instance.sender:
+            return None
+        return resolve_avatar(instance.sender)
         
 class PostImageSerializer(serializers.ModelSerializer):
 
