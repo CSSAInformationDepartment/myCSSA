@@ -75,6 +75,26 @@ class FavouritePostViewSet(
         request_body=None, responses={202: '创建成功'})
     @action(methods=['PUT'], detail=True, url_path='add', url_name='add_favouritepost',
         serializer_class=None, permission_classes=[permissions.IsAuthenticated])
+
+    def create_favorite_notification(self, 
+        favoritePost: Post, creator: Post.createdy, favoriteUser: UserProfile):
+     
+        CONTENT_TEXT_LENGTH = 20
+        if favoritePost.id == creator:
+            return Response(status=status.HTTP_202_ACCEPTED)
+        return Notification.objects.create(
+            user = creator,
+            targetPost = favoritePost,
+            type=Notification.Favorite,
+            data={
+
+                'favorite_username': resolve_username(favoriteUser),
+                'favorite_avatar': resolve_avatar(favoriteUser),
+                "target_post_tag": favoritePost.tag,
+                'target_post_title': resolve_post_content(favoritePost).title,
+            },
+        )
+    
     def add_favouritepost(self, request, pk=None):
         userProfile: UserProfile = self.request.user
         post = pk
@@ -85,29 +105,9 @@ class FavouritePostViewSet(
             user_id=userProfile.pk,
             post_id=post
         )
+        self.create_favorite_notification( 
+        post, post.createdy, UserProfile)
         return Response(status=status.HTTP_202_ACCEPTED)
-
-    def create_reply_notification(self, 
-        favoritePost: Post, creator: Post.createdy, favoriteUser: UserProfile):
-     
-        CONTENT_TEXT_LENGTH = 20
-
-        return Notification.objects.create(
-            user = creator,
-            targetPost = favoritePost,
-            type=Notification.Favorite,
-            data={
-
-                'favorite_username': resolve_username(favoriteUser),
-                'favorite_avatar': resolve_avatar(favoriteUser),
-              
-                "target_post_tag": favoritePost.tag,
-                'target_post_title': resolve_post_content(favoritePost).title,
-            
-                
-            },
-            )
-
 
     def destroy(self, request, *args, **kwargs):
         user = self.request.user.id
@@ -177,8 +177,6 @@ class PostViewSetBase(viewsets.ReadOnlyModelViewSet, mixins.DestroyModelMixin):
         result = self.create_serializer(read_serializer, instance=post).data
         return Response(data=result, status=status.HTTP_201_CREATED)
     
-   
-
     def create_reply_notification(self, 
         target: Post, replier: Post, comment: Post, main_post: Post):
         """
