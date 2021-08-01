@@ -70,6 +70,25 @@ class FavouritePostViewSet(
 
         return query_set
 
+    
+
+    def create_favorite_notification(self, 
+        favoritePost: Post, favoriteUser: UserProfile):
+     
+        if self.request.user.pk == favoritePost.createdBy_id:
+            return None
+        
+        return Notification.objects.create(
+            user = favoritePost.createdBy,
+            targetPost = favoritePost,
+            type= Notification.FAVORITE,
+            sender_id = favoriteUser.pk,
+            data={
+                "target_post_tag": favoritePost.tag_id,
+                'target_post_title': resolve_post_content(favoritePost).title,
+            },
+        )
+    
     @atomic
     @swagger_auto_schema(method='PUT', operation_description='添加收藏',
         request_body=None, responses={202: '创建成功'})
@@ -85,6 +104,9 @@ class FavouritePostViewSet(
             user_id=userProfile.pk,
             post_id=post
         )
+        favouritePost = Post.objects.get(id = post)
+    
+        self.create_favorite_notification( favouritePost, userProfile)
         return Response(status=status.HTTP_202_ACCEPTED)
 
     def destroy(self, request, *args, **kwargs):
@@ -154,7 +176,7 @@ class PostViewSetBase(viewsets.ReadOnlyModelViewSet, mixins.DestroyModelMixin):
     def create_post_response(self, post, read_serializer):
         result = self.create_serializer(read_serializer, instance=post).data
         return Response(data=result, status=status.HTTP_201_CREATED)
-
+    
     def create_reply_notification(self, 
         target: Post, replier: Post, comment: Post, main_post: Post) -> Optional[Notification]:
         """
