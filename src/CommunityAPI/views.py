@@ -238,7 +238,7 @@ class MainPostViewSet(PostViewSetBase):
 
         # 如果想要这个功能的话，可以在这里让管理员能看见被屏蔽和删除的文章
 
-        return query.order_by('-createTime')
+        return query.order_by('-createTime').select_related('createdBy')
 
     # 在swagger文档里的条目定义：
     @swagger_auto_schema(method='POST', operation_description='添加一个帖子',
