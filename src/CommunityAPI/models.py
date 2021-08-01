@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models.deletion import SET_NULL
 from django.db.models.fields import CharField
 from django.utils.timezone import now
 from sorl.thumbnail import ImageField as SorlImageField
@@ -82,6 +83,8 @@ class Notification(models.Model):
     targetPost = models.ForeignKey(Post, null=True, on_delete=models.CASCADE)
     data = models.JSONField('使用JSON表示额外的数据， 其格式根据type来变化')
     read = models.BooleanField('用户是否已读该通知', default=False)
+    sender = models.ForeignKey(UserProfile, on_delete=SET_NULL, null=True,
+        related_name='%(class)s_sender')
 
     # 列出所有类型，防止打错字
     REPLY = 'REPLY'
