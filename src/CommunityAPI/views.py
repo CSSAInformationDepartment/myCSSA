@@ -77,19 +77,19 @@ class FavouritePostViewSet(
         serializer_class=None, permission_classes=[permissions.IsAuthenticated])
 
     def create_favorite_notification(self, 
-        favoritePost: Post, creator: Post.createdy, favoriteUser: UserProfile):
+        favoritePost: Post, creator: Post.createdBy, favoriteUser: UserProfile):
      
         CONTENT_TEXT_LENGTH = 20
+        
         if favoritePost.id == creator:
             return Response(status=status.HTTP_202_ACCEPTED)
+        
         return Notification.objects.create(
             user = creator,
             targetPost = favoritePost,
-            type=Notification.Favorite,
+            type= Notification.FAVORITE,
+            sender = favoriteUser,
             data={
-
-                'favorite_username': resolve_username(favoriteUser),
-                'favorite_avatar': resolve_avatar(favoriteUser),
                 "target_post_tag": favoritePost.tag,
                 'target_post_title': resolve_post_content(favoritePost).title,
             },
@@ -105,8 +105,7 @@ class FavouritePostViewSet(
             user_id=userProfile.pk,
             post_id=post
         )
-        self.create_favorite_notification( 
-        post, post.createdy, UserProfile)
+        self.create_favorite_notification( post, post.createdBy , userProfile)
         return Response(status=status.HTTP_202_ACCEPTED)
 
     def destroy(self, request, *args, **kwargs):
