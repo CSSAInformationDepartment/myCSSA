@@ -90,14 +90,14 @@ class Notification(models.Model):
     REPLY = 'REPLY'
     CENSOR = 'CENSOR'
     DECENSOR = 'DECENSOR'
-    FAVORITE = 'FAVORITE'
+    FAVOURITE = 'FAVOURITE'
     # End
 
     notificationTypeChoices = [
         (REPLY, '回复'),
         (CENSOR, '屏蔽'),
         (DECENSOR, '解除屏蔽'),
-        (FAVORITE, '收藏'),
+        (FAVOURITE, '收藏'),
     ]
     type = CharField('通知类型', choices=notificationTypeChoices, max_length=100)
 
