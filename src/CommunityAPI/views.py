@@ -30,7 +30,7 @@ from .serializers import (
     EditMainPostSerializer, ReadMainPostSerializer, FavouritePostSerializer,
     NotificationSerializer, UserInformationSerializer, get_post_from_url, EditSubCommentSerializer, 
     ReadSubCommentSerializer, resolve_avatar, resolve_post_content, resolve_username, verify_comment, verify_main_post, 
-    ReportSerializer, CreateReportSerializer
+    ReportSerializer, CreateReportSerializer, HandleReportSerializer
     )
 from .models import Post, PostImage, Report, Tag, FavouritePost, Notification, UserInformation
 from django.db.transaction import atomic
@@ -562,6 +562,34 @@ class ReportViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     serializer_class = ReportSerializer
     queryset = Report.objects.filter()
 
+    NOTIFICATION_CONTENT_TEXT_LENGTH = 20
+
+    def _create_notification_data(self, instance: Post):
+        if not instance.replyToId:
+            return {
+                'type': 'main_post',
+                'main_post_id': instance.pk,
+                'main_post_tag_id': instance.tag_id,
+                'main_post_title': resolve_post_content(instance).title, 
+                'content_summary': resolve_post_content(instance).text[:self.NOTIFICATION_CONTENT_TEXT_LENGTH],      
+            }
+        elif not instance.replyToComment:
+            return {
+                'type': 'comment',
+                'main_post_id': instance.replyToId.id, 
+                'main_post_tag_id': instance.replyToId.tag_id,
+                'main_post_title': resolve_post_content(instance.replyToId).title, 
+                'content_summary': resolve_post_content(instance).text[:self.NOTIFICATION_CONTENT_TEXT_LENGTH],      
+            }
+        else:
+            return {
+                'type': 'subcomment',
+                'main_post_id': instance.replyToComment.replyToId.id, 
+                'main_post_tag_id': instance.replyToComment.replyToId.tag_id,
+                'main_post_title': resolve_post_content(instance.replyToComment.replyToId).title, 
+                'content_summary': resolve_post_content(instance).text[:self.NOTIFICATION_CONTENT_TEXT_LENGTH],      
+           }
+
     @atomic
     @swagger_auto_schema(method='POST', operation_description='举报帖子',
         request_body=None, responses={202: '举报成功'})
@@ -569,11 +597,58 @@ class ReportViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         serializer_class=CreateReportSerializer, permission_classes=[permissions.IsAuthenticated])
     def report_post(self, request):
         userProfile: UserProfile = self.request.user
-        print(request.data)
+        
         Report.objects.create(
             createdBy_id = userProfile.pk, 
             targetPost_id = request.data['targetPost'], 
             reason = request.data['reason'], 
             type=request.data['type']
         )
-        return Response(status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_202_ACCEPTED)
+
+    @atomic
+    @swagger_auto_schema(method='POST', operation_description='处理举报（拒绝）',
+        request_body=None, responses={202: '处理成功', 401: '未授权'})
+    @action(methods=['POST'], detail=False, url_path='reject', url_name='reject_report',
+        serializer_class=HandleReportSerializer, permission_classes=[CanHandleReport])
+    def reject_report(self, request):
+        userProfile: UserProfile = self.request.user
+        id_list = list(request.data['id_list'])
+
+        instances = Report.objects.filter(id__in=id_list)
+        instances.update(resolved=True, resolvedBy_id=userProfile.pk)
+
+        return Response(status=status.HTTP_202_ACCEPTED)
+
+    @atomic
+    @swagger_auto_schema(method='POST', operation_description='处理举报（接受）',
+        request_body=None, responses={202: '处理成功', 401: '未授权'})
+    @action(methods=['POST'], detail=False, url_path='accept', url_name='accept_report',
+        serializer_class=HandleReportSerializer, permission_classes=[CanHandleReport])
+    def accept_report(self, request):
+        userProfile: UserProfile = self.request.user
+        id_list = list(request.data['id_list'])
+        
+        instances = Report.objects.filter(id__in=id_list)
+        instances.update(resolved=True, resolvedBy_id=userProfile.pk)
+
+        for i in id_list:
+            report_instance=Report.objects.get(id=i)
+            post_instance = report_instance.targetPost
+            if not post_instance.censored:
+                # 每个单独检查，若已经屏蔽，则不覆盖原有信息，且不会创建新的notification
+                post_instance.censored=True
+                post_instance.censoredBy_id=request.user.id
+                post_instance.save()
+
+                Notification.objects.create(
+                    user=post_instance.createdBy,
+                    targetPost=post_instance,
+                    type=Notification.CENSOR,
+                    data={
+                        **self._create_notification_data(post_instance),
+                        'reason': report_instance.type, # TODO:这里是返回reason还是type
+                    },
+                    )
+
+        return Response(status=status.HTTP_202_ACCEPTED)
