@@ -73,23 +73,22 @@ class FavouritePostViewSet(
     
 
     def create_favorite_notification(self, 
-        favoritePost: Post, creator: Post.createdBy, favoriteUser: UserProfile):
+        favoritePost: Post, favoriteUser: UserProfile):
      
-        CONTENT_TEXT_LENGTH = 20
-        
         if self.request.user.pk == favoritePost.createdBy_id:
             return None
         
         return Notification.objects.create(
-            user = creator,
+            user = favoritePost.createdBy,
             targetPost = favoritePost,
             type= Notification.FAVORITE,
-            sender = favoriteUser,
+            sender_id = favoriteUser.pk,
             data={
                 "target_post_tag": favoritePost.tag_id,
                 'target_post_title': resolve_post_content(favoritePost).title,
             },
         )
+    
     @atomic
     @swagger_auto_schema(method='PUT', operation_description='添加收藏',
         request_body=None, responses={202: '创建成功'})
@@ -107,7 +106,7 @@ class FavouritePostViewSet(
         )
         favouritePost = Post.objects.get(id = post)
     
-        self.create_favorite_notification( favouritePost, favouritePost.createdBy , userProfile)
+        self.create_favorite_notification( favouritePost, userProfile)
         return Response(status=status.HTTP_202_ACCEPTED)
 
     def destroy(self, request, *args, **kwargs):
