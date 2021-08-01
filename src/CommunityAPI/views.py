@@ -315,7 +315,7 @@ class NotificationViewSet(viewsets.ReadOnlyModelViewSet):
             # queryset just for schema generation metadata
             return Notification.objects.none()
 
-        query = Notification.objects.filter(user_id=self.request.user.id) 
+        query = Notification.objects.filter(user_id=self.request.user.id).order_by('-id')
         return query
       
     @swagger_auto_schema(method='PUT', operation_description='设为已读',
