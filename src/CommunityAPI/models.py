@@ -90,7 +90,7 @@ class Notification(models.Model):
     REPLY = 'REPLY'
     CENSOR = 'CENSOR'
     DECENSOR = 'DECENSOR'
-    FAVOURITE = 'FAVOURITE'
+    FAVOURITE = 'FAVORITE' # 这里确实拼错了，但它已经进数据库和接口了，没法改
     # End
 
     notificationTypeChoices = [
