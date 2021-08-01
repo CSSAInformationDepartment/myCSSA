@@ -608,7 +608,7 @@ class ReportViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
 
         for i in id_list:
             report_instance=Report.objects.get(id=i)
-            post_instance = Post.objects.get(id=report_instance.targetPost.id)
+            post_instance = report_instance.targetPost
             if not post_instance.censored:
                 # 每个单独检查，若已经屏蔽，则不覆盖原有信息，且不会创建新的notification
                 post_instance.censored=True
