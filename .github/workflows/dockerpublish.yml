@@ -22,14 +22,11 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Run tests
-        run: |
-          if [ -f docker-compose.test.yml ]; then
-            docker-compose --file docker-compose.test.yml build
-            docker-compose --file docker-compose.test.yml run sut
-          else
-            docker build . --file Dockerfile
-          fi
+      - name: Build image
+        run: docker build . --file Dockerfile --tag image
+        
+      - name: Smoke test
+        run: docker run image python manage.py check --settings=CSSANet.settings.ci
 
   # Push image to GitHub Packages.
   # See also https://docs.docker.com/docker-hub/builds/

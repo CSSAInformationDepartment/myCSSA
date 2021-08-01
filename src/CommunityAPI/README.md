@@ -10,12 +10,12 @@
 返回的数据中， `targetPost` 为回复的目标的id。由于这里无法判断目标具体是主贴、一级回复还是二级回复，
 前端不需要使用此字段。
 
+`sender` 相关的两个字段为回复者的信息。
+
 `data` 字段中包含了前端可以使用的数据，其格式如下：
 
 ```python
 {
-  'replier_username': '给我回复的人的用户名',
-  'replier_avatar': '给我回复的人的头像',
   'main_post_id': '这个回复属于哪个主贴',
   'main_post_tag_id': '这个回复的主贴的tag id',
   'main_post_title': '这个回复的主贴的标题',
@@ -27,6 +27,8 @@
 ### `CENSOR` ： 表示被封禁的通知类型。
 
 返回的数据中， `targetPost` 为回复的目标的id。可根据data中'type'字段来分辨是主贴、一级回复还是二级回复
+
+`sender` 相关的信息为 null。
 
 `data` 字段中包含了前端可以使用的数据，其格式如下：
 
