@@ -424,3 +424,9 @@ class CreateReportSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Report
         fields = ('targetPost', 'reason', 'type')
+
+class HandleReportSerializer(serializers.ModelSerializer):
+    id_list = serializers.ListField(child=serializers.IntegerField())
+    class Meta:
+        model = models.Report
+        fields = ('id_list',)
