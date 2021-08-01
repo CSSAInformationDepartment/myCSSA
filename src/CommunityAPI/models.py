@@ -66,7 +66,7 @@ class PostImage(models.Model):
 
 class Content(models.Model):
     # django 对复合主键的支持不大好，这里就不把它当成主键了。
-    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='contents')
     # 其实这里不需要 previousContentID
 
     title = models.CharField('标题', max_length=POST_TITLE_LENGTH_MAX, null=True, default=None)
