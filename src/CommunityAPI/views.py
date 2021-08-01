@@ -10,7 +10,7 @@ from django.db.transaction import atomic
 
 # Create your views here.
 
-from typing import TypeVar, Callable
+from typing import Optional, TypeVar, Callable
 from . import models
 from rest_framework import serializers, status, viewsets, permissions, mixins
 from rest_framework.decorators import action, permission_classes
@@ -156,14 +156,19 @@ class PostViewSetBase(viewsets.ReadOnlyModelViewSet, mixins.DestroyModelMixin):
         return Response(data=result, status=status.HTTP_201_CREATED)
 
     def create_reply_notification(self, 
-        target: Post, replier: Post, comment: Post, main_post: Post):
+        target: Post, replier: Post, comment: Post, main_post: Post) -> Optional[Notification]:
         """
         创建一个回复通知。
 
         参数之间的关系如下：
         replier --回复给-> target --它们属于哪个一级评论-> comment --它们的主贴为-> main_post
+
+        如果 request.user 跟 target.createBy 是同一个人的话，不创建通知
         """
         CONTENT_TEXT_LENGTH = 20
+
+        if self.request.user.pk == target.createdBy_id:
+            return None
 
         return Notification.objects.create(
             user=target.createdBy,
