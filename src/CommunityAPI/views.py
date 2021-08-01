@@ -531,7 +531,7 @@ class UserInformationView(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 class ReportViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [CanHandleReport]
     authentication_classes = (JWTAuthentication,)
     serializer_class = ReportSerializer
     queryset = Report.objects.filter()
@@ -584,7 +584,7 @@ class ReportViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     @swagger_auto_schema(method='POST', operation_description='处理举报（拒绝）',
         request_body=None, responses={202: '处理成功', 401: '未授权'})
     @action(methods=['POST'], detail=False, url_path='reject', url_name='reject_report',
-        serializer_class=HandleReportSerializer, permission_classes=[permissions.IsAuthenticated])
+        serializer_class=HandleReportSerializer, permission_classes=[CanHandleReport])
     def reject_report(self, request):
         userProfile: UserProfile = self.request.user
         id_list = list(request.data['id_list'])
@@ -598,7 +598,7 @@ class ReportViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     @swagger_auto_schema(method='POST', operation_description='处理举报（接受）',
         request_body=None, responses={202: '处理成功', 401: '未授权'})
     @action(methods=['POST'], detail=False, url_path='accept', url_name='accept_report',
-        serializer_class=HandleReportSerializer, permission_classes=[permissions.IsAuthenticated])
+        serializer_class=HandleReportSerializer, permission_classes=[CanHandleReport])
     def accept_report(self, request):
         userProfile: UserProfile = self.request.user
         id_list = list(request.data['id_list'])
