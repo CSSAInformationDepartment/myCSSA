@@ -70,19 +70,15 @@ class FavouritePostViewSet(
 
         return query_set
 
-    @atomic
-    @swagger_auto_schema(method='PUT', operation_description='添加收藏',
-        request_body=None, responses={202: '创建成功'})
-    @action(methods=['PUT'], detail=True, url_path='add', url_name='add_favouritepost',
-        serializer_class=None, permission_classes=[permissions.IsAuthenticated])
+    
 
     def create_favorite_notification(self, 
         favoritePost: Post, creator: Post.createdBy, favoriteUser: UserProfile):
      
         CONTENT_TEXT_LENGTH = 20
         
-        if favoritePost.id == creator:
-            return Response(status=status.HTTP_202_ACCEPTED)
+        if self.request.user.pk == favoritePost.createdBy_id:
+            return None
         
         return Notification.objects.create(
             user = creator,
@@ -90,11 +86,15 @@ class FavouritePostViewSet(
             type= Notification.FAVORITE,
             sender = favoriteUser,
             data={
-                "target_post_tag": favoritePost.tag,
+                "target_post_tag": favoritePost.tag_id,
                 'target_post_title': resolve_post_content(favoritePost).title,
             },
         )
-    
+    @atomic
+    @swagger_auto_schema(method='PUT', operation_description='添加收藏',
+        request_body=None, responses={202: '创建成功'})
+    @action(methods=['PUT'], detail=True, url_path='add', url_name='add_favouritepost',
+        serializer_class=None, permission_classes=[permissions.IsAuthenticated])
     def add_favouritepost(self, request, pk=None):
         userProfile: UserProfile = self.request.user
         post = pk
@@ -105,7 +105,9 @@ class FavouritePostViewSet(
             user_id=userProfile.pk,
             post_id=post
         )
-        self.create_favorite_notification( post, post.createdBy , userProfile)
+        favouritePost = Post.objects.get(id = post)
+    
+        self.create_favorite_notification( favouritePost, favouritePost.createdBy , userProfile)
         return Response(status=status.HTTP_202_ACCEPTED)
 
     def destroy(self, request, *args, **kwargs):
