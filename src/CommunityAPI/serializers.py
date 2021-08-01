@@ -97,12 +97,12 @@ def resolve_username(profile: UserProfile) -> str:
         # 用用户的全名来当作用户名
         return profile.firstNameEN + ' ' + profile.lastNameEN
 
-def resolve_avatar(profile: UserProfile) -> Optional[str]:
+def resolve_avatar(profile: UserProfile, request) -> Optional[str]:
     info = models.UserInformation.objects.filter(user_id=profile.pk).first()
     if info:
         return info.avatarUrl
     elif profile.avatar:
-        return profile.avatar.url
+        return request.build_absolute_uri(profile.avatar.url)
     else:
         return None
 
@@ -127,7 +127,7 @@ class PostSerializerMixin:
         repr['content'] = self.fields['content'].to_representation(contentModel)
 
         repr['createdBy'] = resolve_username(instance.createdBy)
-        repr['creatorAvatar'] = resolve_avatar(instance.createdBy)
+        repr['creatorAvatar'] = resolve_avatar(instance.createdBy, self.context['request'])
 
     def get_my(self, instance) -> bool:
         user: UserProfile = self.context['request'].user
