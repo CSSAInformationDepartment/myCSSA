@@ -621,7 +621,7 @@ class ReportViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                     type=Notification.CENSOR,
                     data={
                         **self._create_notification_data(post_instance),
-                        'reason': report_instance.reason, # TODO:这里是返回reason还是type
+                        'reason': report_instance.type, # TODO:这里是返回reason还是type
                     },
                     )
 
