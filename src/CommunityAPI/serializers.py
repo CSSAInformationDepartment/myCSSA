@@ -106,17 +106,15 @@ class EditContentSerializer(serializers.ModelSerializer):
         return super().validate(attrs)
 
 def resolve_username(profile: UserProfile) -> str:
-    info = models.UserInformation.objects.filter(user_id=profile.pk).first()
-    if info:
-        return info.username
+    if hasattr(profile, 'userinformation'):
+        return profile.userinformation.username
     else:
         # 用用户的全名来当作用户名
         return profile.firstNameEN + ' ' + profile.lastNameEN
 
 def resolve_avatar(profile: UserProfile) -> Optional[str]:
-    info = models.UserInformation.objects.filter(user_id=profile.pk).first()
-    if info:
-        return info.avatarUrl
+    if hasattr(profile, 'userinformation'):
+        return profile.userinformation.avatarUrl
     elif profile.avatar:
         return profile.avatar.url
     else:
