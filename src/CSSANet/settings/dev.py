@@ -53,7 +53,6 @@ EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
 ## Add debug middleware
 MIDDLEWARE = [
     'debug_toolbar.middleware.DebugToolbarMiddleware',
-    'Library.middlewares.QueryCountDebugMiddleware',
 ] + MIDDLEWARE
 
 try:
