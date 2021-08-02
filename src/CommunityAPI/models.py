@@ -66,7 +66,7 @@ class PostImage(models.Model):
 
 class Content(models.Model):
     # django 对复合主键的支持不大好，这里就不把它当成主键了。
-    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='contents')
     # 其实这里不需要 previousContentID
 
     title = models.CharField('标题', max_length=POST_TITLE_LENGTH_MAX, null=True, default=None)
@@ -134,7 +134,8 @@ class UserInformation(models.Model):
 
     USERNAME_MAX_LENGTH = 30
 
-    user_id = models.UUIDField('用户的id', primary_key=True, auto_created=False)
+    user = models.OneToOneField(UserProfile, on_delete=models.CASCADE, primary_key=True,
+        verbose_name='用户的id')
 
     username = models.CharField('用户名', max_length=USERNAME_MAX_LENGTH)
     avatarUrl = models.URLField('用户头像的url')

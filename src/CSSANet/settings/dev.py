@@ -50,6 +50,9 @@ MAILOWL_PORT = 44300
 # credentials will be at risk.
 EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
 
+## Add debug middleware
+MIDDLEWARE = ['Library.middlewares.QueryCountDebugMiddleware'] + MIDDLEWARE
+
 try:
     from .local import *
 except:
