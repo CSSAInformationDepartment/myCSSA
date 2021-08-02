@@ -25,7 +25,7 @@ class NotificationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Notification
-        fields = ['id', 'targetPost','data', 'type', 'read',
+        fields = ['id', 'targetPost','data', 'type', 'read', 'time',
             'senderUsername', 'senderAvatar']
 
     def get_senderUsername(self, instance) -> Optional[str]:
