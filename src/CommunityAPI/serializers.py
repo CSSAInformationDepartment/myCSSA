@@ -192,7 +192,9 @@ class ReadMainPostSerializer(PostSerializerMixin, serializers.ModelSerializer):
             'content', 'createdBy', 'creatorAvatar', 'favouriteCount', 'isFavourite', 'my']
 
     def get_favouriteCount(self, instance) -> int:
-        return caches.get_favourite_count_for_post(instance.id)
+        return caches.get_favourite_count_for_post(
+            instance.id, 
+            self.context['view'].detail)
 
     def get_isFavourite(self, instance) -> bool:
         user = self.context['request'].user
