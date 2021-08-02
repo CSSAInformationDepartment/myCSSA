@@ -11,6 +11,7 @@ from sorl.thumbnail import get_thumbnail
 from UserAuthAPI.models import UserProfile
 
 from . import models
+from . import caches
 
 class TagSerializer(serializers.ModelSerializer):
     class Meta:
@@ -105,24 +106,23 @@ class EditContentSerializer(serializers.ModelSerializer):
         return super().validate(attrs)
 
 def resolve_username(profile: UserProfile) -> str:
-    info = models.UserInformation.objects.filter(user_id=profile.pk).first()
-    if info:
-        return info.username
+    if hasattr(profile, 'userinformation'):
+        return profile.userinformation.username
     else:
         # 用用户的全名来当作用户名
         return profile.firstNameEN + ' ' + profile.lastNameEN
 
 def resolve_avatar(profile: UserProfile) -> Optional[str]:
-    info = models.UserInformation.objects.filter(user_id=profile.pk).first()
-    if info:
-        return info.avatarUrl
+    if hasattr(profile, 'userinformation'):
+        return profile.userinformation.avatarUrl
     elif profile.avatar:
         return profile.avatar.url
     else:
         return None
 
 def resolve_post_content(post: models.Post) -> models.Content:
-    content = models.Content.objects.filter(post=post).order_by('-editedTime').first()
+    content = models.Content.objects.filter(post=post).order_by('-editedTime') \
+        .select_related('editedBy').first()
     assert content, '一个Post必定有一个Content'
     return content
 
@@ -190,7 +190,9 @@ class ReadMainPostSerializer(PostSerializerMixin, serializers.ModelSerializer):
             'content', 'createdBy', 'creatorAvatar', 'favouriteCount', 'isFavourite', 'my']
 
     def get_favouriteCount(self, instance) -> int:
-        return models.FavouritePost.objects.filter(post=instance).count()
+        return caches.get_favourite_count_for_post(
+            instance.id, 
+            self.context['view'].detail)
 
     def get_isFavourite(self, instance) -> bool:
         user = self.context['request'].user
