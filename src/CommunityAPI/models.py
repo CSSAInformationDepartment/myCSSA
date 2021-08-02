@@ -101,6 +101,8 @@ class Notification(models.Model):
     ]
     type = CharField('通知类型', choices=notificationTypeChoices, max_length=100)
 
+    time = models.DateTimeField('通知的创建时间', default=now)
+
 class FavouritePost(models.Model):
     user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
