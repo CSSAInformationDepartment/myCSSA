@@ -11,6 +11,7 @@ from sorl.thumbnail import get_thumbnail
 from UserAuthAPI.models import UserProfile
 
 from . import models
+from . import caches
 
 class TagSerializer(serializers.ModelSerializer):
     class Meta:
@@ -191,7 +192,7 @@ class ReadMainPostSerializer(PostSerializerMixin, serializers.ModelSerializer):
             'content', 'createdBy', 'creatorAvatar', 'favouriteCount', 'isFavourite', 'my']
 
     def get_favouriteCount(self, instance) -> int:
-        return models.FavouritePost.objects.filter(post=instance).count()
+        return caches.get_favourite_count_for_post(instance.id)
 
     def get_isFavourite(self, instance) -> bool:
         user = self.context['request'].user
