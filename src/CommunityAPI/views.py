@@ -300,7 +300,7 @@ class CommentViewSet(PostViewSetBase):
 
         # 如果想要这个功能的话，可以在这里让管理员能看见被屏蔽和删除的文章
 
-        return query.order_by('createTime')
+        return query.order_by('createTime').select_related('createdBy')
 
     @swagger_auto_schema(method='POST', operation_description='添加一个评论',
         request_body=EditCommentSerializer, responses={201: ReadCommentSerializer})
@@ -381,7 +381,7 @@ class SubCommentViewSet(PostViewSetBase):
 
         # 如果想要这个功能的话，可以在这里让管理员能看见被屏蔽和删除的文章
 
-        return query.order_by('createTime')
+        return query.order_by('createTime').select_related('createdBy')
 
     @swagger_auto_schema(method='POST', operation_description='添加一个评论，用 replyTo 指定回复的对象，'
         '它必须跟本评论属于同一个一级评论。想要直接回复给一级评论，请将 replyTo 指定为 comment_id',

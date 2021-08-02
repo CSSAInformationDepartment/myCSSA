@@ -122,7 +122,8 @@ def resolve_avatar(profile: UserProfile) -> Optional[str]:
         return None
 
 def resolve_post_content(post: models.Post) -> models.Content:
-    content = models.Content.objects.filter(post=post).order_by('-editedTime').first()
+    content = models.Content.objects.filter(post=post).order_by('-editedTime') \
+        .select_related('editedBy').first()
     assert content, '一个Post必定有一个Content'
     return content
 
