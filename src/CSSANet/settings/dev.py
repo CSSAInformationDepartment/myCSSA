@@ -51,7 +51,10 @@ MAILOWL_PORT = 44300
 EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
 
 ## Add debug middleware
-MIDDLEWARE = ['Library.middlewares.QueryCountDebugMiddleware'] + MIDDLEWARE
+MIDDLEWARE = [
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
+    'Library.middlewares.QueryCountDebugMiddleware',
+] + MIDDLEWARE
 
 try:
     from .local import *
