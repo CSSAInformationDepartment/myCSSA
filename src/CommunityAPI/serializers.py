@@ -171,7 +171,7 @@ class ReadMainPostSerializer(PostSerializerMixin, serializers.ModelSerializer):
     只用来处理主贴的读取
     """
 
-    SUMMARY_TEXT_LENGTH = 50 # 25个汉字
+    SUMMARY_TEXT_LENGTH = 200 # 前200字
 
     content = ReadContentSerializer(read_only=True)
 
@@ -203,7 +203,7 @@ class ReadMainPostSerializer(PostSerializerMixin, serializers.ModelSerializer):
         repr = super().to_representation(instance)
         self.fill_representation(repr, instance)
 
-        # 如果是读取文章列表，只保留正文的前25个汉字
+        # 如果是读取文章列表，只保留正文的一部分内容
         if not self.context['view'].detail:
             repr['content']['text'] = repr['content']['text'][:self.SUMMARY_TEXT_LENGTH]
 

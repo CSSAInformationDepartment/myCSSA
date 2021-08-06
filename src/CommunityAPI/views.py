@@ -187,7 +187,7 @@ class PostViewSetBase(viewsets.ReadOnlyModelViewSet, mixins.DestroyModelMixin):
 
         如果 request.user 跟 target.createBy 是同一个人的话，不创建通知
         """
-        CONTENT_TEXT_LENGTH = 20
+        CONTENT_TEXT_LENGTH = 50
 
         if self.request.user.pk == target.createdBy_id:
             return None
@@ -445,7 +445,7 @@ class CensorViewSet(viewsets.GenericViewSet):
     authentication_classes = (JWTAuthentication, SessionAuthentication)
     queryset=models.Post.objects.filter(deleted=False)
 
-    NOTIFICATION_CONTENT_TEXT_LENGTH = 20
+    NOTIFICATION_CONTENT_TEXT_LENGTH = 50
 
     def _create_notification_data(self, instance: Post):
         if not instance.replyToId:
@@ -565,7 +565,7 @@ class ReportViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     serializer_class = ReportSerializer
     queryset = Report.objects.filter()
 
-    NOTIFICATION_CONTENT_TEXT_LENGTH = 20
+    NOTIFICATION_CONTENT_TEXT_LENGTH = 50
 
     def _create_notification_data(self, instance: Post):
         if not instance.replyToId:
