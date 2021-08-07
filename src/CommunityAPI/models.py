@@ -12,12 +12,20 @@ POST_TITLE_LENGTH_MAX = 100
 
 # Create your models here.
 class Tag(models.Model):
+    """
+    主贴的标签
+    """
+
     title = models.CharField('标签标题', max_length=16)
 
     def __str__(self) -> str:
         return self.title
 
 class Post(models.Model):
+    """
+    表示一个帖子，可以是主贴或者回复
+    """
+
     # 标签。如果是回复，这里是null
     tag = models.ForeignKey(Tag, on_delete=models.CASCADE, null=True)
 
@@ -58,6 +66,10 @@ class Post(models.Model):
     viewCount = models.IntegerField('访问次数', default=0)
         
 class PostImage(models.Model):
+    """
+    帖子里的图片
+    """
+    
     id = models.UUIDField(primary_key=True)
     image = SorlImageField(verbose_name='用户上传的图片', upload_to='uploads/community/post_image')
     uploader = models.ForeignKey(UserProfile, on_delete=models.DO_NOTHING,
@@ -65,6 +77,10 @@ class PostImage(models.Model):
     uploadTime = models.DateTimeField('本图片的上传时间', default=now)
 
 class Content(models.Model):
+    """
+    帖子的内容。一个帖子可以有多个版本，每个版本都是一个 Content
+    """
+
     # django 对复合主键的支持不大好，这里就不把它当成主键了。
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='contents')
     # 其实这里不需要 previousContentID
@@ -79,6 +95,10 @@ class Content(models.Model):
         related_name='%(class)s_edited_by')
 
 class Notification(models.Model):
+    """
+    通知
+    """
+
     user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     targetPost = models.ForeignKey(Post, null=True, on_delete=models.CASCADE)
     data = models.JSONField('使用JSON表示额外的数据， 其格式根据type来变化')
@@ -104,6 +124,10 @@ class Notification(models.Model):
     time = models.DateTimeField('通知的创建时间', default=now)
 
 class FavouritePost(models.Model):
+    """
+    帖子收藏
+    """
+
     user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
 
@@ -114,6 +138,10 @@ class FavouritePost(models.Model):
 
 
 class Report(models.Model):
+    """
+    帖子举报
+    """
+
     createdBy = models.ForeignKey(UserProfile, on_delete=models.CASCADE,
         related_name='%(class)s_created_by')
 
@@ -133,6 +161,11 @@ class Report(models.Model):
         )
 
 class UserInformation(models.Model):
+    """
+    圈子API里专用的用户数据。
+
+    比如下面的用户名和头像就是只在圈子里用的。
+    """
 
     USERNAME_MAX_LENGTH = 30
 
