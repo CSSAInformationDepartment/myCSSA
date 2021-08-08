@@ -475,16 +475,27 @@ class CensorViewSet(viewsets.GenericViewSet):
     authentication_classes = (JWTAuthentication, SessionAuthentication)
     queryset=models.Post.objects.filter(deleted=False)
 
+    def _resolve_all_reports(self):
+        instance: Post = self.get_object()
+
+        # 批量处理举报
+        Report.objects.filter(targetPost=instance).update(
+            resolved=True,
+            resolvedBy_id=self.request.user.pk,
+        )
+
     @atomic
-    @swagger_auto_schema(method='POST', operation_description='屏蔽帖子',
+    @swagger_auto_schema(method='POST', operation_description='屏蔽帖子，并将关联的举报设置为已处理',
         request_body=None, responses={202: '处理成功', 401: '未授权'})
     @action(methods=['POST'], detail=True, url_path='censor', url_name='censor_post',
         serializer_class=None)
     def censor_post(self, request, pk=None):
         instance: Post = self.get_object()
 
+        self._resolve_all_reports()
+
         if instance.censored:
-            raise ValidationError('帖子已经被屏蔽，不能再次屏蔽')
+            return Response(status=status.HTTP_202_ACCEPTED)
 
         instance.censored=True
         instance.censoredBy_id=request.user.id
@@ -503,15 +514,17 @@ class CensorViewSet(viewsets.GenericViewSet):
         return Response(status=status.HTTP_202_ACCEPTED)
 
     @atomic
-    @swagger_auto_schema(method='POST', operation_description='取消帖子屏蔽',
+    @swagger_auto_schema(method='POST', operation_description='取消帖子屏蔽，并将关联的举报设置为已处理',
         request_body=None, responses={202: '处理成功', 401: '未授权'})
     @action(methods=['POST'], detail=True, url_path='decensor',
         serializer_class=None)
     def decensor_post(self, request, pk=None):
         instance: Post = self.get_object()
 
+        self._resolve_all_reports()
+
         if not instance.censored:
-            raise ValidationError('帖子还未被屏蔽，不能解除屏蔽')
+            return Response(status=status.HTTP_202_ACCEPTED)
 
         instance.censored=False
         instance.censoredBy=None
