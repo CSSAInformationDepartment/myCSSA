@@ -72,9 +72,18 @@ class PostListJsonView(LoginRequiredMixin, PermissionRequiredMixin, BaseDatatabl
     max_display_length = 500
 
     def get_initial_queryset(self):
-        reports = Report.objects.filter(targetPost=OuterRef('id'))
-        return Post.objects.order_by('-createTime') \
+        query = Post.objects.order_by('-createTime') \
             .annotate(reported=Count('report'))
+
+        type = self.request.GET.get('type')
+        if type == 'MAIN_POST':
+            query = query.filter(replyToId__isnull=True)
+        elif type == 'COMMENT':
+            query = query.filter(replyToComment__isnull=True, replyToId__isnull=False)
+        elif type == 'SUBCOMMENT':
+            query = query.filter(replyToComment__isnull=False, replyToId__isnull=False)
+
+        return query
 
     def render_column(self, row, column):
         if column == 'id':

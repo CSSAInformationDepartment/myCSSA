@@ -30,6 +30,17 @@
       </div>
       <div class="card-body">
         <p>这里列出所有的帖子，包括主贴、评论和回复</p>
+
+        <div class="row">
+          <label for="type-select">帖子类型</label>
+          <select class="form-select" id="type-select">
+            <option value="" selected>全部</option>
+            <option value="MAIN_POST">MAIN_POST</option>
+            <option value="COMMENT">COMMENT</option>
+            <option value="SUBCOMMENT">SUBCOMMENT</option>
+          </select>
+        </div>
+
         <table id="main-datatable" class="table table-responsive-md" style="width:100%">
           <thead>
             <tr>
@@ -56,11 +67,23 @@
 <script src="{% static 'myCSSAhub/vendors/DataTables/datatables.js'%}"></script>
 <script>
   $(document).ready(function () {
-    var oTable = $('#main-datatable').dataTable({
+
+    $('#type-select').change(function (e) {
+      oTable.draw();
+    });
+
+    var oTable = $('#main-datatable').DataTable({
       "responsive": true,
       "processing": true,
       "serverSide": true,
-      "ajax": "{% url 'myCSSAhub:CommunityAPI:post_list_json' %}",
+      "ajax": {
+        url: "{% url 'myCSSAhub:CommunityAPI:post_list_json' %}",
+        data: function (d) {
+          return $.extend({}, d, {
+            "type": $('#type-select').val(),
+          });
+        }
+      },
     });
   });
 </script>
