@@ -91,6 +91,12 @@ class PostListJsonView(LoginRequiredMixin, PermissionRequiredMixin, BaseDatatabl
         elif has_report == 'no':
             query = query.filter(reported=0)
 
+        is_censored = self.request.GET.get('is-censored')
+        if is_censored == 'yes':
+            query = query.filter(censored=True)
+        elif is_censored == 'no':
+            query = query.filter(censored=False)
+
         create_after = self.request.GET.get('create-after')
         if create_after:
             query = query.filter(createTime__gte=parse_date(create_after))

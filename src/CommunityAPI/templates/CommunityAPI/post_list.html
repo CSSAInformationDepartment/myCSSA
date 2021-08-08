@@ -49,9 +49,9 @@
           <label for="has-report" class="col-sm-2 col-form-label">是否有未处理的举报</label>
           <div class="col-sm-10">
             <select class="form-select" id="has-report">
-              <option value="" selected>全部</option>
-              <option value="yes">有</option>
-              <option value="no">无</option>
+              <option value="" selected>显示全部</option>
+              <option value="yes">只显示有为处理举报的帖子</option>
+              <option value="no">只显示没有未处理举报的帖子</option>
             </select>
           </div>
         </div>
@@ -60,6 +60,17 @@
           <label for="create-after" class="col-sm-2 col-form-label">在某日期之后创建</label>
           <div class="col-sm-10">
             <input type="text" class="form-control" id="create-after">
+          </div>
+        </div>
+
+        <div class="mb-3 row">
+          <label for="is-censored" class="col-sm-2 col-form-label">是否被屏蔽</label>
+          <div class="col-sm-10">
+            <select class="form-select" id="is-censored">
+              <option value="" selected>显示全部</option>
+              <option value="yes">只显示被屏蔽</option>
+              <option value="no">只显示没被屏蔽</option>
+            </select>
           </div>
         </div>
 
@@ -103,6 +114,10 @@
       oTable.draw();
     });
 
+    $('#is-censored').change(function (e) {
+      oTable.draw();
+    });
+
     $('#create-after').datepicker({
       todayBtn: "linked",
       clearBtn: true,
@@ -124,6 +139,7 @@
             "type": $('#type-select').val(),
             "has-report": $('#has-report').val(),
             "create-after": createAfter && createAfter.toISOString(),
+            "is-censored": $('#is-censored').val(),
           });
         }
       },
