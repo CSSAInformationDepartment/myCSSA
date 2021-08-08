@@ -432,3 +432,20 @@ class HandleReportSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Report
         fields = ('id_list',)
+
+class ReadAllPostSerializer(serializers.ModelSerializer):
+    """
+    处理所有帖子的读取，这个只用在hub中
+    """
+
+    reported = serializers.SerializerMethodField(label='被举报的次数')
+
+    class Meta:
+        model = models.Post
+        fields = ('id', 'tag', 'replyToId', 'replyToComment', 'viewableToGuest', 'deleted', 
+            'censored', 'createTime', 'viewCount', 'type',
+            # custom fields
+            'reported')
+
+    def get_reported(self, instance: models.Post) -> int:
+        return models.Report.objects.filter(targetPost=instance, resolved=False).count()

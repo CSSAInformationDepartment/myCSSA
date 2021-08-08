@@ -1,10 +1,10 @@
+import django_filters
 from rest_framework.decorators import api_view
 from rest_framework.exceptions import ParseError, ValidationError
 from rest_framework.generics import get_object_or_404
 from rest_framework.parsers import MultiPartParser
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
-from django.contrib.auth.mixins import PermissionRequiredMixin, AccessMixin
 from UserAuthAPI.models import UserProfile
 from django.db.transaction import atomic
 
@@ -26,7 +26,7 @@ from CommunityAPI.filters import IsOwnerFilterBackend, TagFilter
 from CommunityAPI.paginations import PostResultsSetPagination, NotificationSetPagination
 from CommunityAPI.permissions import CanCensorPost, IsOwner, CanHandleReport
 from .serializers import (
-    EditCommentSerializer, PostImageSerializer, ReadCommentSerializer, TagSerializer, 
+    EditCommentSerializer, PostImageSerializer, ReadAllPostSerializer, ReadCommentSerializer, TagSerializer, 
     EditMainPostSerializer, ReadMainPostSerializer, FavouritePostSerializer,
     NotificationSerializer, UserInformationSerializer, get_post_from_url, EditSubCommentSerializer, 
     ReadSubCommentSerializer, resolve_avatar, resolve_post_content, resolve_username, verify_comment, verify_main_post, 
@@ -470,10 +470,26 @@ def get_notification_data_for_censor(instance: Post):
             'content_summary': resolve_post_content(instance).text[:NOTIFICATION_CONTENT_TEXT_LENGTH],      
         }
 
-class CensorViewSet(viewsets.GenericViewSet):
+class AllPostViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     permission_classes = [CanCensorPost]
     authentication_classes = (JWTAuthentication, SessionAuthentication)
-    queryset=models.Post.objects.filter(deleted=False)
+    serializer_class = ReadAllPostSerializer
+    pagination_class = PostResultsSetPagination
+
+    filter_backends = [django_filters.rest_framework.DjangoFilterBackend]
+    filterset_fields = {
+        'createTime': ['gte', 'lte', 'gt', 'lt'],
+        'deleted': ['exact'],
+        'censored': ['exact'],
+    }
+
+    def get_queryset(self):
+
+        if getattr(self, 'swagger_fake_view', False):
+            # queryset just for schema generation metadata
+            return Post.objects.none()
+
+        return Post.objects.order_by('-createTime')
 
     @atomic
     @swagger_auto_schema(method='POST', operation_description='屏蔽帖子',
