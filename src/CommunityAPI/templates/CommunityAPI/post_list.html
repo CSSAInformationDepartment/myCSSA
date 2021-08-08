@@ -31,14 +31,27 @@
       <div class="card-body">
         <p>这里列出所有的帖子，包括主贴、评论和回复</p>
 
-        <div class="row">
-          <label for="type-select">帖子类型</label>
-          <select class="form-select" id="type-select">
-            <option value="" selected>全部</option>
-            <option value="MAIN_POST">MAIN_POST</option>
-            <option value="COMMENT">COMMENT</option>
-            <option value="SUBCOMMENT">SUBCOMMENT</option>
-          </select>
+        <div class="mb-3 row">
+          <label for="type-select" class="col-sm-2 col-form-label">帖子类型</label>
+          <div class="col-sm-10">
+            <select class="form-select" id="type-select">
+              <option value="" selected>全部</option>
+              <option value="MAIN_POST">MAIN_POST</option>
+              <option value="COMMENT">COMMENT</option>
+              <option value="SUBCOMMENT">SUBCOMMENT</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="mb-3 row">
+          <label for="has-report" class="col-sm-2 col-form-label">是否有未处理的举报</label>
+          <div class="col-sm-10">
+            <select class="form-select" id="has-report">
+              <option value="" selected>全部</option>
+              <option value="yes">有</option>
+              <option value="no">无</option>
+            </select>
+          </div>
         </div>
 
         <table id="main-datatable" class="table table-responsive-md" style="width:100%">
@@ -72,6 +85,10 @@
       oTable.draw();
     });
 
+    $('#has-report').change(function (e) {
+      oTable.draw();
+    });
+
     var oTable = $('#main-datatable').DataTable({
       "responsive": true,
       "processing": true,
@@ -81,6 +98,7 @@
         data: function (d) {
           return $.extend({}, d, {
             "type": $('#type-select').val(),
+            "has-report": $('#has-report').val(),
           });
         }
       },

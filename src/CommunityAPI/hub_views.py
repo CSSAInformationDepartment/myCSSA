@@ -83,6 +83,12 @@ class PostListJsonView(LoginRequiredMixin, PermissionRequiredMixin, BaseDatatabl
         elif type == 'SUBCOMMENT':
             query = query.filter(replyToComment__isnull=False, replyToId__isnull=False)
 
+        has_report = self.request.GET.get('has-report')
+        if has_report == 'yes':
+            query = query.filter(reported__gt=0)
+        elif has_report == 'no':
+            query = query.filter(reported=0)
+
         return query
 
     def render_column(self, row, column):
