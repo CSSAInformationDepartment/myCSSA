@@ -1,3 +1,4 @@
+import dateutil
 from django import views
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.shortcuts import render
@@ -6,6 +7,7 @@ from django_datatables_view.base_datatable_view import BaseDatatableView
 from rest_framework.generics import get_object_or_404
 from django.db.models import OuterRef, Subquery, Count
 from django.urls import reverse
+from dateutil.parser import parse as parse_date
 
 from CommunityAPI.models import Post, Report
 from .serializers import resolve_post_content
@@ -88,6 +90,10 @@ class PostListJsonView(LoginRequiredMixin, PermissionRequiredMixin, BaseDatatabl
             query = query.filter(reported__gt=0)
         elif has_report == 'no':
             query = query.filter(reported=0)
+
+        create_after = self.request.GET.get('create-after')
+        if create_after:
+            query = query.filter(createTime__gte=parse_date(create_after))
 
         return query
 

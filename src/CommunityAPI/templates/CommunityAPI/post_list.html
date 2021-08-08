@@ -2,6 +2,8 @@
 {% load static %}
 {% block ExtraHeader %}
 <link href="{% static 'myCSSAhub/vendors/DataTables/datatables.min.css'%}" rel="stylesheet">
+<link id="bsdp-css" href="https://unpkg.com/bootstrap-datepicker@1.9.0/dist/css/bootstrap-datepicker3.min.css"
+  rel="stylesheet">
 {% endblock ExtraHeader %}
 
 {% block pageTitle %}
@@ -54,6 +56,14 @@
           </div>
         </div>
 
+        <div class="mb-3 row">
+          <label for="create-after" class="col-sm-2 col-form-label">在某日期之后创建</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" id="create-after">
+          </div>
+        </div>
+
+
         <table id="main-datatable" class="table table-responsive-md" style="width:100%">
           <thead>
             <tr>
@@ -78,6 +88,10 @@
 {% block ExtraJS %}
 
 <script src="{% static 'myCSSAhub/vendors/DataTables/datatables.js'%}"></script>
+<script src="https://unpkg.com/bootstrap-datepicker@1.9.0/dist/js/bootstrap-datepicker.min.js"></script>
+<script src="https://unpkg.com/bootstrap-datepicker@1.9.0/dist/locales/bootstrap-datepicker.zh-CN.min.js"
+  charset="UTF-8"></script>
+
 <script>
   $(document).ready(function () {
 
@@ -89,6 +103,15 @@
       oTable.draw();
     });
 
+    $('#create-after').datepicker({
+      todayBtn: "linked",
+      clearBtn: true,
+      autoclose: true,
+      language: "zh-CN",
+    }).change(function (e) {
+      oTable.draw();
+    });
+
     var oTable = $('#main-datatable').DataTable({
       "responsive": true,
       "processing": true,
@@ -96,12 +119,17 @@
       "ajax": {
         url: "{% url 'myCSSAhub:CommunityAPI:post_list_json' %}",
         data: function (d) {
+          var createAfter = $('#create-after').datepicker('getDate')
           return $.extend({}, d, {
             "type": $('#type-select').val(),
             "has-report": $('#has-report').val(),
+            "create-after": createAfter && createAfter.toISOString(),
           });
         }
       },
+      order: [
+        [6, 'asc']
+      ], // order by createTime
     });
   });
 </script>
