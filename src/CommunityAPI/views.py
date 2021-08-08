@@ -440,38 +440,40 @@ class ImageUploadView(APIView):
 
         return Response(output.data, status=status.HTTP_201_CREATED)
 
+def get_notification_data_for_censor(instance: Post):
+    NOTIFICATION_CONTENT_TEXT_LENGTH = 50
+
+    type = instance.type
+    if type == Post.MAIN_POST:
+        return {
+            'type': 'main_post',
+            'main_post_id': instance.pk,
+            'main_post_tag_id': instance.tag_id,
+            'main_post_title': resolve_post_content(instance).title, 
+            'content_summary': resolve_post_content(instance).text[:NOTIFICATION_CONTENT_TEXT_LENGTH],      
+        }
+    elif type == Post.COMMENT:
+        return {
+            'type': 'comment',
+            'main_post_id': instance.replyToId.id, 
+            'main_post_tag_id': instance.replyToId.tag_id,
+            'main_post_title': resolve_post_content(instance.replyToId).title, 
+            'content_summary': resolve_post_content(instance).text[:NOTIFICATION_CONTENT_TEXT_LENGTH],      
+        }
+    else:
+        assert type == Post.SUBCOMMENT
+        return {
+            'type': 'subcomment',
+            'main_post_id': instance.replyToComment.replyToId.id, 
+            'main_post_tag_id': instance.replyToComment.replyToId.tag_id,
+            'main_post_title': resolve_post_content(instance.replyToComment.replyToId).title, 
+            'content_summary': resolve_post_content(instance).text[:NOTIFICATION_CONTENT_TEXT_LENGTH],      
+        }
+
 class CensorViewSet(viewsets.GenericViewSet):
     permission_classes = [CanCensorPost]
     authentication_classes = (JWTAuthentication, SessionAuthentication)
     queryset=models.Post.objects.filter(deleted=False)
-
-    NOTIFICATION_CONTENT_TEXT_LENGTH = 50
-
-    def _create_notification_data(self, instance: Post):
-        if not instance.replyToId:
-            return {
-                'type': 'main_post',
-                'main_post_id': instance.pk,
-                'main_post_tag_id': instance.tag_id,
-                'main_post_title': resolve_post_content(instance).title, 
-                'content_summary': resolve_post_content(instance).text[:self.NOTIFICATION_CONTENT_TEXT_LENGTH],      
-            }
-        elif not instance.replyToComment:
-            return {
-                'type': 'comment',
-                'main_post_id': instance.replyToId.id, 
-                'main_post_tag_id': instance.replyToId.tag_id,
-                'main_post_title': resolve_post_content(instance.replyToId).title, 
-                'content_summary': resolve_post_content(instance).text[:self.NOTIFICATION_CONTENT_TEXT_LENGTH],      
-            }
-        else:
-            return {
-                'type': 'subcomment',
-                'main_post_id': instance.replyToComment.replyToId.id, 
-                'main_post_tag_id': instance.replyToComment.replyToId.tag_id,
-                'main_post_title': resolve_post_content(instance.replyToComment.replyToId).title, 
-                'content_summary': resolve_post_content(instance).text[:self.NOTIFICATION_CONTENT_TEXT_LENGTH],      
-            }
 
     @atomic
     @swagger_auto_schema(method='POST', operation_description='屏蔽帖子',
@@ -493,7 +495,7 @@ class CensorViewSet(viewsets.GenericViewSet):
             targetPost=instance,
             type=Notification.CENSOR,
             data={
-                **self._create_notification_data(instance),
+                **get_notification_data_for_censor(instance),
                 'reason': '其他理由',      
             },
             )
@@ -520,7 +522,7 @@ class CensorViewSet(viewsets.GenericViewSet):
             targetPost=instance,
             type=Notification.DECENSOR,
             data={
-                **self._create_notification_data(instance),
+                **get_notification_data_for_censor(instance),
             },
             )
             
@@ -564,34 +566,6 @@ class ReportViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     authentication_classes = (JWTAuthentication,)
     serializer_class = ReportSerializer
     queryset = Report.objects.filter()
-
-    NOTIFICATION_CONTENT_TEXT_LENGTH = 50
-
-    def _create_notification_data(self, instance: Post):
-        if not instance.replyToId:
-            return {
-                'type': 'main_post',
-                'main_post_id': instance.pk,
-                'main_post_tag_id': instance.tag_id,
-                'main_post_title': resolve_post_content(instance).title, 
-                'content_summary': resolve_post_content(instance).text[:self.NOTIFICATION_CONTENT_TEXT_LENGTH],      
-            }
-        elif not instance.replyToComment:
-            return {
-                'type': 'comment',
-                'main_post_id': instance.replyToId.id, 
-                'main_post_tag_id': instance.replyToId.tag_id,
-                'main_post_title': resolve_post_content(instance.replyToId).title, 
-                'content_summary': resolve_post_content(instance).text[:self.NOTIFICATION_CONTENT_TEXT_LENGTH],      
-            }
-        else:
-            return {
-                'type': 'subcomment',
-                'main_post_id': instance.replyToComment.replyToId.id, 
-                'main_post_tag_id': instance.replyToComment.replyToId.tag_id,
-                'main_post_title': resolve_post_content(instance.replyToComment.replyToId).title, 
-                'content_summary': resolve_post_content(instance).text[:self.NOTIFICATION_CONTENT_TEXT_LENGTH],      
-           }
 
     @atomic
     @swagger_auto_schema(method='POST', operation_description='举报帖子',
@@ -649,7 +623,7 @@ class ReportViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                     targetPost=post_instance,
                     type=Notification.CENSOR,
                     data={
-                        **self._create_notification_data(post_instance),
+                        **get_notification_data_for_censor(post_instance),
                         'reason': report_instance.type, # TODO:这里是返回reason还是type
                     },
                     )

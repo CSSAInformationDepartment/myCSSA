@@ -56,14 +56,32 @@ class Post(models.Model):
     createdBy = models.ForeignKey(UserProfile, null=True, on_delete=models.SET_NULL,
         related_name='%(class)s_created_by')
 
+    # last edit time: read from content
+
+    viewCount = models.IntegerField('访问次数', default=0)
+
     class Meta:
         permissions = (
             ("censor_post", "Can censor post"),
         )
 
-    # last edit time: read from content
+    # types
+    MAIN_POST = 'MAIN_POST'
+    COMMENT = 'COMMENT'
+    SUBCOMMENT = 'SUBCOMMENT'
 
-    viewCount = models.IntegerField('访问次数', default=0)
+    @property
+    def type(self):
+        """
+        获取post的类型
+        """
+        if not self.replyToId:
+            assert not self.replyToComment
+            return self.MAIN_POST
+        elif not self.replyToComment:
+            return self.COMMENT
+        else:
+            return self.SUBCOMMENT
         
 class PostImage(models.Model):
     """
