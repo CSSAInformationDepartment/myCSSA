@@ -192,9 +192,19 @@
               {% endif %}
 
               {% if perms.CommunityAPI.censor_post%}
-                <li class="nav-item">
-                  <a class="nav-link" href="{% url 'myCSSAhub:CommunityAPI:show_post' %}">
-                    <i class="nav-icon fa fa-camera-retro"></i> 圈子审核 </a>
+                <li class="nav-item nav-dropdown">
+                  <a class="nav-link nav-dropdown-toggle" href="#">
+                    <i class="nav-icon fa fa-shopping-bag"></i>圈子审核</a>
+                    <ul class="nav-dropdown-items">
+                      <li class="nav-item">
+                        <a class="nav-link" href="{% url 'myCSSAhub:CommunityAPI:post_list' %}">
+                          <i class="nav-icon cui-list"></i> 文章列表 </a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link" href="{% url 'myCSSAhub:CommunityAPI:show_post' %}">
+                          <i class="nav-icon fa fa-plus-circle"></i> 查看文章 </a>
+                      </li>
+                    </ul>
                 </li>
               {% endif %}
 

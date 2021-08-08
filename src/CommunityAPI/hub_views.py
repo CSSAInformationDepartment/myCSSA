@@ -1,10 +1,12 @@
 from django import views
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.shortcuts import render
 from django.views.generic.base import TemplateView, View
+from django_datatables_view.base_datatable_view import BaseDatatableView
 from rest_framework.generics import get_object_or_404
+from django.db.models import OuterRef, Subquery, Count
 
-from CommunityAPI.models import Post
+from CommunityAPI.models import Post, Report
 from .serializers import resolve_post_content
 
 def pk(instance):
@@ -46,3 +48,29 @@ class ShowPostView(LoginRequiredMixin, TemplateView):
                 **context,
                 'id': id,
             }
+
+class PostListView(LoginRequiredMixin, TemplateView):
+    """
+    列出所有的帖子
+    """
+
+    login_url = '/hub/login/'
+    template_name = 'CommunityAPI/post_list.html'
+    permission_required = ('CommunityAPI.censor_post',)
+
+class PostListJsonView(LoginRequiredMixin, PermissionRequiredMixin, BaseDatatableView):
+    login_url = '/hub/login/'
+    permission_required = ('CommunityAPI.censor_post',)
+
+    columns = ['id', 'type', 'tag', 'viewableToGuest', 'deleted', 'censored', 
+        'createTime', 'viewCount', 
+        # custom
+        'reported']
+    order_columns = columns
+
+    max_display_length = 500
+
+    def get_initial_queryset(self):
+        reports = Report.objects.filter(targetPost=OuterRef('id'))
+        return Post.objects.order_by('-createTime') \
+            .annotate(reported=Count('report'))

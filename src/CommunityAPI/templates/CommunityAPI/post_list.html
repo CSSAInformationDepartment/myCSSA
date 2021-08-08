@@ -1,0 +1,68 @@
+{% extends 'myCSSAhub/component/_layout.html' %}
+{% load static %}
+{% block ExtraHeader %}
+<link href="{% static 'myCSSAhub/vendors/DataTables/datatables.min.css'%}" rel="stylesheet">
+{% endblock ExtraHeader %}
+
+{% block pageTitle %}
+帖子列表
+{% endblock pageTitle %}
+
+{% block BreadcrumbPath %}
+  <li class="breadcrumb-item">圈子</li>
+  <li class="breadcrumb-item">
+    <a href="{% url 'myCSSAhub:CommunityAPI:post_list' %}">帖子列表</a>
+  </li>
+{% endblock BreadcrumbPath %}
+
+{% block pageContent %}
+<div class="row mb-3">
+  <div class="col-6">
+
+  </div>
+  
+</div>
+<div class="row">
+  <div class="col-md-12">
+    <div class="card" >
+      <div class="card-header">
+        帖子列表
+      </div>
+      <div class="card-body">
+          <p>这里列出所有的帖子，包括主贴、评论和回复</p>
+          <table id="main-datatable" class="table table-responsive-md"  style="width:100%" >
+          <thead>
+              <tr>
+                <th>ID</th>
+                <th>类型</th>
+                <th>Tag</th>
+                <th>未登录是否可见</th>
+                <th>是否被删除</th>
+                <th>是否被屏蔽</th>
+                <th>创建时间</th>
+                <th>访问量</th>
+                <th>未处理的举报次数</th>
+              </tr>
+          </thead>
+          </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block ExtraJS %}
+
+<script src="{% static 'myCSSAhub/vendors/DataTables/datatables.js'%}"></script>
+<script>
+$(document).ready(function() {
+  var oTable = $('#main-datatable').dataTable({
+    "responsive": true,
+    "processing": true,
+    "serverSide": true,
+    "ajax": "{% url 'myCSSAhub:CommunityAPI:post_list_json' %}",
+  });
+});
+</script>
+
+{% endblock ExtraJS %}
