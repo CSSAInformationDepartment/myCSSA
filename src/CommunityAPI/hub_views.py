@@ -5,6 +5,7 @@ from django.views.generic.base import TemplateView, View
 from django_datatables_view.base_datatable_view import BaseDatatableView
 from rest_framework.generics import get_object_or_404
 from django.db.models import OuterRef, Subquery, Count
+from django.urls import reverse
 
 from CommunityAPI.models import Post, Report
 from .serializers import resolve_post_content
@@ -74,3 +75,12 @@ class PostListJsonView(LoginRequiredMixin, PermissionRequiredMixin, BaseDatatabl
         reports = Report.objects.filter(targetPost=OuterRef('id'))
         return Post.objects.order_by('-createTime') \
             .annotate(reported=Count('report'))
+
+    def render_column(self, row, column):
+        if column == 'id':
+            return f'''<a href="{
+                reverse('myCSSAhub:CommunityAPI:show_post')}?id={row.id}">
+                {row.id}</a>'''
+
+        else: 
+            return super().render_column(row, column)
