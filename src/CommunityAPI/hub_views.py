@@ -1,10 +1,15 @@
+import dateutil
 from django import views
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.shortcuts import render
 from django.views.generic.base import TemplateView, View
+from django_datatables_view.base_datatable_view import BaseDatatableView
 from rest_framework.generics import get_object_or_404
+from django.db.models import OuterRef, Subquery, Count
+from django.urls import reverse
+from dateutil.parser import parse as parse_date
 
-from CommunityAPI.models import Post
+from CommunityAPI.models import Post, Report
 from .serializers import resolve_post_content
 
 def pk(instance):
@@ -46,3 +51,63 @@ class ShowPostView(LoginRequiredMixin, TemplateView):
                 **context,
                 'id': id,
             }
+
+class PostListView(LoginRequiredMixin, TemplateView):
+    """
+    列出所有的帖子
+    """
+
+    login_url = '/hub/login/'
+    template_name = 'CommunityAPI/post_list.html'
+    permission_required = ('CommunityAPI.censor_post',)
+
+class PostListJsonView(LoginRequiredMixin, PermissionRequiredMixin, BaseDatatableView):
+    login_url = '/hub/login/'
+    permission_required = ('CommunityAPI.censor_post',)
+
+    columns = ['id', 'type', 'tag', 'viewableToGuest', 'deleted', 'censored', 
+        'createTime', 'viewCount', 
+        # custom
+        'reported']
+    order_columns = columns
+
+    max_display_length = 500
+
+    def get_initial_queryset(self):
+        query = Post.objects.order_by('-createTime') \
+            .annotate(reported=Count('report'))
+
+        type = self.request.GET.get('type')
+        if type == 'MAIN_POST':
+            query = query.filter(replyToId__isnull=True)
+        elif type == 'COMMENT':
+            query = query.filter(replyToComment__isnull=True, replyToId__isnull=False)
+        elif type == 'SUBCOMMENT':
+            query = query.filter(replyToComment__isnull=False, replyToId__isnull=False)
+
+        has_report = self.request.GET.get('has-report')
+        if has_report == 'yes':
+            query = query.filter(reported__gt=0)
+        elif has_report == 'no':
+            query = query.filter(reported=0)
+
+        is_censored = self.request.GET.get('is-censored')
+        if is_censored == 'yes':
+            query = query.filter(censored=True)
+        elif is_censored == 'no':
+            query = query.filter(censored=False)
+
+        create_after = self.request.GET.get('create-after')
+        if create_after:
+            query = query.filter(createTime__gte=parse_date(create_after))
+
+        return query
+
+    def render_column(self, row, column):
+        if column == 'id':
+            return f'''<a href="{
+                reverse('myCSSAhub:CommunityAPI:show_post')}?id={row.id}">
+                {row.id}</a>'''
+
+        else: 
+            return super().render_column(row, column)
