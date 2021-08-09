@@ -54,6 +54,10 @@ class DiscountMerchant(models.Model):
     )
     merchant_Category = models.CharField(verbose_name="折扣商家种类", max_length=10, choices= merchantCategory, null=True, default='美食',blank=True)
 
+    discount_rate = models.IntegerField(verbose_name="折扣", default=1)
+
+    operation_hours = models.CharField(verbose_name="商家开放时间", max_length=5, null=True)
+
     def __str__(self):
         return self.merchant_name
 
