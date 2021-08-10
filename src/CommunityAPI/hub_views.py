@@ -9,7 +9,7 @@ from django.db.models import OuterRef, Subquery, Count
 from django.urls import reverse
 from dateutil.parser import parse as parse_date
 
-from CommunityAPI.models import Post, Report
+from CommunityAPI.models import Content, Post, PostImage, Report
 from .serializers import resolve_post_content
 
 def pk(instance):
@@ -68,14 +68,20 @@ class PostListJsonView(LoginRequiredMixin, PermissionRequiredMixin, BaseDatatabl
     columns = ['id', 'type', 'tag', 'viewableToGuest', 'deleted', 'censored', 
         'createTime', 'viewCount', 
         # custom
-        'reported']
+        'reported', 'title', 'text', 'imageCount']
     order_columns = columns
 
     max_display_length = 500
 
     def get_initial_queryset(self):
+        content = Content.objects.filter(post=OuterRef('id')) \
+            .annotate(imageCount=Count('images')) \
+            .order_by('editedTime')[:1]
         query = Post.objects.order_by('-createTime') \
-            .annotate(reported=Count('report'))
+            .annotate(reported=Count('report')) \
+            .annotate(text=content.values('text')) \
+            .annotate(title=content.values('title')) \
+            .annotate(imageCount=content.values('imageCount'))
 
         type = self.request.GET.get('type')
         if type == 'MAIN_POST':
