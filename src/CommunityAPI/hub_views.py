@@ -9,7 +9,7 @@ from django.db.models import OuterRef, Subquery, Count
 from django.urls import reverse
 from dateutil.parser import parse as parse_date
 
-from CommunityAPI.models import Post, Report
+from CommunityAPI.models import Content, Post, PostImage, Report
 from .serializers import resolve_post_content
 
 def pk(instance):
@@ -65,17 +65,25 @@ class PostListJsonView(LoginRequiredMixin, PermissionRequiredMixin, BaseDatatabl
     login_url = '/hub/login/'
     permission_required = ('CommunityAPI.censor_post',)
 
-    columns = ['id', 'type', 'tag', 'viewableToGuest', 'deleted', 'censored', 
-        'createTime', 'viewCount', 
-        # custom
-        'reported']
+    columns = [
+        'id', 'type', 'tag', 'viewableToGuest', 'deleted', 'censored', 
+        'createTime', 'editedTime', 'viewCount', 'reported', 'title', 'text', 
+        'imageCount',
+    ]
     order_columns = columns
 
     max_display_length = 500
 
     def get_initial_queryset(self):
+        content = Content.objects.filter(post=OuterRef('id')) \
+            .annotate(imageCount=Count('images')) \
+            .order_by('editedTime')[:1]
         query = Post.objects.order_by('-createTime') \
-            .annotate(reported=Count('report'))
+            .annotate(reported=Count('report')) \
+            .annotate(text=content.values('text')) \
+            .annotate(title=content.values('title')) \
+            .annotate(imageCount=content.values('imageCount')) \
+            .annotate(editedTime=content.values('editedTime'))
 
         type = self.request.GET.get('type')
         if type == 'MAIN_POST':
@@ -100,6 +108,16 @@ class PostListJsonView(LoginRequiredMixin, PermissionRequiredMixin, BaseDatatabl
         create_after = self.request.GET.get('create-after')
         if create_after:
             query = query.filter(createTime__gte=parse_date(create_after))
+
+        edit_after = self.request.GET.get('edit-after')
+        if edit_after:
+            query = query.filter(editedTime__gte=parse_date(edit_after))
+
+        has_image = self.request.GET.get('has-image')
+        if has_image == 'yes':
+            query = query.filter(imageCount__gt=0)
+        elif has_image == 'no':
+            query = query.filter(imageCount=0)
 
         return query
 
