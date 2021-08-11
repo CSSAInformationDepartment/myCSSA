@@ -109,6 +109,16 @@ class PostListJsonView(LoginRequiredMixin, PermissionRequiredMixin, BaseDatatabl
         if create_after:
             query = query.filter(createTime__gte=parse_date(create_after))
 
+        edit_after = self.request.GET.get('edit-after')
+        if edit_after:
+            query = query.filter(editedTime__gte=parse_date(edit_after))
+
+        has_image = self.request.GET.get('has-image')
+        if has_image == 'yes':
+            query = query.filter(imageCount__gt=0)
+        elif has_image == 'no':
+            query = query.filter(imageCount=0)
+
         return query
 
     def render_column(self, row, column):

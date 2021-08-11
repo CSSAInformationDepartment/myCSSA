@@ -64,6 +64,13 @@
         </div>
 
         <div class="mb-3 row">
+          <label for="edit-after" class="col-sm-2 col-form-label">在某日期之后修改</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" id="edit-after">
+          </div>
+        </div>
+
+        <div class="mb-3 row">
           <label for="is-censored" class="col-sm-2 col-form-label">是否被屏蔽</label>
           <div class="col-sm-10">
             <select class="form-select" id="is-censored">
@@ -74,6 +81,16 @@
           </div>
         </div>
 
+        <div class="mb-3 row">
+          <label for="has-image" class="col-sm-2 col-form-label">是否有图片</label>
+          <div class="col-sm-10">
+            <select class="form-select" id="has-image">
+              <option value="" selected>显示全部</option>
+              <option value="yes">只显示有图片</option>
+              <option value="no">只显示没图片</option>
+            </select>
+          </div>
+        </div>
 
         <table id="main-datatable" class="table display nowrap" style="width:100%">
           <thead>
@@ -131,6 +148,19 @@
       oTable.draw();
     });
 
+    $('#edit-after').datepicker({
+      todayBtn: "linked",
+      clearBtn: true,
+      autoclose: true,
+      language: "zh-CN",
+    }).change(function (e) {
+      oTable.draw();
+    });
+
+    $('#has-image').change(function (e) {
+      oTable.draw();
+    });
+
     var format = new Intl.DateTimeFormat('zh-CN', {
       year: 'numeric',
       month: 'numeric',
@@ -159,11 +189,14 @@
         url: "{% url 'myCSSAhub:CommunityAPI:post_list_json' %}",
         data: function (d) {
           var createAfter = $('#create-after').datepicker('getDate')
+          var editAfter = $('#edit-after').datepicker('getDate')
           return $.extend({}, d, {
             "type": $('#type-select').val(),
             "has-report": $('#has-report').val(),
             "create-after": createAfter && createAfter.toISOString(),
+            "edit-after": editAfter && editAfter.toISOString(),
             "is-censored": $('#is-censored').val(),
+            "has-image": $('#has-image').val(),
           });
         }
       },
