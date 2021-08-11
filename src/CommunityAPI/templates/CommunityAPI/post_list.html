@@ -31,7 +31,7 @@
         帖子列表
       </div>
       <div class="card-body">
-        <p>这里列出所有的帖子，包括主贴、评论和回复</p>
+        <p>这里列出所有的帖子，包括主贴、评论和回复。将光标移动到过长（截断）的标题和正文上可以显示其全部内容</p>
 
         <div class="mb-3 row">
           <label for="type-select" class="col-sm-2 col-form-label">帖子类型</label>
@@ -131,6 +131,26 @@
       oTable.draw();
     });
 
+    var format = new Intl.DateTimeFormat('zh-CN', {
+      year: 'numeric',
+      month: 'numeric',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric',
+    });
+
+    function renderDateTime(data, type, row) {
+      return format.format(new Date(data));
+    }
+
+    function cutLongText(data, type, row) {
+      var text = data.substr(0, 20)
+      if (text.length < data.length) {
+        text += '【截断】'
+      }
+      return '<span title="' + data + '">' + text + '</span>'
+    }
+
     var oTable = $('#main-datatable').DataTable({
       "processing": true,
       "serverSide": true,
@@ -150,6 +170,23 @@
       order: [
         [6, 'asc']
       ], // order by createTime
+      columnDefs: [{
+          targets: 6,
+          render: renderDateTime,
+        },
+        {
+          targets: 7,
+          render: renderDateTime,
+        },
+        {
+          targets: 10,
+          render: cutLongText,
+        },
+        {
+          targets: 11,
+          render: cutLongText,
+        },
+      ],
     });
   });
 </script>
