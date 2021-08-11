@@ -65,10 +65,11 @@ class PostListJsonView(LoginRequiredMixin, PermissionRequiredMixin, BaseDatatabl
     login_url = '/hub/login/'
     permission_required = ('CommunityAPI.censor_post',)
 
-    columns = ['id', 'type', 'tag', 'viewableToGuest', 'deleted', 'censored', 
-        'createTime', 'viewCount', 
-        # custom
-        'reported', 'title', 'text', 'imageCount']
+    columns = [
+        'id', 'type', 'tag', 'viewableToGuest', 'deleted', 'censored', 
+        'createTime', 'editedTime', 'viewCount', 'reported', 'title', 'text', 
+        'imageCount',
+    ]
     order_columns = columns
 
     max_display_length = 500
@@ -81,7 +82,8 @@ class PostListJsonView(LoginRequiredMixin, PermissionRequiredMixin, BaseDatatabl
             .annotate(reported=Count('report')) \
             .annotate(text=content.values('text')) \
             .annotate(title=content.values('title')) \
-            .annotate(imageCount=content.values('imageCount'))
+            .annotate(imageCount=content.values('imageCount')) \
+            .annotate(editedTime=content.values('editedTime'))
 
         type = self.request.GET.get('type')
         if type == 'MAIN_POST':

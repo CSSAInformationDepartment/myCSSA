@@ -75,18 +75,19 @@
         </div>
 
 
-        <table id="main-datatable" class="table table-responsive-md" style="width:100%">
+        <table id="main-datatable" class="table display nowrap" style="width:100%">
           <thead>
             <tr>
               <th>ID</th>
               <th>类型</th>
               <th>Tag</th>
-              <th>未登录是否可见</th>
-              <th>是否被删除</th>
-              <th>是否被屏蔽</th>
+              <th>游客可见</th>
+              <th>被删除</th>
+              <th>被屏蔽</th>
               <th>创建时间</th>
+              <th>修改时间</th>
               <th>访问量</th>
-              <th>未处理的举报次数</th>
+              <th>举报次数</th>
               <th>标题</th>
               <th>正文</th>
               <th>图片数量</th>
@@ -131,9 +132,9 @@
     });
 
     var oTable = $('#main-datatable').DataTable({
-      "responsive": true,
       "processing": true,
       "serverSide": true,
+      "sScrollX": '100%',
       "ajax": {
         url: "{% url 'myCSSAhub:CommunityAPI:post_list_json' %}",
         data: function (d) {
