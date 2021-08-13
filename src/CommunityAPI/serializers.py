@@ -377,7 +377,7 @@ class EditSubCommentSerializer(PostSerializerMixin, serializers.Serializer):
         replyTarget = get_post_by_id(validated_data['replyTo'])
         if comment == replyTarget:
             pass
-        elif not replyTarget.replyToId or not replyTarget.replyToComment:
+        elif replyTarget.type != models.Post.SUBCOMMENT:
             raise ValidationError('replyTo 指定的回复目标不能是主贴或一级评论，除非 replyTo = comment_id')
         elif replyTarget.replyToComment.pk != comment.pk:
             raise ValidationError('replyTo 指定的回复目标跟本评论不属于同一个一级评论。其目标'

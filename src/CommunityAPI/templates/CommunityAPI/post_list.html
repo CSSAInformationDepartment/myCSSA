@@ -1,0 +1,227 @@
+{% extends 'myCSSAhub/component/_layout.html' %}
+{% load static %}
+{% block ExtraHeader %}
+<link href="{% static 'myCSSAhub/vendors/DataTables/datatables.min.css'%}" rel="stylesheet">
+<link id="bsdp-css" href="https://unpkg.com/bootstrap-datepicker@1.9.0/dist/css/bootstrap-datepicker3.min.css"
+  rel="stylesheet">
+{% endblock ExtraHeader %}
+
+{% block pageTitle %}
+帖子列表
+{% endblock pageTitle %}
+
+{% block BreadcrumbPath %}
+<li class="breadcrumb-item">圈子</li>
+<li class="breadcrumb-item">
+  <a href="{% url 'myCSSAhub:CommunityAPI:post_list' %}">帖子列表</a>
+</li>
+{% endblock BreadcrumbPath %}
+
+{% block pageContent %}
+<div class="row mb-3">
+  <div class="col-6">
+
+  </div>
+
+</div>
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-header">
+        帖子列表
+      </div>
+      <div class="card-body">
+        <p>这里列出所有的帖子，包括主贴、评论和回复。将光标移动到过长（截断）的标题和正文上可以显示其全部内容</p>
+
+        <div class="mb-3 row">
+          <label for="type-select" class="col-sm-2 col-form-label">帖子类型</label>
+          <div class="col-sm-10">
+            <select class="form-select" id="type-select">
+              <option value="" selected>全部</option>
+              <option value="MAIN_POST">MAIN_POST</option>
+              <option value="COMMENT">COMMENT</option>
+              <option value="SUBCOMMENT">SUBCOMMENT</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="mb-3 row">
+          <label for="has-report" class="col-sm-2 col-form-label">是否有未处理的举报</label>
+          <div class="col-sm-10">
+            <select class="form-select" id="has-report">
+              <option value="" selected>显示全部</option>
+              <option value="yes">只显示有为处理举报的帖子</option>
+              <option value="no">只显示没有未处理举报的帖子</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="mb-3 row">
+          <label for="create-after" class="col-sm-2 col-form-label">在某日期之后创建</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" id="create-after">
+          </div>
+        </div>
+
+        <div class="mb-3 row">
+          <label for="edit-after" class="col-sm-2 col-form-label">在某日期之后修改</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" id="edit-after">
+          </div>
+        </div>
+
+        <div class="mb-3 row">
+          <label for="is-censored" class="col-sm-2 col-form-label">是否被屏蔽</label>
+          <div class="col-sm-10">
+            <select class="form-select" id="is-censored">
+              <option value="" selected>显示全部</option>
+              <option value="yes">只显示被屏蔽</option>
+              <option value="no">只显示没被屏蔽</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="mb-3 row">
+          <label for="has-image" class="col-sm-2 col-form-label">是否有图片</label>
+          <div class="col-sm-10">
+            <select class="form-select" id="has-image">
+              <option value="" selected>显示全部</option>
+              <option value="yes">只显示有图片</option>
+              <option value="no">只显示没图片</option>
+            </select>
+          </div>
+        </div>
+
+        <table id="main-datatable" class="table display nowrap" style="width:100%">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>类型</th>
+              <th>Tag</th>
+              <th>游客可见</th>
+              <th>被删除</th>
+              <th>被屏蔽</th>
+              <th>创建时间</th>
+              <th>修改时间</th>
+              <th>访问量</th>
+              <th>举报次数</th>
+              <th>标题</th>
+              <th>正文</th>
+              <th>图片数量</th>
+            </tr>
+          </thead>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block ExtraJS %}
+
+<script src="{% static 'myCSSAhub/vendors/DataTables/datatables.js'%}"></script>
+<script src="https://unpkg.com/bootstrap-datepicker@1.9.0/dist/js/bootstrap-datepicker.min.js"></script>
+<script src="https://unpkg.com/bootstrap-datepicker@1.9.0/dist/locales/bootstrap-datepicker.zh-CN.min.js"
+  charset="UTF-8"></script>
+
+<script>
+  $(document).ready(function () {
+
+    $('#type-select').change(function (e) {
+      oTable.draw();
+    });
+
+    $('#has-report').change(function (e) {
+      oTable.draw();
+    });
+
+    $('#is-censored').change(function (e) {
+      oTable.draw();
+    });
+
+    $('#create-after').datepicker({
+      todayBtn: "linked",
+      clearBtn: true,
+      autoclose: true,
+      language: "zh-CN",
+    }).change(function (e) {
+      oTable.draw();
+    });
+
+    $('#edit-after').datepicker({
+      todayBtn: "linked",
+      clearBtn: true,
+      autoclose: true,
+      language: "zh-CN",
+    }).change(function (e) {
+      oTable.draw();
+    });
+
+    $('#has-image').change(function (e) {
+      oTable.draw();
+    });
+
+    var format = new Intl.DateTimeFormat('zh-CN', {
+      year: 'numeric',
+      month: 'numeric',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric',
+    });
+
+    function renderDateTime(data, type, row) {
+      return format.format(new Date(data));
+    }
+
+    function cutLongText(data, type, row) {
+      var text = data.substr(0, 20)
+      if (text.length < data.length) {
+        text += '【截断】'
+      }
+      return '<span title="' + data + '">' + text + '</span>'
+    }
+
+    var oTable = $('#main-datatable').DataTable({
+      "processing": true,
+      "serverSide": true,
+      "sScrollX": '100%',
+      "ajax": {
+        url: "{% url 'myCSSAhub:CommunityAPI:post_list_json' %}",
+        data: function (d) {
+          var createAfter = $('#create-after').datepicker('getDate')
+          var editAfter = $('#edit-after').datepicker('getDate')
+          return $.extend({}, d, {
+            "type": $('#type-select').val(),
+            "has-report": $('#has-report').val(),
+            "create-after": createAfter && createAfter.toISOString(),
+            "edit-after": editAfter && editAfter.toISOString(),
+            "is-censored": $('#is-censored').val(),
+            "has-image": $('#has-image').val(),
+          });
+        }
+      },
+      order: [
+        [6, 'asc']
+      ], // order by createTime
+      columnDefs: [{
+          targets: 6,
+          render: renderDateTime,
+        },
+        {
+          targets: 7,
+          render: renderDateTime,
+        },
+        {
+          targets: 10,
+          render: cutLongText,
+        },
+        {
+          targets: 11,
+          render: cutLongText,
+        },
+      ],
+    });
+  });
+</script>
+
+{% endblock ExtraJS %}
