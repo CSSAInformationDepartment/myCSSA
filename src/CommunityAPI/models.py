@@ -124,7 +124,22 @@ class Report(models.Model):
     resolvedBy = models.ForeignKey(UserProfile, null=True, on_delete=models.SET_NULL,
         related_name='%(class)s_resolved_by')
     
-    reportTypeChoices = [] # TODO: 决定类型
+    # 列出所有类型，防止打错字
+    SPAM = 'SPAM'
+    FALSE_INFORMATION = 'FALSE_INFORMATION'
+    PERSONAL_ATTACK = 'PERSONAL_ATTACK'
+    PLAGIARISM = 'PLAGIARISM'
+    HATRED = 'HATRED'
+    ILLEGAL = 'ILLEGAL'
+
+    reportTypeChoices = [
+        (SPAM, r'垃圾/恶意营销'), 
+        (FALSE_INFORMATION, r'不实/有害消息'), 
+        (PERSONAL_ATTACK, r'人身攻击'), 
+        (PLAGIARISM, r'内容抄袭'), 
+        (HATRED, r'宣扬仇恨'), 
+        (ILLEGAL, r'违法内容'), 
+    ]
     type = CharField('举报类型', choices=reportTypeChoices, max_length=100)
 
     class Meta:
