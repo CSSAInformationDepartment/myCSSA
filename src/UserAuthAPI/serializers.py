@@ -69,6 +69,7 @@ class APILoginSerializer(serializers.Serializer):
     password = serializers.CharField(style={'input_type': 'password'})
 
     def _validate_email(self, email, password):
+        ## 验证邮箱
         user = None
 
         if email and password:
@@ -80,6 +81,7 @@ class APILoginSerializer(serializers.Serializer):
         return user
 
     def _validate_username(self, username, password):
+        ## 验证username
         user = None
 
         if username and password:

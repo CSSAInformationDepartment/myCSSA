@@ -4,7 +4,7 @@ from django.conf.urls import include
 from django.contrib import admin
 from django.views.generic import TemplateView, RedirectView
 import rest_auth.registration.urls
-
+from django.contrib.auth import views as auth_views
 from . import views 
 
 #from rest_framework_swagger.views import get_swagger_view
@@ -32,7 +32,8 @@ urlpatterns = [
     re_path(r'^password-change/$',
         TemplateView.as_view(template_name="password_change.html"),
         name='password-change'),
-
+    re_path( r'^send-email/',TemplateView.as_view(template_name="accounts/password_reset.html"),
+     name="form_valid"),
 
     # this url is used to generate email content
 #    url(r'^password-reset/confirm/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
@@ -44,5 +45,19 @@ urlpatterns = [
     re_path(r'^account/', include('allauth.urls')),
     re_path(r'^accounts/profile/$', RedirectView.as_view(url='/', permanent=True), name='profile-redirect'),
     path('login-user-info/', views.get_login_user_info, name='login-info'),
-    path('register/', views.user_easy_registry_api, name='register-api')
+    
+ 
+
+    path('reset_password_sent/', 
+        auth_views.PasswordResetDoneView.as_view(template_name="accounts/password_reset_sent.html"), 
+        name="password_reset_done"),
+
+    path('reset/<uidb64>/<token>/',
+     auth_views.PasswordResetConfirmView.as_view(template_name="accounts/password_reset_form.html"), 
+     name="password_reset_confirm"),
+
+    path('reset_password_complete/', 
+        auth_views.PasswordResetCompleteView.as_view(template_name="accounts/password_reset_done.html"), 
+        name="password_reset_complete"),
+    
 ]

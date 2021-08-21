@@ -106,11 +106,9 @@ class FavouritePostViewSet(
         )
         favouritePost = Post.objects.get(id = post)
     
-<<<<<<< Updated upstream
-        self.create_favorite_notification( favouritePost, userProfile)
-=======
+
         self.create_favourite_notification(favouritePost, userProfile)
->>>>>>> Stashed changes
+
         return Response(status=status.HTTP_202_ACCEPTED)
 
     def destroy(self, request, *args, **kwargs):

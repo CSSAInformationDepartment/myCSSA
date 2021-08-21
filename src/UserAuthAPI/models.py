@@ -134,7 +134,7 @@ class User(AbstractUser):
 
     class Meta:
         verbose_name = _('user')
-        verbose_name_plural = _('users')
+        
 
 
     def __str__(self):
@@ -153,7 +153,7 @@ class UserProfile (models.Model):
 
     identiyConfirmed = models.BooleanField(verbose_name="会员身份状态",default=False)
     isValid = models.BooleanField(verbose_name="账号有效性",default=False)
-
+                                                       
     firstNameEN = models.CharField(verbose_name="英文名",max_length=50)
     lastNameEN = models.CharField(verbose_name="英文姓",max_length=50)
 
