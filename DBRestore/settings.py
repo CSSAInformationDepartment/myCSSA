@@ -29,3 +29,8 @@ EXCLUDED_TABLE = ["authtoken_token",
 ANONYMOUS_MASKING_CONFIG = {
 
 }
+
+DEFAULT_AUTHENTICATION_CLASSES = [
+    # 'rest_framework.authentication.SessionAuthentication',
+    'rest_framework.authentication.BasicAuthentication',
+]

@@ -36,8 +36,6 @@ from django.core.mail import send_mail
 from django.contrib import messages
 from django import forms
 
-class PasswordResetRequestForm(forms.Form):
-    email_or_username = forms.CharField(label=("Email Or Username"), max_length=254)
 class UserListView(ListCreateAPIView):
 
     queryset = models.User.objects.all()
