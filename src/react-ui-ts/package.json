@@ -24,7 +24,7 @@
     "node-fetch": "^2.6.1",
     "node-forge": "^0.10.0",
     "node-notifier": "^8.0.1",
-    "object-path": "^0.11.5",
+    "object-path": "^0.11.6",
     "postcss": "^7.0.36",
     "react": "^16.13.1",
     "react-app-rewired": "^2.1.5",
