@@ -125,7 +125,7 @@ def password_reset_request(request):
 						
 					# If success, pop up a success message
 					messages.success(request, 'A message with reset password instructions has been sent to your inbox.')
-					return redirect ("/")
+					# return redirect ("/hub/login/")
 			# Otherwise let user to retype the email
 			else:
 				messages.error(request, 'An invalid email has been entered.')
