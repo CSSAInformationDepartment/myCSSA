@@ -2,6 +2,7 @@
 from django.urls import re_path, path
 from django.conf.urls import include
 from django.contrib import admin
+from django.contrib.auth import views as auth_views
 from django.views.generic import TemplateView, RedirectView
 import rest_auth.registration.urls
 
@@ -44,5 +45,8 @@ urlpatterns = [
     re_path(r'^account/', include('allauth.urls')),
     re_path(r'^accounts/profile/$', RedirectView.as_view(url='/', permanent=True), name='profile-redirect'),
     path('login-user-info/', views.get_login_user_info, name='login-info'),
-    path('register/', views.user_easy_registry_api, name='register-api')
+    path('register/', views.user_easy_registry_api, name='register-api'),
+
+    path("password_reset/", views.password_reset_request, name="password_reset"),
+    path('reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(template_name="password_reset_confirm.html"), name='password_reset_confirm'),
 ]
