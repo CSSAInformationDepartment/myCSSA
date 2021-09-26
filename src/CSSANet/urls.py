@@ -19,6 +19,7 @@ from django.contrib import admin
 from django.urls import path,re_path ,include
 from django.conf.urls import handler400, handler403, handler404, handler500
 from django.views.defaults import server_error
+from django.contrib.auth import views as auth_views
 
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
@@ -54,6 +55,7 @@ urlpatterns = [
     path('api/legacy/', include(LegacyUrl)),
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('reset/done/', auth_views.PasswordResetCompleteView.as_view(template_name='password_reset_complete.html'), name='password_reset_complete'),
     path('oauth/', include('social_django.urls', namespace='social')),
     path('mobile/', include(MobileUrl)),
     path('api/community/', include(CommunityUrl)),
