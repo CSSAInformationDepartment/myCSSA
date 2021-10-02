@@ -1,3 +1,4 @@
+from typing import Dict
 from django.db import models
 from django.db.models.deletion import SET_NULL
 from django.db.models.fields import CharField
@@ -221,3 +222,27 @@ class UserInformation(models.Model):
     username = models.CharField('用户名', max_length=USERNAME_MAX_LENGTH)
     avatarUrl = models.URLField('用户头像的url')
 
+
+class WxMiniProgramData(models.Model):
+    """
+    微信小程序的全局数据。比如 access_token。
+    """
+
+    class Type(models.IntegerChoices):
+        ACCESS_TOKEN = 1
+
+    # 用int当作主键，提升检索效率
+    type = models.IntegerField(
+        choices=Type.choices, primary_key=True, verbose_name="数据类型")
+
+    data = models.JSONField(null=False, verbose_name="数据")
+
+    @property
+    def access_token(self) -> Dict[str, str]:
+        """
+        Get access token.
+
+        The type must be Type.ACCESS_TOKEN !
+        """
+        assert self.type == WxMiniProgramData.Type.ACCESS_TOKEN, 'Type must match'
+        return self.data
