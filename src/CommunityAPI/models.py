@@ -7,10 +7,12 @@ from sorl.thumbnail import ImageField as SorlImageField
 from UserAuthAPI.models import UserProfile
 
 
-POST_CONTENT_LENGTH_MAX = 20000 # TODO: 决定一个长度
+POST_CONTENT_LENGTH_MAX = 20000  # TODO: 决定一个长度
 POST_TITLE_LENGTH_MAX = 100
 
 # Create your models here.
+
+
 class Tag(models.Model):
     """
     主贴的标签
@@ -20,6 +22,7 @@ class Tag(models.Model):
 
     def __str__(self) -> str:
         return self.title
+
 
 class Post(models.Model):
     """
@@ -38,23 +41,23 @@ class Post(models.Model):
     '''
     # 这里只能用字符串 'Post'，因为程序执行到这里的时候这个类还没定义完毕
     replyToId = models.ForeignKey('Post', null=True, on_delete=models.SET_NULL,
-        related_name='%(class)s_reply_to_id') 
+                                  related_name='%(class)s_reply_to_id')
     replyToComment = models.ForeignKey('Post', null=True, on_delete=models.SET_NULL,
-        related_name='%(class)s_reply_to_comment') 
+                                       related_name='%(class)s_reply_to_comment')
 
     viewableToGuest = models.BooleanField('未登录用户是否可见')
 
     deleted = models.BooleanField('是否被删除', default=False)
-    deletedBy = models.ForeignKey(UserProfile, null=True, on_delete=models.SET_NULL, 
-        related_name='%(class)s_deleted_by')
+    deletedBy = models.ForeignKey(UserProfile, null=True, on_delete=models.SET_NULL,
+                                  related_name='%(class)s_deleted_by')
 
     censored = models.BooleanField('是否被审查', default=False)
-    censoredBy = models.ForeignKey(UserProfile, null=True, on_delete=models.SET_NULL, 
-        related_name='%(class)s_censored_by')
+    censoredBy = models.ForeignKey(UserProfile, null=True, on_delete=models.SET_NULL,
+                                   related_name='%(class)s_censored_by')
 
     createTime = models.DateTimeField('创建时间', auto_now_add=True)
     createdBy = models.ForeignKey(UserProfile, null=True, on_delete=models.SET_NULL,
-        related_name='%(class)s_created_by')
+                                  related_name='%(class)s_created_by')
 
     # last edit time: read from content
 
@@ -82,17 +85,20 @@ class Post(models.Model):
             return self.COMMENT
         else:
             return self.SUBCOMMENT
-        
+
+
 class PostImage(models.Model):
     """
     帖子里的图片
     """
-    
+
     id = models.UUIDField(primary_key=True)
-    image = SorlImageField(verbose_name='用户上传的图片', upload_to='uploads/community/post_image')
+    image = SorlImageField(verbose_name='用户上传的图片',
+                           upload_to='uploads/community/post_image')
     uploader = models.ForeignKey(UserProfile, on_delete=models.DO_NOTHING,
-        related_name='%(class)s_uploader')
+                                 related_name='%(class)s_uploader')
     uploadTime = models.DateTimeField('本图片的上传时间', default=now)
+
 
 class Content(models.Model):
     """
@@ -100,17 +106,21 @@ class Content(models.Model):
     """
 
     # django 对复合主键的支持不大好，这里就不把它当成主键了。
-    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='contents')
+    post = models.ForeignKey(
+        Post, on_delete=models.CASCADE, related_name='contents')
     # 其实这里不需要 previousContentID
 
-    title = models.CharField('标题', max_length=POST_TITLE_LENGTH_MAX, null=True, default=None)
-    text = models.TextField('帖子正文', max_length=POST_CONTENT_LENGTH_MAX, default='')
+    title = models.CharField(
+        '标题', max_length=POST_TITLE_LENGTH_MAX, null=True, default=None)
+    text = models.TextField(
+        '帖子正文', max_length=POST_CONTENT_LENGTH_MAX, default='')
 
     images = models.ManyToManyField(PostImage, verbose_name='帖子关联的图片')
 
     editedTime = models.DateTimeField('当前Content的创建时间（Post的修改时间）', default=now)
     editedBy = models.ForeignKey(UserProfile, null=True, on_delete=models.SET_NULL,
-        related_name='%(class)s_edited_by')
+                                 related_name='%(class)s_edited_by')
+
 
 class Notification(models.Model):
     """
@@ -122,13 +132,13 @@ class Notification(models.Model):
     data = models.JSONField('使用JSON表示额外的数据， 其格式根据type来变化')
     read = models.BooleanField('用户是否已读该通知', default=False)
     sender = models.ForeignKey(UserProfile, on_delete=SET_NULL, null=True,
-        related_name='%(class)s_sender')
+                               related_name='%(class)s_sender')
 
     # 列出所有类型，防止打错字
     REPLY = 'REPLY'
     CENSOR = 'CENSOR'
     DECENSOR = 'DECENSOR'
-    FAVOURITE = 'FAVORITE' # 这里确实拼错了，但它已经进数据库和接口了，没法改
+    FAVOURITE = 'FAVORITE'  # 这里确实拼错了，但它已经进数据库和接口了，没法改
     # End
 
     notificationTypeChoices = [
@@ -141,6 +151,7 @@ class Notification(models.Model):
 
     time = models.DateTimeField('通知的创建时间', default=now)
 
+
 class FavouritePost(models.Model):
     """
     帖子收藏
@@ -151,7 +162,8 @@ class FavouritePost(models.Model):
 
     class Meta:
         constraints = [
-            models.UniqueConstraint(fields=['userId', 'postId'], name='userId_postId')
+            models.UniqueConstraint(
+                fields=['userId', 'postId'], name='userId_postId')
         ]
 
 
@@ -161,15 +173,15 @@ class Report(models.Model):
     """
 
     createdBy = models.ForeignKey(UserProfile, on_delete=models.CASCADE,
-        related_name='%(class)s_created_by')
+                                  related_name='%(class)s_created_by')
 
     targetPost = models.ForeignKey(Post, on_delete=models.CASCADE)
-    reason = models.TextField('举报原因', max_length=1000) # TODO: 决定一个长度
+    reason = models.TextField('举报原因', max_length=1000)  # TODO: 决定一个长度
 
     resolved = models.BooleanField('是否已处理', default=False)
     resolvedBy = models.ForeignKey(UserProfile, null=True, on_delete=models.SET_NULL,
-        related_name='%(class)s_resolved_by')
-    
+                                   related_name='%(class)s_resolved_by')
+
     # 列出所有类型，防止打错字
     SPAM = 'SPAM'
     FALSE_INFORMATION = 'FALSE_INFORMATION'
@@ -179,12 +191,12 @@ class Report(models.Model):
     ILLEGAL = 'ILLEGAL'
 
     reportTypeChoices = [
-        (SPAM, r'垃圾/恶意营销'), 
-        (FALSE_INFORMATION, r'不实/有害消息'), 
-        (PERSONAL_ATTACK, r'人身攻击'), 
-        (PLAGIARISM, r'内容抄袭'), 
-        (HATRED, r'宣扬仇恨'), 
-        (ILLEGAL, r'违法内容'), 
+        (SPAM, r'垃圾/恶意营销'),
+        (FALSE_INFORMATION, r'不实/有害消息'),
+        (PERSONAL_ATTACK, r'人身攻击'),
+        (PLAGIARISM, r'内容抄袭'),
+        (HATRED, r'宣扬仇恨'),
+        (ILLEGAL, r'违法内容'),
     ]
     type = CharField('举报类型', choices=reportTypeChoices, max_length=100)
 
@@ -192,6 +204,7 @@ class Report(models.Model):
         permissions = (
             ("can_handle_report", "Can handle report"),
         )
+
 
 class UserInformation(models.Model):
     """
@@ -203,7 +216,8 @@ class UserInformation(models.Model):
     USERNAME_MAX_LENGTH = 30
 
     user = models.OneToOneField(UserProfile, on_delete=models.CASCADE, primary_key=True,
-        verbose_name='用户的id')
+                                verbose_name='用户的id')
 
     username = models.CharField('用户名', max_length=USERNAME_MAX_LENGTH)
     avatarUrl = models.URLField('用户头像的url')
+
