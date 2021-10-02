@@ -30,6 +30,7 @@ Pillow = "*"
 django-imagekit = "*"
 cachetools = "*"
 django-debug-toolbar = "*"
+requests = "*"
 
 [dev-packages]
 

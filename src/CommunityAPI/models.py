@@ -238,7 +238,7 @@ class WxMiniProgramData(models.Model):
     data = models.JSONField(null=False, verbose_name="数据")
 
     @property
-    def access_token(self) -> Dict[str, str]:
+    def access_token(self) -> Dict:
         """
         Get access token.
 
