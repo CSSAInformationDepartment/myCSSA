@@ -86,7 +86,7 @@ MIDDLEWARE = [
     'django_cprofile_middleware.middleware.ProfilerMiddleware',
 ]
 
-DJANGO_CPROFILE_MIDDLEWARE_REQUIRE_STAFF = False
+# DJANGO_CPROFILE_MIDDLEWARE_REQUIRE_STAFF = False
 
 ROOT_URLCONF = 'CSSANet.urls'
 
