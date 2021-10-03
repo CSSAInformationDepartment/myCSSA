@@ -12,7 +12,7 @@ import textwrap
 
 from .models import WxMiniProgramData
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger('app.CommunityAPI.miniprogram_api')
 
 # 获取 access token 的过程每天只能调用2000次。所以必须把它缓存起来。
 
@@ -25,10 +25,12 @@ def get_access_token() -> Optional[str]:
     If acquiring failed, return None.
     """
 
+    data: Optional[WxMiniProgramData] = None
     try:
-        data: WxMiniProgramData = WxMiniProgramData.objects \
+        data = WxMiniProgramData.objects \
             .get(type=WxMiniProgramData.Type.ACCESS_TOKEN)
-        if data.access_token['exp'] >= time():
+        assert data is not None
+        if data.access_token['exp'] <= time():
             # expired
             raise WxMiniProgramData.DoesNotExist()
         return data.access_token['token']
@@ -47,15 +49,20 @@ def get_access_token() -> Optional[str]:
             'secret': secret,
         }).json()
 
-        if 'errcode' in ret:
+        if ret.get('errcode'):
             logger.warning('获取 access token 出错，code: %s, msg: %s', ret['errcode'], ret['errmsg'])
             return None
 
         token = ret['access_token']
         exp = int(ret['expires_in']) + int(time())
-        WxMiniProgramData.objects.update_or_create(
-            type=WxMiniProgramData.Type.ACCESS_TOKEN,
-            data={'token': token, 'exp': exp})
+        if data:
+            data.data = {'token': token, 'exp': exp}
+            data.save()
+        else:
+            WxMiniProgramData.objects.create(
+                type=WxMiniProgramData.Type.ACCESS_TOKEN,
+                data={'token': token, 'exp': exp}
+            )
 
         return token
 
@@ -88,17 +95,22 @@ def is_text_invalid(openid: str, text: str, title: Optional[str]=None):
     for x in text_list:
         # api doc: https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/sec-check/security.msgSecCheck.html
         res = requests.post('https://api.weixin.qq.com/wxa/msg_sec_check', params={'access_token': token},
-            data={
+            json={
                 'version': 2,
                 'openid': openid,
                 'scene': 3, # 场景固定为论坛
                 'content': x,
                 'title': title,
             }).json()
+        logger.debug('内容审查 %s ，结果 %s', x, res)
         title = None # after first iteration, do not send title anymore
 
-        if 'errcode' in res:
+        if res.get('errcode'):
             logger.warning('获取检测结果出错，code: %s, msg: %s', res['errcode'], res['errmsg'])
+            if res['errcode'] == '40001':
+                # remove old access token
+                WxMiniProgramData.objects.filter(type=WxMiniProgramData.Type.ACCESS_TOKEN).delete()
+            # 如果 access token 出错，我们就不重试了，因为这个功能不是很重要，可以忽略不频繁的错误
             return None
 
         if res['result']['suggest'] == 'risky':

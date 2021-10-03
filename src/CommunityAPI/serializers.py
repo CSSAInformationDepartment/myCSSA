@@ -16,7 +16,7 @@ from UserAuthAPI.models import UserProfile
 from . import models
 from . import caches
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger('app.CommunityAPI.serializers')
 
 class TagSerializer(serializers.ModelSerializer):
     class Meta:
