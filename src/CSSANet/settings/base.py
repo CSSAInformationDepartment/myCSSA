@@ -219,18 +219,23 @@ LOGGING = {
 		'django.server': {
 			'()': 'django.utils.log.ServerFormatter',
 			'format': '[%(server_time)s] %(message)s',
-		}
+		},
+        'console': {
+            'format': '%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+        },
 	},
 	'handlers': {
 		'console': {
 			'level': 'INFO',
 			'filters': ['require_debug_true'],
 			'class': 'logging.StreamHandler',
+            'formatter': 'console',
 		},
 		'console_debug_false': {
 			'level': 'ERROR',
 			'filters': ['require_debug_false'],
 			'class': 'logging.StreamHandler',
+            'formatter': 'console',
 		},
 		'django.server': {
 			'level': 'INFO',
@@ -252,7 +257,11 @@ LOGGING = {
 			'handlers': ['django.server'],
 			'level': 'INFO',
 			'propagate': False,
-		}
+		},
+        'app': { # App logger 
+            'handlers': ['console', 'console_debug_false'],
+            'level': 'DEBUG',
+        },
 	}
 }
 ADMINS = [('Master Inbox', 'information@cssaunimelb.com'), ('Lead Engineer', 'joshlubox@gmail.com')]
@@ -268,3 +277,6 @@ SWAGGER_SETTINGS = {
     },
 }
 
+# 小程序API相关
+MINIPROGRAM_APPID = '' 
+MINIPROGRAM_SECRET ='' 
