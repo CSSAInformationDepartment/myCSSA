@@ -83,7 +83,10 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 #    'guard_angel.middleware.HttpRequestLogMiddleware',
+    'django_cprofile_middleware.middleware.ProfilerMiddleware',
 ]
+
+DJANGO_CPROFILE_MIDDLEWARE_REQUIRE_STAFF = False
 
 ROOT_URLCONF = 'CSSANet.urls'
 
