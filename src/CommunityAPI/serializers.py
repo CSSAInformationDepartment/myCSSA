@@ -73,7 +73,15 @@ class PostImageSerializer(serializers.ModelSerializer):
         return self._buildAbsoluteUrl(image)
 
 class ReadContentSerializer(serializers.ModelSerializer):
-    images = PostImageSerializer(many=True, read_only=True)
+    # images = PostImageSerializer(many=True, read_only=True)
+    images = serializers.SerializerMethodField(label='images. Can be null if parameter `noimg` is given')
+
+    @swagger_serializer_method(serializer_or_field=PostImageSerializer(many=True))
+    def get_images(self, instance):
+        if self.context['request'].query_params.get('noimg'):
+            return None
+
+        return PostImageSerializer(instance.images, many=True, context=self.context).data
 
     class Meta:
         model = models.Content

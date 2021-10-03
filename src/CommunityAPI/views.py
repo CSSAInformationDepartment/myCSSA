@@ -20,7 +20,7 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.authentication import SessionAuthentication
 import uuid
-from CommunityAPI.filters import IsOwnerFilterBackend, TagFilter
+from CommunityAPI.filters import IsOwnerFilterBackend, NoImgFilter, TagFilter
 
 from CommunityAPI.paginations import PostResultsSetPagination, NotificationSetPagination
 from CommunityAPI.permissions import CanCensorPost, IsOwner, CanHandleReport
@@ -122,7 +122,7 @@ class PostViewSetBase(viewsets.ReadOnlyModelViewSet, mixins.DestroyModelMixin):
     permission_classes = [permissions.AllowAny]
     authentication_classes = (JWTAuthentication,)
     pagination_class = PostResultsSetPagination
-    filter_backends = [IsOwnerFilterBackend]
+    filter_backends = [IsOwnerFilterBackend, NoImgFilter]
 
     def get_permissions(self):
         if self.action == 'destroy':

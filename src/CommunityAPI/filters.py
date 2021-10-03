@@ -51,3 +51,21 @@ class TagFilter(BaseFilterBackend):
                 )
             )
         ]
+
+class NoImgFilter(BaseFilterBackend):
+    def filter_queryset(self, request: HttpRequest, queryset, view):
+        # we do noting here. because it will be read by ReadContentSerializer
+        return queryset
+
+    def get_schema_fields(self, view):
+        return [
+            coreapi.Field(
+                name='noimg',
+                required=False,
+                location='query',
+                schema=coreschema.Boolean(
+                    title='不返回图片',
+                    description='在返回的列表里不返回图片，这样设置可以提高查询速度。（默认为false）',
+                )
+            )
+        ]
