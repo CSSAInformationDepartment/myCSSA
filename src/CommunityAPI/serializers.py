@@ -1,17 +1,22 @@
 from typing import Optional
 from django.contrib import postgres
 from django.contrib.postgres import fields
+from rest_framework.exceptions import APIException
 from rest_framework.serializers import ValidationError
 from rest_framework import serializers
 from django.db.transaction import atomic
 from rest_framework.views import APIView
 from drf_yasg.utils import swagger_serializer_method
 from sorl.thumbnail import get_thumbnail
+from CommunityAPI.miniprogram_api import is_text_invalid
+import logging
 
 from UserAuthAPI.models import UserProfile
 
 from . import models
 from . import caches
+
+logger = logging.getLogger('app.CommunityAPI.serializers')
 
 class TagSerializer(serializers.ModelSerializer):
     class Meta:
@@ -68,7 +73,15 @@ class PostImageSerializer(serializers.ModelSerializer):
         return self._buildAbsoluteUrl(image)
 
 class ReadContentSerializer(serializers.ModelSerializer):
-    images = PostImageSerializer(many=True, read_only=True)
+    # images = PostImageSerializer(many=True, read_only=True)
+    images = serializers.SerializerMethodField(label='images. Can be null if parameter `noimg` is given')
+
+    @swagger_serializer_method(serializer_or_field=PostImageSerializer(many=True))
+    def get_images(self, instance):
+        if self.context['request'].query_params.get('noimg'):
+            return None
+
+        return PostImageSerializer(instance.images, many=True, context=self.context).data
 
     class Meta:
         model = models.Content
@@ -153,6 +166,8 @@ class PostSerializerMixin:
         从输入的json创建一个新的content版本
         """
 
+        self._check_legal(validated_data)
+
         userProfile: UserProfile = self.context['request'].user
 
         content = validated_data['content']
@@ -165,6 +180,22 @@ class PostSerializerMixin:
         )
         contentModel.images.set(images)
         return contentModel
+
+    def _check_legal(self, validated_data):
+        """
+        调用微信API检查内容是否合法。如果不合法，直接抛出 APIException.
+        """
+
+        openid = validated_data.get('openid')
+        text = validated_data['content'].get('text')
+        title = validated_data['content'].get('title')
+
+        if not openid:
+            logger.warning('API未提供openid，跳过审查')
+            return
+
+        if is_text_invalid(openid, text, title):
+            raise APIException('根据相关法律法规，您不能发布此内容。', 451) 
 
 class ReadMainPostSerializer(PostSerializerMixin, serializers.ModelSerializer):
     """
@@ -215,11 +246,13 @@ class EditMainPostSerializer(PostSerializerMixin, serializers.ModelSerializer):
     """
     content = EditContentSerializer()
 
+    openid = serializers.CharField(label='用来调用微信API的 openid', write_only=True, allow_null=True)
+
     class Meta:
         model = models.Post
         fields = ['tag', 'viewableToGuest',
             # 正常情况下我们不需要再声明下面的field，但是不这么搞的话 drf_yasg 会报错
-            'content']
+            'content', 'openid']
 
     @atomic
     def create(self, validated_data):
@@ -301,6 +334,8 @@ class EditCommentSerializer(PostSerializerMixin, serializers.Serializer):
 
     content = EditContentSerializer()
 
+    openid = serializers.CharField(label='用来调用微信API的 openid', write_only=True, allow_null=True)
+
     @atomic
     def create(self, validated_data):
 
@@ -366,6 +401,8 @@ class EditSubCommentSerializer(PostSerializerMixin, serializers.Serializer):
 
     replyTo = serializers.IntegerField(label='要回复的评论的id；只在添加新评论时有效，其他情况下会'
         '忽略此值')
+
+    openid = serializers.CharField(label='用来调用微信API的 openid', write_only=True, allow_null=True)
 
     @atomic
     def create(self, validated_data):

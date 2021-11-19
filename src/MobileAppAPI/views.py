@@ -29,7 +29,7 @@ def Sponsors(request):
     for merchant in merchants:
         jsonObj = dict(id=merchant.merchant_id, sponsor=merchant.merchant_name, details=merchant.merchant_description, \
                        priority=merchant.merchant_level, logo=str(merchant.merchant_image.url), join_date=merchant.merchant_add_date.strftime("%Y-%m-%d"), \
-                       location=merchant.merchant_address, website=merchant.merchant_link)
+                       location=merchant.merchant_address, website=merchant.merchant_link, promotion_image=merchant.promotion_image.url)
         jsonRes.append(jsonObj)
     return HttpResponse(json.dumps(jsonRes), content_type='application/json')
 
