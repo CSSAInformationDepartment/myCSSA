@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, Http404
 from django.db.models import Q
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import AllowAny, IsAuthenticated
 
 from .models import *
 from .forms import *
@@ -275,7 +275,7 @@ from django.core.serializers.json import DjangoJSONEncoder
 # from django.core import serializers
 
 class MobilePastEventAPI(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
     
     def get(self, request, format=None):
         sys_time.activate('Australia/Melbourne')
@@ -297,7 +297,7 @@ class MobilePastEventAPI(APIView):
 
 
 class MobileFutureEventAPI(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
 
     #原理同上   
     def get(self, request, format=None):
