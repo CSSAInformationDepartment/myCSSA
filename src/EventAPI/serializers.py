@@ -1,7 +1,10 @@
-from rest_framework import serializers
+from rest_framework import fields, serializers
 from EventAPI.models import Event as eventModels
 
 class EventsSerializer(serializers.ModelSerializer):
+
+    eventTaker = fields.SerializerMethodField()
+    eventType = fields.SerializerMethodField()
 
     def get_eventTaker(self, instance):
         return instance.eventBy.eventTakerName if instance.eventBy else None
@@ -12,5 +15,8 @@ class EventsSerializer(serializers.ModelSerializer):
     class Meta:
       model = eventModels
       fields = ('eventID','eventName','eventInfo','mainVisual','address','venue','isFree','price',
-                'pastEventLink', 'pastEventPoster', 'recentEventLink', 'recentEventPoster',)
+                'pastEventLink', 'pastEventPoster', 'recentEventLink', 'recentEventPoster',
+                # extra fields
+                'eventTaker', 'eventType',
+                )
       
