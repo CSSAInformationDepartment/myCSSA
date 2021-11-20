@@ -93,12 +93,14 @@
             </div> -->
             <div class="row justify-content-center text-center">
               <p>详情请见: <a href="{{events.WechatArticleUrl}}" class="text-primary">&nbsp&nbsp&nbsp<u> {{events.WechatArticleUrl}}</u></a>
+              {% if events.WechatQRcode %}
               <br>
              报名后请扫小助手二维码哦!
               <br>
               小助手二维码
               <br>
               <img src="{{events.WechatQRcode.url}}" alt="{{events.eventName}}" class="img-thumbnail rounded mx-auto d-bloc" style="min-width:150px; max-width:250px; margin-top:10px">
+              {% endif %}
               </p>
               </div>
 
