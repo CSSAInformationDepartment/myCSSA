@@ -109,6 +109,13 @@ class Event (models.Model):
     WechatArticleUrl = models.CharField(verbose_name=_("微信公众号文章链接"), max_length=500, default=None, null=True, blank=True)
     WechatQRcode = models.ImageField(verbose_name=_("微信二维码"),upload_to='uploads/usrImage/eventWechatQRcode',default=None ,null=True, blank=True)
 
+    # 近期、往期活动的链接和海报
+    pastEventLink = models.URLField(verbose_name=_("往期活动链接"), default=None, null=True)
+    recentEventLink = models.URLField(verbose_name=_("近期活动链接"), default=None, null=True)
+
+    pastEventPoster = models.ImageField(verbose_name=_("往期活动海报"), upload_to='uploads/usrImage/eventPastVisual', default=None, null=True)
+    recentEventPoster = models.ImageField(verbose_name=_("近期活动海报"), upload_to='uploads/usrImage/eventRecentVisual', default=None, null=True)
+
     disabled = models.BooleanField(default=False)
 
     def __str__(self):
