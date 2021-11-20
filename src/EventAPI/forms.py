@@ -19,7 +19,7 @@ class AddEventForm(forms.ModelForm):
             'DisplayArticleType': _("选择活动介绍所要显示的文章来源"),
             'relatedArticles': _("若文章来源选择为Blog，则此项必填"),
             'WechatArticleUrl': _("若文章来源选择为WeChat，则此项必填"),
-            'WechatQRcode': _("若文章来源选择为WeChat，则必须提供文章对应的微信公众号"),
+            'WechatQRcode': _("若文章来源选择为WeChat，可提供文章对应的微信公众号的二维码"),
 
             'pastEventLink': _("可以为空"),
             'recentEventLink': _("可以为空"),
@@ -45,7 +45,7 @@ class AddEventForm(forms.ModelForm):
         display_article_type = self.cleaned_data.get('DisplayArticleType')
         wechat_qr_code = self.cleaned_data.get('WechatQRcode')
 
-        if (display_article_type == 'WeChat' and (wechat_article_url == None or wechat_qr_code == None)) or (display_article_type == 'Blog' and related_articles == None):
+        if (display_article_type == 'WeChat' and (wechat_article_url == None)) or (display_article_type == 'Blog' and related_articles == None):
             errors.append(ValidationError(_(mark_safe('<li>文章显示设置不正确，请检查相关设置项</li>')), code='invalid article display setting'))
 
         event_actualSt_time = self.cleaned_data.get("eventActualStTime")
