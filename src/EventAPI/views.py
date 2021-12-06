@@ -269,8 +269,11 @@ class EventListJsonView(LoginRequiredMixin, PermissionRequiredMixin, BaseDatatab
 
 ########Start###################### Event API for mobile App ##################Start###################
 from rest_framework.views import APIView
-from .serializers import EventsSerializer
 from rest_framework.response import Response as RestResponse
+from rest_framework import viewsets, permissions
+
+from .serializers import EventsSerializer
+
 
 def query_events():
     return Event.objects \

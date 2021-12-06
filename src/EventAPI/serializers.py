@@ -16,6 +16,7 @@ class EventsSerializer(serializers.ModelSerializer):
       model = eventModels
       fields = ('eventID','eventName','eventInfo','mainVisual','address','venue','isFree','price',
                 'pastEventLink', 'pastEventPoster', 'recentEventLink', 'recentEventPoster',
+                'eventSignUpTime', 'eventActualStTime',
                 # extra fields
                 'eventTaker', 'eventType',
                 )
