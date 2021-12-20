@@ -33,6 +33,10 @@ class AddEventForm(forms.ModelForm):
             }),
         }
 
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
+        self.fields['retrospectArticleLink'].required = False
+
     def clean(self, *args, **kwargs):
         errors = []
         
