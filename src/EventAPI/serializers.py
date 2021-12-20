@@ -15,7 +15,7 @@ class EventsSerializer(serializers.ModelSerializer):
     class Meta:
       model = eventModels
       fields = ('eventID','eventName','eventInfo','mainVisual','address','venue','isFree','price',
-                'pastEventLink', 'pastEventPoster', 'recentEventLink', 'recentEventPoster',
+                'WechatArticleUrl', 'retrospectArticleLink',
                 'eventSignUpTime', 'eventActualStTime',
                 # extra fields
                 'eventTaker', 'eventType',

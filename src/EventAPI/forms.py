@@ -21,10 +21,7 @@ class AddEventForm(forms.ModelForm):
             'WechatArticleUrl': _("若文章来源选择为WeChat，则此项必填"),
             'WechatQRcode': _("若文章来源选择为WeChat，可提供文章对应的微信公众号的二维码"),
 
-            'pastEventLink': _("可以为空"),
-            'recentEventLink': _("可以为空"),
-            'pastEventPoster': _("可以为空"),
-            'recentEventPoster': _("可以为空"),
+            'retrospectArticleLink': _("可以为空"),
         }
         widgets = {
             'eventInfo': forms.Textarea(attrs={'rows': 3}),
