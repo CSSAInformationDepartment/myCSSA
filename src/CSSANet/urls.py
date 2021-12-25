@@ -28,6 +28,7 @@ from LegacyDataAPI import urls as LegacyUrl
 from myCSSAhub import urls as HubUrl
 from MobileAppAPI import urls as MobileUrl
 from CommunityAPI import urls as CommunityUrl
+from EventAPI import api_urls as EventApiUrl
 
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
@@ -57,6 +58,7 @@ urlpatterns = [
     path('oauth/', include('social_django.urls', namespace='social')),
     path('mobile/', include(MobileUrl)),
     path('api/community/', include(CommunityUrl)),
+    path('api/event/', include(EventApiUrl)),
 
     re_path(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),
     re_path(r'^swagger/$', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
