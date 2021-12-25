@@ -1,6 +1,9 @@
 from django.shortcuts import render, get_object_or_404
 from django.db.models import Q
+from rest_framework import serializers, status, viewsets, permissions
 
+
+from .serializers import *
 from .models import Resume, JobList, InterviewTimetable
 from .apis import GetResumesByDepartments, GetInterviewTimeByDepartments
 from .forms import AddJobForm, AddInterviewForm
@@ -231,3 +234,8 @@ class InterviewListJsonView(LoginRequiredMixin, PermissionRequiredMixin, BaseDat
         if search:
             qs = qs.filter(Q(resume__user__email__istartswith=search))
         return qs
+
+class JoblistAvailabilityViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = JobList.objects.all().order_by('jobId')
+    serializer_class = JoblistAvailabilitySerializer
+    permission_classes = [permissions.AllowAny]
