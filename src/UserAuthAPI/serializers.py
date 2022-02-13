@@ -273,7 +273,8 @@ class UserEasyRegistrationSerializer(serializers.Serializer):
         return value
 
     def validate_email(self, value):
-        regex = r'^[a-zA-Z0-9]+[\._]?[a-zA-Z0-9]+[@]\w+[.]\w{2,3}$'
+        # regex extracted from https://emailregex.com/
+        regex = r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)"
         if(not re.search(regex, value)): 
             raise serializers.ValidationError(_('Invalid email Address'))
 
