@@ -101,7 +101,7 @@
             </div>
         {% endif %}
 
-        {% if orm.merchant_qrcode.value %}
+        {% if form.merchant_qrcode.value %}
             <div class="form-group">
                 {{ form.merchant_qrcode.label_tag }}<span class="asteriskField">*</span>
                 <input id="input-b2" name="merchant_qrcode" type="file" class="file" data-browse-on-zone-click="true">
