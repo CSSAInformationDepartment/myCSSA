@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 import itertools
-from typing import Dict, List, Optional
+from typing import Dict, Iterator, List, Optional
 from django.shortcuts import render,get_object_or_404
 from PublicSite import models
 from UserAuthAPI import models as UserModels
@@ -377,11 +377,10 @@ def SupportMerchants(request):
         .filter(merchant_type='赞助商家') \
         .order_by("merchant_add_date")
 
-    infos: Dict[str, List[HubModels.DiscountMerchant]] = {}
-    for category, lst in itertools.groupby(merchants, lambda x: x.merchant_level):
-        infos[category] = list(lst)
+    infos: Dict[str, List[HubModels.DiscountMerchant]] = \
+        {k: list(v) for k,v in itertools.groupby(merchants, lambda x: x.merchant_level)}
 
-    return render(request,'PublicSite/supportMerchant.html', {'categories': {
+    return render(request, 'PublicSite/supportMerchant.html', {'categories': {
         # 不是所有的 category 都存在。如果某个类别不存在，infos里不会有这个key
         # 从python 3.6开始，dict里key的声明顺序决定了 for 里遍历的顺序
         '钻石商家': infos.get('钻石商家'),
