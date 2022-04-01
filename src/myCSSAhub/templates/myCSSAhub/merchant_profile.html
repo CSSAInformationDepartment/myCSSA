@@ -101,12 +101,10 @@
             </div>
         {% endif %}
 
-        {% if form.merchant_qrcode.value %}
-            <div class="form-group">
-                {{ form.merchant_qrcode.label_tag }}<span class="asteriskField">*</span>
-                <input id="input-b2" name="merchant_qrcode" type="file" class="file" data-browse-on-zone-click="true">
-            </div>
-        {% endif %}
+        <div class="form-group">
+            {{ form.merchant_qrcode.label_tag }}<span class="asteriskField">*</span>
+            <input id="input-b2" name="merchant_qrcode" type="file" class="file" data-browse-on-zone-click="true">
+        </div>
 
     </div>
 
@@ -154,17 +152,18 @@
         });
     {% endif %}
 
-    {% if form.merchant_qrcode.value %}
-        $("#input-b2").fileinput({
-            theme: "fa",
-            allowedFileExtensions: ['jpeg','jpg', 'png'],
-            overwriteInitial: true,
-            showUpload: false,
-            maxFileSize: 2048,
-            maxFilesNum: 1,
-            slugCallback: function (filename) {
-                return filename.replace('(', '_').replace(']', '_');
-            },
+    
+    $("#input-b2").fileinput({
+        theme: "fa",
+        allowedFileExtensions: ['jpeg','jpg', 'png'],
+        overwriteInitial: true,
+        showUpload: false,
+        maxFileSize: 2048,
+        maxFilesNum: 1,
+        slugCallback: function (filename) {
+            return filename.replace('(', '_').replace(']', '_');
+        },
+        {% if form.merchant_qrcode.value %}
             initialPreview: [
                         "/media/{{form.merchant_qrcode.value}}",
             ],
@@ -172,8 +171,9 @@
             initialPreviewConfig:[
                 { caption:"{{form.merchant_qrcode.name}}" ,key: 1, downloadUrl: false,}, 
             ]
-        });
-    {% endif %}
+        {% endif %}
+    });
+    
 
 
     
