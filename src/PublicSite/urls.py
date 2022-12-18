@@ -22,7 +22,7 @@ urlpatterns = [
     path('events/<str:eventID>/', Views.EventDetails, name='eventsDetails'),
 
     ### Apps Extension Urls
-    path('app/photo-competition/', include(PhotoCompetitionPublicUrls,  namespace='PhotoCompetition')),
+    ### path('app/photo-competition/', include(PhotoCompetitionPublicUrls,  namespace='PhotoCompetition')), # 暂时移除摄影大赛接口
     path('app/events/', include(EventsPublicUrls,  namespace='EventAPI')),
 
 ]
