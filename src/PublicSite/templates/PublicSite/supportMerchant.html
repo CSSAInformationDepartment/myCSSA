@@ -1,23 +1,92 @@
 {% extends 'components/base_page.html' %}
 {% block 'pg_body' %}
+{% load static %}
 <!-- Page Content -->
   <div class="page-container">
-    <div class="container bloc-fill-screen">
 
-      <!-- Page Heading -->
-      <h1 class="my-4 text-left">特别鸣谢
-        <br><small class="lead"> 特别感谢以下赞助商家</small>
-      </h1>
+    <!-- Page Heading -->
+    <div style="
+          background-image: url(https://source.unsplash.com/Y5bvRlcCx8k);
+          background-size: cover;
+          background-position: 50% 52%;
+          width: 100%;
+          height: 404px;
+          border: 1px solid black;
+          position: relative;">
 
-      {% for category, infos in categories.items %}
-      {% if infos %}
-      <div class="row justify-content-center m-3 text-muted">
-        <h2>{{category}}</h2>
+      <div class="title" style="
+            color: white;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;">
+
+        <h1 style="
+            font-family: 'Inter';
+            font-weight: 700;
+            font-size: 60px;
+            line-height: 140%;">
+          赞助商家
+        </h1>
+        <h3 style="
+            font-family: 'Acme';
+            font-weight: 400;
+            font-size: 24px;
+            line-height: 30px;">
+          感谢以下商家的大力支持
+        </h3>
+
       </div>
-      <hr>
+    
+    </div>
+
+    {% for category, infos in categories.items %}
+    {% if infos %}  
+    {% if category == "钻石商家" %}
+    <div class="container bloc-fill-screen">   
+      <div style="text-align:center;">
+        <h2 style="
+            font-family: 'Inter';
+            font-weight: 700;
+            font-size: 54px;
+            line-height: 140%;
+            margin-top: 50px;">{{category}}</h2>
+        <div style="
+            box-sizing: border-box;
+            width: 246px;
+            height: 0px;
+            border: 5px solid #DF4C73;
+            margin: 13.5px auto;"></div>
+        <div style="
+            box-sizing: border-box;
+            width: 200px;
+            height: 0px;
+            border: 5px solid #DF4C73;
+            margin: 13.5px auto;"></div>
+      </div>
+
       <div class="row justify-content-center" style="margin:50px;">
         {% for info in infos %}
-        <div class="col-lg-7 col-sm-7 portfolio-item align-self-center">
+        <div class="col-12 m-4 text-center">
+          <h1 class="text-center mb-4">
+            {% if info.merchant_link %}
+            <a href="{{info.merchant_link}}" class="h1">
+            {% else %}
+            <a href=# class="h1">
+            {% endif %}
+            <strong style="
+                font-family: 'Inter';
+                font-style: normal;
+                font-weight: 600;
+                font-size: 40px;
+                line-height: 70px;
+                text-decoration-line: underline;
+                color: #0C3F7C;
+            ">{{info.merchant_name}}</strong></a>
+          </h1>
+        </div>                                                  
+        <div class="col-lg-12 col-sm-12 portfolio-item align-self-center">
           <div class="align-items-center text-center">
             {% if info.merchant_link %}
             <a href="{{info.merchant_link}}">
@@ -33,27 +102,98 @@
             {% endif %}
           </div>
         </div>
-        <div class="col-lg-5 col-sm-5 portfolio-item mt-2 align-self-center">
+        <div class="col-lg-12 col-sm-12 portfolio-item mt-2 align-self-center" style="margin-bottom: 168px;">
           <div class="text-center align-items-center">
             {{info.merchant_description}}
           </div>
         </div>
-        <div class="col-12 m-4 text-center">
-          <h1 class="text-center mb-4">
-            {% if info.merchant_link %}
-            <a href="{{info.merchant_link}}" class="h1">
-            {% else %}
-            <a href=# class="h1">
-            {% endif %}
-            <strong>{{info.merchant_name}}</strong></a>
-          </h1>
-          </div>
+
         {% endfor %}
       </div>
-      {% endif %}
-      {% endfor %}
-
     </div>
+    {% else %}
+    <div style="background-color: #B0DDE42B;">
+      <div class="container bloc-fill-screen">
+        <div style="text-align:center;">
+          <h2 style="
+              font-family: 'Inter';
+              font-weight: 700;
+              font-size: 40px;
+              line-height: 70px;
+              color: #0C3F7C;
+              margin-top: 50px;">{{category}}</h2>
+          <div style="
+              box-sizing: border-box;
+              width: 246px;
+              height: 0px;
+              border: 5px solid #F4DE55;
+              flex: none;
+              order: 0;
+              flex-grow: 0;
+              margin: 0 auto 5px;"></div>
+          <div style="
+              box-sizing: border-box;
+              width: 200px;
+              height: 0px;
+              border: 5px solid #F4DE55;
+              flex: none;
+              order: 1;
+              flex-grow: 0;
+              margin: 0 auto 5px;"></div>
+        </div>
+        
+        <div class="row justify-content-center" style="margin:50px;">
+          {% for info in infos %}
+          <div class="col-12 m-4 text-center">
+            <h1 class="text-center mb-4">
+              {% if info.merchant_link %}
+              <a href="{{info.merchant_link}}" class="h1">
+                {% else %}
+                <a href=# class="h1">
+                  {% endif %}
+                  <strong style="
+                      font-family: 'Inter';
+                      font-style: normal;
+                      font-weight: 600;
+                      font-size: 40px;
+                      line-height: 70px;
+                      text-decoration-line: underline;
+                      color: #0C3F7C;
+                ">{{info.merchant_name}}</strong></a>
+            </h1>
+          </div>
+          <div class="col-lg-12 col-sm-12 portfolio-item align-self-center">
+            <div class="align-items-center text-center">
+              {% if info.merchant_link %}
+              <a href="{{info.merchant_link}}">
+                {% else %}
+                <a href="#">
+                  {% endif %}
+                  <img alt="{{info.merchant_name}}" class="card-img-top img-fluid" src="{{info.merchant_image.url}}"
+                    style="max-width:60%"></a>
+    
+                {% if info.merchant_qrcode %}
+                <img alt="{{info.merchant_name}}" class="card-img-top img-fluid" src="{{info.merchant_qrcode.url}}"
+                  style="width:130px; height:130px; margin-left:40px">
+                {% else %}
+                <div class="card-img-top img-fluid" style="width:130px; height:130px; margin-left:40px"></div>
+                {% endif %}
+            </div>
+          </div>
+          <div class="col-lg-12 col-sm-12 portfolio-item mt-2 align-self-center" style="margin-bottom: 112px;">
+            <div class="text-center align-items-center">
+              {{info.merchant_description}}
+            </div>
+          </div>
+    
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+    {% endif %}
+      
+    {% endif %}
+    {% endfor %}
 
   </div>
 
