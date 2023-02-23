@@ -110,6 +110,31 @@ button:hover {
   padding-left: 8%;
   padding-right: 8%;
 }
+
+@media (max-width: 500px) {
+  .welcome-text {
+    font-size: 40px;
+  }
+  .welcome-info {
+    padding: 0 1%;
+	}
+  .welcome-info p {
+    height: 100px;
+  }
+}
+
+@media (max-width: 900px) {
+	.welcome-info {
+		column-gap: 3%;
+	}
+	.welcome-info p {
+    font-size: 12px;
+		line-height: 20px;
+		height: 70px;
+	}
+}
+
+
 </style>
 
 <div id="HomePageCarouselIndicators" class="carousel slide" data-ride="carousel" interval="3000">

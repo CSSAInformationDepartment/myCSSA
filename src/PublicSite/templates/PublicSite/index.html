@@ -57,9 +57,100 @@
 	color: #000;
 	font-weight: 500;
 	font-size: 18px;
-	padding: 3%;
+	padding: 3% 0;
 }
 
+.cssa-intro {
+	padding-bottom: 30%;
+	background-color: #E9F3FA;
+}
+
+.blank {
+	padding-top: 10%;
+	{% comment %} width: 60%;
+	float: left; {% endcomment %}
+	background-color: white;
+}
+
+.intro-text {
+	text-align: right;
+	{% comment %} padding-right: 8%; {% endcomment %}
+	background-color: #E9F3FA;
+
+	float: left;
+	width: 60%;
+}
+
+.intro-text h1 {
+	padding-top: 6%;
+	padding-bottom: 3%;
+}
+
+.intro-text h2 {
+	padding-bottom: 8%;
+    padding-top: 6%;
+    padding-left: 30%;
+	line-height: 1.5;
+}
+
+.pr-email {
+	color: #DF4C73;
+}
+
+.intro-text .line1 {
+	width: 20%;
+	height: 5px;
+	background-color: #DF4C73;
+	margin: 0 80%;
+}
+
+.intro-text .line2 {
+	width: 15%;
+	height: 5px;
+	background-color: #DF4C73;
+	margin: 0.6% 85%;
+	{% comment %} float: right; {% endcomment %}
+
+}
+
+.intro-image {
+	width: 40%;
+	float: right;
+	top: -50px;
+	right: -115px;
+	position: relative;
+	{% comment %} padding-top: 6%; {% endcomment %}
+}
+
+.intro-image img {
+	border-radius: 325px;
+	width: 86%;
+}
+
+.circle{
+    {% comment %} width: 300px;
+    height: 300px;
+	border: 1px solid #DF4C73;
+	border-radius:50%; {% endcomment %}
+}
+
+@media (max-width: 600px) {
+	.department p {
+		font-size: 8px;
+	}
+}
+
+@media (max-width: 1140px) {
+	.department-detail {
+		column-count: 2;
+	}
+}
+
+@media (max-width: 1416px) {
+	.cssa-intro {
+		padding-bottom: 38%;
+	}
+}
 
 </style>
 
@@ -70,41 +161,52 @@
 {% include 'components/index/_hero.html' %}
 
 <!-- bloc-2 -->
-<div class="cssa-into">
-	<h1>学生会介绍</h1>
-	<div class="line1"></div>
-	<div class="line2"></div>
-	<h2>CSSA是墨尔本大学最有影响力的中国学生组织。我们为华人学生提供语言，生活，学习上的帮助；定期组织娱乐活动。Email:pr@cssaunimelb.com</h2>
+<div class="cssa-intro">
+	<div class="blank">
+		<div class="intro-text">
+			<h1>学生会介绍</h1>
+			<div class="line1"></div>
+			<div class="line2"></div>
+			<h2>CSSA是墨尔本大学最有影响力的中国学生组织。我们为华人学生提供语言，生活，学习上的帮助；定期组织娱乐活动。<div class="pr-email">Email:pr@cssaunimelb.com<div></h2>
+		</div>
+		<div class="intro-image">
+			<img class="into-img" src="{% static "PublicSite/img/placeholder-user.png" %}" alt="CSSA">
+			<div class="circle"></div>
+		</div>
+	</div>
+	{% comment %} <div class="intro-image">
+		<img class="into-img" src="{% static "PublicSite/img/placeholder-user.png" %}" alt="CSSA">
+	</div> {% endcomment %}
 </div>
 
-<div class="department-intro">
+<div class="department-intro">"
 	<h1>部门介绍</h1>
 	<div class="line1"></div>
 	<div class="line2"></div>
 	<div class="department-detail">
 		<div class="department">
 			<img class="department-img" src="{% static "PublicSite/img/placeholder-image.png" %}" alt="CSSA Council Board">
-			<p>主席团<br>CSSA Council Board<p>
-		</div>
-		<div class="department">
-			<img class="department-img" src="{% static "PublicSite/img/placeholder-image.png" %}" alt="Department of Publicity">
-			<p>宣传部<br>Department of Publicity<p>
-		</div>
-		<div class="department">
-			<img class="department-img" src="{% static "PublicSite/img/placeholder-image.png" %}" alt="Department of Organisation">
-			<p>组织部<br>Department of Organisation<p>
+			<p>主席团<br>CSSA Council Board</p>
 		</div>
 		<div class="department">
 			<img class="department-img" src="{% static "PublicSite/img/placeholder-image.png" %}" alt="Department of Information Technology">
 			<p>信息技术部<br>Department of Information Technology</p>
 		</div>
 		<div class="department">
+			<img class="department-img" src="{% static "PublicSite/img/placeholder-image.png" %}" alt="Department of Organisation">
+			<p>组织部<br>Department of Organisation</p>
+		</div>
+		<div class="department">
+			<img class="department-img" src="{% static "PublicSite/img/placeholder-image.png" %}" alt="Department of Publicity">
+			<p>宣传部<br>Department of Publicity</p>
+		</div>
+		<div class="department">
 			<img class="department-img" src="{% static "PublicSite/img/placeholder-image.png" %}" alt="Department of Public Relations">
-			<p>外联部<br>Department of Public Relations<p>
+			<p>外联部<br>Department of Public Relations</p>
 		</div>
 		<div class="department">
 			<img class="department-img" src="{% static "PublicSite/img/placeholder-image.png" %}" alt="Department of Human Resources">
-			<p>人力资源部<br>Department of Human Resources<p>
+			<p>人力资源部<br>Department of Human Resources</p>
 		</div>
 	</div>
 </div>
