@@ -375,7 +375,8 @@ def SupportMerchants(request):
 
     merchants = HubModels.DiscountMerchant.objects.all() \
         .filter(merchant_type='赞助商家') \
-        .order_by("merchant_add_date")
+        .order_by("merchant_level")
+        
 
     infos: Dict[str, List[HubModels.DiscountMerchant]] = \
         {k: list(v) for k,v in itertools.groupby(merchants, lambda x: x.merchant_level)}
