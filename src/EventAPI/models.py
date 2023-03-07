@@ -109,6 +109,9 @@ class Event (models.Model):
     WechatArticleUrl = models.CharField(verbose_name=_("微信公众号文章链接"), max_length=500, default=None, null=True, blank=True)
     WechatQRcode = models.ImageField(verbose_name=_("微信二维码"),upload_to='uploads/usrImage/eventWechatQRcode',default=None ,null=True, blank=True)
 
+    # 小程序中用到的字段
+    retrospectArticleLink = models.URLField(verbose_name=_("活动回顾（往期活动）文章链接"), default=None, null=True)
+
     disabled = models.BooleanField(default=False)
 
     def __str__(self):

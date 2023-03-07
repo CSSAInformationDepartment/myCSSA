@@ -101,11 +101,16 @@
             </div>
         {% endif %}
 
-        {% if orm.merchant_qrcode.value %}
-            <div class="form-group">
-                {{ form.merchant_qrcode.label_tag }}<span class="asteriskField">*</span>
-                <input id="input-b2" name="merchant_qrcode" type="file" class="file" data-browse-on-zone-click="true">
-            </div>
+        <div class="form-group">
+            {{ form.merchant_qrcode.label_tag }}<span class="asteriskField">*</span>
+            <input id="input-b2" name="merchant_qrcode" type="file" class="file" data-browse-on-zone-click="true">
+        </div>
+
+        {% if form.merchant_type.value == "赞助商家" %}
+        <div class="form-group">
+            {{ form.promotion_image.label_tag }}<span class="asteriskField">*</span>
+            <input id="input-b3" name="promotion_image" type="file" class="file" data-browse-on-zone-click="true">
+        </div>
         {% endif %}
 
     </div>
@@ -145,7 +150,7 @@
                 return filename.replace('(', '_').replace(']', '_');
             },
             initialPreview: [
-                        "/media/{{form.merchant_image.value}}",
+                        "{{form.merchant_image.value.url}}",
             ],
             initialPreviewAsData: true, 
             initialPreviewConfig:[
@@ -154,26 +159,52 @@
         });
     {% endif %}
 
-    {% if form.merchant_qrcode.value %}
-        $("#input-b2").fileinput({
-            theme: "fa",
-            allowedFileExtensions: ['jpeg','jpg', 'png'],
-            overwriteInitial: true,
-            showUpload: false,
-            maxFileSize: 2048,
-            maxFilesNum: 1,
-            slugCallback: function (filename) {
-                return filename.replace('(', '_').replace(']', '_');
-            },
+    
+    $("#input-b2").fileinput({
+        theme: "fa",
+        allowedFileExtensions: ['jpeg','jpg', 'png'],
+        overwriteInitial: true,
+        showUpload: false,
+        maxFileSize: 2048,
+        maxFilesNum: 1,
+        slugCallback: function (filename) {
+            return filename.replace('(', '_').replace(']', '_');
+        },
+        {% if form.merchant_qrcode.value %}
             initialPreview: [
-                        "/media/{{form.merchant_qrcode.value}}",
+                        "{{form.merchant_qrcode.value.url}}",
             ],
             initialPreviewAsData: true, 
             initialPreviewConfig:[
                 { caption:"{{form.merchant_qrcode.name}}" ,key: 1, downloadUrl: false,}, 
             ]
-        });
+        {% endif %}
+    });
+
+    {% if form.merchant_type.value == "赞助商家" %}
+    $("#input-b3").fileinput({
+        theme: "fa",
+        allowedFileExtensions: ['jpeg','jpg', 'png'],
+        overwriteInitial: true,
+        showUpload: false,
+        maxFileSize: 2048,
+        maxFilesNum: 1,
+        slugCallback: function (filename) {
+            return filename.replace('(', '_').replace(']', '_');
+        },
+        {% if form.promotion_image.value %}
+            initialPreview: [
+                        "{{form.promotion_image.value.url}}",
+            ],
+            initialPreviewAsData: true, 
+            initialPreviewConfig:[
+                { caption:"{{form.promotion_image.name}}" ,key: 1, downloadUrl: false,}, 
+            ]
+        {% endif %}
+    });
     {% endif %}
+
+    
 
 
     

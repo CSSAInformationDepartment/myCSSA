@@ -30,8 +30,11 @@ Pillow = "*"
 django-imagekit = "*"
 cachetools = "*"
 django-debug-toolbar = "*"
+requests = "*"
 
 [dev-packages]
+django-cprofile-middleware = "*"
+snakeviz = "*"
 
 [requires]
 python_version = "3.9"

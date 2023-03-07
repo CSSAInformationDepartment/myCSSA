@@ -1,5 +1,7 @@
-from typing import Dict, List
-from django.shortcuts import render,reverse, get_object_or_404
+from dataclasses import dataclass
+import itertools
+from typing import Dict, Iterator, List, Optional
+from django.shortcuts import render,get_object_or_404
 from PublicSite import models
 from UserAuthAPI import models as UserModels
 from BlogAPI import models as BlogModels
@@ -370,9 +372,22 @@ def Merchants(request):
     return render(request,'PublicSite/merchant.html', {'infos':infos})
 
 def SupportMerchants(request):
-    infos = HubModels.DiscountMerchant.objects.all().order_by("merchant_add_date")
-    
-    return render(request,'PublicSite/supportMerchant.html', {'infos':infos})
+
+    merchants = HubModels.DiscountMerchant.objects.all() \
+        .filter(merchant_type='赞助商家') \
+        .order_by("merchant_level")
+        
+
+    infos: Dict[str, List[HubModels.DiscountMerchant]] = \
+        {k: list(v) for k,v in itertools.groupby(merchants, lambda x: x.merchant_level)}
+
+    return render(request, 'PublicSite/supportMerchant.html', {'categories': {
+        # 不是所有的 category 都存在。如果某个类别不存在，infos里不会有这个key
+        # 从python 3.6开始，dict里key的声明顺序决定了 for 里遍历的顺序
+        '钻石商家': infos.get('钻石商家'),
+        '金牌商家': infos.get('金牌商家'),
+        '银牌商家': infos.get('银牌商家'),
+    }})
 
 ################################# errors pages ########################################
 from django.shortcuts import render

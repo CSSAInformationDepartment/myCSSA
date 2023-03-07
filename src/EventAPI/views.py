@@ -1,5 +1,7 @@
 from django.shortcuts import render, get_object_or_404, Http404
 from django.db.models import Q
+from rest_framework import permissions
+from rest_framework.decorators import permission_classes
 
 from .models import *
 from .forms import *
@@ -267,42 +269,38 @@ class EventListJsonView(LoginRequiredMixin, PermissionRequiredMixin, BaseDatatab
 
 ########Start###################### Event API for mobile App ##################Start###################
 from rest_framework.views import APIView
+from rest_framework.response import Response as RestResponse
+from rest_framework import viewsets, permissions
+
 from .serializers import EventsSerializer
-import base64, json
-from django.core.serializers.json import DjangoJSONEncoder
-# from rest_framework.response import Response
-# from django.core import serializers
+
+
+def query_events():
+    return Event.objects \
+        .select_related('eventBy', 'eventTypes') \
+        .order_by("eventActualStTime")
 
 class MobilePastEventAPI(APIView):
+    permission_classes = [permissions.AllowAny]
+
     def get(self, request, format=None):
         sys_time.activate('Australia/Melbourne')
         now_time = sys_time.now()
-        eventsPast= Event.objects.filter(eventActualStTime__lt=now_time).order_by("eventActualStTime")    
+        eventsPast= query_events().filter(eventActualStTime__lt=now_time)    
         
         # queryset是实例集合，需要加 many=True ，如果是单个实例，可以不用加 many=True
         serializer = EventsSerializer(eventsPast, many = True)
-        
-        # data = serializers.serialize("json",serializer.eventsPast) # 直接序列化成json形式
-
-        # 两种返回方法都行，下面一种需要设置，设定已标注
-        # In order to allow non-dict objects to be serialized set the safe parameter to False
-        data = json.dumps(serializer.data, cls=DjangoJSONEncoder)
-        # 这里需要加encode()才能通过base64进行编码
-        data_encode = base64.b64encode(data.encode())
-        # return JsonResponse(serializer.data, safe=False)
-        return HttpResponse(data_encode, content_type="text/plain")
-
+        return RestResponse(serializer.data)
 
 class MobileFutureEventAPI(APIView):
+    permission_classes = [permissions.AllowAny]
+
     #原理同上   
     def get(self, request, format=None):
         sys_time.activate('Australia/Melbourne')
         now_time = sys_time.now()
-        eventsFuture = Event.objects.filter(eventActualStTime__gt=now_time).order_by("eventActualStTime")
+        eventsFuture = query_events().filter(eventActualStTime__gt=now_time)
         serializer = EventsSerializer(eventsFuture, many = True)
-        data = json.dumps(serializer.data, cls=DjangoJSONEncoder)
-        data_encode = base64.b64encode(data.encode())
-        return HttpResponse(data_encode, content_type="text/plain")
-
+        return RestResponse(serializer.data)
 
 ########End######################## Event API for mobile App ######################End##############

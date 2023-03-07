@@ -1,99 +1,60 @@
 {% extends 'components/base_page.html' %}
 {% block 'pg_body' %}
 <!-- Page Content -->
-      <div class="page-container">
-        <div class="container bloc-fill-screen">
+  <div class="page-container">
+    <div class="container bloc-fill-screen">
 
       <!-- Page Heading -->
       <h1 class="my-4 text-left">特别鸣谢
         <br><small class="lead"> 特别感谢以下赞助商家</small>
       </h1>
 
-
+      {% for category, infos in categories.items %}
+      {% if infos %}
       <div class="row justify-content-center m-3 text-muted">
-              <h2>金牌商家</h2>
-              </div>
-              <hr>
+        <h2>{{category}}</h2>
+      </div>
+      <hr>
       <div class="row justify-content-center" style="margin:50px;">
         {% for info in infos %}
-        {% if info.merchant_type == "赞助商家" %}
-        {% if info.merchant_level == "金牌商家" %}
-         <div class="col-lg-7 col-sm-7 portfolio-item align-self-center">
-           <div class="align-items-center text-center">
-             {% if info.merchant_link %}
-             <a href="{{info.merchant_link}}">
-               {% else %}
-               <a href="#">
-               {% endif %}
-             <img alt="{{info.merchant_name}}" class="card-img-top img-fluid" src="{{info.merchant_image.url}}" style="max-width:60%"></a>
-            
-              <img alt="{{info.merchant_name}}" class="card-img-top img-fluid" src="{{info.merchant_qrcode.url}}"  style="width:130px; height:130px; margin-left:40px">
-           </div>
-         </div>
-         <div class="col-lg-5 col-sm-5 portfolio-item mt-2 align-self-center">
-           <div class="text-center align-items-center">
-             {{info.merchant_description}}
-           </div>
-         </div>
-         <div class="col-12 m-4 text-center">
-             <h1 class="text-center mb-4">
-               {% if info.merchant_link %}
-               <a href="{{info.merchant_link}}" class="h1">
-               {% else %}
-               <a href=# class="h1">
-                 {% endif %}
-                 <strong>{{info.merchant_name}}</strong></a>
-             </h1>
-           </div>
-           {% endif %}
-           {% endif %}
-         {% endfor %}
-</div>
-
-
-<div class="row justify-content-center m-3 text-muted">
-        <h2>银牌商家</h2>
+        <div class="col-lg-7 col-sm-7 portfolio-item align-self-center">
+          <div class="align-items-center text-center">
+            {% if info.merchant_link %}
+            <a href="{{info.merchant_link}}">
+            {% else %}
+            <a href="#">
+            {% endif %}
+            <img alt="{{info.merchant_name}}" class="card-img-top img-fluid" src="{{info.merchant_image.url}}" style="max-width:60%"></a>
+           
+            {% if info.merchant_qrcode %}
+            <img alt="{{info.merchant_name}}" class="card-img-top img-fluid" src="{{info.merchant_qrcode.url}}"  style="width:130px; height:130px; margin-left:40px">
+            {% else %}
+            <div class="card-img-top img-fluid" style="width:130px; height:130px; margin-left:40px"></div>
+            {% endif %}
+          </div>
         </div>
-        <hr>
-<div class="row justify-content-center" style="margin:50px;">
-  {% for info in infos %}
-  {% if info.merchant_type == "赞助商家" %}
-  {% if info.merchant_level == "银牌商家" %}
-   <div class="col-lg-7 col-sm-7 portfolio-item align-self-center">
-     <div class="align-items-center text-center">
-       {% if info.merchant_link %}
-       <a href="{{info.merchant_link}}">
-         {% else %}
-         <a href="#">
-         {% endif %}
-       <img alt="{{info.merchant_name}}" class="card-img-top img-fluid" src="{{info.merchant_image.url}}" style="max-width:50%"></a>
-       <img alt="{{info.merchant_name}}" class="card-img-top img-fluid" src="{{info.merchant_qrcode.url}}" style="width:130px; height:130px; margin-left:60px;">
-     </div>
-   </div>
-   <div class="col-lg-5 col-sm-5 portfolio-item mt-2 align-self-center">
-     <div class="text-center align-self-center">
-        {{info.merchant_description}}
-     </div>
-   </div>
-   <div class="col-12 m-4 text-center">
-       <h1 class="text-center mb-4">
-         {% if info.merchant_link %}
-         <a href="{{info.merchant_link}}" class="h1">
-         {% else %}
-         <a href=# class="h1">
-           {% endif %}
-           <strong>{{info.merchant_name}}</strong></a>
-       </h1>
-     </div>
-     {% endif %}
-     {% endif %}
-   {% endfor %}
-</div>
-
+        <div class="col-lg-5 col-sm-5 portfolio-item mt-2 align-self-center">
+          <div class="text-center align-items-center">
+            {{info.merchant_description}}
+          </div>
+        </div>
+        <div class="col-12 m-4 text-center">
+          <h1 class="text-center mb-4">
+            {% if info.merchant_link %}
+            <a href="{{info.merchant_link}}" class="h1">
+            {% else %}
+            <a href=# class="h1">
+            {% endif %}
+            <strong>{{info.merchant_name}}</strong></a>
+          </h1>
+          </div>
+        {% endfor %}
       </div>
+      {% endif %}
+      {% endfor %}
 
-          </div>
-          </div>
+    </div>
 
+  </div>
 
-      {% endblock 'pg_body' %}
+{% endblock 'pg_body' %}

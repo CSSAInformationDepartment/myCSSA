@@ -53,7 +53,11 @@ EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
 ## Add debug middleware
 MIDDLEWARE = [
     'debug_toolbar.middleware.DebugToolbarMiddleware',
-] + MIDDLEWARE
+] + MIDDLEWARE + [
+    'django_cprofile_middleware.middleware.ProfilerMiddleware',
+]
+
+# DJANGO_CPROFILE_MIDDLEWARE_REQUIRE_STAFF = False
 
 try:
     from .local import *

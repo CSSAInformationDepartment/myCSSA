@@ -4,7 +4,6 @@ from rest_framework.generics import get_object_or_404
 from rest_framework.parsers import MultiPartParser
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
-from django.contrib.auth.mixins import PermissionRequiredMixin, AccessMixin
 from UserAuthAPI.models import UserProfile
 from django.db.transaction import atomic
 
@@ -21,7 +20,7 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.authentication import SessionAuthentication
 import uuid
-from CommunityAPI.filters import IsOwnerFilterBackend, TagFilter
+from CommunityAPI.filters import IsOwnerFilterBackend, NoImgFilter, TagFilter
 
 from CommunityAPI.paginations import PostResultsSetPagination, NotificationSetPagination
 from CommunityAPI.permissions import CanCensorPost, IsOwner, CanHandleReport
@@ -123,7 +122,7 @@ class PostViewSetBase(viewsets.ReadOnlyModelViewSet, mixins.DestroyModelMixin):
     permission_classes = [permissions.AllowAny]
     authentication_classes = (JWTAuthentication,)
     pagination_class = PostResultsSetPagination
-    filter_backends = [IsOwnerFilterBackend]
+    filter_backends = [IsOwnerFilterBackend, NoImgFilter]
 
     def get_permissions(self):
         if self.action == 'destroy':
@@ -243,7 +242,8 @@ class MainPostViewSet(PostViewSetBase):
 
     # 在swagger文档里的条目定义：
     @swagger_auto_schema(method='POST', operation_description='添加一个帖子',
-        request_body=EditMainPostSerializer, responses={201: ReadMainPostSerializer})
+        request_body=EditMainPostSerializer, responses={
+            201: ReadMainPostSerializer, 451: '用户发布的内容不合法'})
     # 给 rest_framework 用的view定义（这两个decorator的顺序不能反）
     @action(methods=['POST'], detail=False, url_path='create', url_name='create_post',
         serializer_class=EditMainPostSerializer,
@@ -253,7 +253,8 @@ class MainPostViewSet(PostViewSetBase):
         return self.create_post_response(post, ReadMainPostSerializer)
 
     @swagger_auto_schema(method='POST', operation_description='修改帖子，不能修改 tag 和 viewableToGuest',
-        request_body=EditMainPostSerializer, responses={202: ReadMainPostSerializer})
+        request_body=EditMainPostSerializer, responses={
+            202: ReadMainPostSerializer, 451: '用户发布的内容不合法'})
     @action(methods=['POST'], detail=True, url_path='edit', url_name='edit_post',
         serializer_class=EditMainPostSerializer, permission_classes=[IsOwner])
     def edit_post(self, request, pk=None):
@@ -305,7 +306,8 @@ class CommentViewSet(PostViewSetBase):
             .prefetch_related('createdBy__userinformation')
 
     @swagger_auto_schema(method='POST', operation_description='添加一个评论',
-        request_body=EditCommentSerializer, responses={201: ReadCommentSerializer})
+        request_body=EditCommentSerializer, responses={
+            201: ReadCommentSerializer, 451: '用户发布的内容不合法'})
     @action(methods=['POST'], detail=False, url_path='create', url_name='create_comment',
         serializer_class=EditCommentSerializer,
         permission_classes=[permissions.IsAuthenticated])
@@ -319,7 +321,8 @@ class CommentViewSet(PostViewSetBase):
         return self.create_post_response(post, ReadCommentSerializer)
 
     @swagger_auto_schema(method='POST', operation_description='修改回复',
-        request_body=EditCommentSerializer, responses={202: ReadCommentSerializer})
+        request_body=EditCommentSerializer, responses={
+            202: ReadCommentSerializer, 451: '用户发布的内容不合法'})
     @action(methods=['POST'], detail=True, url_path='edit', url_name='edit_comment',
         serializer_class=EditCommentSerializer, permission_classes=[IsOwner])
     def edit_post(self, request, pk=None, post_id=None):
@@ -388,7 +391,8 @@ class SubCommentViewSet(PostViewSetBase):
 
     @swagger_auto_schema(method='POST', operation_description='添加一个评论，用 replyTo 指定回复的对象，'
         '它必须跟本评论属于同一个一级评论。想要直接回复给一级评论，请将 replyTo 指定为 comment_id',
-        request_body=EditSubCommentSerializer, responses={201: ReadSubCommentSerializer})
+        request_body=EditSubCommentSerializer, responses={
+            201: ReadSubCommentSerializer, 451: '用户发布的内容不合法'})
     @action(methods=['POST'], detail=False, url_path='create', url_name='create_subcomment',
         serializer_class=EditSubCommentSerializer,
         permission_classes=[permissions.IsAuthenticated])
@@ -404,7 +408,8 @@ class SubCommentViewSet(PostViewSetBase):
         return self.create_post_response(post, ReadSubCommentSerializer)
 
     @swagger_auto_schema(method='POST', operation_description='修改回复，无法修改 replyTo',
-        request_body=EditSubCommentSerializer, responses={202: ReadSubCommentSerializer})
+        request_body=EditSubCommentSerializer, responses={
+            202: ReadSubCommentSerializer, 451: '用户发布的内容不合法'})
     @action(methods=['POST'], detail=True, url_path='edit', url_name='edit_subcomment',
         serializer_class=EditSubCommentSerializer, permission_classes=[IsOwner])
     def edit_post(self, request, pk=None, comment_id=None):
