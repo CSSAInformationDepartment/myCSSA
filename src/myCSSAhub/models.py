@@ -51,6 +51,11 @@ class DiscountMerchant(models.Model):
         ('美食', '美食'),
         ('休闲娱乐', '休闲娱乐'),
         ('便捷生活', '便捷生活'),
+        ('餐饮美食', '餐饮美食'), 
+        ('休闲娱乐', '休闲娱乐'), 
+        ('生活服务', '生活服务'), 
+        ('消费购物', '消费购物'), 
+        ('个人护理', '个人护理')
     )
     merchant_Category = models.CharField(verbose_name="折扣商家种类", max_length=10, choices= merchantCategory, null=True, default='美食',blank=True)
 
