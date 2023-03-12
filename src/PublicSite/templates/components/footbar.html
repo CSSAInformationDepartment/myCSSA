@@ -1,120 +1,315 @@
 <footer class='footer'>
-<!-- bloc-20 -->
-{% load static %}
-{% load get_system_version %}
-<div class="bloc d-bloc none" id="bloc-20" style="background-color:#FFFFFF">
-	<div class="container bloc-sm">
-		<div class="row">
-			<div class="col-md-3 col-sm-6">
-				<h4 class="mg-md text-sm-left text-center tc" style="color:#0C3F7C">
-					Affiliate with
-					</h4>
-						<a href="https://umsu.unimelb.edu.au/">
-							<div class="mt-3 text-sm-left text-center">
-							<img src="{% static 'PublicSite/img/umsuLogo.png'%}"  class=" d-inline img-logo-style"/>
-							</div>
-						</a>
-						<a href="https://gsa.unimelb.edu.au/">
-							<div class="mt-3 text-sm-left text-center">
-								<img src="{% static 'PublicSite/img/gsaLogo.png'%}" class=" d-inline img-logo-style"/>
-							</div>
-						</a>
-			</div>
+	<!-- bloc-20 -->
+	{% load static %}
+	{% load get_system_version %}
 
-			<div class="col-md-3 col-sm-6">
-				<h4 class="mg-md text-sm-left text-center tc" style="color:#0C3F7C">
-					Quick Links
-				</h4>
-					<div class="text-sm-left text-center">
-						<a class="tc" style="color:#6D7280" href="https://www.unimelb.edu.au/">University of Melbourne Homepage</a>
-					</div>
-					<div class="text-sm-left text-center"> 
-						<a class="tc" style="color:#6D7280" href="https://students.unimelb.edu.au/">Student information</a>
-					</div>
-					<div class="text-sm-left text-center">
-						<a class="tc" style="color:#6D7280" href="https://auth.unimelb.edu.au/login/pages/login.jsp">MyUnimelb Student Portal</a>
-					</div>
-					<div class="text-sm-left text-center">
-						<a class="tc" style="color:#6D7280" href="https://library.unimelb.edu.au/">Library</a>
-					</div>	
-			</div>
+	<style>
+		.footer{
+			position: absolute;
+			align-items: flex-start;
+			background-color: transparent;
+			border-bottom-style: none;
+			border-color:#8888888a;
+			border-left-style: none;
+			border-right-style: none;
+			border-top-style: solid;
+			border-top-width:5px;
+			display:flex;
+			flex-direction: row;
+			height:349px;
+			justify-content: flex-start;
+			left:0;
+			min-width:1450px;
+			mix-blend-mode:normal;
+			position: absolute;
+			width:100%;
+		}
+	
+		.flex-row-2{
+			align-items:center;
+			background-color:rgba(255, 255, 255, 1);
+			display:flex;
+			gap:153px;
+			height:339px;
+			justify-content:flex-end;
+			min-width:1440px;
+			padding:0 142px;
+		}
+		
+		.flex-row-3{
+			align-items:flex-start;
+			align-self:flex-end;
+			display:flex;
+			gap:127px;
+			height:289px;
+			min-width:735px;
+		}
+		
+		.group-3{
+			align-items:center;
+			display:flex;
+			flex-direction:column;
+			margin-top:10px;
+			min-height:230px;
+			width:164px;
+		}
 
-			<div class="col-md-4 col-sm-6">
-				<h4 class="mg-md text-sm-left text-center tc" style="color:#0C3F7C">
-					Contact Mailbox
-				</h4>
-				<ul class="mg-md text-sm-left text-center" style="color:black">
-					<li><strong>President: </strong>president@cssaunimelb.com</li>
-					<li><strong>Public Relation: </strong>pr@cssaunimelb.com </li>
-					<li><strong>Event: </strong>activity@cssaunimelb.com </li>
-					<li><strong>Publicity: </strong>publicity@cssaunimelb.com </li>
-					<li><strong>IT & Dev Team: </strong>information@cssaunimelb.com </li>
-					<li><strong>Human Resources: </strong>hr@cssaunimelb.com</li>
-				</ul>
-			</div>
+		.group-4{
+			align-items:center;
+			display:flex;
+			flex-direction:column;
+			margin-top:10px;
+			min-height:230px;
+			width: 400px;
+		}
+		
+		.text-8{
+			height:20px;
+			letter-spacing:0;
+			line-height:20px;
+			margin-right:24px;
+			margin-top:33px;
+			min-width:100px;
+			white-space:nowrap;
+		}
+		
+		.valign-text-middle{
+			display: flex;
+			flex-direction:column;
+			justify-content:center;
+		}
+		
+		.text-10{
+			align-self:flex-start;
+			height:20px;
+			letter-spacing:0;
+			line-height:20px;
+			margin-top:30px;
+			white-space:nowrap;
+		}
+		
+		.text-11{
+			height:20px;
+			letter-spacing:0;
+			line-height:20px;
+			margin-right:26px;
+			margin-top:34px;
+			min-width:80px;
+			white-space:nowrap;
+		}
+		
+		.text-7{
+			height:20px;
+			letter-spacing:0;
+			line-height:20px;
+			margin-right:26px;
+			min-width:40px;
+			white-space:nowrap;
+		}
+		
+		.text-9{
+			height:20px;
+			letter-spacing:0;
+			line-height:20px;
+			margin-right:18px;
+			margin-top:33px;
+			min-width:80px;
+			white-space: nowrap;
+		}
+		
+		.shou-ye .flex-col-3{
+			align-items: center;
+			display: flex;
+			flex-direction:column;
+		}
+		
+		.flex-col-1{
+			gap:11px;
+			min-height:289px;
+			width:444px;
+		}
+		
+		.quick-links{
+			color:rgba(12, 63, 124, 1);
+			font-family:"Inter";
+			font-size:24px;
+			font-weight:700;
+			letter-spacing:0;
+			line-height:70px;
+			margin-right:7px;
+			min-height:71px;
+			text-align: center;
+			white-space: nowrap;
+			width:357px;
+		}
+			
+		.university-of-melbou{
+			color:rgba(109, 114, 128, 1);
+			font-family:"Inter";
+			font-size:20px;
+			font-weight:400;
+			letter-spacing:0;
+			line-height:30px;
+			text-align:center;
+			width:444px;
+		}
+		
+		.flex-col-2{
+			margin-bottom:12px;
+			min-height:227px;
+			width:267px;
+		}
+		
+		.affiliate-with{
+			height:20px;
+			letter-spacing:0;
+			line-height:20px;
+			margin-left:3px;
+			margin-top:69px;
+			min-width:126px;
+			white-space:nowrap;
+		}
+		
+		.logo-container{
+			align-items: center;
+			display:flex;
+			gap:48px;
+			margin-top:27px;
+			min-width:267px;
+		}
+		
+		.gsa-logo{
+			height:45px;
+			margin-bottom:2px;
+			object-fit: cover;
+			width:109px;
+		}
+		
+		.umsu-logo{
+			height:51px;
+			object-fit:cover;
+			width:110px;
+		}
+		
+		.icon-container{
+			align-items:flex-start;
+			display:flex;
+			height:31px;
+			margin-right:5px;
+			margin-top:9px;
+			min-width:210px;
+		}
+		
+		.icon-sina-weibo{
+			align-self:center;
+			height:27px;
+			margin-bottom:1.84px;
+			margin-left:26px;
+			width:36px;
+		}
+		
+		.icon-social-facebook{
+			height:28px;
+			width:29px;
+		}
+		
+		.icon-weixin-we-chat{
+			align-self: flex-end;
+			height:28px;
+			margin-left:27px;
+			width:37px;
+		}
+		
+		.icon-instagram-icon{
+			height:30px;
+			margin-left:22px;
+			width:33px;
+		}
+		
+		.text-12{
+			height:20px;
+			letter-spacing:0;
+			line-height:20px;
+			margin-right:9px;
+			min-width:80px;
+			white-space: nowrap;
+		}
 
-			<div class="col-md-2 col-sm-6">
-				<h4 class="mg-md text-sm-left text-center tc" style="color:#0C3F7C;"">
-					Follow Up
-				</h4>
-				<div class="row">
-					<div class="col-4 col-sm-4">
-						<div class="text-center">
-							<a href="https://www.facebook.com/CSSAunimelb/"><span class="fa fa-facebook-official icon-md"></span></a>
-						</div>
-					</div>
-					<div class="col-4 col-sm-4">
-						<div class="text-center">
-							<a rel="qrcode-pops" data-container="body" data-toggle="popover" data-placement="top" data-img="{% static 'PublicSite/img/qrcode_wx.jpg'%}"><span class="fa fa-weixin icon-md"></span></a>
-						</div>
-					</div>
-					<div class="col-4 col-sm-4">
-						<div class="text-center">
-							<a href="https://www.weibo.com/cssaum"><span class="fa fa-weibo icon-md"></span></a>
-						</div>
+		.tc-white{
+			color:#FFFFFF;
+		}
+		.tc.gray{
+			#6D7280
+		}
+
+		.inter-bold-regal-blue-20px {
+  			color:#0C3F7C;
+  			font-family: "inter";
+  			font-size: 20px;
+  			font-weight: 700;
+  			font-style: normal;
+		}
+	</style>
+	
+	
+	<div class="flex-row-2" id="bloc-20">
+		<div class="flex-row-3">
+			<div class="group-3">
+				<a class="text-7 valign-text-middle inter-bold-regal-blue-20px" href="https://www.unimelb.edu.au/">首页</a>
+				<a class="text-8 valign-text-middle inter-bold-regal-blue-20px" href="https://students.unimelb.edu.au/">活动与竞赛</a>
+				<a class="text-9 valign-text-middle inter-bold-regal-blue-20px" href="https://auth.unimelb.edu.au/login/pages/login.jsp">部門構成 </a>
+				<a class="text-11 valign-text-middle inter-bold-regal-blue-20px" href="https://library.unimelb.edu.au/">崗位信息</a>
+				<a class="text-10 valign-text-middle inter-bold-regal-blue-20px" href="https://library.unimelb.edu.au/">折扣商家&贊助商 </a>
+			</div>
+			
+			<div class="flex-col-1 flex-col-3">
+				<div class="quick-links">Quick Links</div> 
+					<div class="group-4">
+						<a class="university-of-melbou" href="https://www.unimelb.edu.au/">University of Melbourne Homepage</a> 
+						<a class="university-of-melbou" href="https://students.unimelb.edu.au/">Student information</a>
+						<a class="university-of-melbou" href="https://auth.unimelb.edu.au/login/pages/login.jsp">MyUnimelb Student Portal</a>
+						<a class="university-of-melbou" href="https://library.unimelb.edu.au/">Library</a>
 					</div>
 				</div>
 			</div>
-		</div>
-		<div class="row">
-			<div class="col mg-md d-bloc mx-auto text-center">
-				<a href="https://github.com/ShepherdMOZ/myCSSA">
-					<h6 class="text-center tc-background: tc-white">系统版本 System Version：<strong>{% get_system_version %}</strong></h6>
-				</a>
-			</div>
-		</div>
-	</div>
-</div>
-<!-- bloc-20 END -->
 
-<!-- bloc-30 -->
-<div class="bloc d-bloc" id="bloc-22" style="background-color:rgb(38, 38, 38)">
-	<div class="container">
-		<div class="row">
-			<div class="col">
-				<!-- <h6 class="mg-md text-lg-center">
-					本项目由 卢玏 设计管理 This Project is Designed &amp; Managed by Josh. Le. Lu
-				</h6>
-				<p class="mg-md text-lg-center h6-margin-top">
-					站点交互设计：蒋梦雨 UI/UX Design: Caitlin. Mengyu. Jiang
-				</p> -->
-				<h6 class="mg-md text-lg-center">
-					版权所有 墨尔本大学中国学生会 Copyrights @ Chinese Student and Scholars Association, University of Melbourne 2012 - {% now "Y" %}
-				</h6>
-				<p class="mg-md text-lg-center h6-margin-top">
-					由 信息技术部系统开发组 设计管理 Designed and Managed by Department of Information Technology, System Development Group
-				</p>
+			<div class="flex-col-2 flex-col-3">
+				<div class="text-12 valign-text-middle inter-bold-regal-blue-20px">聯繫我們</div>
+				<div class="icon-container">
+					<a href="https://www.facebook.com/">
+						<img src="{% static 'PublicSite/img/icon/Facebook.png'%}" class="icon-social-facebook" alt='icon "social facebook"'/>
+					</a>
+					<a href="https://www.instagram.com/unimelbcssa/?hl=en">
+						<img src="{% static 'PublicSite/img/icon/Instagram.png'%}" class="icon-instagram-icon" alt='icon "instagram icon"'/>
+					</a>
+					<a rel="qrcode-pops" data-container="body" data-toggle="popover" data-placement="top" data-img="{% static 'PublicSite/img/qrcode_wx.jpg'%}">
+						<img src="{% static 'PublicSite/img/icon/wechat_green.png'%}" class="icon-weixin-we-chat" alt='icon "wechat icon"'>
+					</a>
+					<a href="https://www.weibo.com/cssaum">
+					<img src="{% static 'PublicSite/img/icon/weibo_black.png'%}" class="icon-sina-weibo" alt='icon "sina weibo icon"'/>
+				</div>
+				<div class="affiliate-with align-text-middle inter-bold-regal-blue-20px">Affiliate with</div>
+				<div class="logo-container">
+					<a href="https://umsu.unimelb.edu.au/">						
+						<img src="{% static 'PublicSite/img/umsuLogo.png'%}" class="umsu-logo"/>
+					</a>
+					<a href="https://gsa.unimelb.edu.au/">
+						<img src="{% static 'PublicSite/img/gsaLogo.png'%}" class="gsa-logo"/>
+					</a>
+				</div>
 			</div>
-		</div>
 	</div>
-</div>
-<!-- bloc-30 END -->
-<script>
-$('a[rel=qrcode-pops]').popover({
-  html: true,
-  trigger: 'hover',
-  placement: 'bottom',
-  content: function(){return '<img src="'+$(this).data('img') + '" />';}
-});
-</script>
 </footer>
+
+
+	<script>
+	$('a[rel=qrcode-pops]').popover({
+	  html: true,
+	  trigger: 'hover',
+	  placement: 'bottom',
+	  content: function(){return '<img src="'+$(this).data('img') + '" />';}
+	});
+	</script>
+	</footer>
+	
+	
