@@ -2,12 +2,98 @@
 
 {% load static %}
 
+<style>
+	.header{
+		align-items: flex-start;
+		background-color: rgba(255, 255, 255, 1);
+		border-bottom-style: solid;
+		border-bottom-width: 2px;
+		border-color: #96929259;
+		display: flex;
+		flex-direction: row;
+		flex-shrink: 1;
+		gap: 325px;
+		height: 87px;
+		justify-content: flex-start;
+		/*margin-top: 13819px;*/
+		min-width: 1440px;
+		mix-blend-mode: normal;
+		padding: 16px 22px;
+		width: 100%;
+	}
+	.logo{
+		height: 52px;
+		object-fit: cover;
+		width: 109px;
+	}
+	.navbar{
+		align-items: center;
+		align-self: center;
+		display: flex;
+		height: 28px;
+		margin-bottom: 4.8px;
+		min-width: 932px;
+	}
+	.link-text{
+		font-family: "Inter";
+		font-size: 20px;
+		font-weight: 700;
+		margin-left: 35px;
+	}
+	.navbar-link-text{
+		height: 20px;
+		letter-spacing: 0;
+		line-height: 20px;
+		margin-top: 1.8px;
+		white-space: nowrap;
+	}
+	.tc-red{
+		color: rgba(223,76,115,1);
+	}
+	.valign-text-middle{
+		display:flex;
+		flex-direction:column;
+		justify-content:center;
+	}
+	.container{
+		align-item:  center;
+		display: flex;
+		flew-direaction: row;
+		/*margin-left: 35px;*/
+		margin-top: 15px;
+		min-height: 34px;
+		width: 920;
+	}
+	.vector{
+		align-self: flex-end;
+		height: 27px;
+		margin-bottom: 0;
+		margin-left: 32px;
+		width: 22px;
+	}
+</style>
+<nav class="header">
+	<!-- <a class="navbar-brand" href="/"> -->
+		<img class="logo" src="{% static 'PublicSite/img/Logo_c.png' %}" alt="CSSA Logo"/>
+	<!-- </a> -->
+	<div class="container">
+			<div class="link-text valign-text-middle navbar-link-text tc-red">{%trans "首页" %}</div>
+			<div class="link-text valign-text-middle navbar-link-text">活动与竞赛</div>
+			<div class="link-text valign-text-middle navbar-link-text">部门构成</div>
+			<div class="link-text valign-text-middle navbar-link-text">岗位信息</div>
+			<div class="link-text valign-text-middle navbar-link-text">折扣商家</div>
+			<div class="link-text valign-text-middle navbar-link-text">赞助商</div>
+			<div class="link-text valign-text-middle navbar-link-text">联系我们</div>
+			<img src="{% static 'PublicSite/img/icon/vector/search.png' %}" class="vector" alt="search" />
+			<img src="{% static 'PublicSite/img/icon/vector/notice.png' %}" class="vector" alt="notice" />
+			<img src="{% static 'PublicSite/img/icon/vector/user.png' %}" class="vector" alt="user" />
+		</div>
+	
 
-<nav class="navbar navbar-expand-lg navbar-light bg-light" style="border:none;">
-<a class="navbar-brand" href="/"><img class="img-fluid" src="{% static 'PublicSite/img/Logo_c.png' %}" style="max-width: 5rem;" /></a>
-	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
 		<span class="navbar-toggler-icon"></span>
-	</button>
+		</button>
 
 	<div class="collapse navbar-collapse" id="navbarColor01">
 		<ul class="navbar-nav mr-auto">

@@ -21,7 +21,6 @@
 			left:0;
 			min-width:1450px;
 			mix-blend-mode:normal;
-			position: absolute;
 			width:100%;
 		}
 	
@@ -58,7 +57,7 @@
 			align-items:center;
 			display:flex;
 			flex-direction:column;
-			margin-top:10px;
+			/* margin-top:10px; */
 			min-height:230px;
 			width: 400px;
 		}
@@ -69,7 +68,7 @@
 			line-height:20px;
 			margin-right:24px;
 			margin-top:33px;
-			min-width:100px;
+			/* min-width:100px; */
 			white-space:nowrap;
 		}
 		
@@ -94,7 +93,7 @@
 			line-height:20px;
 			margin-right:26px;
 			margin-top:34px;
-			min-width:80px;
+			/* min-width:80px; */
 			white-space:nowrap;
 		}
 		
@@ -103,7 +102,7 @@
 			letter-spacing:0;
 			line-height:20px;
 			margin-right:26px;
-			min-width:40px;
+			/* min-width:40px; */
 			white-space:nowrap;
 		}
 		
@@ -113,7 +112,7 @@
 			line-height:20px;
 			margin-right:18px;
 			margin-top:33px;
-			min-width:80px;
+			/* min-width:80px; */
 			white-space: nowrap;
 		}
 		
@@ -136,7 +135,7 @@
 			font-weight:700;
 			letter-spacing:0;
 			line-height:70px;
-			margin-right:7px;
+			/* margin-right:7px; */
 			min-height:71px;
 			text-align: center;
 			white-space: nowrap;
@@ -175,21 +174,21 @@
 			display:flex;
 			gap:48px;
 			margin-top:27px;
-			min-width:267px;
+			/* min-width:267px; */
 		}
 		
-		.gsa-logo{
+		.logo{
 			height:45px;
 			margin-bottom:2px;
 			object-fit: cover;
 			width:109px;
 		}
 		
-		.umsu-logo{
-			height:51px;
+		/* .logo{
+			height:50px;
 			object-fit:cover;
 			width:110px;
-		}
+		} */
 		
 		.icon-container{
 			align-items:flex-start;
@@ -197,7 +196,7 @@
 			height:31px;
 			margin-right:5px;
 			margin-top:9px;
-			min-width:210px;
+			/* min-width:210px; */
 		}
 		
 		.icon-sina-weibo{
@@ -231,15 +230,8 @@
 			letter-spacing:0;
 			line-height:20px;
 			margin-right:9px;
-			min-width:80px;
+			/* min-width:80px; */
 			white-space: nowrap;
-		}
-
-		.tc-white{
-			color:#FFFFFF;
-		}
-		.tc.gray{
-			#6D7280
 		}
 
 		.inter-bold-regal-blue-20px {
@@ -263,8 +255,9 @@
 			</div>
 			
 			<div class="flex-col-1 flex-col-3">
-				<div class="quick-links">Quick Links</div> 
-					<div class="group-4">
+				<!-- <div class="quick-links">Quick Links</div>  -->
+					<div class="group-4"> 
+						<div class="quick-links">Quick Links</div> 
 						<a class="university-of-melbou" href="https://www.unimelb.edu.au/">University of Melbourne Homepage</a> 
 						<a class="university-of-melbou" href="https://students.unimelb.edu.au/">Student information</a>
 						<a class="university-of-melbou" href="https://auth.unimelb.edu.au/login/pages/login.jsp">MyUnimelb Student Portal</a>
@@ -288,19 +281,17 @@
 					<a href="https://www.weibo.com/cssaum">
 					<img src="{% static 'PublicSite/img/icon/weibo_black.png'%}" class="icon-sina-weibo" alt='icon "sina weibo icon"'/>
 				</div>
-				<div class="affiliate-with align-text-middle inter-bold-regal-blue-20px">Affiliate with</div>
+				<div class="affiliate-with valign-text-middle inter-bold-regal-blue-20px">Affiliate with</div>
 				<div class="logo-container">
 					<a href="https://umsu.unimelb.edu.au/">						
-						<img src="{% static 'PublicSite/img/umsuLogo.png'%}" class="umsu-logo"/>
+						<img src="{% static 'PublicSite/img/umsuLogo.png'%}" class="logo"/>
 					</a>
 					<a href="https://gsa.unimelb.edu.au/">
-						<img src="{% static 'PublicSite/img/gsaLogo.png'%}" class="gsa-logo"/>
+						<img src="{% static 'PublicSite/img/gsaLogo.png'%}" class="logo"/>
 					</a>
 				</div>
 			</div>
 	</div>
-</footer>
-
 
 	<script>
 	$('a[rel=qrcode-pops]').popover({
@@ -310,6 +301,6 @@
 	  content: function(){return '<img src="'+$(this).data('img') + '" />';}
 	});
 	</script>
-	</footer>
+</footer>
 	
 	
