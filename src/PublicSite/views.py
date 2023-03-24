@@ -53,8 +53,8 @@ def index(request):
     The Homepage view function for public site
     '''
     now_time = timezone.now()
-    eventsPast=eventModels.Event.objects.filter(eventActualStTime__lt=now_time).order_by("eventActualStTime")
-    eventsFuture=eventModels.Event.objects.filter(eventActualStTime__gt=now_time).order_by("eventActualStTime")
+    eventsPast=eventModels.Event.objects.filter(eventActualStTime__lt=now_time).order_by("-eventActualStTime")
+    eventsFuture=eventModels.Event.objects.filter(eventActualStTime__gt=now_time).order_by("-eventActualStTime")
     header_caro = models.HomepageCarousels.objects.all()
     return render(request, 'PublicSite/index.html',
         {'now_time':now_time,'eventsPast':eventsPast,'eventsFuture':eventsFuture,
