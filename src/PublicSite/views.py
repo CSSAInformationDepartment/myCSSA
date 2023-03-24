@@ -53,7 +53,9 @@ def index(request):
     The Homepage view function for public site
     '''
     now_time = timezone.now()
-    eventsPast=eventModels.Event.objects.filter(eventActualStTime__lt=now_time).order_by("-eventActualStTime")
+    # Filter events for the past year
+    past_year = now_time - timezone.timedelta(days=365)
+    eventsPast=eventModels.Event.objects.filter(eventActualStTime__lt=now_time, eventActualStTime__gt=past_year).order_by("-eventActualStTime")
     eventsFuture=eventModels.Event.objects.filter(eventActualStTime__gt=now_time).order_by("eventActualStTime")
     header_caro = models.HomepageCarousels.objects.all()
     return render(request, 'PublicSite/index.html',
@@ -173,8 +175,10 @@ class EventsListView(View):
     def get(self, request, *args, **kwargs):
         timezone.activate('Australia/Melbourne')
         now_time = timezone.now()
+        # Filter events for the past year
+        past_year = now_time - timezone.timedelta(days=365)
         eventsFuture=eventModels.Event.objects.filter(eventActualStTime__gt=now_time).order_by("eventActualStTime")
-        eventsPast=eventModels.Event.objects.filter(eventActualStTime__lt=now_time).order_by("-eventActualStTime")
+        eventsPast=eventModels.Event.objects.filter(eventActualStTime__lt=now_time, eventActualStTime__gt=past_year).order_by("-eventActualStTime")
         return render(request, self.template_name, {'eventsFuture':eventsFuture, 'now_time':now_time,'events':self.events, 'eventsPast':eventsPast})
 
 
