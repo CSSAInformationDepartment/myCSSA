@@ -173,8 +173,8 @@ class EventsListView(View):
     def get(self, request, *args, **kwargs):
         timezone.activate('Australia/Melbourne')
         now_time = timezone.now()
-        eventsFuture=eventModels.Event.objects.filter(eventActualStTime__gt=now_time).order_by("eventActualStTime")
-        eventsPast=eventModels.Event.objects.filter(eventActualStTime__lt=now_time).order_by("eventActualStTime")
+        eventsFuture=eventModels.Event.objects.filter(eventActualStTime__gt=now_time).order_by("-eventActualStTime")
+        eventsPast=eventModels.Event.objects.filter(eventActualStTime__lt=now_time).order_by("-eventActualStTime")
         return render(request, self.template_name, {'eventsFuture':eventsFuture, 'now_time':now_time,'events':self.events, 'eventsPast':eventsPast})
 
 
