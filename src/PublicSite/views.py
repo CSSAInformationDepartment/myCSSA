@@ -169,7 +169,7 @@ class ResumeSubmissionView(LoginRequiredMixin,View):
 
 class EventsListView(View):
     template_name = 'PublicSite/event.html'
-    events=eventModels.Event.objects.all().order_by("eventStartTime")
+    events=eventModels.Event.objects.all().order_by("-eventActualStTime")
     
 
     def get(self, request, *args, **kwargs):
