@@ -4,49 +4,45 @@
       <div class="page-container">
         <div class="container bloc-fill-screen">
 
-      <!-- Page Heading -->
-      <h1 class="my-4 text-left">
+          <!-- Page Heading -->
+          <h1 class="my-4 text-left">
 
-        合作折扣商家
-        <br>
-        <small class="lead"> 感谢以下商家的大力支持:)</small>
+            合作折扣商家
+            <br>
+            <small class="lead"> 感谢以下商家的大力支持:)</small>
 
-      </h1>
+          </h1>
 
 
-      <div class="row justify-content-center">
-       {% for info in infos %}
-       {% if info.merchant_type == "折扣商家" %}
-        <div class="col-lg-4 col-sm-6 portfolio-item mt-2">
-          <div class="card" style="border: none; width:280px;">
-            {% if info.merchant_link %}
-            <a href="{{info.merchant_link}}">
-              {% else %}
-              <a href=#>
+          <div class="row justify-content-center">
+            {% for info in infos %}
+              {% if info.merchant_type == "折扣商家" %}
+              <div class="col-lg-4 col-sm-6 portfolio-item mt-2">
+                <div class="card" style="border: none; width:280px;">
+                  {% if info.merchant_link != "None" %}
+                  <a href="{{info.merchant_link}}">
+                    {% else %}
+                    <a href="#">
+                    {% endif %}
+                    <img alt="{{info.merchant_name}}" class="card-img-top img-fluid" src="{{info.merchant_image.url}}" style="height:180px; width:100%">
+                  </a>
+                  <div class="card-body">
+                    <h3 class="card-title">
+                      {% if info.merchant_link != "None" %}
+                      <a href="{{info.merchant_link}}">
+                      {% else %}
+                      <a href="#">
+                        {% endif %}
+                        <strong>{{info.merchant_name}}</strong></a>
+                    </h3>
+                    <p class="card-text">优惠: {{info.merchant_description}} <br> 地址: {{info.merchant_address}}</p>
+                  </div>
+                </div>
+              </div>
               {% endif %}
-                <img alt="{{info.merchant_name}}" class="card-img-top img-fluid" src="{{info.merchant_image.url}}" style="height:180px; width:100%"></a>
-            <div class="card-body">
-              <h3 class="card-title">
-                {% if info.merchant_link %}
-                <a href="{{info.merchant_link}}">
-                {% else %}
-                <a href=#>
-                  {% endif %}
-                  <strong>{{info.merchant_name}}</strong></a>
-
-              </h3>
-              <p class="card-text">优惠: {{info.merchant_description}} <br> 地址: {{info.merchant_address}}</p>
-            </div>
+            {% endfor %}
           </div>
-        </div>
-          {% endif %}
-        {% endfor %}
       </div>
-      <!-- /.row -->
-
-
     </div>
-    </div>
-    <!-- /.container -->
 
 {% endblock 'pg_body' %}
