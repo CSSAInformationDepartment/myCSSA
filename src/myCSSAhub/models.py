@@ -49,7 +49,6 @@ class DiscountMerchant(models.Model):
     merchantCategory = (
         ('无', '无'),
         ('美食', '美食'),
-        ('休闲娱乐', '休闲娱乐'),
         ('便捷生活', '便捷生活'),
         ('餐饮美食', '餐饮美食'), 
         ('休闲娱乐', '休闲娱乐'), 
