@@ -45,11 +45,10 @@ class DiscountMerchant(models.Model):
         ('金牌商家', '金牌商家'),
         ('银牌商家', '银牌商家'),
     )
-    merchant_level = models.CharField(verbose_name="赞助商等级", max_length=10, choices= merchantLevel, null=True, default='银牌商家',blank=True)
+    merchant_level = models.CharField(verbose_name="赞助商等级", max_length=10, choices= merchantLevel, null=True, blank=True)
     merchantCategory = (
         ('无', '无'),
         ('美食', '美食'),
-        ('休闲娱乐', '休闲娱乐'),
         ('便捷生活', '便捷生活'),
         ('餐饮美食', '餐饮美食'), 
         ('休闲娱乐', '休闲娱乐'), 
