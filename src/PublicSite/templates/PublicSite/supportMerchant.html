@@ -19,7 +19,7 @@
         {% for info in infos %}
         <div class="col-lg-7 col-sm-7 portfolio-item align-self-center">
           <div class="align-items-center text-center">
-            {% if info.merchant_link %}
+            {% if info.merchant_link != "None" %}
             <a href="{{info.merchant_link}}">
             {% else %}
             <a href="#">
@@ -40,10 +40,10 @@
         </div>
         <div class="col-12 m-4 text-center">
           <h1 class="text-center mb-4">
-            {% if info.merchant_link %}
+            {% if info.merchant_link != "None" %}
             <a href="{{info.merchant_link}}" class="h1">
             {% else %}
-            <a href=# class="h1">
+            <a href="#" class="h1">
             {% endif %}
             <strong>{{info.merchant_name}}</strong></a>
           </h1>
