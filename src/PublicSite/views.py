@@ -371,9 +371,31 @@ class reviewBlogPublic(LoginRequiredMixin, PermissionRequiredMixin, View):
 ################################# sponsor pages ########################################
 def Merchants(request):
 
-    infos = HubModels.DiscountMerchant.objects.all().order_by("merchant_add_date")
+    # infos = HubModels.DiscountMerchant.objects.all().order_by("merchant_add_date")
+    # Need to group by merchant_Category
+    # 一种方法是通过找到所有distinct的 Category，然后单独Query每个Category？ 有没有更简单的做法
+    
+    merchants_info = {}
 
-    return render(request,'PublicSite/merchant.html', {'infos':infos})
+    for merchant in HubModels.DiscountMerchant.objects.all().filter(merchant_type='折扣商家').order_by("merchant_add_date").iterator():
+        # print(merchant.merchant_image.url)
+        if merchant.merchant_Category in merchants_info:
+            merchants_info[merchant.merchant_Category].append(merchant)
+        else:
+            merchants_info[merchant.merchant_Category] = [merchant]
+
+    # for merchant in HubModels.DiscountMerchant.objects.all().filter(merchant_type='折扣商家').order_by("merchant_add_date").values():
+    #     if merchant["merchant_Category"] in merchants_info:
+    #         merchants_info[merchant["merchant_Category"]].append(merchant)
+    #     else:
+    #         merchants_info[merchant["merchant_Category"]] = [merchant]
+
+    # print(merchants_info["test"])
+    # print(merchants_info["美食"][0])
+
+    return render(request,'PublicSite/merchant.html', {'infos':list(merchants_info.items())})
+
+    # return render(request,'PublicSite/merchant.html', {'infos':infos})
 
 def SupportMerchants(request):
 

@@ -1,48 +1,224 @@
 {% extends 'components/base_page.html' %}
 {% block 'pg_body' %}
 <!-- Page Content -->
-      <div class="page-container">
-        <div class="container bloc-fill-screen">
+<style>
+  .merchant_category_title{
+    /* width: 80px;
+    height: 70px; */
+    /* left: 680px;
+    top: 662px; */
 
-          <!-- Page Heading -->
-          <h1 class="my-4 text-left">
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 40px;
+    line-height: 70px;
+    color: #0C3F7C;
+    align-self: center;
+  }
+  .merchant_category_contatiner{
+    display: flex;
+    flex-direction: column;
+  }
+
+  .merchant_decoration{
+    border: 2.5px solid #F4DE55;
+    flex: none;
+    border-radius: 20px;
+    width: 246px;
+    align-self: center;
+    margin: 4px;
+  }
+  
+  .merchant_item_container{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+
+  }
+
+  .merchant_item{
+    width: 300px;
+    height: 500px;
+    padding: 20px 10px;
+    /* border: 1px solid black; */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 40px auto;
+
+  }
+
+  .merchant_img{
+    width: 100%;
+    max-height: 100%;
+    object-fit: scale-down;
+  }
+
+  .merchant_img_container{
+    width: 90%;
+    height: 200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .merchant_name{
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 29px;
+    text-align: center;
+
+    color: #0C3F7C;
+    margin: 10px 0px;
+  }
+
+  .merchant_description{
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 22px;
+    text-align: center;
+    margin: 10px 0px;
+  }
+  .merchant-hero-img-container{
+    position: static;
+  }
+
+  .merchant-hero-img{
+    width: 100vw;
+    height: 40vh;
+    background-color:darkgoldenrod;
+  }
+
+  .merchant-title{
+    position: relative;
+    bottom: 20vh;
+  }
+
+  .merchant-title-text{
+    text-align: center;
+    color: white;
+    margin: 5px;
+  }
+
+  
+
+  /* .merchant_address{
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 22px;
+    text-align: center;
+  } */
+
+
+</style>
+
+      <div class="page-container">
+        <div class="merchant-hero-img-container">
+          <img class="merchant-hero-img"  />
+          <div class="merchant-title">
+            <h2 class="merchant-title-text">合作折扣商家</h2>
+            <h6 class="merchant-title-text">感谢一下商家的大力支持</h6>     
+          </div>
+               
+        </div>
+        <div class="container bloc-fill-screen">
+          
+          
+          <div class="merchant_category_contatiner">
+            {% for merchant_category, merchants in infos %}
+            <div class="merchant_category_title">
+              {{merchant_category}}
+            </div>
+            
+            <div class="merchant_decoration">
+            </div>
+            <div class="merchant_decoration" style="width: 200px">
+            </div>
+
+            <div class="merchant_item_container">
+
+              {% for info in merchants %}
+              <!-- {% if info.merchant_type == "折扣商家" %} -->
+              <div class="merchant_item">
+                <div class="merchant_img_container">
+                  <img class="merchant_img" src="{{info.merchant_image.url}}"/>
+                </div>
+                
+
+                <div class="merchant_name">
+                  {{info.merchant_name}}
+                </div>
+
+                <div class="merchant_description">
+                  优惠: {{info.merchant_description}}
+                </div>
+
+                <div class="merchant_description">
+                  地址: {{info.merchant_address}}
+                </div>
+
+
+              </div>
+              <!-- {% endif %} -->
+              {% endfor %}
+
+
+            </div>
+
+            {% endfor %}
+            
+          </div>
+
+
+
+
+      <!-- Page Heading -->
+      <!-- <h1 class="my-4 text-left">
 
             合作折扣商家
             <br>
             <small class="lead"> 感谢以下商家的大力支持:)</small>
 
-          </h1>
+      </h1> -->
 
 
-          <div class="row justify-content-center">
-            {% for info in infos %}
-              {% if info.merchant_type == "折扣商家" %}
-              <div class="col-lg-4 col-sm-6 portfolio-item mt-2">
-                <div class="card" style="border: none; width:280px;">
-                  {% if info.merchant_link != "None" %}
-                  <a href="{{info.merchant_link}}">
-                    {% else %}
-                    <a href="#">
-                    {% endif %}
-                    <img alt="{{info.merchant_name}}" class="card-img-top img-fluid" src="{{info.merchant_image.url}}" style="height:180px; width:100%">
-                  </a>
-                  <div class="card-body">
-                    <h3 class="card-title">
-                      {% if info.merchant_link != "None" %}
-                      <a href="{{info.merchant_link}}">
-                      {% else %}
-                      <a href="#">
-                        {% endif %}
-                        <strong>{{info.merchant_name}}</strong></a>
-                    </h3>
-                    <p class="card-text">优惠: {{info.merchant_description}} <br> 地址: {{info.merchant_address}}</p>
-                  </div>
-                </div>
-              </div>
+      <!-- <div class="row justify-content-center">
+       {% for info in infos %}
+       {% if info.merchant_type == "折扣商家" %}
+        <div class="col-lg-4 col-sm-6 portfolio-item mt-2">
+          <div class="card" style="border: none; width:280px;">
+            {% if info.merchant_link %}
+            <a href="{{info.merchant_link}}">
+              {% else %}
+              <a href=#>
               {% endif %}
-            {% endfor %}
+                <img alt="{{info.merchant_name}}" class="card-img-top img-fluid" src="{{info.merchant_image.url}}" style="height:180px; width:100%"></a>
+            <div class="card-body">
+              <h3 class="card-title">
+                {% if info.merchant_link %}
+                <a href="{{info.merchant_link}}">
+                {% else %}
+                <a href=#>
+                  {% endif %}
+                  <strong>{{info.merchant_name}}</strong></a>
+
+              </h3>
+              <p class="card-text">优惠: {{info.merchant_description}} <br> 地址: {{info.merchant_address}}</p>
+            </div>
           </div>
-      </div>
+        </div>
+          {% endif %}
+        {% endfor %}
+      </div> -->
+      <!-- /.row -->
+
+
+    </div>
     </div>
 
 {% endblock 'pg_body' %}
