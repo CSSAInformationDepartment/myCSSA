@@ -77,13 +77,13 @@
 		<img class="logo" src="{% static 'PublicSite/img/Logo_c.png' %}" alt="CSSA Logo"/>
 	<!-- </a> -->
 	<div class="container">
-			<div class="link-text valign-text-middle navbar-link-text tc-red">{%trans "首页" %}</div>
-			<div class="link-text valign-text-middle navbar-link-text">活动与竞赛</div>
-			<div class="link-text valign-text-middle navbar-link-text">部门构成</div>
-			<div class="link-text valign-text-middle navbar-link-text">岗位信息</div>
-			<div class="link-text valign-text-middle navbar-link-text">折扣商家</div>
-			<div class="link-text valign-text-middle navbar-link-text">赞助商</div>
-			<div class="link-text valign-text-middle navbar-link-text">联系我们</div>
+			<a class="link-text valign-text-middle navbar-link-text tc-red" href="/">{%trans "首页" %}</a>
+			<a class="link-text valign-text-middle navbar-link-text" href="{% url 'PublicSite:events' %}">活动与竞赛</a>
+			<a class="link-text valign-text-middle navbar-link-text">部门构成</a>
+			<a class="link-text valign-text-middle navbar-link-text" href="{% url 'PublicSite:recruitment' %}">岗位信息</a>
+			<a class="link-text valign-text-middle navbar-link-text" href="{% url 'PublicSite:merchants' %}">折扣商家</a>
+			<a class="link-text valign-text-middle navbar-link-text" href="{% url 'PublicSite:supportMerchants' %}">赞助商</a>
+			<a class="link-text valign-text-middle navbar-link-text" href="{% url 'PublicSite:contact' %}">联系我们</a>
 			<img src="{% static 'PublicSite/img/icon/vector/search.png' %}" class="vector" alt="search" />
 			<img src="{% static 'PublicSite/img/icon/vector/notice.png' %}" class="vector" alt="notice" />
 			<img src="{% static 'PublicSite/img/icon/vector/user.png' %}" class="vector" alt="user" />
