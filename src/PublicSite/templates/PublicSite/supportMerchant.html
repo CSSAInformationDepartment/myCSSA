@@ -87,22 +87,22 @@
           </h1>
         </div>                                                  
         <div class="col-lg-12 col-sm-12 portfolio-item align-self-center">
-          <div class="align-items-center text-center">
+          <div class="align-items-center text-center" style="margin-bottom: 48px;">
             {% if info.merchant_link %}
             <a href="{{info.merchant_link}}">
             {% else %}
             <a href="#">
             {% endif %}
-            <img alt="{{info.merchant_name}}" class="card-img-top img-fluid" src="{{info.merchant_image.url}}" style="max-width:60%"></a>
+            <img alt="{{info.merchant_name}}" class="card-img-top img-fluid" src="{{info.merchant_image.url}}" style="width: 473px;height: 213px;border: 1px solid black;"></a>
            
             {% if info.merchant_qrcode %}
-            <img alt="{{info.merchant_name}}" class="card-img-top img-fluid" src="{{info.merchant_qrcode.url}}"  style="width:130px; height:130px; margin-left:40px">
+            <img alt="{{info.merchant_name}}" class="card-img-top img-fluid" src="{{info.merchant_qrcode.url}}"  style="width:162px; height:162px;border: 1px solid black; margin-left:90px">
             {% else %}
             <div class="card-img-top img-fluid" style="width:130px; height:130px; margin-left:40px"></div>
             {% endif %}
           </div>
         </div>
-        <div class="col-lg-12 col-sm-12 portfolio-item mt-2 align-self-center" style="margin-bottom: 168px;">
+        <div class="col-lg-12 col-sm-12 portfolio-item mt-2 align-self-center" style="border: 1px solid black;width:936px;height:168px;">
           <div class="text-center align-items-center">
             {{info.merchant_description}}
           </div>
@@ -163,25 +163,25 @@
             </h1>
           </div>
           <div class="col-lg-12 col-sm-12 portfolio-item align-self-center">
-            <div class="align-items-center text-center">
+            <div class="align-items-center text-center" style="margin-bottom: 48px;">
               {% if info.merchant_link %}
               <a href="{{info.merchant_link}}">
                 {% else %}
                 <a href="#">
                   {% endif %}
                   <img alt="{{info.merchant_name}}" class="card-img-top img-fluid" src="{{info.merchant_image.url}}"
-                    style="max-width:60%"></a>
+                    style="width: 473px;height: 213px;border: 1px solid black;"></a>
     
                 {% if info.merchant_qrcode %}
                 <img alt="{{info.merchant_name}}" class="card-img-top img-fluid" src="{{info.merchant_qrcode.url}}"
-                  style="width:130px; height:130px; margin-left:40px">
+                  style="width:162px; height:162px;border: 1px solid black; margin-left:90px">
                 {% else %}
                 <div class="card-img-top img-fluid" style="width:130px; height:130px; margin-left:40px"></div>
                 {% endif %}
             </div>
           </div>
           <div class="col-lg-12 col-sm-12 portfolio-item mt-2 align-self-center" style="margin-bottom: 112px;">
-            <div class="text-center align-items-center">
+            <div class="text-center align-items-center" style="border: 1px solid black;width:936px;height:168px;">
               {{info.merchant_description}}
             </div>
           </div>
