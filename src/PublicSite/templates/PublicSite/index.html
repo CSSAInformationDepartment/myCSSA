@@ -256,28 +256,39 @@
 		</div>
 	</section> {% endcomment %}
 
-	<section class="bg-light" id="portfolio" style="margin-top:-100px">
+
+
+	<!-- The below part is code to commit -->
+	
+	<!-- 活动展览 -->	
+	<section id="portfolio" style="margin-top:-100px; background-color: #E9F3FA">
 		<div class="container">
 			<div class="row">
 				<div class="col-lg-12 text-center">
-					<h2 class="section-heading text-uppercase">活动回顾</h2>
-					<h3 class="section-subheading text-muted">cssa过去活动回顾</h3>
+					<h2 class="section-heading text-uppercase">活动展览</h2>
+					<div class="mx-auto" style="border: 3px solid #DF4C73; height: 0; width: 246px;margin-top: 16px;"></div>
+					<div class="mx-auto" style="border: 3px solid #DF4C73; height: 0; width: 200px;margin-top: 14px;margin-bottom: 20px;"></div>
 				</div>
+				
 			</div>
 			<div class="row justify-content-center">
-				{% for event in eventsPast|slice:":4" %}
-				<div class="col-md-3 portfolio-item ">
+				{% for event in eventsPast|slice:":2" %}
+				<div class="col-xl-6 portfolio-item ">
 					<a class="portfolio-link" data-toggle="modal" href="#model2{{event.eventID}}">
 						<div class="portfolio-hover">
 							<div class="portfolio-hover-content">
 								<i class="fa fa-plus fa-3x"></i>
 							</div>
 						</div>
-						<img class="img-fluid" src="{{event.mainVisual.url}}" style="min-height:200px; max-height:200px; width:100%">
+						<img class="img-fluid" src="{{event.mainVisual.url}}" style="min-height:293px; max-height:293px; width:100%">
 					</a>
-					<div class="portfolio-caption" style="max-height:200px; height:100%;">
+					<div class="portfolio-caption" style="max-height:250px; height:100%;">
 						<h4>{{event.eventName}}</h4>
 						<p class="text-muted m-3" style="max-height:80px; overflow:auto;">{{event.eventInfo}}</p>
+						<button type="button" class="btn btn-danger rounded-pill">了解更多</button>
+					</div>
+					<div >
+						
 					</div>
 				</div>
 				{% empty %}
@@ -290,80 +301,120 @@
 		</div>
 	</section>
 
+	<!-- 关于我们 -->
+	<section id="about">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-12 text-center">
+					<h2 class="section-heading text-uppercase">关于我们</h2>
+					<div class="mx-auto" style="border: 3px solid #F4DE55; height: 0; width: 246px;margin-top: 16px;"></div>
+					<div class="mx-auto" style="border: 3px solid #F4DE55; height: 0; width: 200px;margin-top: 14px;margin-bottom: 20px;"></div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-lg-12">
+					<ul class="timeline">
+						<li>
+							<div class="timeline-image">
+								<img class="rounded-circle img-fluid" src="{% static 'myCSSAhub/img/1.jpg'%}" alt="">
+							</div>
+							<div class="timeline-panel">
+								<div class="timeline-heading pt-5">
+									<h4>2003</h4>
+									<h4 class="subheading">墨尔本大学中国学联成立</h4>
+								</div>
+								<div class="timeline-body">
 
+								</div>
+							</div>
+						</li>
+						<li class="timeline-inverted">
+							<div class="timeline-image">
+								<img class="rounded-circle img-fluid" src="{% static 'myCSSAhub/img/4.jpg'%}" alt="">
+							</div>
+							<div class="timeline-panel">
+								<div class="timeline-heading pt-5">
+									<h4>2011</h4>
+									<h4 class="subheading">CSSA网站成立</h4>
+								</div>
+								<div class="timeline-body">
 
-<section id="about">
-	<div class="container">
-		<div class="row">
-			<div class="col-lg-12 text-center">
-				<h2 class="section-heading text-uppercase pb-5">关于我们</h2>
+								</div>
+							</div>
+						</li>
+						<li>
+							<div class="timeline-image">
+								<img class="rounded-circle img-fluid" src="{% static 'myCSSAhub/img/2.jpg'%}" alt="">
+							</div>
+							<div class="timeline-panel">
+								<div class="timeline-heading pt-5">
+									<h4>2019</h4>
+									<h4 class="subheading">CSSA 2.0 全新改版上线</h4>
+								</div>
+								<div class="timeline-body">
+
+								</div>
+							</div>
+						</li>
+
+						<li class="timeline-inverted">
+							<div class="timeline-image">
+								<img class="rounded-circle img-fluid" src="{% static 'myCSSAhub/img/3.jpg'%}" alt="">
+							</div>
+							<div class="timeline-panel">
+								<div class="timeline-heading pt-5">
+									<h4>2020</h4>
+									<h4 class="subheading">CSSA微信小程序上线</h4>
+								</div>
+								<div class="timeline-body">
+
+								</div>
+							</div>
+						</li>
+					</ul>
+				</div>
 			</div>
 		</div>
-		<div class="row">
-			<div class="col-lg-12">
-				<ul class="timeline">
-					<li>
-						<div class="timeline-image">
-							<img class="rounded-circle img-fluid" src="{% static 'myCSSAhub/img/1.jpg'%}" alt="">
-						</div>
-						<div class="timeline-panel">
-							<div class="timeline-heading pt-5">
-								<h4>2003</h4>
-								<h4 class="subheading">墨尔本大学中国学联成立</h4>
-							</div>
-							<div class="timeline-body">
+	</section>
 
+	<!-- 加入我们 -->
+	<section id="join" style="margin-top:-100px; background-color: #E9F3FA">
+		<div class="container">
+			<div class="row justify-content-center">
+				<div class="col-xl-6">
+					<div class="text-center" style="margin-bottom: 20px;">
+						<img src="{% static 'PublicSite/img/qrcode_wx.jpg'%}" style="width:300px;height: 300px;">
+					</div>
+					<!-- <div class="text-center mx-auto" style="max-width: 372px;">
+						<form action="">
+							<div class="form-group">
+								<input type="name" class="form-control" placeholder="姓名" id="name">
 							</div>
-						</div>
-					</li>
-					<li class="timeline-inverted">
-						<div class="timeline-image">
-							<img class="rounded-circle img-fluid" src="{% static 'myCSSAhub/img/4.jpg'%}" alt="">
-						</div>
-						<div class="timeline-panel">
-							<div class="timeline-heading pt-5">
-								<h4>2011</h4>
-								<h4 class="subheading">CSSA网站成立</h4>
+							<div class="form-group" >
+								<input type="email" class="form-control" placeholder="邮箱" id="email">
 							</div>
-							<div class="timeline-body">
-
+							<div class="form-group">
+								<input type="text" class="form-control" placeholder="学号" id="text">
 							</div>
-						</div>
-					</li>
-					<li>
-						<div class="timeline-image">
-							<img class="rounded-circle img-fluid" src="{% static 'myCSSAhub/img/2.jpg'%}" alt="">
-						</div>
-						<div class="timeline-panel">
-							<div class="timeline-heading pt-5">
-								<h4>2019</h4>
-								<h4 class="subheading">CSSA 2.0 全新改版上线</h4>
-							</div>
-							<div class="timeline-body">
-
-							</div>
-						</div>
-					</li>
-
-					<li class="timeline-inverted">
-						<div class="timeline-image">
-							<img class="rounded-circle img-fluid" src="{% static 'myCSSAhub/img/3.jpg'%}" alt="">
-						</div>
-						<div class="timeline-panel">
-							<div class="timeline-heading pt-5">
-								<h4>2020</h4>
-								<h4 class="subheading">CSSA微信小程序上线</h4>
-							</div>
-							<div class="timeline-body">
-
-							</div>
-						</div>
-					</li>
-				</ul>
+							<button type="submit" class="btn btn-danger">Submit</button>
+						</form>
+					</div> -->
+				</div>
+				<div class="col-xl-6 text-center">
+						<h2 class="section-heading text-uppercase mt-6">加入我们</h2>
+						<div class="mx-auto" style="border: 3px solid #DF4C73; height: 0; width: 246px;margin-top: 16px; margin-bottom: 36px;"></div>
+						<p style="font-size: 24px; font-weight: 500; line-height: 40px; text-align: left;">President: president@cssaunimelb.com</p>
+						<p style="font-size: 24px; font-weight: 500; line-height: 40px; text-align: left;">Public Relation: pr@cssaunimelb.com</p>
+						<p style="font-size: 24px; font-weight: 500; line-height: 40px; text-align: left;">Event: activity@cssaunimelb.com</p>
+						<p style="font-size: 24px; font-weight: 500; line-height: 40px; text-align: left;">Publicity: publicity@cssaunimelb.com</p>
+						<p style="font-size: 24px; font-weight: 500; line-height: 40px; text-align: left;">IT & Dev Team: information@cssaunimelb.com</p>
+						<p style="font-size: 24px; font-weight: 500; line-height: 40px; text-align: left;">Human Resources: hr@cssaunimelb.com</p>
+				</div>
 			</div>
 		</div>
-	</div>
-</section>
+	</section>
+
+
 
  <!-- Portfolio Modals -->
  {% for event in eventsFuture|slice:":4" %}
