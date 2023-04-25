@@ -9,34 +9,74 @@
 		padding-bottom: 70%;
 		position: relative;
 	}
+
 	.card-img > img {
 		position: absolute;
 		max-width: 100%;
 		max-height: 100%;
 	}
+
 	.carousel-inner > .carousel-item {
-  height: 100vh;
-}
+		height: 100vh;
+	}
 
-.carousel-inner > .carousel-item > img {
-  position: absolute;
-  /* top: 50%;
-  left: 50%;
-  -webkit-transform: translate(-50%, -50%);
-  -ms-transform: translate(-50%, -50%);
-  transform: translate(-50%, -50%); */
-  max-height: 800px;
-  width: auto;
-}
+	.carousel-inner > .carousel-item > img {
+		position: absolute;
+		/* top: 50%;
+		left: 50%;
+		-webkit-transform: translate(-50%, -50%);
+		-ms-transform: translate(-50%, -50%);
+		transform: translate(-50%, -50%); */
+		max-height: 800px;
+		width: auto;
+	}
 
-.bg-white{
-	background:#ffffff !important;
+	.bg-white{
+		background:#ffffff !important;
 
-}
+	}
 
-.bg-light {
-	background-color: #f8f9fa!important;
-}
+	.bg-light {
+		background-color: #f8f9fa!important;
+	}
+
+	.col-lg-6 {
+		-webkit-box-flex: 0;
+		-ms-flex: 0 0 50%;
+		flex: 0 0 50%;
+		max-width: 90%;
+	}
+
+	.btn-pink{
+		background:#DF4C73;
+		color:#FFFFFF!important;
+	}
+
+	.btn-pink:hover{
+		background:#E87897!important;
+		color:#FFFFFF!important;
+	}
+
+	.long-line {
+		position: relative;
+		bottom: 5px;
+		left: 50%;
+		transform: translateX(-50%);
+		width: 7rem;
+		height: 2px;
+		background-color: #DF4C73;
+	}
+	
+	.short-line {
+		position: relative;
+		bottom: 15px;
+		left: 50%;
+		transform: translateX(-50%);
+		width: 5rem;
+		height: 2px;
+		background-color: #DF4C73;
+		margin-bottom: 0
+	}
 
 </style>
 {% endblock 'extra_header' %}
@@ -48,9 +88,9 @@
 <!-- bloc-12 -->
 <div class="bloc l-bloc mt-4" id="bloc-12">
 	<div class="container">
-		<div class="row">
+		<div class="row" style="flex-direction: column-reverse">
 			<div class="col bloc-0-margin-bottom">
-				<h1 class="mg-md pg-title">
+				<h1 class="mg-md pg-title" style="margin-top: 0">
 					CSSA 活动
 				</h1>
 			</div>
@@ -60,79 +100,78 @@
 <!-- bloc-12 END -->
 
 <!-- bloc-13 -->
-<div class="bloc l-bloc" id="bloc-13" style="min-height:20vh;">
-	<div class="container">
-		<div class="row">
-			<div class="col">
-				<div id="event-highlight-caro" class="carousel slide" data-ride="carousel">
-					<ol class="carousel-indicators">
-						{% for event in events|slice:":5" %}
-							{% if forloop.first %}
-								<li data-target="#event-highlight-caro" data-slide-to="{{forloop.counter0}}" class="active">
-								</li>
-							{% else %}
-								<li data-target="#event-highlight-caro" data-slide-to="{{forloop.counter0}}">
-								</li>
-							{% endif %}
-						{% endfor %}
+<div id="HomePageCarouselIndicators" class="carousel slide" data-ride="carousel" style="min-height:20vh;">
+	<ol class="carousel-indicators">
+		{% for event in events|slice:":5" %}
+			{% if forloop.first %}
+				<li data-target="#event-highlight-caro" data-slide-to="{{forloop.counter0}}" class="active">
+				</li>
+			{% else %}
+				<li data-target="#event-highlight-caro" data-slide-to="{{forloop.counter0}}">
+				</li>
+			{% endif %}
+		{% endfor %}
 
-					</ol>
-					<div class="carousel-inner" style=" width:100%; height: 420px ;">
-						{% for event in events|slice:":5" %}
-						{% if forloop.first %}
-						<div class="carousel-item active" >
-							{% else %}
-							<div class="carousel-item ">
-								{% endif %}
+		{% comment %} <div class="carousel-caption d-md-block hero">
+			<h1 class="font-weight-normal">CSSA 活动</h1>
+		</div> {% endcomment %}
 
-								<img class="d-inline-block rounded w-100" alt="{{event.eventName}}" src="{{event.mainVisual.url}}"/>
+	</ol>
+	<div class="carousel-inner" style=" width:100%; height: 420px ;">
+		{% for event in events|slice:":5" %}
+		{% if forloop.first %}
+		<div class="carousel-item active" >
+			{% else %}
+			<div class="carousel-item ">
+				{% endif %}
 
-								<div class="carousel-caption">
-									<h3 class="mg-md event-highlight-title">
-										{{event.eventName}}
-									</h3>
-								</div>
-							</div>
+				<img class="d-inline-block rounded w-100" alt="{{event.eventName}}" src="{{event.mainVisual.url}}"/>
 
-							{% empty %}
-							<h4 class="mg-md text-center">
-								目前没有可预览活动，敬请期待
-							</h4>
-							{% endfor %}
-
-						</div><a class="carousel-nav-controls carousel-control-prev" href="#event-highlight-caro" role="button" data-slide="prev"><span class="fa fa-chevron-left"></span><span class="sr-only">Previous</span></a><a class="carousel-nav-controls carousel-control-next" href="#event-highlight-caro" role="button" data-slide="next"><span class="fa fa-chevron-right"></span><span class="sr-only">Next</span></a>
-					</div>
-				</div>
+				{% comment %} <div class="carousel-caption">
+					<h3 class="mg-md event-highlight-title">
+						{{event.eventName}}
+					</h3>
+				</div> {% endcomment %}
 			</div>
-		</div>
-	</div>
 
+			{% empty %}
+			<h4 class="mg-md text-center">
+				目前没有可预览活动，敬请期待
+			</h4>
+			{% endfor %}
+
+		</div><a class="carousel-nav-controls carousel-control-prev" href="#event-highlight-caro" role="button" data-slide="prev"><span class="fa fa-chevron-left"></span><span class="sr-only">Previous</span></a><a class="carousel-nav-controls carousel-control-next" href="#event-highlight-caro" role="button" data-slide="next"><span class="fa fa-chevron-right"></span><span class="sr-only">Next</span></a>
+	</div>
+</div>
 <!-- bloc-13 END -->
 
 <!-- bloc-14 -->
 <div class="bloc l-bloc bg-light" id="bloc-14" style="min-height:25vh;">
 	<div class="container bloc-md">
-		<div class="row">
+		<div class="row" style="flex-direction: column-reverse">
 			<div class="col bloc-bloc-1-margin-bottom">
-				<h3 class="mg-md text-center">
+				<h2 class="mg-md text-center" style="font-weight:bold; color: #000000">
 					即将开始
-				</h3>
+				</h2>
+				<hr class="long-line">
+				<hr class="short-line">
 				<p class="text-center">
-					Next Events
+					Upcoming Events
 				</p>
 			</div>
 		</div>
 
-		<div class="row voffset justify-content-center" >
+		<div class="row voffset justify-content-center" style="flex-direction: column-reverse">
 			{% for event in eventsFuture %}
-			<div class="mt-3 col-lg-3 align-self-center col-md-6 mt-lg-3">
-				<div class="card h-100">
-					<div class="card-img">
+			{% if forloop.counter|divisibleby:2 %}
+			<div class="mt-3 col-lg-3 align-self-center col-lg-6 mt-lg-3">
+				<div class="card h-100" style="display: flex; flex-direction: row; align-items: center; border: 0; background-color: #f8f9fa">
+					<div class="card-img" style="flex: 0 0 35%; padding: 0 0 20% 0">
 						<img src="{{event.mainVisual.url}}" data-src="{{event.mainVisual.url}}" class="card-img-top h-100 w-100"/>
 					</div>
-					<div class="card-body" >
-						<h5 class="card-title" style="min-height:50px">{{event.eventName}}</h5>
-						<p class="card-text" style="height:50px; overflow:auto;">
+					<div class="card-body" style="flex: 0 0 65%">
+						<h5 class="card-title" style="min-height:50px; font-weight:bold; color:#0C3F7C">{{event.eventName}}</h5>
+						<p class="card-text" style="height:150px; overflow:auto;">
 							{{ event.eventInfo }}
 						</p>
 						{% if event.isMemberOnly %}
@@ -146,18 +185,47 @@
 						{% elif event.get_estimate_remaining_factor >= 1 %}
 						<a href="#" class="btn btn-block btn-danger mt-3" disabled="disabled">名额已满</a>
 						{% else %}
-						<a href="{% url 'PublicSite:eventsDetails' event.eventID %}" class="btn btn-block btn-blue-gray mt-3">查看详情<br></a>
+						<a href="{% url 'PublicSite:eventsDetails' event.eventID %}" class="btn btn-block btn-pink mt-3">查看详情<br></a>
 						{% endif %}
 					</div>
 				</div>
 			</div>
 
+			{% else %}
+			<div class="mt-3 col-lg-3 align-self-center col-lg-6 mt-lg-3">
+				<div class="card h-100" style="display: flex; flex-direction: row-reverse; align-items: center; border: 0; background-color: #f8f9fa">
+					<div class="card-img" style="flex: 0 0 35%; padding: 0 0 20% 0">
+						<img src="{{event.mainVisual.url}}" data-src="{{event.mainVisual.url}}" class="card-img-top h-100 w-100"/>
+					</div>
+					<div class="card-body" style="flex: 0 0 65%">
+						<h5 class="card-title" style="min-height:50px; font-weight:bold; color:#0C3F7C">{{event.eventName}}</h5>
+						<p class="card-text" style="height:150px; overflow:auto;">
+							{{ event.eventInfo }}
+						</p>
+						{% if event.isMemberOnly %}
+						<a href="{% url 'PublicSite:eventsDetails' event.eventID %}" class="btn btn-block btn-mustard mt-3">CSSA会员专享</a>
+						{% elif event.eventSignUpTime >  now_time %}
+						<a href="{% url 'PublicSite:eventsDetails' event.eventID %}" class="btn btn-block btn-light-gray mt-3">报名将于 {{ event.eventSignUpTime|date:"SHORT_DATE_FORMAT" }} 开始</a>
+						{% elif event.eventActualStTime < now_time %}
+						<a href="{% url 'PublicSite:eventsDetails' event.eventID %}" class="btn btn-block btn-light-gray mt-3">活动已结束</a>
+						{% elif event.get_estimate_remaining_factor > 0.6 %}
+						<a href="{% url 'PublicSite:eventsDetails' event.eventID %}" class="btn btn-block btn-warning mt-3">余位有限</a>
+						{% elif event.get_estimate_remaining_factor >= 1 %}
+						<a href="#" class="btn btn-block btn-danger mt-3" disabled="disabled">名额已满</a>
+						{% else %}
+						<a href="{% url 'PublicSite:eventsDetails' event.eventID %}" class="btn btn-block btn-pink mt-3">查看详情<br></a>
+						{% endif %}
+					</div>
+				</div>
+			</div>
+
+			{% endif %}
 
 			{% empty %}
-
 			<h4 class="mg-md text-center">
 				目前没有可报名活动，敬请期待
 			</h4>
+
 			{% endfor %}
 
 		</div>
@@ -171,9 +239,11 @@
 	<div class="container bloc-sm">
 		<div class="row">
 			<div class="col bloc-bloc-1-margin-bottom">
-				<h3 class="mg-md text-center">
+				<h2 class="mg-md text-center" style="font-weight:bold; color: #000000">
 					过往活动回顾
-				</h3>
+				</h2>
+				<hr class="long-line" style="background-color: #F4DE55;">
+				<hr class="short-line" style="background-color: #F4DE55;">
 				<p class="text-center">
 					Previous Events
 				</p>
@@ -182,16 +252,16 @@
 		<div class=" row voffset justify-content-center">
 			{% for event in eventsPast %}
 			<div class="col-lg-3 col-md-6 mt-1 mt-md-4 mt-lg-0 mb-3">
-				<div class="bg-white" style="margin-bottom:30px">
-					<a href="#" data-lightbox="{{event.mainVisual.url}}" data-gallery-id="gallery-1" data-caption="{{event.eventName}} <br> {{event.eventInfo}}">
-						<img src="{{event.mainVisual.url}}" data-src="{{event.mainVisual.url}}" class="img-fluid mx-auto d-block lazyload w-100 h-100"  style="min-height:258px;max-height:240px;"/></a>
+				<div>
+				<a href="#" data-lightbox="{{event.mainVisual.url}}" data-gallery-id="gallery-1" data-caption="{{event.eventName}} <br> {{event.eventInfo}}">
+					<img src="{{event.mainVisual.url}}" data-src="{{event.mainVisual.url}}" class="img-fluid mx-auto d-block lazyload w-100 h-100"  style="min-height:258px;max-height:240px;"/></a>
 
-					<h4 class="mg-md pt-3 text-center">
-						{{event.eventName}}
-					</h4>
-					<p class="text-center pb-3" style="max-height: 200px; overflow: scroll;">
-						{{event.eventInfo}}
-					</p>
+				<h4 class="mg-md pt-3 text-center">
+					{{event.eventName}}
+				</h4>
+				<p class="text-center pb-3" style="height:200px; overflow: scroll;">
+					{{event.eventInfo}}
+				</p>
 				</div>
 			</div>
 			{% empty %}
