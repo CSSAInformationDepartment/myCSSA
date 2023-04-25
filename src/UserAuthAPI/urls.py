@@ -44,5 +44,6 @@ urlpatterns = [
     re_path(r'^account/', include('allauth.urls')),
     re_path(r'^accounts/profile/$', RedirectView.as_view(url='/', permanent=True), name='profile-redirect'),
     path('login-user-info/', views.get_login_user_info, name='login-info'),
-    path('register/', views.user_easy_registry_api, name='register-api')
+    path('register/', views.user_easy_registry_api, name='register-api'),
+    path('update-user-avatar/', views.update_user_avatar, name='update-avatar')
 ]
