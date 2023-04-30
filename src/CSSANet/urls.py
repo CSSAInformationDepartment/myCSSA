@@ -56,7 +56,6 @@ urlpatterns = [
     path('api/legacy/', include(LegacyUrl)),
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-    path('reset/done/', auth_views.PasswordResetCompleteView.as_view(template_name='password_reset_complete.html'), name='password_reset_complete'),
     path('oauth/', include('social_django.urls', namespace='social')),
     path('mobile/', include(MobileUrl)),
     path('api/community/', include(CommunityUrl)),
