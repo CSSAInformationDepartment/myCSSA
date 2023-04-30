@@ -1,5 +1,7 @@
 
 from django.urls import path, re_path, include
+from django.contrib.auth import views as auth_views
+
 from myCSSAhub import views as Views
 from FinanceAPI import urls as FinanceUrls
 from OrganisationMgr import  urls as OrgMgrUrls
@@ -38,7 +40,9 @@ urlpatterns = [
     path('calendar/', Views.Calendar.as_view(), name="calendar"),
     # path('luckydraw/', LuckyDrawView.as_view(), name="luckydraw"),
     path('luckydraw/event_pool/',LuckyDrawEventView.as_view(), name="luckydraw_event_list"),
-    path('luckydraw/event_pool/<str:id>/',LuckyDrawView.as_view(), name="luckydraw_event_draw")
+    path('luckydraw/event_pool/<str:id>/',LuckyDrawView.as_view(), name="luckydraw_event_draw"),
+    path('password_reset/', Views.PasswordResetView.as_view(), name="password_reset"),
+    path('password_reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(template_name="password_reset_confirm.html"), name='password_reset_confirm'),
 ]
     
 
