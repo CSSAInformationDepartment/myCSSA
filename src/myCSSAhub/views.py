@@ -114,6 +114,15 @@ class PasswordResetView(View):
         else:
             return render(request=request, template_name="myCSSAhub/password_reset.html", context={"password_reset_form":PasswordResetForm(request.POST)})
 
+class PasswordResetConfirmView(View):
+    template_name = 'myCSSAhub/password_reset_confirm.html'
+
+    def get(self, request, *args, **kwargs):
+        return render(request=request, template_name=self.template_name)
+
+    def post(self, request, *args, **kwargs):
+        password_reset_form = PasswordResetForm(request.POST)
+
 ################################# calendar ########################################
 class Calendar(LoginRequiredMixin, View):
     login_url = '/hub/login/'
