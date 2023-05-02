@@ -45,19 +45,17 @@ class DiscountMerchant(models.Model):
         ('金牌商家', '金牌商家'),
         ('银牌商家', '银牌商家'),
     )
-    merchant_level = models.CharField(verbose_name="赞助商等级", max_length=10, choices= merchantLevel, null=True, default='银牌商家',blank=True)
+    merchant_level = models.CharField(verbose_name="赞助商等级", max_length=10, choices= merchantLevel, null=True, blank=True)
     merchantCategory = (
         ('无', '无'),
-        ('美食', '美食'),
-        ('休闲娱乐', '休闲娱乐'),
-        ('便捷生活', '便捷生活'),
         ('餐饮美食', '餐饮美食'), 
+        ('便捷生活', '便捷生活'),
         ('休闲娱乐', '休闲娱乐'), 
         ('生活服务', '生活服务'), 
         ('消费购物', '消费购物'), 
-        ('个人护理', '个人护理')
+        ('美丽Buff', '美丽Buff')
     )
-    merchant_Category = models.CharField(verbose_name="折扣商家种类", max_length=10, choices= merchantCategory, null=True, default='美食',blank=True)
+    merchant_Category = models.CharField(verbose_name="折扣商家种类", max_length=10, choices= merchantCategory, null=True, blank=True)
 
     sale = models.CharField(verbose_name="促销",null=True, blank=True, max_length=100)
     operation_hours = models.CharField(verbose_name="商家开放时间", null=True, blank=True, max_length=50) # 用charfield方便储存各种格式的时间

@@ -182,15 +182,16 @@
 		<div class=" row voffset justify-content-center">
 			{% for event in eventsPast %}
 			<div class="col-lg-3 col-md-6 mt-1 mt-md-4 mt-lg-0 mb-3">
-				<div class="bg-white">
-				<a href="#" data-lightbox="{{event.mainVisual.url}}" data-gallery-id="gallery-1"><img src="{{event.mainVisual.url}}" data-src="{{event.mainVisual.url}}" class="img-fluid mx-auto d-block lazyload w-100 h-100"  style="min-height:120px;max-height:240px;"/></a>
+				<div class="bg-white" style="margin-bottom:30px">
+					<a href="#" data-lightbox="{{event.mainVisual.url}}" data-gallery-id="gallery-1" data-caption="{{event.eventName}} <br> {{event.eventInfo}}">
+						<img src="{{event.mainVisual.url}}" data-src="{{event.mainVisual.url}}" class="img-fluid mx-auto d-block lazyload w-100 h-100"  style="min-height:258px;max-height:240px;"/></a>
 
-				<h4 class="mg-md pt-3 text-center">
-					{{event.eventName}}
-				</h4>
-				<p class="text-center pb-3">
-					{{event.eventInfo}}
-				</p>
+					<h4 class="mg-md pt-3 text-center">
+						{{event.eventName}}
+					</h4>
+					<p class="text-center pb-3" style="max-height: 200px; overflow: scroll;">
+						{{event.eventInfo}}
+					</p>
 				</div>
 			</div>
 			{% empty %}

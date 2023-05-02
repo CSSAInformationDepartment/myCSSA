@@ -14,6 +14,8 @@
 #                                                                             #
 ###############################################################################
 from django.contrib.auth import get_user_model, authenticate
+import base64
+from django.core.files.base import ContentFile
 
 from rest_framework import authentication, permissions, status, response
 from rest_framework.parsers import JSONParser
@@ -27,6 +29,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from mail_owl.utils import AutoMailSender
 
 from UserAuthAPI import models, forms, serializers
+from UserAuthAPI.forms import UserAvatarUpdateForm
 
 class UserListView(ListCreateAPIView):
     queryset = models.User.objects.all()
@@ -81,3 +84,28 @@ def get_login_user_info(request):
         'membershipId': userProfile.membershipId,
         'avatarUrl': userProfile.avatar.url if userProfile.avatar else 'None'
     })
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def update_user_avatar(request):
+    model = models.UserProfile
+    current_user = model.objects.get(user=request.user)
+    data = JSONParser().parse(request)
+    if data["img_base64"]:
+        img_b64 = data["img_base64"]
+        # print(data["img_base64"])
+
+        format, imgstr = img_b64.split(';base64,') 
+        ext = format.split('/')[-1] 
+
+        ## Patch to avoid incorrect padding caused by some browsers
+        missing_padding = len(imgstr) % 4
+        if missing_padding:
+            imgstr += b'='* (4 - missing_padding)
+
+        decoded_file = ContentFile(base64.b64decode(imgstr), name='avatar_lg.' + ext)
+        current_user.avatar = decoded_file
+        current_user.save()
+        return Response(status=status.HTTP_200_OK)
+
+    return Response(status=status.HTTP_400_BAD_REQUEST)
