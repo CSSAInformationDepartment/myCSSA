@@ -116,10 +116,10 @@ class UserAvatarUpdateForm(forms.ModelForm):
         super().save()
         return form
 
-class UserAcademicForm(forms.ModelForm):
-    class Meta:
-        model = models.UserAcademic
-        fields = ('userProfile','degree','uniMajor')
+# class UserAcademicForm(forms.ModelForm):
+#     class Meta:
+#         model = models.UserAcademic
+#         fields = ('userProfile','degree','uniMajor')
 
 class MigrationForm(forms.Form):
     membershipId = forms.CharField(required=False)

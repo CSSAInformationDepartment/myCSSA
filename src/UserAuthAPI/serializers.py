@@ -253,8 +253,8 @@ class UserEasyRegistrationSerializer(serializers.Serializer):
     gender = serializers.ChoiceField(choices=genderChoice, required=True)
     dateOfBirth = serializers.DateField(required=True)
     studentId = serializers.CharField(required=True, max_length=8)
-    degree = serializers.ChoiceField(choices=degreeChoice, required=True)
-    uniMajor = serializers.CharField(max_length=100, required=True)
+    # degree = serializers.ChoiceField(choices=degreeChoice, required=False)
+    # uniMajor = serializers.CharField(max_length=100, required=False)
 
     def validate_telNumber(self, value):
         data_telNumber = value
@@ -316,11 +316,11 @@ class UserEasyRegistrationSerializer(serializers.Serializer):
             dateOfBirth = validated_data.get('dateOfBirth')
         )
 
-        models.UserAcademic.objects.create(
-            userProfile = profile,
-            degree = validated_data.get('degree'),
-            uniMajor = validated_data.get('uniMajor') 
-        )
+        # models.UserAcademic.objects.create(
+        #     userProfile = profile,
+        #     degree = validated_data.get('degree'),
+        #     uniMajor = validated_data.get('uniMajor') 
+        # )
 
         return new_user
 

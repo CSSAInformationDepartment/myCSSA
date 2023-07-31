@@ -18,7 +18,7 @@ class MailQueneAdmin(admin.ModelAdmin):
     '''
     list_display = ('id','date_created','date_scheduled','title','receiver','state','disabled',)
     list_display_links = ('id',)
-    search_fields = ('mail_body','receiver')
+    search_fields = ('id','receiver')
     list_per_page = 25
 
 

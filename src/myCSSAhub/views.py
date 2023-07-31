@@ -25,7 +25,7 @@ from PrizeAPI.models import Prize
 from UserAuthAPI import models as UserModels
 from BlogAPI import models as BlogModels
 from UserAuthAPI.forms import (BasicSiginInForm, UserInfoForm, MigrationForm,
-                               UserAcademicForm, UserProfileUpdateForm, EasyRegistrationForm, UserAvatarUpdateForm)
+                               UserProfileUpdateForm, EasyRegistrationForm, UserAvatarUpdateForm)
 from LegacyDataAPI import models as LegacyDataModels
 from CommunicateManager.send_email import send_emails
 from EventAPI.models import Event
@@ -250,18 +250,18 @@ class EasyRegistrationView(View):
     def post(self, request, *args, **kwargs):
         account_form = BasicSiginInForm(data=request.POST)
         profile_form = EasyRegistrationForm(data=request.POST)
-        academic_form = UserAcademicForm(data=request.POST)
-        if account_form.is_valid() and profile_form.is_valid() and academic_form.is_valid():
+        # academic_form = UserAcademicForm(data=request.POST)
+        if account_form.is_valid() and profile_form.is_valid(): #and academic_form.is_valid():
             account_register = account_form.save(commit=False)
             profile = profile_form.save(commit=False)
             profile.user = account_register
-            academic = academic_form.save(commit=False)
-            academic.userProfile = profile
+            # academic = academic_form.save(commit=False)
+            # academic.userProfile = profile
             if profile.membershipId and profile.membershipId != '':
                 profile.isValid = True
             account_form.save()
             profile.save()
-            academic.save()
+            # academic.save()
 
             # 完成信息保存以后，发送注册成功的邮件
             username = profile.get_full_EN_name()
@@ -280,7 +280,7 @@ class EasyRegistrationView(View):
         else:
             return JsonResponse({
                 'success': False,
-                'errors': [dict(account_form.errors.items()), dict(profile_form.errors.items()), dict(academic_form.errors.items())]
+                'errors': [dict(account_form.errors.items()), dict(profile_form.errors.items())] #, dict(academic_form.errors.items())]
             })
         return HttpResponseRedirect(reverse('myCSSAhub:hub_regformConfirmation'))
 
@@ -316,18 +316,18 @@ class NewUserSignUpView(View):
     def post(self, request, *args, **kwargs):
         account_form = BasicSiginInForm(data=request.POST)
         profile_form = UserInfoForm(data=request.POST, files=request.FILES)
-        academic_form = UserAcademicForm(data=request.POST)
-        if account_form.is_valid() and profile_form.is_valid() and academic_form.is_valid():
+        # academic_form = UserAcademicForm(data=request.POST)
+        if account_form.is_valid() and profile_form.is_valid(): # and academic_form.is_valid():
             account_register = account_form.save(commit=False)
             account_form.save()
             profile = profile_form.save(commit=False)
             profile.user = account_register
-            academic = academic_form.save(commit=False)
-            academic.userProfile = account_register
+            # academic = academic_form.save(commit=False)
+            # academic.userProfile = account_register
             if profile.membershipId and profile.membershipId != '':
                 profile.isValid = True
             profile.save()
-            academic.save()
+            # academic.save()
 
             # 完成信息保存以后，发送注册成功的邮件
             target_email = account_form.email
@@ -337,7 +337,7 @@ class NewUserSignUpView(View):
         else:
             return JsonResponse({
                 'success': False,
-                'errors': [dict(account_form.errors.items()), dict(profile_form.errors.items()), dict(academic_form.errors.items())]
+                'errors': [dict(account_form.errors.items()), dict(profile_form.errors.items())] #, dict(academic_form.errors.items())]
             })
         return JsonResponse({
             'success': True, })

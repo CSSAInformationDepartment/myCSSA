@@ -32,7 +32,7 @@ from django.contrib.auth.decorators import login_required
 
 from UserAuthAPI import models as UserModels
 from BlogAPI import models as BlogModels
-from UserAuthAPI.forms import BasicSiginInForm, UserInfoForm, MigrationForm, UserAcademicForm, UserProfileUpdateForm
+from UserAuthAPI.forms import BasicSiginInForm, UserInfoForm, MigrationForm, UserProfileUpdateForm
 from RecruitAPI.forms import ResumeSubmissionForm
 from PhotoCompetition.forms import CandidateSubmissionForm
 from LegacyDataAPI import models as LegacyDataModels

@@ -240,7 +240,7 @@
             </div>
           </div>
 
-          <div id="div_id_select" class="form-label-group required">
+          {% comment %} <div id="div_id_select" class="form-label-group ">
             <label
               for="degree"
               class="control-label  col-md-6  requiredField"
@@ -269,13 +269,12 @@
           </div>
           </div>
 
-        <div id="major" class="form-label-group required">
+        <div id="major" class="form-label-group ">
           <label for="major" class="control-label  col-md-6  requiredField">
             Major / 专业<span class="asteriskField">*</span>
           </label>
           <div class="controls  col-md-12 ">
             <select
-              required
               class="selectpicker form-control"
               id="id_major"
               name="uniMajor"
@@ -284,7 +283,7 @@
             >
             </select>
           </div>
-        </div>
+        </div> {% endcomment %}
 
         <div class="form-label-group">
           <div class="controls col-md-offset-3  col-md-12 ">
@@ -358,8 +357,8 @@
             });
           });
 
-         //Major dropdown Handler
-         let dropdown = document.getElementById('id_major');
+         {% comment %} //Major dropdown Handler
+          let dropdown = document.getElementById('id_major');
           dropdown.length = 0;
 
           let defaultOption = document.createElement('option');
@@ -390,7 +389,7 @@
             console.error('An error occurred fetching the JSON from ' + url);
           };
 
-          request.send();
+          request.send(); {% endcomment %}
 
           $("#msform").parsley({
             errorClass: "is-invalid",

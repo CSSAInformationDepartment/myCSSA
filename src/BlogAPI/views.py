@@ -16,7 +16,7 @@ from django.http import JsonResponse, HttpResponseRedirect, HttpResponse, Http40
 from django.contrib.auth.decorators import login_required
 from UserAuthAPI import models as UserModels
 from BlogAPI import models as BlogModels
-from UserAuthAPI.forms import BasicSiginInForm, UserInfoForm, MigrationForm, UserAcademicForm, UserProfileUpdateForm
+from UserAuthAPI.forms import BasicSiginInForm, UserInfoForm, MigrationForm, UserProfileUpdateForm
 from LegacyDataAPI import models as LegacyDataModels
 
 from Library.Mixins import AjaxableResponseMixin
