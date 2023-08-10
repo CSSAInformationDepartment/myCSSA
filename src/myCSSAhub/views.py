@@ -46,6 +46,8 @@ import datetime
 
 from django.urls import reverse
 
+from django.core.files.base import ContentFile
+
 # Create your views here.
 
 
@@ -138,6 +140,29 @@ class Merchant_add(PermissionRequiredMixin, LoginRequiredMixin, View):
         # return render(request, self.template_name, {'update': have_update})
 
         return render(request, self.template_name, {'update': have_update, 'form': form})
+    
+
+
+    # def post(self, request, *args, **kwargs):
+    #         have_update = False
+    #         form = self.form_class(request.POST, request.FILES)
+    #         if form.is_valid():
+    #             instance = form.save(commit=False)
+                
+    #             cropped_image_data = request.POST.get('cropped_image_data')
+    #             if cropped_image_data:
+                    
+    #                 format, imgstr = cropped_image_data.split(';base64,')
+    #                 ext = format.split('/')[-1]
+    #                 data = ContentFile(base64.b64decode(imgstr), name='temp.' + ext)
+
+
+    #                 instance.merchant_image = data
+
+    #             instance.save()
+    #             have_update = True
+
+    #         return render(request, self.template_name, {'update': have_update, 'form': form})
 
 #
 
