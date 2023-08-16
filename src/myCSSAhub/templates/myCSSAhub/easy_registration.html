@@ -18,8 +18,7 @@
   
   #pswd_info {
     position:absolute;
-    bottom:-75px;
-    bottom: -200px; 
+    bottom: -180px; 
     left: 18%;
     width:220px;
     padding:15px;
@@ -196,7 +195,7 @@
                 <li id="length" class="invalid">Be at least <strong>8 characters</strong></li>
                 </ul>
                </div> 
-              <div id="progress-container" style="padding-top:10px"></div>
+              {% comment %} <div id="progress-container" style="padding-top:10px"></div> {% endcomment %}
             </div>
           </div>
           <div id="password2" class="form-label-group required">
@@ -299,7 +298,6 @@
             </div>
           </div>
 
-          {% comment %} 
           <div id="div_id_select" class="form-label-group required">
             <label
               for="degree"
@@ -328,9 +326,7 @@
             <p class="text-muted"><small>注: 若选择Master或以上学位，也自愿同时加入CSSA Graduates社团</small></p>
           </div>
           </div> 
-          {% endcomment %}
 
-        {% comment %} 
         <div id="major" class="form-label-group required">
           <label for="major" class="control-label  col-md-6  requiredField">
             Major / 专业<span class="asteriskField">*</span>
@@ -347,7 +343,6 @@
             </select>
           </div>
         </div> 
-        {% endcomment %}
 
         <div class="form-label-group">
           <div class="controls col-md-offset-3  col-md-12 ">
@@ -406,19 +401,7 @@
         <script type="text/javascript">
           //Password Strength Indicator
           $(document).ready(function() {
-            $('#id_password').strengthMeter('progressBar', {
-              container: $('#progress-container'),
-              base: 80,
-              hierarchy: {
-                '0': 'progress-bar-danger',
-                '25': 'progress-bar-warning',
-                '50': 'progress-bar-success'
-              },
-              passwordScore: {
-                options: [],
-                append: true
-              }
-            });
+
 
             $('#id_password').keyup(function (){
               //console.log("Entering password");
@@ -461,8 +444,7 @@
             });
           });
 
-         //Major dropdown Handler
-         {% comment %}          
+         //Major dropdown Handler         
          let dropdown = document.getElementById('id_major');
           dropdown.length = 0;
 
@@ -495,8 +477,6 @@
           };
 
           request.send();
-
-          {% endcomment %}
 
           $("#msform").parsley({
             errorClass: "is-invalid",
