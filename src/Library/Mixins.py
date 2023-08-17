@@ -18,4 +18,3 @@ class AjaxableResponseMixin:
             return JsonResponse(data)
         else:
             return response
-
