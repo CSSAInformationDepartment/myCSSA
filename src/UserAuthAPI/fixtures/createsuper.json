@@ -1,5 +1,6 @@
 [
-    { "model": "UserAuthAPI.user", 
+    {
+        "model": "UserAuthAPI.user",
         "pk": "62f34ec1-34c8-4014-90ff-3a9249587784",
         "fields": {
             "email": "testadmin@cssa.com",

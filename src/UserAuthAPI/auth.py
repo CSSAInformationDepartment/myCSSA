@@ -1,10 +1,14 @@
-##自定义用户验证
+from django.contrib.auth import get_user_model
+
+# 自定义用户验证
+
 
 class EmailOrUsernameModelBackend(object):
     """
     This is a ModelBacked that allows authentication with either a username or an email address.
 
     """
+
     def authenticate(self, username=None, password=None, **kwargs):
         UserModel = get_user_model()
         try:

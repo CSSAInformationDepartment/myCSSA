@@ -13,23 +13,19 @@
 #                             Version: 0.6a(C)                                #
 #                                                                             #
 ###############################################################################
-from django.contrib.auth import get_user_model, authenticate
 import base64
-from django.core.files.base import ContentFile
 
-from rest_framework import authentication, permissions, status, response
+from django.core.files.base import ContentFile
+from rest_framework import authentication, permissions, status
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.generics import GenericAPIView, ListCreateAPIView
 from rest_framework.parsers import JSONParser
-from rest_framework.response import Response, Serializer
-from rest_framework.decorators import api_view,permission_classes,authentication_classes
-from rest_framework.views import APIView
-from rest_framework.generics import GenericAPIView, ListCreateAPIView, ListAPIView
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from mail_owl.utils import AutoMailSender
+from UserAuthAPI import models, serializers
 
-from UserAuthAPI import models, forms, serializers
-from UserAuthAPI.forms import UserAvatarUpdateForm
 
 class UserListView(ListCreateAPIView):
     queryset = models.User.objects.all()
@@ -45,12 +41,14 @@ class EditUserDetails(GenericAPIView):
 
     def post(self, request):
         self.object = self.get_object()
-        serializer = serializers.UserDetailSerializer(self.object, data=request.data)
+        serializer = serializers.UserDetailSerializer(
+            self.object, data=request.data)
         if serializer.is_valid():
             self.object.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
-            return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 @api_view(['POST'])
 @permission_classes([])
@@ -66,7 +64,7 @@ def user_easy_registry_api(request):
         }
         return Response(res, status=status.HTTP_201_CREATED)
 
-    return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['GET'])
@@ -85,6 +83,7 @@ def get_login_user_info(request):
         'avatarUrl': userProfile.avatar.url if userProfile.avatar else 'None'
     })
 
+
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def update_user_avatar(request):
@@ -95,15 +94,16 @@ def update_user_avatar(request):
         img_b64 = data["img_base64"]
         # print(data["img_base64"])
 
-        format, imgstr = img_b64.split(';base64,') 
-        ext = format.split('/')[-1] 
+        format, imgstr = img_b64.split(';base64,')
+        ext = format.split('/')[-1]
 
-        ## Patch to avoid incorrect padding caused by some browsers
+        # Patch to avoid incorrect padding caused by some browsers
         missing_padding = len(imgstr) % 4
         if missing_padding:
-            imgstr += b'='* (4 - missing_padding)
+            imgstr += b'=' * (4 - missing_padding)
 
-        decoded_file = ContentFile(base64.b64decode(imgstr), name='avatar_lg.' + ext)
+        decoded_file = ContentFile(
+            base64.b64decode(imgstr), name='avatar_lg.' + ext)
         current_user.avatar = decoded_file
         current_user.save()
         return Response(status=status.HTTP_200_OK)
