@@ -1,103 +1,104 @@
-{% extends 'myCSSAhub/component/_layout.html' %}
+{% extends "myCSSAhub/component/_layout.html" %}
 {% load static %}
 {% block ExtraHeader %}
-<link href="{% static 'myCSSAhub/vendors/DataTables/datatables.min.css'%}" rel="stylesheet">
+    <link href="{% static 'myCSSAhub/vendors/DataTables/datatables.min.css' %}"
+          rel="stylesheet">
 {% endblock ExtraHeader %}
-
 {% block pageTitle %}
-报名人列表
+    报名人列表
 {% endblock pageTitle %}
-
 {% block BreadcrumbPath %}
-  <li class="breadcrumb-item">活动管理</li>
-  <li class="breadcrumb-item">
-    <a href="{% url 'myCSSAhub:EventAPI:event_stat' %}">活动报名管理</a>
-  </li>
-  <li class="breadcrumb-item active">报名人员列表</li>
+    <li class="breadcrumb-item">活动管理</li>
+    <li class="breadcrumb-item">
+        <a href="{% url 'myCSSAhub:EventAPI:event_stat' %}">活动报名管理</a>
+    </li>
+    <li class="breadcrumb-item active">报名人员列表</li>
 {% endblock BreadcrumbPath %}
-
 {% block pageContent %}
-<div class="row mb-3">
-  <div class="col-6">
-
-  </div>
-  
-  {% if user.is_staff %}
-  <div class="col-6">
-      <div class="btn-group float-right" role="group">
-         
-      </div>
-  </div>
-  {% endif %}
-</div>
-<div class="row">
-  <div class="col-md-12">
-    <div class="card" >
-      <div class="card-header">
-        报名情况统计
-      </div>
-      <div class="card-body">
-          <table id="main-datatable" class="table table-responsive-md"  style="width:100%" >
-              <thead>
-                <tr>
-                  <th>姓名</th>
-                  <th>性别</th>
-                  <th>邮箱</th>
-                  <th>电话号码</th>
-                  <th>出票情况</th>
-                  <th>入场情况</th>
-                </tr>
-              </thead>
-              <tbody>
-                {% for attendant in attendants %}
-                  <tr>
-                    <td>{{attendant.attendedUserId.get_full_EN_name}}</td>
-                    <td>{{attendant.attendedUserId.get_gender_CN}}</td>
-                    <td>{{attendant.attendedUserId.user.email}}</td>
-                    <td>{{attendant.attendedUserId.user.telNumber}}</td>
-                    {% if attendant.token %}
-                      <td>已出票</td>
-                    {% else %}
-                      <td> --- </td>
-                    {% endif %}
-
-                    {% if attendant.token_used %}
-                      <td>已入场</td>
-                    {% else %}
-                      <td>尚未入场</td>
-                    {% endif %}
-                  </tr>
-                {% endfor %}
-              </tbody>
-          </table>
-          {% if is_paginated %}
-            <ul class="pagination">
-              {% if page_obj.has_previous %}
-                <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Prev</a></li>
-              {% else %}
-                <li class="page-item disabled"><a class="page-link" href="#">Prev</a></li>
-              {% endif %}
-              {% for i in paginator.page_range %}
-                {% if page_obj.number == i %}
-                  <li class="page-item active"><a class="page-link" href="#">{{ i }} </a></li>
-                {% else %}
-                  <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
-                {% endif %}
-              {% endfor %}
-              {% if page_obj.has_next %}
-                <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
-              {% else %}
-                <li class="page-item disabled"><a class="page-link" href="#">Prev</a></li>
-              {% endif %}
-            </ul>
-          {% endif %}
-      </div>
+    <div class="row mb-3">
+        <div class="col-6"></div>
+        {% if user.is_staff %}
+            <div class="col-6">
+                <div class="btn-group float-right" role="group"></div>
+            </div>
+        {% endif %}
     </div>
-  </div>
-</div>
-{% endblock %}
-
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">报名情况统计</div>
+                <div class="card-body">
+                    <table id="main-datatable"
+                           class="table table-responsive-md"
+                           style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>姓名</th>
+                                <th>性别</th>
+                                <th>邮箱</th>
+                                <th>电话号码</th>
+                                <th>出票情况</th>
+                                <th>入场情况</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for attendant in attendants %}
+                                <tr>
+                                    <td>{{ attendant.attendedUserId.get_full_EN_name }}</td>
+                                    <td>{{ attendant.attendedUserId.get_gender_CN }}</td>
+                                    <td>{{ attendant.attendedUserId.user.email }}</td>
+                                    <td>{{ attendant.attendedUserId.user.telNumber }}</td>
+                                    {% if attendant.token %}
+                                        <td>已出票</td>
+                                    {% else %}
+                                        <td>---</td>
+                                    {% endif %}
+                                    {% if attendant.token_used %}
+                                        <td>已入场</td>
+                                    {% else %}
+                                        <td>尚未入场</td>
+                                    {% endif %}
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    {% if is_paginated %}
+                        <ul class="pagination">
+                            {% if page_obj.has_previous %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Prev</a>
+                                </li>
+                            {% else %}
+                                <li class="page-item disabled">
+                                    <a class="page-link" href="#">Prev</a>
+                                </li>
+                            {% endif %}
+                            {% for i in paginator.page_range %}
+                                {% if page_obj.number == i %}
+                                    <li class="page-item active">
+                                        <a class="page-link" href="#">{{ i }}</a>
+                                    </li>
+                                {% else %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
+                            {% if page_obj.has_next %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+                                </li>
+                            {% else %}
+                                <li class="page-item disabled">
+                                    <a class="page-link" href="#">Prev</a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock pageContent %}
 {% block ExtraJS %}
-
-
 {% endblock ExtraJS %}
