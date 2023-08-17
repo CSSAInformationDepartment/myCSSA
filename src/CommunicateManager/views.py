@@ -1,22 +1,13 @@
-from django.shortcuts import render
-from django.http import JsonResponse, HttpResponseRedirect, HttpResponse
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.shortcuts import get_object_or_404
-from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin
-from django.views import View
-from django.views.generic import CreateView, UpdateView, FormView
-from django.db.models import Q
-from django.http import JsonResponse, HttpResponseRedirect, HttpResponse, Http404
-from django.core.files import File
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.shortcuts import render
+from django.views import View
 
+from .forms import NotificationForm
+from .notification import insertDB, queryMessageContent, queryMessagesList
 
 # Create your views here.
-from .send_email import send_emails, queryEmailContent, queryEmailContent, queryEmailList
-from .notification import insertDB, queryMessagesList, queryMessageContent
-from .forms import NotificationForm
-from .models import Notification_DB
-
+from .send_email import queryEmailContent, queryEmailList
 
 ###### 站内信 -- Start ##########
 
@@ -33,9 +24,9 @@ class NotificationsList(LoginRequiredMixin, View):
             currentUserID = request.user.id
 
             # 将查询到的内容发送到前端
-            infos = queryMessagesList(currentUserID)
+            queryMessagesList(currentUserID)
 
-            email_infos = queryEmailList(currentUserID)
+            queryEmailList(currentUserID)
             # 设置当前页面没有缓存
             # tmp.setdefault('Cache-Control', 'no-store')
             # tmp.setdefault('Expires', 0)
@@ -93,7 +84,7 @@ class NotificationForm(LoginRequiredMixin, View):
             flag, message = insertDB(form, targetUserId, currentID)
 
             # 测试返回结果
-            if flag == False:
+            if flag is False:
                 print(message)
 
             return render(request, self.template_name, {'back_end_flag': flag})
@@ -116,7 +107,6 @@ class Email(LoginRequiredMixin, View):
             title = request.POST['title']
             content = request.POST['content']
             # 当前用户id
-            currentID = request.user.id
 
             print("title", title)
             print("targetUserId", targetUserId)
@@ -159,42 +149,46 @@ class EmailHistory(LoginRequiredMixin, View):
 
         return render(request, self.template_name, locals())
 
+
 @login_required(login_url='/hub/login/')
 def message(request):
     return render(request, 'Communication/message.html')
+
 
 class Inbox(LoginRequiredMixin, View):
     login_url = '/hub/login/'
     template_name = 'Communication/email/email_inbox.html'
 
     def get(self, request):
-           
+
         return render(request, self.template_name, locals())
-    
+
     def post(self, request):
-        
+
         return render(request, self.template_name)
+
 
 class Email_Message(LoginRequiredMixin, View):
     login_url = '/hub/login/'
     template_name = 'Communication/email/email_message.html'
 
     def get(self, request):
-           
+
         return render(request, self.template_name, locals())
-    
+
     def post(self, request):
-        
+
         return render(request, self.template_name)
+
 
 class Email_Compose(LoginRequiredMixin, View):
     login_url = '/hub/login/'
-    template_name = 'Communication/email/email_compose.html' 
+    template_name = 'Communication/email/email_compose.html'
 
     def get(self, request):
-           
+
         return render(request, self.template_name, locals())
-    
+
     def post(self, request):
-        
+
         return render(request, self.template_name)
