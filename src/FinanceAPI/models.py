@@ -1,9 +1,9 @@
+import uuid
+
 from django.db import models
-from django.db.models import F
-from django.db.models.signals import post_save
 from django.urls import reverse
 from UserAuthAPI.models import UserProfile
-import uuid
+
 # Create your models here.
 
 
@@ -11,7 +11,7 @@ class AccountBalance(models.Model):
     id = models.AutoField(primary_key=True, editable=False)
     time = models.DateTimeField(auto_now_add=True)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
-    
+
 
 class TransactionType(models.Model):
     id = models.AutoField(primary_key=True, editable=False)
@@ -20,32 +20,38 @@ class TransactionType(models.Model):
     def __str__(self):
         return self.name
 
+
 class Transaction(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid1, editable=False)
-    transaction_type = models.ForeignKey(TransactionType, on_delete=models.DO_NOTHING)
-    related_user = models.ForeignKey(UserProfile, on_delete=models.DO_NOTHING, null=True, blank=True)
+    transaction_type = models.ForeignKey(
+        TransactionType, on_delete=models.DO_NOTHING)
+    related_user = models.ForeignKey(
+        UserProfile, on_delete=models.DO_NOTHING, null=True, blank=True)
     time = models.DateTimeField(auto_now_add=True)
     is_disabled = models.BooleanField(default=False)
     is_effective = models.BooleanField(default=True)
     is_expense = models.BooleanField(default=False)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
-    note = models.CharField(max_length=500,null=True, blank=True)
+    note = models.CharField(max_length=500, null=True, blank=True)
 
     def get_absolute_url(self):
         return reverse("myCSSAhub:FinanceAPI:transaction_details", args=[str(self.id)])
+
 
 class TransactionReview(models.Model):
     transaction = models.OneToOneField(Transaction, on_delete=models.CASCADE)
     time = models.DateTimeField(auto_now_add=True)
     is_auto_created = models.BooleanField(default=False)
     is_approved = models.BooleanField(default=False)
-    operator = models.ForeignKey(UserProfile, on_delete=models.DO_NOTHING, null=True, blank=True)
-    note = models.CharField(max_length=500,null=True, blank=True)
+    operator = models.ForeignKey(
+        UserProfile, on_delete=models.DO_NOTHING, null=True, blank=True)
+    note = models.CharField(max_length=500, null=True, blank=True)
 
     def _update_transaction_status(self, created=False):
         if created:
             if self.is_approved:
-                target_transaction =  Transaction.objects.filter(id=self.transaction.id).update(is_effective=True)
+                Transaction.objects.filter(
+                    id=self.transaction.id).update(is_effective=True)
 
     def save(self, *args, **kwargs):
         created = self._state.adding
@@ -60,27 +66,29 @@ class Invoice(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     is_disabled = models.BooleanField(default=False)
     time = models.DateTimeField(auto_now_add=True)
-    related_transaction = models.ForeignKey(Transaction, on_delete=models.CASCADE,null=True,blank=True)
-    uploader = models.ForeignKey(UserProfile, on_delete=models.DO_NOTHING, null=True, blank=True)
+    related_transaction = models.ForeignKey(
+        Transaction, on_delete=models.CASCADE, null=True, blank=True)
+    uploader = models.ForeignKey(
+        UserProfile, on_delete=models.DO_NOTHING, null=True, blank=True)
     abn_number = models.CharField(max_length=11)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
-    note = models.CharField(max_length=500,null=True, blank=True)
-    pic_scan = models.ImageField(upload_to='finance/invoices/', height_field=None, width_field=None, 
-        blank=True, null=True)
+    note = models.CharField(max_length=500, null=True, blank=True)
+    pic_scan = models.ImageField(upload_to='finance/invoices/', height_field=None, width_field=None,
+                                 blank=True, null=True)
 
     def _bind_transactions(self, created=False):
         if created:
             new_transaction = Transaction.objects.create(
-                amount = self.amount,
-                related_user = self.uploader,
-                is_expense = True,
-                transaction_type = TransactionType.objects.get_or_create(name='Lodge Expense')[0],
-                is_effective = False,
+                amount=self.amount,
+                related_user=self.uploader,
+                is_expense=True,
+                transaction_type=TransactionType.objects.get_or_create(name='Lodge Expense')[
+                    0],
+                is_effective=False,
             )
             self.__class__.objects.filter(id=self.id).update(
-                related_transaction = new_transaction
+                related_transaction=new_transaction
             )
-
 
     def save(self, *args, **kwargs):
         created = self._state.adding
@@ -91,8 +99,6 @@ class Invoice(models.Model):
         return reverse("myCSSAhub:FinanceAPI:transaction_details", args=[str(self.related_transaction.id)])
 
 
-
-
 class BankTransferRecipient(models.Model):
     '''
     Store the bank transfer paid that needs to be checked
@@ -100,32 +106,34 @@ class BankTransferRecipient(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     is_disabled = models.BooleanField(default=False)
     time = models.DateTimeField(auto_now_add=True)
-    related_transaction = models.ForeignKey(Transaction, on_delete=models.CASCADE,null=True,blank=True)
+    related_transaction = models.ForeignKey(
+        Transaction, on_delete=models.CASCADE, null=True, blank=True)
     bsb = models.CharField(max_length=6)
     acc_number = models.CharField(max_length=11)
     amount = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
-    sender = models.ForeignKey(UserProfile, on_delete=models.DO_NOTHING, null=True, blank=True)
-    pic_scan = models.ImageField(upload_to='finance/bankreceipient/', height_field=None, width_field=None, 
-        blank=True, null=True)
-    note = models.CharField(max_length=500,null=True, blank=True)
+    sender = models.ForeignKey(
+        UserProfile, on_delete=models.DO_NOTHING, null=True, blank=True)
+    pic_scan = models.ImageField(upload_to='finance/bankreceipient/', height_field=None, width_field=None,
+                                 blank=True, null=True)
+    note = models.CharField(max_length=500, null=True, blank=True)
 
     def _bind_transactions(self, created=False):
         if created:
             new_transaction = Transaction.objects.create(
-                amount = self.amount,
-                related_user = self.sender,
-                is_expense = False,
-                transaction_type = TransactionType.objects.get_or_create(name='Bank Transfer-IN')[0],
-                is_effective = False,
+                amount=self.amount,
+                related_user=self.sender,
+                is_expense=False,
+                transaction_type=TransactionType.objects.get_or_create(
+                    name='Bank Transfer-IN')[0],
+                is_effective=False,
             )
             self.__class__.objects.filter(id=self.id).update(
-                related_transaction = new_transaction
+                related_transaction=new_transaction
             )
-
 
     def save(self, *args, **kwargs):
         created = self._state.adding
-        super(BankTransferRecipient, self).save( *args, **kwargs)
+        super(BankTransferRecipient, self).save(*args, **kwargs)
         self._bind_transactions(created)
 
     def get_absolute_url(self):
