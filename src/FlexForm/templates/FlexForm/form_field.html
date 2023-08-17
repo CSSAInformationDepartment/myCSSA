@@ -1,141 +1,115 @@
-{% extends 'myCSSAhub/component/_layout.html' %}
-
+{% extends "myCSSAhub/component/_layout.html" %}
 {% block pageContent %}
-
-{% load widget_tweaks %}
-<div class="col col-lg-10 col-md-12 col-sm-12">
-    <div class="card" >
-      <div class="card-header">
-        表单字段
-      </div>
-      <div class="card-body">
-          <table class="table table-responsive-sm" >
-          <thead>
-            <th>字段名称</th>
-            <th>类型</th>
-            <th>字数上限</th>
-          </thead>
-          <tbody>
-            {% if FormConfig|length > 0 %}
-            {% for row in FormConfig %}
-              <tr>
-                <td>{{ row.name }}</td>
-                <td>{{ row.field_type }}</td>
-                <td>{{ row.max_len }}</td>
-              </tr>
-            {% endfor %}
-
-            {% else %}
-            <div class="alert alert-warning" role="alert">该表还未添加任何字段</div>
-            {% endif %}
-          </tbody>
-          </table>
-      </div>
-    </div>
-</div>
-
-<div class="col col-lg-10 col-md-12 col-sm-12">
-    <div class="card">
-    <form action="{{submit_url}}" method="POST" enctype="multipart/form-data">
-        {% csrf_token %}
-        <div class="card-header">
-            <i class="fa fa-align-justify"></i> 添加新字段
-        </div>
-        <div class="card-body">
-            {% for hidden_field in form.hidden_fields %}
-                {{ hidden_field }}
-            {% endfor %}
-
-            {% if form.non_field_errors %}
-            <div class="alert alert-danger" role="alert">
-                {% for error in form.non_field_errors %}
-                    {{ error }}
-                {% endfor %}
+    {% load widget_tweaks %}
+    <div class="col col-lg-10 col-md-12 col-sm-12">
+        <div class="card">
+            <div class="card-header">表单字段</div>
+            <div class="card-body">
+                <table class="table table-responsive-sm">
+                    <thead>
+                        <th>字段名称</th>
+                        <th>类型</th>
+                        <th>字数上限</th>
+                    </thead>
+                    <tbody>
+                        {% if FormConfig|length > 0 %}
+                            {% for row in FormConfig %}
+                                <tr>
+                                    <td>{{ row.name }}</td>
+                                    <td>{{ row.field_type }}</td>
+                                    <td>{{ row.max_len }}</td>
+                                </tr>
+                            {% endfor %}
+                        {% else %}
+                            <div class="alert alert-warning" role="alert">该表还未添加任何字段</div>
+                        {% endif %}
+                    </tbody>
+                </table>
             </div>
-            {% endif %}
-            {% for field in form.visible_fields %}
-                <div class="form-group">
-                    {{ field.label_tag }}
-                    {% if field.errors %}
-                        {% render_field field class="form-control is-invalid" %}
-                        {% for error in field.errors %}
-                            <div class="invalid-feedback">
-                                {{ error }}
-                            </div>
-                        {% endfor %}
-                    {% else %}
-                        {% render_field field class="form-control" %}
-                    {% endif %}
-
-                    {% if field.help_text %}
-                        <small class="form-text text-muted">{{ field.help_text }}</small>
-                    {% endif %}
-                </div>
-            {% endfor %}
         </div>
-        <div class='card-footer'>
-            <button class="btn btn-sm btn-success" type="submit"><i class="fa fa-dot-circle-o"></i> 添加字段</button>
-            <button class="btn btn-sm btn-danger" type="reset"><i class="fa fa-ban"></i> 取消 </button>
-        </div>
-    </form>
     </div>
-</div>
-
-<div class="col col-lg-10 col-md-12 col-sm-12">
-    <div class="card">
-    <form action="{{submit_url}}" method="POST" enctype="multipart/form-data">
-        {% csrf_token %}
-        {% for hidden_field in form.hidden_fields %}
-            {{ hidden_field }}
-        {% endfor %}
-        <div class="card-header">
-            <i class="fa fa-align-justify"></i> 绑定到活动
-        </div>
-        <div class="card-body">
-            <label>当前绑定活动：</label>
-                <ul class="list-group pb-2">
-                    {% if bind_events %}
-                        {% for eventlog in bind_events %}
-                            <li class="list-group-item">{{eventlog.event.eventName}}</li>
-                        {% endfor %}
-                    {% else %}
-                        <li class="list-group-item">此表未绑定任何活动</li>
-                    {% endif %}
-                </ul>
-            {% if event_bind_form.non_field_errors %}
-            <div class="alert alert-danger" role="alert">
-                {% for error in event_bind_form.non_field_errors %}
-                    {{ error }}
-                {% endfor %}
-            </div>
-            {% endif %}
-
-            {% for field in event_bind_form.visible_fields %}
-                <div class="form-group">
-                    {{ field.label_tag }}
-                    {% if field.errors %}
-                        {% render_field field class="form-control is-invalid" %}
-                        {% for error in field.errors %}
-                            <div class="invalid-feedback">
-                                {{ error }}
-                            </div>
-                        {% endfor %}
-                    {% else %}
-                        {% render_field field class="form-control" %}
-                    {% endif %}
-
-                    {% if field.help_text %}
-                        <small class="form-text text-muted">{{ field.help_text }}</small>
-                    {% endif %}
+    <div class="col col-lg-10 col-md-12 col-sm-12">
+        <div class="card">
+            <form action="{{ submit_url }}" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="card-header">
+                    <i class="fa fa-align-justify"></i> 添加新字段
                 </div>
-            {% endfor %}
+                <div class="card-body">
+                    {% for hidden_field in form.hidden_fields %}{{ hidden_field }}{% endfor %}
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-danger" role="alert">
+                            {% for error in form.non_field_errors %}{{ error }}{% endfor %}
+                        </div>
+                    {% endif %}
+                    {% for field in form.visible_fields %}
+                        <div class="form-group">
+                            {{ field.label_tag }}
+                            {% if field.errors %}
+                                {% render_field field class="form-control is-invalid" %}
+                                {% for error in field.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+                            {% else %}
+                                {% render_field field class="form-control" %}
+                            {% endif %}
+                            {% if field.help_text %}<small class="form-text text-muted">{{ field.help_text }}</small>{% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="card-footer">
+                    <button class="btn btn-sm btn-success" type="submit">
+                        <i class="fa fa-dot-circle-o"></i> 添加字段
+                    </button>
+                    <button class="btn btn-sm btn-danger" type="reset">
+                        <i class="fa fa-ban"></i> 取消
+                    </button>
+                </div>
+            </form>
         </div>
-        <div class='card-footer'>
-            <button class="btn btn-sm btn-success" type="submit"><i class="fa fa-dot-circle-o"></i> 绑定</button>
-            <button class="btn btn-sm btn-danger" type="reset"><i class="fa fa-ban"></i> 取消 </button>
-        </div>
-    </form>
     </div>
-</div>
-
+    <div class="col col-lg-10 col-md-12 col-sm-12">
+        <div class="card">
+            <form action="{{ submit_url }}" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {% for hidden_field in form.hidden_fields %}{{ hidden_field }}{% endfor %}
+                <div class="card-header">
+                    <i class="fa fa-align-justify"></i> 绑定到活动
+                </div>
+                <div class="card-body">
+                    <label>当前绑定活动：</label>
+                    <ul class="list-group pb-2">
+                        {% if bind_events %}
+                            {% for eventlog in bind_events %}<li class="list-group-item">{{ eventlog.event.eventName }}</li>{% endfor %}
+                        {% else %}
+                            <li class="list-group-item">此表未绑定任何活动</li>
+                        {% endif %}
+                    </ul>
+                    {% if event_bind_form.non_field_errors %}
+                        <div class="alert alert-danger" role="alert">
+                            {% for error in event_bind_form.non_field_errors %}{{ error }}{% endfor %}
+                        </div>
+                    {% endif %}
+                    {% for field in event_bind_form.visible_fields %}
+                        <div class="form-group">
+                            {{ field.label_tag }}
+                            {% if field.errors %}
+                                {% render_field field class="form-control is-invalid" %}
+                                {% for error in field.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+                            {% else %}
+                                {% render_field field class="form-control" %}
+                            {% endif %}
+                            {% if field.help_text %}<small class="form-text text-muted">{{ field.help_text }}</small>{% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="card-footer">
+                    <button class="btn btn-sm btn-success" type="submit">
+                        <i class="fa fa-dot-circle-o"></i> 绑定
+                    </button>
+                    <button class="btn btn-sm btn-danger" type="reset">
+                        <i class="fa fa-ban"></i> 取消
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
 {% endblock pageContent %}
