@@ -32,7 +32,7 @@
 
 .city-picker-span.focus,
 .city-picker-span.open {
-    border-bottom-color: #46A4FF;
+    border-bottom-color: #46a4ff;
 }
 
 .city-picker-span.open > .arrow {
@@ -77,7 +77,7 @@
     padding: 8px 22px;
     border-left: 1px solid #ccc;
     border-bottom: 1px solid transparent;
-    color: #4D4D4D;
+    color: #4d4d4d;
     text-align: center;
     outline: 0;
     text-decoration: none;
@@ -89,7 +89,7 @@
 .city-select-tab > a.active {
     background: #fff;
     border-bottom: 1px solid #fff;
-    color: #46A4FF;
+    color: #46a4ff;
 }
 
 .city-select-tab > a:first-child {
@@ -151,11 +151,11 @@
 .city-select a:focus {
     background-color: #f1f8ff;
     border-radius: 2px;
-    color: #46A4FF;
+    color: #46a4ff;
 }
 
 .city-select a.active {
-    background-color: #46A4FF;
+    background-color: #46a4ff;
     color: #fff;
     border-radius: 2px;
 }

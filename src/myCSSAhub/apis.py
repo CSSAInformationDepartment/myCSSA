@@ -1,4 +1,6 @@
-import os, operator
+import operator
+import os
+
 
 def GetDocViewData(instance, headers, user_info_required, attachments, **kwargs):
     '''
@@ -7,18 +9,19 @@ def GetDocViewData(instance, headers, user_info_required, attachments, **kwargs)
         - user_info_required
         - attachments
     '''
-    view_bag = {'Data':[]}
+    view_bag = {'Data': []}
     view_bag['id'] = instance.pk
 
     for item in headers:
         view_bag['Data'].append({
-            'name':item['name'],
-            'value':operator.attrgetter(item['dbAttr'])(instance)
-       })
-    
+            'name': item['name'],
+            'value': operator.attrgetter(item['dbAttr'])(instance)
+        })
+
     if user_info_required:
         from UserAuthAPI.models import UserProfile
-        userinfo = UserProfile.objects.filter(user__id=instance.user.id).first()
+        userinfo = UserProfile.objects.filter(
+            user__id=instance.user.id).first()
         if userinfo:
             view_bag['AccountInfo'] = instance.user
             view_bag['UserInfo'] = userinfo
@@ -36,6 +39,3 @@ def GetDocViewData(instance, headers, user_info_required, attachments, **kwargs)
             view_bag['file_ext'] = 'office'
 
     return {'DocView': view_bag}
-
-    
-

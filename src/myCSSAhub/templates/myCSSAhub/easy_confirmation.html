@@ -1,52 +1,71 @@
-{% extends 'components/base_page.html' %}
+{% extends "components/base_page.html" %}
 {% block 'extra_header' %}
-{% load static %}
-<link rel="stylesheet" type="text/css" href="{% static 'myCSSAhub/css/registrationForm.css'%}">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.0-alpha14/css/tempusdominus-bootstrap-4.min.css"/>
+  {% load static %}
+  <link rel="stylesheet"
+        type="text/css"
+        href="{% static 'myCSSAhub/css/registrationForm.css' %}">
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.0-alpha14/css/tempusdominus-bootstrap-4.min.css" />
 {% endblock 'extra_header' %}
-
 {% block 'pg_body' %}
-
-<style>
-  #bloc-1 {
-    background-image: url("{% static 'myCSSAhub/img/bg_Register.jpg' %}");
-    background-color: rgba(255, 255, 255, 0.4);
-    background-blend-mode: lighten;
-  }
-</style>
-
-<div class="bloc none l-bloc" id="bloc-1">
-  <div class="container bloc-fill-screen">
-    <div class="row justify-content-md-center justify-content-center">
-      <div class="form-label-group required jumbotron justify-content-center">
+  <style>
+      #bloc-1 {
+          background-image: url("{% static 'myCSSAhub/img/bg_Register.jpg' %}");
+          background-color: rgba(255, 255, 255, 0.4);
+          background-blend-mode: lighten;
+      }
+  </style>
+  <div class="bloc none l-bloc" id="bloc-1">
+    <div class="container bloc-fill-screen">
+      <div class="row justify-content-md-center justify-content-center">
+        <div class="form-label-group required jumbotron justify-content-center">
           <h2 class="text-center">
-            恭喜你！<br>已经完成注册<br><small>可以点击活动消息进行活动报名哦！</small>
+            恭喜你！
+            <br>
+            已经完成注册
+            <br>
+            <small>可以点击活动消息进行活动报名哦！</small>
           </h2>
           <p class="lead text-center">
             <br>
             请于Oweek前往CSSA摊位办理会员卡
-            <br> 如有疑问请联系<a href="{% url 'PublicSite:contact' %}"><strong>小助手（二维码）</strong></a>
+            <br>
+            如有疑问请联系<a href="{% url 'PublicSite:contact' %}"><strong>小助手（二维码）</strong></a>
           </p>
           <hr />
-          <p class="lead text-left">成为会员您将享受以下优惠:<br><small>*点击图标查看详细信息</small></p>
+          <p class="lead text-left">
+            成为会员您将享受以下优惠:
+            <br>
+            <small>*点击图标查看详细信息</small>
+          </p>
           <div class="row form-label-group">
-            <a href="https://mp.weixin.qq.com/s/DXXb7g2v5hiTT9MyvkoGOQ" class="iconfont col-6 col-md-6"><i
-                class="iconfont">&#xe63d;</i></a>
+            <a href="https://mp.weixin.qq.com/s/DXXb7g2v5hiTT9MyvkoGOQ"
+               class="iconfont col-6 col-md-6"><i class="iconfont">&#xe63d;</i></a>
             <a href="{% url 'PublicSite:events' %}" class="iconfont col-6 col-md-6"><i class="iconfont">&#xeab5;</i></a>
-            <a href="https://mp.weixin.qq.com/s/DXXb7g2v5hiTT9MyvkoGOQ" class="col-6 col-md-6 text-center">
+            <a href="https://mp.weixin.qq.com/s/DXXb7g2v5hiTT9MyvkoGOQ"
+               class="col-6 col-md-6 text-center">
               <p>商家折扣</p>
             </a>
-            <a href="{% url 'PublicSite:events' %}" class="col-6 col-md-6 text-center"><p>活动报名</p></a>
+            <a href="{% url 'PublicSite:events' %}"
+               class="col-6 col-md-6 text-center">
+              <p>活动报名</p>
             </a>
-          </div>
-          <div class="row form-label-group">
-            <a href="" class="iconfont col-6 col-md-6"><i class="iconfont">&#xe607;</i></a>
-            <div class="iconfont col-6 col-md-6"></div>
-            <a href="" class="col-6 col-md-6 text-center"><p>墨城攻略<br>(请于Oweek前往CSSA摊位免费领取哦)</p></a>
-          </div>
+          </a>
+        </div>
+        <div class="row form-label-group">
+          <a href="" class="iconfont col-6 col-md-6"><i class="iconfont">&#xe607;</i></a>
+          <div class="iconfont col-6 col-md-6"></div>
+          <a href="" class="col-6 col-md-6 text-center">
+            <p>
+              墨城攻略
+              <br>
+              (请于Oweek前往CSSA摊位免费领取哦)
+            </p>
+          </a>
         </div>
       </div>
     </div>
   </div>
+</div>
 </div>
 {% endblock 'pg_body' %}

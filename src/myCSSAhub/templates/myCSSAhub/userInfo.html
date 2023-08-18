@@ -1,300 +1,298 @@
- {% extends 'myCSSAhub/component/_layout.html' %}
+{% extends "myCSSAhub/component/_layout.html" %}
+{% block pageTitle %}
+  用户信息
+{% endblock pageTitle %}
+{% block ExtraHeader %}
+  {% load static %}
+  <link rel="stylesheet"
+        type="text/css"
+        href="{% static 'PublicSite/avatar.css' %}">
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.1/cropper.min.css"
+        crossorigin="anonymous">
+  <link rel="stylesheet"
+        href="https://use.fontawesome.com/releases/v5.5.0/css/all.css"
+        crossorigin="anonymous">
+  <style rel="stylesheet/scss">
+      img {
+          max-width: 100%;
+      }
 
- {% block pageTitle %}
- 用户信息
- {% endblock  %}
-
-
- {% block ExtraHeader %}
- {% load static %}
- <link rel="stylesheet" type="text/css" href="{% static 'PublicSite/avatar.css' %}">
- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.1/cropper.min.css" crossorigin="anonymous">
- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" crossorigin="anonymous">
-
-<style rel="stylesheet/scss">
-    img {
-      max-width: 100%;
-    }
-    .hide {
-      display: none;
-    }
-
-</style>
- 
- {% endblock ExtraHeader %}
-
+      .hide {
+          display: none;
+      }
+  </style>
+{% endblock ExtraHeader %}
 {% block pageContent %}
-<div class="card">
-  <div class="card-header card-header-primary">
+  <div class="card">
+    <div class="card-header card-header-primary">
       {% load static %}
-     
-          <div class="col-md-6">
-            <a data-toggle="modal" data-target="#modal">
-              {% if user.userprofile.avatar %} 
-                <img class="img-avatar" src="{{ user.userprofile.avatar.url }}" style="height:70px;width:70px;"/>
-              {% else %} 
-                <img class="img-avatar" src="{% static 'myCSSAhub/img/avatar_placeholder.png' %}" style="height:70px;width:70px;"/>
-            {% endif %}
-          </a>
-          </div>
-    <div class="col pull-right">
+      <div class="col-md-6">
+        <a data-toggle="modal" data-target="#modal">
+          {% if user.userprofile.avatar %}
+            <img class="img-avatar"
+                 src="{{ user.userprofile.avatar.url }}"
+                 style="height:70px;
+                        width:70px" />
+          {% else %}
+            <img class="img-avatar"
+                 src="{% static 'myCSSAhub/img/avatar_placeholder.png' %}"
+                 style="height:70px;
+                        width:70px" />
+          {% endif %}
+        </a>
+      </div>
+      <div class="col pull-right"></div>
     </div>
-  </div>
-  <div class="card-body">
-    <div class="col-md-6 mb-4">
+    <div class="card-body">
+      <div class="col-md-6 mb-4">
         <ul class="nav nav-tabs" role="tablist">
-        <li class="nav-item">
-        <a class="nav-link active show" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">基本信息</a>
-        </li>
-        <li class="nav-item">
-        <a class="nav-link" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">专业背景信息</a>
-        </li>
-        <li class="nav-item">
-        <a class="nav-link" data-toggle="tab" href="#messages" role="tab" aria-controls="messages">账号偏好设置</a>
-        </li>
+          <li class="nav-item">
+            <a class="nav-link active show"
+               data-toggle="tab"
+               href="#home"
+               role="tab"
+               aria-controls="home"
+               aria-selected="true">基本信息</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link"
+               data-toggle="tab"
+               href="#profile"
+               role="tab"
+               aria-controls="profile"
+               aria-selected="false">专业背景信息</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link"
+               data-toggle="tab"
+               href="#messages"
+               role="tab"
+               aria-controls="messages">账号偏好设置</a>
+          </li>
         </ul>
         <div class="tab-content">
-        <div class="tab-pane active show" id="home" role="tabpanel">
+          <div class="tab-pane active show" id="home" role="tabpanel">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="display-email">电子邮箱</label>
+                  <input class="form-control"
+                         id="display-email"
+                         value="{{ data.user.email }}"
+                         disabled />
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="display-telNumber">电话</label>
+                  <input class="form-control"
+                         id="display-telNumber"
+                         value="{{ data.user.telNumber }}"
+                         disabled />
+                </div>
+              </div>
+            </div>
+            <form method="post"
+                  action="{% url 'myCSSAhub:userInfo' %}"
+                  enctype="multipart/form-data">
+              {% csrf_token %}
+              {% load widget_tweaks %}
+              {% for hidden_field in form.hidden_fields %}{{ hidden_field }}{% endfor %}
+              {% if form.non_field_errors %}
+                <div class="alert alert-danger" role="alert">
+                  {% for error in form.non_field_errors %}{{ error }}{% endfor %}
+                </div>
+              {% endif %}
               <div class="row">
-                  <div class="col-md-6">
-                    <div class="form-group">
-                      <label for="display-email">电子邮箱</label>
-                      <input class="form-control" id="display-email" value="{{data.user.email}}" disabled/>
-                    </div>
-                  </div>
-                  <div class="col-md-6">
-                    <div class="form-group">
-                      <label for="display-telNumber">电话</label>
-                      <input class="form-control" id="display-telNumber" value="{{data.user.telNumber}}" disabled/>
-                    </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="lastNameEN">英文姓（拼音）</label>
+                    {% if form.is_bound %}
+                      {% if form.lastNameEN.errors %}
+                        {% render_field form.lastNameEN class="form-control is-invalid" value=data.lastNameEN %}
+                        {% for error in form.lastNameEN.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+                      {% else %}
+                        {% render_field form.lastNameEN class="form-control is-valid" value=data.lastNameEN %}
+                      {% endif %}
+                    {% else %}
+                      {% render_field form.lastNameEN class="form-control" value=data.lastNameEN %}
+                    {% endif %}
+                    {% if form.lastNameEN.help_text %}
+                      <small class="form-text text-muted">{{ form.lastNameEN.help_text }}</small>
+                    {% endif %}
                   </div>
                 </div>
-                <form method="POST" action="{% url 'myCSSAhub:userInfo' %}" enctype="multipart/form-data">
-                  {% csrf_token %}
-                  {% load widget_tweaks %}
-                  {% for hidden_field in form.hidden_fields %}
-                  {{ hidden_field }}
-                  {% endfor %}
-                  {% if form.non_field_errors %}
-                  <div class="alert alert-danger" role="alert">
-                      {% for error in form.non_field_errors %}
-                      {{ error }}
-                      {% endfor %}
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="firstNameEN">英文名（拼音）</label>
+                    {% if form.is_bound %}
+                      {% if form.firstNameEN.errors %}
+                        {% render_field form.firstNameEN class="form-control is-invalid" value=data.firstNameEN %}
+                        {% for error in form.firstNameEN.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+                      {% else %}
+                        {% render_field form.firstNameEN class="form-control is-valid" value=data.firstNameEN %}
+                      {% endif %}
+                    {% else %}
+                      {% render_field form.firstNameEN class="form-control" value=data.firstNameEN %}
+                    {% endif %}
+                    {% if form.firstNameEN.help_text %}
+                      <small class="form-text text-muted">{{ form.firstNameEN.help_text }}</small>
+                    {% endif %}
                   </div>
-                  {% endif %}
-                    <div class="row">
-                      <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="lastNameEN">英文姓（拼音）</label>
-                            {% if form.is_bound %}
-                              {% if form.lastNameEN.errors %}
-                                  {% render_field form.lastNameEN class="form-control is-invalid" value=data.lastNameEN%}
-                                  {% for error in form.lastNameEN.errors %}
-                                  <div class="invalid-feedback">
-                                      {{ error }}
-                                  </div>
-                                  {% endfor %}
-                              {% else %}
-                                  {% render_field form.lastNameEN class="form-control is-valid" value=data.lastNameEN%}
-                              {% endif %}
-                            {% else %}
-                                {% render_field form.lastNameEN class="form-control" value=data.lastNameEN%}
-                            {% endif %}
-                            {% if form.lastNameEN.help_text %}
-                                <small class="form-text text-muted">{{ form.lastNameEN.help_text }}</small>
-                            {% endif %}
-                        </div>
-                      </div>
-                      <div class="col-md-6">
-                          <div class="form-group">
-                            <label for="firstNameEN">英文名（拼音）</label>
-                            {% if form.is_bound %}
-                              {% if form.firstNameEN.errors %}
-                                  {% render_field form.firstNameEN class="form-control is-invalid" value=data.firstNameEN%}
-                                  {% for error in form.firstNameEN.errors %}
-                                  <div class="invalid-feedback">
-                                      {{ error }}
-                                  </div>
-                                  {% endfor %}
-                              {% else %}
-                                  {% render_field form.firstNameEN class="form-control is-valid" value=data.firstNameEN%}
-                              {% endif %}
-                            {% else %}
-                                {% render_field form.firstNameEN class="form-control" value=data.firstNameEN%}
-                            {% endif %}
-                            {% if form.firstNameEN.help_text %}
-                                <small class="form-text text-muted">{{ form.firstNameEN.help_text }}</small>
-                            {% endif %}
-                        </div>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="lastNameCN">中文姓</label>
-                            {% if form.is_bound %}
-                              {% if form.lastNameCN.errors %}
-                                  {% render_field form.lastNameCN class="form-control is-invalid" value=data.lastNameCN%}
-                                  {% for error in form.lastNameCN.errors %}
-                                  <div class="invalid-feedback">
-                                      {{ error }}
-                                  </div>
-                                  {% endfor %}
-                              {% else %}
-                                  {% render_field form.lastNameCN class="form-control is-valid" value=data.lastNameCN%}
-                              {% endif %}
-                            {% else %}
-                                {% render_field form.lastNameCN class="form-control" value=data.lastNameCN%}
-                            {% endif %}
-                            {% if form.lastNameCN.help_text %}
-                                <small class="form-text text-muted">{{ form.lastNameCN.help_text }}</small>
-                            {% endif %}
-                        </div>
-                      </div>
-                      <div class="col-md-6">
-                          <div class="form-group">
-                            <label for="firstNameCN">中文名</label>
-                            {% if form.is_bound %}
-                              {% if form.firstNameCN.errors %}
-                                  {% render_field form.firstNameCN class="form-control is-invalid" value=data.firstNameCN %}
-                                  {% for error in form.firstNameCN.errors %}
-                                  <div class="invalid-feedback">
-                                      {{ error }}
-                                  </div>
-                                  {% endfor %}
-                              {% else %}
-                                  {% render_field form.firstNameCN class="form-control is-valid" value=data.firstNameCN %}
-                              {% endif %}
-                            {% else %}
-                                {% render_field form.firstNameCN class="form-control" value=data.firstNameCN %}
-                            {% endif %}
-                            {% if form.firstNameCN.help_text %}
-                                <small class="form-text text-muted">{{ form.firstNameCN.help_text }}</small>
-                            {% endif %}
-                        </div>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-md-12">
-                          <div class="form-group">
-                            <label for="address">地址</label>
-                            {% if form.is_bound %}
-                              {% if form.address.errors %}
-                                  {% render_field form.address class="form-control is-invalid" value=data.address %}
-                                  {% for error in form.address.errors %}
-                                  <div class="invalid-feedback">
-                                      {{ error }}
-                                  </div>
-                                  {% endfor %}
-                              {% else %}
-                                  {% render_field form.address class="form-control is-valid" value=data.address %}
-                              {% endif %}
-                            {% else %}
-                                {% render_field form.address class="form-control" value=data.address %}
-                            {% endif %}
-                            {% if form.address.help_text %}
-                                <small class="form-text text-muted">{{ form.address.help_text }}</small>
-                            {% endif %}
-                        </div>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-md-4">
-                          <div class="form-group">
-                            <label for="postcode">邮编</label>
-                            {% if form.is_bound %}
-                              {% if form.postcode.errors %}
-                                  {% render_field form.postcode class="form-control is-invalid" value=data.postcode %}
-                                  {% for error in form.postcode.errors %}
-                                  <div class="invalid-feedback">
-                                      {{ error }}
-                                  </div>
-                                  {% endfor %}
-                              {% else %}
-                                  {% render_field form.postcode class="form-control is-valid" value=data.postcode %}
-                              {% endif %}
-                            {% else %}
-                                {% render_field form.postcode class="form-control" value=data.postcode %}
-                            {% endif %}
-                            {% if form.postcode.help_text %}
-                                <small class="form-text text-muted">{{ form.postcode.help_text }}</small>
-                            {% endif %}
-                        </div>
-                      </div>
-                    </div>
-                    <button type="submit" class="btn btn-primary pull-right">更新个人基本信息</button>
-                    <div class="clearfix"></div>
-                  </form>
-        </div>
-        <div class="tab-pane" id="profile" role="tabpanel">
-          该项信息编辑暂未开放，请等待后续更新
-        </div>
-        <div class="tab-pane" id="messages" role="tabpanel">
-        该项信息编辑暂未开放，请等待后续更新
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="lastNameCN">中文姓</label>
+                    {% if form.is_bound %}
+                      {% if form.lastNameCN.errors %}
+                        {% render_field form.lastNameCN class="form-control is-invalid" value=data.lastNameCN %}
+                        {% for error in form.lastNameCN.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+                      {% else %}
+                        {% render_field form.lastNameCN class="form-control is-valid" value=data.lastNameCN %}
+                      {% endif %}
+                    {% else %}
+                      {% render_field form.lastNameCN class="form-control" value=data.lastNameCN %}
+                    {% endif %}
+                    {% if form.lastNameCN.help_text %}
+                      <small class="form-text text-muted">{{ form.lastNameCN.help_text }}</small>
+                    {% endif %}
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="firstNameCN">中文名</label>
+                    {% if form.is_bound %}
+                      {% if form.firstNameCN.errors %}
+                        {% render_field form.firstNameCN class="form-control is-invalid" value=data.firstNameCN %}
+                        {% for error in form.firstNameCN.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+                      {% else %}
+                        {% render_field form.firstNameCN class="form-control is-valid" value=data.firstNameCN %}
+                      {% endif %}
+                    {% else %}
+                      {% render_field form.firstNameCN class="form-control" value=data.firstNameCN %}
+                    {% endif %}
+                    {% if form.firstNameCN.help_text %}
+                      <small class="form-text text-muted">{{ form.firstNameCN.help_text }}</small>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label for="address">地址</label>
+                    {% if form.is_bound %}
+                      {% if form.address.errors %}
+                        {% render_field form.address class="form-control is-invalid" value=data.address %}
+                        {% for error in form.address.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+                      {% else %}
+                        {% render_field form.address class="form-control is-valid" value=data.address %}
+                      {% endif %}
+                    {% else %}
+                      {% render_field form.address class="form-control" value=data.address %}
+                    {% endif %}
+                    {% if form.address.help_text %}<small class="form-text text-muted">{{ form.address.help_text }}</small>{% endif %}
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label for="postcode">邮编</label>
+                    {% if form.is_bound %}
+                      {% if form.postcode.errors %}
+                        {% render_field form.postcode class="form-control is-invalid" value=data.postcode %}
+                        {% for error in form.postcode.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+                      {% else %}
+                        {% render_field form.postcode class="form-control is-valid" value=data.postcode %}
+                      {% endif %}
+                    {% else %}
+                      {% render_field form.postcode class="form-control" value=data.postcode %}
+                    {% endif %}
+                    {% if form.postcode.help_text %}<small class="form-text text-muted">{{ form.postcode.help_text }}</small>{% endif %}
+                  </div>
+                </div>
+              </div>
+              <button type="submit" class="btn btn-primary pull-right">更新个人基本信息</button>
+              <div class="clearfix"></div>
+            </form>
+          </div>
+          <div class="tab-pane" id="profile" role="tabpanel">该项信息编辑暂未开放，请等待后续更新</div>
+          <div class="tab-pane" id="messages" role="tabpanel">该项信息编辑暂未开放，请等待后续更新</div>
         </div>
       </div>
     </div>
   </div>
-</div>
-
-<div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <form id="crop_form" method="post" action={% url 'myCSSAhub:update_user_avatar' %} enctype="multipart/form-data">
-     {% csrf_token %}
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">上传新头像</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
+  <div class="modal fade"
+       id="modal"
+       tabindex="-1"
+       role="dialog"
+       aria-labelledby="exampleModalLabel"
+       aria-hidden="true">
+    <form id="crop_form"
+          method="post"
+          action="{% url 'myCSSAhub:update_user_avatar' %}"
+          enctype="multipart/form-data">
+      {% csrf_token %}
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">上传新头像</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
             <div class="form-group">
-                <button class="btn btn-primary btn-block" id="upload-img"> 点击此处上传新头像 </button>
-
-                <input class="hide" name="avatar" type="file" id="file-input" accept="image/jpeg" />
-                <input name="x" type="hidden" id="anchor-x"/>
-                <input name="y" type="hidden" id="anchor-y"/>
-                <input name="width" type="hidden" id="anchor-width"/>
-                <input name="height" type="hidden" id="anchor-height"/>
-                <input name="cropped_b64" type="hidden" id="cropped_b64"/>
+              <button class="btn btn-primary btn-block" id="upload-img">点击此处上传新头像</button>
+              <input class="hide"
+                     name="avatar"
+                     type="file"
+                     id="file-input"
+                     accept="image/jpeg" />
+              <input name="x" type="hidden" id="anchor-x" />
+              <input name="y" type="hidden" id="anchor-y" />
+              <input name="width" type="hidden" id="anchor-width" />
+              <input name="height" type="hidden" id="anchor-height" />
+              <input name="cropped_b64" type="hidden" id="cropped_b64" />
             </div>
-            <div id='file-size-exceed-warning' class="alert alert-danger hide" role="alert">
-              上传的文件过大! 头像图片格式只可为.jpg/.jpeg, 且不能超过2Mb
-            </div>
+            <div id='file-size-exceed-warning'
+                 class="alert alert-danger hide"
+                 role="alert">上传的文件过大! 头像图片格式只可为.jpg/.jpeg, 且不能超过2Mb</div>
             <div class="row" style="max-height:100%">
               <div class="col-12 col-md-6 col-lg-6">
                 <div class="result"></div>
               </div>
               <div class="col-12 col-md-6 col-lg-6">
-               
                 <div class="col hide img-result" style="max-width:100%">
-                   效果预览：
+                  效果预览：
                   <div class="my-3 d-block mx-auto avatar-lg cropped-preview rounded-circle">
                     <img class="img-fluid" src="" alt="">
                   </div>
                 </div>
               </div>
             </div>
-        </div>
-        <div class="modal-footer">
-              <button class="btn btn-primary hide" id="submit-cropped"> 保存 </button>
-              <button class="btn btn-secondary" type="reset" data-dismiss="modal"> 取消 </button>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-primary hide" id="submit-cropped">保存</button>
+            <button class="btn btn-secondary" type="reset" data-dismiss="modal">取消</button>
+          </div>
         </div>
       </div>
-    </div>
-  </form>
-</div> 
-
-
-{% endblock %}
-
+    </form>
+  </div>
+{% endblock pageContent %}
 {% block ExtraJS %}
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.1/cropper.min.js"></script>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.23.0/moment.min.js"></script>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.0-alpha14/js/tempusdominus-bootstrap-4.min.js"></script>
-
-<script>
+  <script type="text/javascript"
+          src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.1/cropper.min.js"></script>
+  <script type="text/javascript"
+          src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.23.0/moment.min.js"></script>
+  <script type="text/javascript"
+          src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.0-alpha14/js/tempusdominus-bootstrap-4.min.js"></script>
+  <script>
 
 $('.cropped-preview').css({ 
   width: '100%', //width,  sets the starting size to the same as orig image  
@@ -382,6 +380,5 @@ crop_form.addEventListener('submit',(e)=>{
 
 
 
-</script>
-      
+  </script>
 {% endblock ExtraJS %}

@@ -1,59 +1,49 @@
-{% extends 'myCSSAhub/component/_layout.html' %}
-
-{% block pageTitle %}
-2019 Sem2 CSSA迎新随机会员卡号滚动抽奖
-{% endblock %}
-
+{% extends "myCSSAhub/component/_layout.html" %}
+{% block pageTitle %}2019 Sem2 CSSA迎新随机会员卡号滚动抽奖{% endblock pageTitle %}
 {% block ExtraHeader %}
-{% load static %}
-<link rel="stylesheet" type="text/css" href="{% static 'myCSSAhub/css/luckydraw.css'%}">
+    {% load static %}
+    <link rel="stylesheet"
+          type="text/css"
+          href="{% static 'myCSSAhub/css/luckydraw.css' %}">
 {% endblock ExtraHeader %}
-
-
 {% block pageContent %}
-<div class="luckydraw_body">
-    <!-- 主体盒子-->
-    <div class="luckydraw_main_box">
-
-        <!-- 喜迎新年-->
-        <!--<div class="title-box">-->
-        <!--<img src="images/pc-titile.png" alt="">-->
-        <!--</div>-->
-        <!-- 装饰点缀-->
-        <!--<div class="desc-box">-->
-        <!--<img src="images/dianzhui.png" alt="">-->
-        <!--</div>		-->
-        <div class="luckydraw_main">
-            <!-- 数字背景盒子-->
-            <div class="luckydraw_num-bg-box">
-                <!-- 数字盒子-->
-                <div class="luckydraw_num_box">
-                    <div class="luckydraw_num"></div>
-                    <div class="luckydraw_num"></div>
-                    <div class="luckydraw_num"></div>
-                    <div class="luckydraw_num"></div>
-                    <div class="luckydraw_num"></div>
-                    <div class="luckydraw_num"></div>
-                    <div class="luckydraw_num"></div>
-
+    <div class="luckydraw_body">
+        <!-- 主体盒子-->
+        <div class="luckydraw_main_box">
+            <!-- 喜迎新年-->
+            <!--<div class="title-box">-->
+            <!--<img src="images/pc-titile.png" alt="">-->
+            <!--</div>-->
+            <!-- 装饰点缀-->
+            <!--<div class="desc-box">-->
+            <!--<img src="images/dianzhui.png" alt="">-->
+            <!--</div>		-->
+            <div class="luckydraw_main">
+                <!-- 数字背景盒子-->
+                <div class="luckydraw_num-bg-box">
+                    <!-- 数字盒子-->
+                    <div class="luckydraw_num_box">
+                        <div class="luckydraw_num"></div>
+                        <div class="luckydraw_num"></div>
+                        <div class="luckydraw_num"></div>
+                        <div class="luckydraw_num"></div>
+                        <div class="luckydraw_num"></div>
+                        <div class="luckydraw_num"></div>
+                        <div class="luckydraw_num"></div>
+                    </div>
                 </div>
             </div>
         </div>
+        <!-- 操作按钮-->
+        <div class="luckydraw_btn-box">
+            <div class="btn start">开始抽奖</div>
+            <div class="btn stop">停止抽奖</div>
+        </div>
     </div>
-    <!-- 操作按钮-->
-    <div class="luckydraw_btn-box">
-        <div class="btn start">开始抽奖</div>
-        <div class="btn stop">停止抽奖</div>
-    </div>
-
-</div>
-
-
-{% endblock %}
-
+{% endblock pageContent %}
 {% block ExtraJS %}
-<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-<script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script>
     axios.defaults.xsrfCookieName = 'csrftoken'
     axios.defaults.xsrfHeaderName = "X-CSRFTOKEN"
     var arr=[]; 
@@ -142,10 +132,6 @@
         });
     });
     
-</script>
-
-
-
-
-<script src="{% static 'myCSSAhub/js/easing.js'%}"></script>
+    </script>
+    <script src="{% static 'myCSSAhub/js/easing.js'%}"></script>
 {% endblock ExtraJS %}
