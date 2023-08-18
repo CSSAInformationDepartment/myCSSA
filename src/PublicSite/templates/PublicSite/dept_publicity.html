@@ -1,141 +1,124 @@
-{% extends 'components/base_page.html' %}
+{% extends "components/base_page.html" %}
 {% block 'pg_body' %}
-<!-- bloc-4 -->
-{% load static %}
-
-<div class="bloc dept-header l-bloc">
-    <div class="py-3"> 
-		<hr >
-		<h1 style="font-family: 'PingFang SC'; color: #393d3e; font-weight: normal; " class="mg-md text-center">
-		宣传部
-		</h1>
-		<h3 style="font-family: 'PingFang SC'; color: #393d3e; font-weight: normal; " class="mg-md text-center">
-		Department of Publicity
-		</h3>
-		<hr >
-	</div>
-    <div class="row" style="min-height:20rem;">
-        <div class="col-lg-4 card" style='border:none;'>
-            <div class="card-body text-center">
-                <div class="my-3 d-block mx-auto avatar-lg rounded-circle">
-                    {% if view_bag.director.member.avatar %}
-                        <img class='img-fluid' src="{{view_bag.director.member.avatar.url}}" />
-                    {% else %}
-                        <img class="img-fluid" src="{% static 'PublicSite/img/placeholder-user.png' %}">
-                    {% endif %}
-                </div>
-                <h4 class="card-title ">部长 Director</h4>
-                <h3>{{view_bag.director.member.get_full_EN_name}}</h3>
-            </div>
-        </div>
-        <div class="col-lg-8 card" style='border:none;'>
-            <div class='my-auto mx-auto'>
-                <h3 class="text-center card-title">部门简介 About us</h3>
-                <ol class="text-center card-text">
-                    <li>为学生会内部举办的各类活动进行前期、后期宣传，并在举办活动时进行实时宣传</li>
-                    <li>为活动提供更加专业化的策划、建议和服务</li>
-                    <li>运用多种宣传手段，传达活动信息和学生会理念</li>
-                    <li>为全系学生第一时间传递学校发布的信息，并及时反馈他们的意见和建议</li>
-                    <li>与其他部门共同开展内部建设活动，并对院系宣传工作进行监督</li>
-                    <li>定期举办宣传技能培训，提高各宣传部成员宣传工作方面的水平</li>
-                    <li>协助学生会其他部门开展工作，使各部门工作更好的完成</li>
-                </ol> 
-            </div>
+    <!-- bloc-4 -->
+    {% load static %}
+    <div class="bloc dept-header l-bloc">
+        <div class="py-3">
             <hr>
-            <div class="row">
-				<div class="col-md-3 mx-auto">
-					<h3 class="text-center">
-						<strong>{{view_bag.number_of_member}}</strong>
-					</h3>
-					<h5 class="text-center">
-						当届成员数量 
-					</h5>
-					<p class="text-center">
-						Number of Members
-					</p>
-				</div>
-				<div class="col-md-3 mx-auto">
-					<h3 class="text-center">
-						{% if view_bag.gender_div != 0 %}
-							<strong>{{view_bag.gender_div}} : 1</strong>
-						{% else %}
-							Not updated yet
-						{% endif %}
-					</h3>
-					<h5 class="text-center">
-						成员性别多样性 
-					</h5>
-					<p class="text-center">
-						Gender Diversity
-					</p>
-				</div>
-			</div>
+            <h1 style="font-family: 'PingFang SC';
+                       color: #393d3e;
+                       font-weight: normal"
+                class="mg-md text-center">宣传部</h1>
+            <h3 style="font-family: 'PingFang SC';
+                       color: #393d3e;
+                       font-weight: normal"
+                class="mg-md text-center">Department of Publicity</h3>
+            <hr>
+        </div>
+        <div class="row" style="min-height:20rem;">
+            <div class="col-lg-4 card" style="border:none;">
+                <div class="card-body text-center">
+                    <div class="my-3 d-block mx-auto avatar-lg rounded-circle">
+                        {% if view_bag.director.member.avatar %}
+                            <img class='img-fluid' src="{{ view_bag.director.member.avatar.url }}" />
+                        {% else %}
+                            <img class="img-fluid"
+                                 src="{% static 'PublicSite/img/placeholder-user.png' %}">
+                        {% endif %}
+                    </div>
+                    <h4 class="card-title ">部长 Director</h4>
+                    <h3>{{ view_bag.director.member.get_full_EN_name }}</h3>
+                </div>
+            </div>
+            <div class="col-lg-8 card" style="border:none;">
+                <div class="my-auto mx-auto">
+                    <h3 class="text-center card-title">部门简介 About us</h3>
+                    <ol class="text-center card-text">
+                        <li>为学生会内部举办的各类活动进行前期、后期宣传，并在举办活动时进行实时宣传</li>
+                        <li>为活动提供更加专业化的策划、建议和服务</li>
+                        <li>运用多种宣传手段，传达活动信息和学生会理念</li>
+                        <li>为全系学生第一时间传递学校发布的信息，并及时反馈他们的意见和建议</li>
+                        <li>与其他部门共同开展内部建设活动，并对院系宣传工作进行监督</li>
+                        <li>定期举办宣传技能培训，提高各宣传部成员宣传工作方面的水平</li>
+                        <li>协助学生会其他部门开展工作，使各部门工作更好的完成</li>
+                    </ol>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-md-3 mx-auto">
+                        <h3 class="text-center">
+                            <strong>{{ view_bag.number_of_member }}</strong>
+                        </h3>
+                        <h5 class="text-center">当届成员数量</h5>
+                        <p class="text-center">Number of Members</p>
+                    </div>
+                    <div class="col-md-3 mx-auto">
+                        <h3 class="text-center">
+                            {% if view_bag.gender_div != 0 %}
+                                <strong>{{ view_bag.gender_div }} : 1</strong>
+                            {% else %}
+                                Not updated yet
+                            {% endif %}
+                        </h3>
+                        <h5 class="text-center">成员性别多样性</h5>
+                        <p class="text-center">Gender Diversity</p>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-</div>
-
-<!-- bloc-7 -->
-<div class="bloc my-3">
-	<div class="row">
-		<div class="col-12">
-			<h3 class="mg-md text-center">
-				2022/23届 管理团队成员
-			</h3>
-			<h5 class="text-center">
-				Meet the Management Team of 2022/23 Term
-			</h5>
-		</div>
-	</div>
-	<div class="row text-center" style="min-height:5rem;">
-		{% for user in view_bag.management %}
-			<div class="col-lg-3 col-md-3 col-sm-6" >
-				<div class="my-3 d-block mx-auto avatar-md rounded-circle">
-					{% if user.member.avatar %}
-						<img class='img-fluid' src="{{user.member.avatar.url}}" />
-					{% else %}
-						<img class="img-fluid" src="{% static 'PublicSite/img/placeholder-user.png' %}">
-					{% endif %}
-				</div>
-				<h5>{{user.role.roleName}}</h5>
-				<h4> {{user.member.get_full_EN_name}} </h4>
-			</div>
-		{% endfor %}
-	</div>
-</div>
-
-
-<div class="bloc my-3">
-    <div class="row">
-        <div class="col-12">
-			<h3 class="mg-md text-center">
-				2022/23届 部门成员
-			</h3>
-			<h5 class="text-center">
-				Meet the Committee Members of 2022/23 Term
-			</h5>
-		</div>
-    </div>
-    <div class="row" style="min-height:20rem">
-        {% for user in view_bag.general %}
-            <div class="col-lg-3 col-md-4 col-sm-6 text-center">
-                <div class="my-3 d-block mx-auto avatar-sm rounded-circle">
-                    {% if user.member.avatar %}
-                        <img class='img-fluid' src="{{user.member.avatar.url}}" />
-                    {% else %}
-                        <img class="img-fluid" src="{% static 'PublicSite/img/placeholder-user.png' %}">
-                    {% endif %}
-                </div>
-                <h5>{{user.member.get_full_EN_name}}</h5>
+    <!-- bloc-7 -->
+    <div class="bloc my-3">
+        <div class="row">
+            <div class="col-12">
+                <h3 class="mg-md text-center">2022/23届 管理团队成员</h3>
+                <h5 class="text-center">Meet the Management Team of 2022/23 Term</h5>
             </div>
-        {% endfor %}
+        </div>
+        <div class="row text-center" style="min-height:5rem;">
+            {% for user in view_bag.management %}
+                <div class="col-lg-3 col-md-3 col-sm-6">
+                    <div class="my-3 d-block mx-auto avatar-md rounded-circle">
+                        {% if user.member.avatar %}
+                            <img class='img-fluid' src="{{ user.member.avatar.url }}" />
+                        {% else %}
+                            <img class="img-fluid"
+                                 src="{% static 'PublicSite/img/placeholder-user.png' %}">
+                        {% endif %}
+                    </div>
+                    <h5>{{ user.role.roleName }}</h5>
+                    <h4>{{ user.member.get_full_EN_name }}</h4>
+                </div>
+            {% endfor %}
+        </div>
     </div>
-</div>
-<!-- bloc-7 END -->
-
-<hr>
-<div class="bloc py-2">
-	<p>页面作者 Page developed by</p>
-    <p>&copy; 2019 Guanyu Chen, Mingyu Su</p>
-</div>
+    <div class="bloc my-3">
+        <div class="row">
+            <div class="col-12">
+                <h3 class="mg-md text-center">2022/23届 部门成员</h3>
+                <h5 class="text-center">Meet the Committee Members of 2022/23 Term</h5>
+            </div>
+        </div>
+        <div class="row" style="min-height:20rem">
+            {% for user in view_bag.general %}
+                <div class="col-lg-3 col-md-4 col-sm-6 text-center">
+                    <div class="my-3 d-block mx-auto avatar-sm rounded-circle">
+                        {% if user.member.avatar %}
+                            <img class='img-fluid' src="{{ user.member.avatar.url }}" />
+                        {% else %}
+                            <img class="img-fluid"
+                                 src="{% static 'PublicSite/img/placeholder-user.png' %}">
+                        {% endif %}
+                    </div>
+                    <h5>{{ user.member.get_full_EN_name }}</h5>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    <!-- bloc-7 END -->
+    <hr>
+    <div class="bloc py-2">
+        <p>页面作者 Page developed by</p>
+        <p>&copy; 2019 Guanyu Chen, Mingyu Su</p>
+    </div>
 {% endblock 'pg_body' %}
-

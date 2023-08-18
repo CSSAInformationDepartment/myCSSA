@@ -1,138 +1,139 @@
-{% extends 'components/base_page.html' %}
+{% extends "components/base_page.html" %}
 {% block 'pg_body' %}
-<!-- bloc-4 -->
-{% load static %}
-   
-<style>
-	.row{
-    	margin-top: 50px;
-    	justify-content: center;
-	}
-	
-	.bc{
-		background-color: #999;
-	}
-	.col-r{
-		padding-right: 0px;
-		
-	}
-</style>
+    <!-- bloc-4 -->
+    {% load static %}
+    <style>
+        .row {
+            margin-top: 50px;
+            justify-content: center;
+        }
 
-<hr >
-<div class="text-center ">
-	<div class="py-3"> 
-		<hr >
-		<h1 style="font-family: 'PingFang SC'; color: #393d3e; font-weight: normal; " class="mg-md text-center">
-			主席团
-		</h1>
-		<h3 style="font-family: 'PingFang SC'; color: #393d3e; font-weight: normal; " class="mg-md text-center">
-			CSSA Council Board
-		</h3>
-		<hr >
-	</div>
-</div>
-<hr >
+        .bc {
+            background-color: #999;
+        }
 
-<div class="bloc l-bloc">
-	<div class="bloc">
-		<div class="jumbotron jumbotron-fluid">
-			<h2 class="text-center">致辞</h2>
-			<div class="mg-md mx-auto d-block col-12 col-lg-7 col-md-10 col-sm-12" >
-				<p style="font-size:16px; padding-top:0.5rem;">亲爱的学弟学妹们，大家好！</p>
-				<p style="font-size:16px; padding-top:0.5rem;">我是墨尔本大学中国学生学者联谊会2022届主席何泓熹。</p>
-				<p style="font-size:16px; padding-top:0.5rem;">在此我代表墨尔本大学中国学生学者联谊会的全体成员对你们表示由衷的欢迎。</p>
-				<p style="font-size:16px; padding-top:0.5rem;">墨尔本大学中国学生学者联谊会（Chinese Students and Scholars Association），简称为墨尔本大学中国学生会（CSSA），创立于2003年，是在墨尔本大学UMSU注册下的非宗教，非政治，非盈利性质社团，且是目前规模最大的华人学生社团。CSSA分为主席团和其他五个职能部门，分别为组织部，外联部，宣传部，人力资源部和信息部，目前共计干事201名。注册会员超过7000人，合作商家100余家，2011年网站和2020年小程序的建立为会员们提供了更便捷查询折扣和活动资讯的方式。</p>
-				<p style="font-size:16px; padding-top:0.5rem;">我们始终坚持为墨尔本广大华人学生学者们服务，致力于提供更多学习生活上的帮助并让留学生们感受到温暖与关怀。与此同时，我们也希望无论在你遇到什么困难的时候，都可以联系我们，我们永远是在外留学生最坚强的后盾。</p>
-				<p style="font-size:16px; padding-top:0.5rem;">希望你在大洋彼岸的日子里，你可以在面对陌生的环境可以努力融入，可以获得思想的自由和独立思考的能力，也希望你可以坚定你的梦想，认识世界，认识你自己。</p>
-				<p style="font-size:16px; padding-top:0.5rem;">世间所有的相遇，都是久别重逢。感谢缘分让大家可以在墨尔本相遇。希望在这个重新焕发生机的墨尔本，你也可以与我们一起成长一起变好。你要记住：只要你有与众不同的想法，请保持初心，CSSA必然会给你一个舞台展示你自己！</p>
-				<p style="font-size:16px; padding-top:0.5rem;">出发，永远是最有意义的事情。在外留学的生活，祝你快乐，同时也愿你遍历山河，仍觉人间值得。CSSA永远愿意做你坚实的港湾！</p>
-				<h5 align="right">何泓熹</h5>
-				<h5 align="right">墨尔本大学中国学生会</h5>
-			</div>
-		</div>
-	</div>
+        .col-r {
+            padding-right: 0px;
 
-	<div class="row">
-        <div class="col-12">
-			<h3 class="mg-md text-center">
-				2022/23届 主席团成员
-			</h3>
-			<h5 class="text-center">
-				Meet the Council Board Members of 2022/23 Term
-			</h5>
-		</div>
-  </div>
-   
-	
-   <div class="row">
-		<div class="col-lg-12 card" style='border:none;'>
-			<div class="card-body text-center">
-				<div class="my-3 d-block mx-auto avatar-lg rounded-circle">
-					{% if view_bag.president.member.avatar %}
-						<img class='img-fluid' src="{{ view_bag.president.member.avatar.url }}" />
-					{% else %}
-						<img class="img-fluid" src="{% static 'PublicSite/img/placeholder-user.png' %}">
-					{% endif %}
-				</div>
-				<h4 class="card-title ">主席 President</h4>
-				<h3>{{ view_bag.president.member.get_full_EN_name }}</h3>
-			</div>
-		</div>
-	</div>
-
-	<div class="row">
-	{% for user in view_bag.vice_president  %}
-		<div class="col-lg-4 card" style='border:none;'>
-			<div class="card-body text-center">
-				<div class="my-3 d-block mx-auto avatar-md rounded-circle">
-					{% if user.member.avatar %}
-						<img class='img-fluid' src="{{user.member.avatar.url}}" />
-					{% else %}
-						<img class="img-fluid" src="{% static 'PublicSite/img/placeholder-user.png' %}">
-					{% endif %}
-				</div>
-				<h4 class="card-title ">副主席 Vice-President</h4>
-				<h3>{{user.member.get_full_EN_name}}</h3>
-			</div>
-		</div>
-	{% endfor %}
-	</div>
-
-   <div class="row">
-		<div class="col-lg-6 card" style='border:none;'>
-			<div class="card-body text-center">
-				<div class="my-3 d-block mx-auto avatar-md rounded-circle">
-					{% if view_bag.accountant.member.avatar %}
-						<img class='img-fluid' src="{{view_bag.accountant.member.avatar.url}}" />
-					{% else %}
-						<img class="img-fluid" src="{% static 'PublicSite/img/placeholder-user.png' %}">
-					{% endif %}
-				</div>
-				<h4 class="card-title ">财务 Treasurer</h4>
-				<h3>{{view_bag.accountant.member.get_full_EN_name}}</h3>
-			</div>
-		</div>
-		<div class="col-lg-6 card" style='border:none;'>
-			<div class="card-body text-center">
-				<div class="my-3 d-block mx-auto avatar-md rounded-circle">
-					{% if view_bag.headOfSecretary.member.avatar %}
-						<img class='img-fluid' src="{{view_bag.headOfSecretary.member.avatar.url}}" />
-					{% else %}
-						<img class="img-fluid" src="{% static 'PublicSite/img/placeholder-user.png' %}">
-					{% endif %}
-				</div>
-				<h4 class="card-title ">秘书长 Secretary</h4>
-				<h3>{{view_bag.headOfSecretary.member.get_full_EN_name}}</h3>
-			</div>
-		</div>
-	</div>
-</div>
-
-<hr>
-<div class="bloc py-2">
-	<p>页面作者 Page developed by</p>
-  <p>&copy; 2019  Tianyi Mo, Yuxiang Xie </p>
-</div>
-
+        }
+    </style>
+    <hr>
+    <div class="text-center ">
+        <div class="py-3">
+            <hr>
+            <h1 style="font-family: 'PingFang SC';
+                       color: #393d3e;
+                       font-weight: normal"
+                class="mg-md text-center">主席团</h1>
+            <h3 style="font-family: 'PingFang SC';
+                       color: #393d3e;
+                       font-weight: normal"
+                class="mg-md text-center">CSSA Council Board</h3>
+            <hr>
+        </div>
+    </div>
+    <hr>
+    <div class="bloc l-bloc">
+        <div class="bloc">
+            <div class="jumbotron jumbotron-fluid">
+                <h2 class="text-center">致辞</h2>
+                <div class="mg-md mx-auto d-block col-12 col-lg-7 col-md-10 col-sm-12">
+                    <p style="font-size:16px; padding-top:0.5rem;">亲爱的学弟学妹们，大家好！</p>
+                    <p style="font-size:16px; padding-top:0.5rem;">我是墨尔本大学中国学生学者联谊会2022届主席何泓熹。</p>
+                    <p style="font-size:16px; padding-top:0.5rem;">在此我代表墨尔本大学中国学生学者联谊会的全体成员对你们表示由衷的欢迎。</p>
+                    <p style="font-size:16px; padding-top:0.5rem;">
+                        墨尔本大学中国学生学者联谊会（Chinese Students and Scholars Association），简称为墨尔本大学中国学生会（CSSA），创立于2003年，是在墨尔本大学UMSU注册下的非宗教，非政治，非盈利性质社团，且是目前规模最大的华人学生社团。CSSA分为主席团和其他五个职能部门，分别为组织部，外联部，宣传部，人力资源部和信息部，目前共计干事201名。注册会员超过7000人，合作商家100余家，2011年网站和2020年小程序的建立为会员们提供了更便捷查询折扣和活动资讯的方式。
+                    </p>
+                    <p style="font-size:16px; padding-top:0.5rem;">
+                        我们始终坚持为墨尔本广大华人学生学者们服务，致力于提供更多学习生活上的帮助并让留学生们感受到温暖与关怀。与此同时，我们也希望无论在你遇到什么困难的时候，都可以联系我们，我们永远是在外留学生最坚强的后盾。
+                    </p>
+                    <p style="font-size:16px; padding-top:0.5rem;">
+                        希望你在大洋彼岸的日子里，你可以在面对陌生的环境可以努力融入，可以获得思想的自由和独立思考的能力，也希望你可以坚定你的梦想，认识世界，认识你自己。
+                    </p>
+                    <p style="font-size:16px; padding-top:0.5rem;">
+                        世间所有的相遇，都是久别重逢。感谢缘分让大家可以在墨尔本相遇。希望在这个重新焕发生机的墨尔本，你也可以与我们一起成长一起变好。你要记住：只要你有与众不同的想法，请保持初心，CSSA必然会给你一个舞台展示你自己！
+                    </p>
+                    <p style="font-size:16px; padding-top:0.5rem;">出发，永远是最有意义的事情。在外留学的生活，祝你快乐，同时也愿你遍历山河，仍觉人间值得。CSSA永远愿意做你坚实的港湾！</p>
+                    <h5 align="right">何泓熹</h5>
+                    <h5 align="right">墨尔本大学中国学生会</h5>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <h3 class="mg-md text-center">2022/23届 主席团成员</h3>
+                <h5 class="text-center">Meet the Council Board Members of 2022/23 Term</h5>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12 card" style="border:none;">
+                <div class="card-body text-center">
+                    <div class="my-3 d-block mx-auto avatar-lg rounded-circle">
+                        {% if view_bag.president.member.avatar %}
+                            <img class='img-fluid' src="{{ view_bag.president.member.avatar.url }}" />
+                        {% else %}
+                            <img class="img-fluid"
+                                 src="{% static 'PublicSite/img/placeholder-user.png' %}">
+                        {% endif %}
+                    </div>
+                    <h4 class="card-title ">主席 President</h4>
+                    <h3>{{ view_bag.president.member.get_full_EN_name }}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            {% for user in view_bag.vice_president %}
+                <div class="col-lg-4 card" style='border:none;'>
+                    <div class="card-body text-center">
+                        <div class="my-3 d-block mx-auto avatar-md rounded-circle">
+                            {% if user.member.avatar %}
+                                <img class='img-fluid' src="{{ user.member.avatar.url }}" />
+                            {% else %}
+                                <img class="img-fluid"
+                                     src="{% static 'PublicSite/img/placeholder-user.png' %}">
+                            {% endif %}
+                        </div>
+                        <h4 class="card-title ">副主席 Vice-President</h4>
+                        <h3>{{ user.member.get_full_EN_name }}</h3>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="row">
+            <div class="col-lg-6 card" style="border:none;">
+                <div class="card-body text-center">
+                    <div class="my-3 d-block mx-auto avatar-md rounded-circle">
+                        {% if view_bag.accountant.member.avatar %}
+                            <img class='img-fluid' src="{{ view_bag.accountant.member.avatar.url }}" />
+                        {% else %}
+                            <img class="img-fluid"
+                                 src="{% static 'PublicSite/img/placeholder-user.png' %}">
+                        {% endif %}
+                    </div>
+                    <h4 class="card-title ">财务 Treasurer</h4>
+                    <h3>{{ view_bag.accountant.member.get_full_EN_name }}</h3>
+                </div>
+            </div>
+            <div class="col-lg-6 card" style="border:none;">
+                <div class="card-body text-center">
+                    <div class="my-3 d-block mx-auto avatar-md rounded-circle">
+                        {% if view_bag.headOfSecretary.member.avatar %}
+                            <img class='img-fluid'
+                                 src="{{ view_bag.headOfSecretary.member.avatar.url }}" />
+                        {% else %}
+                            <img class="img-fluid"
+                                 src="{% static 'PublicSite/img/placeholder-user.png' %}">
+                        {% endif %}
+                    </div>
+                    <h4 class="card-title ">秘书长 Secretary</h4>
+                    <h3>{{ view_bag.headOfSecretary.member.get_full_EN_name }}</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr>
+    <div class="bloc py-2">
+        <p>页面作者 Page developed by</p>
+        <p>&copy; 2019  Tianyi Mo, Yuxiang Xie</p>
+    </div>
 {% endblock 'pg_body' %}
-
