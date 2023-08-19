@@ -14,6 +14,7 @@ from django.shortcuts import render
 from django.views import View
 
 from BlogAPI import models as BlogModels
+from UserAuthAPI import models as UserAuthModels
 
 # Create your views here.
 
@@ -409,11 +410,12 @@ class writtenBlogs(LoginRequiredMixin, PermissionRequiredMixin, View):
     def get(self, request):
         ViewBag = {}
         userAuthed = request.user.is_authenticated
+        userID = UserAuthModels.User.objects.get(email=request.user).id
 
         if userAuthed:
             ViewBag["writtenOrReview"] = True
             blogWrittenBys = BlogModels.BlogWrittenBy.objects.filter(
-                userId=request.user)
+                userId=userID)
             ViewBag["blogs"] = [
                 blogWritten.blogId for blogWritten in blogWrittenBys][::-1]
             return render(request, "myCSSAhub/blogLess.html", ViewBag)
