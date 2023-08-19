@@ -5,6 +5,7 @@
 # @Software: PyCharm
 
 from django.urls import path
+
 from MobileAppAPI import views as Views
 
 app_name = "MobileAppAPI"

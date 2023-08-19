@@ -1,6 +1,7 @@
+from django.urls import include, path
 from rest_framework import routers
+
 from .views import MailDraftViewSet, MailQueneViewSet
-from django.urls import path,include
 
 app_name = 'mail_owl'
 

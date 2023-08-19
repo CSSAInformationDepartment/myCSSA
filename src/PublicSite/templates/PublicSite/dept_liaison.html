@@ -1,137 +1,120 @@
-{% extends 'components/base_page.html' %}
+{% extends "components/base_page.html" %}
 {% block 'pg_body' %}
-{% load static %}
-
-<div class="bloc dept-header l-bloc">
-    <div class="py-3"> 
-		<hr >
-		<h1 style="font-family: 'PingFang SC'; color: #393d3e; font-weight: normal; " class="mg-md text-center">
-		外联部
-		</h1>
-		<h3 style="font-family: 'PingFang SC'; color: #393d3e; font-weight: normal; " class="mg-md text-center">
-		Department of Public Relations
-		</h3>
-		<hr >
-	</div>
-    <div class="row" style="min-height:20rem;">
-        <div class="col-lg-4 card" style='border:none;'>
-            <div class="card-body text-center">
-                <div class="my-3 d-block mx-auto avatar-lg rounded-circle">
-                    {% if view_bag.director.member.avatar %}
-                        <img class='img-fluid' src="{{view_bag.director.member.avatar.url}}" />
-                    {% else %}
-                        <img class="img-fluid" src="{% static 'PublicSite/img/placeholder-user.png' %}">
-                    {% endif %}
-                </div>
-                <h4 class="card-title ">部长 Director</h4>
-                <h3>{{view_bag.director.member.get_full_EN_name}}</h3>
-            </div>
+    {% load static %}
+    <div class="bloc dept-header l-bloc">
+        <div class="py-3">
+            <hr>
+            <h1 style="font-family: 'PingFang SC';
+                       color: #393d3e;
+                       font-weight: normal"
+                class="mg-md text-center">外联部</h1>
+            <h3 style="font-family: 'PingFang SC';
+                       color: #393d3e;
+                       font-weight: normal"
+                class="mg-md text-center">Department of Public Relations</h3>
+            <hr>
         </div>
-        <div class="col-lg-8 card" style='border:none;'>
-            <div class='my-auto mx-auto'>
-                <h3 class="text-center card-title">部门简介 About us</h3>
-                <div class="card-text px-5" style="line-height:2">
-                    外联部作为墨尔本大学中国学生会与外界沟通的窗口，负责一切对外合作事宜，包括但不局限于赞助商，折扣商家，战略合作伙伴以及校外其他活动的沟通和参与。我们是墨大中国学生会对外界的形象代表。作为主要负责社团资金来源的部门，外联部同样需要寻求年度赞助商，活动合作商家，来减轻社团的负担，更好的给与广大社员福利。
-                    </br></br>外联部提供了一个充分锻炼社交能力和沟通技巧的平台。日常事务包括:与墨尔本各个商家和企业维持良好的关系，代表社团联系并参加墨尔本地区的各个活动，与校内各个兄弟社团保持良好的关系，对于兄弟社团的活动推广互相帮助支持，扩大社团影响力。
+        <div class="row" style="min-height:20rem;">
+            <div class="col-lg-4 card" style="border:none;">
+                <div class="card-body text-center">
+                    <div class="my-3 d-block mx-auto avatar-lg rounded-circle">
+                        {% if view_bag.director.member.avatar %}
+                            <img class='img-fluid' src="{{ view_bag.director.member.avatar.url }}" />
+                        {% else %}
+                            <img class="img-fluid"
+                                 src="{% static 'PublicSite/img/placeholder-user.png' %}">
+                        {% endif %}
+                    </div>
+                    <h4 class="card-title ">部长 Director</h4>
+                    <h3>{{ view_bag.director.member.get_full_EN_name }}</h3>
                 </div>
-                <hr>
-                <div class="row">
-                    <div class="col-md-3 mx-auto">
-                        <h3 class="text-center">
-                            <strong>{{view_bag.number_of_member}}</strong>
-                        </h3>
-                        <h5 class="text-center">
-                            当届成员数量 
-                        </h5>
-                        <p class="text-center">
-                            Number of Members
-                        </p>
-                    </div>
-                    <div class="col-md-3 mx-auto">
-                        <h3 class="text-center">
-                            {% if view_bag.gender_div != 0 %}
-                                <strong>{{view_bag.gender_div}} : 1</strong>
-                            {% else %}
-                                Not updated yet
-                            {% endif %}
-                        </h3>
-                        <h5 class="text-center">
-                            成员性别多样性 
-                        </h5>
-                        <p class="text-center">
-                            Gender Diversity
-                        </p>
-                    </div>
+            </div>
+            <div class="col-lg-8 card" style="border:none;">
+                <div class="my-auto mx-auto">
+                    <h3 class="text-center card-title">部门简介 About us</h3>
+                    <div class="card-text px-5" style="line-height:2">
+                        外联部作为墨尔本大学中国学生会与外界沟通的窗口，负责一切对外合作事宜，包括但不局限于赞助商，折扣商家，战略合作伙伴以及校外其他活动的沟通和参与。我们是墨大中国学生会对外界的形象代表。作为主要负责社团资金来源的部门，外联部同样需要寻求年度赞助商，活动合作商家，来减轻社团的负担，更好的给与广大社员福利。
+                    </br>
+                </br>
+                外联部提供了一个充分锻炼社交能力和沟通技巧的平台。日常事务包括:与墨尔本各个商家和企业维持良好的关系，代表社团联系并参加墨尔本地区的各个活动，与校内各个兄弟社团保持良好的关系，对于兄弟社团的活动推广互相帮助支持，扩大社团影响力。
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-md-3 mx-auto">
+                    <h3 class="text-center">
+                        <strong>{{ view_bag.number_of_member }}</strong>
+                    </h3>
+                    <h5 class="text-center">当届成员数量</h5>
+                    <p class="text-center">Number of Members</p>
+                </div>
+                <div class="col-md-3 mx-auto">
+                    <h3 class="text-center">
+                        {% if view_bag.gender_div != 0 %}
+                            <strong>{{ view_bag.gender_div }} : 1</strong>
+                        {% else %}
+                            Not updated yet
+                        {% endif %}
+                    </h3>
+                    <h5 class="text-center">成员性别多样性</h5>
+                    <p class="text-center">Gender Diversity</p>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
-<!-- bloc-7 -->
-<div class="bloc my-3">
-	<div class="row">
-		<div class="col-12">
-			<h3 class="mg-md text-center">
-				2022/23届 管理团队成员
-			</h3>
-			<h5 class="text-center">
-				Meet the Management Team of 2022/23 Term
-			</h5>
-		</div>
-	</div>
-	<div class="row text-center" style="min-height:5rem;">
-		{% for user in view_bag.management %}
-			<div class="col-lg-3 col-md-3 col-sm-6" >
-				<div class="my-3 d-block mx-auto avatar-md rounded-circle">
-					{% if user.member.avatar %}
-						<img class='img-fluid' src="{{user.member.avatar.url}}" />
-					{% else %}
-						<img class="img-fluid" src="{% static 'PublicSite/img/placeholder-user.png' %}">
-					{% endif %}
-				</div>
-				<h5>{{user.role.roleName}}</h5>
-				<h4> {{user.member.get_full_EN_name}} </h4>
-			</div>
-		{% endfor %}
-	</div>
 </div>
-
-
+<!-- bloc-7 -->
 <div class="bloc my-3">
     <div class="row">
         <div class="col-12">
-			<h3 class="mg-md text-center">
-				2022/23届 部门成员
-			</h3>
-			<h5 class="text-center">
-				Meet the Committee Members of 2022/23 Term
-			</h5>
-		</div>
+            <h3 class="mg-md text-center">2022/23届 管理团队成员</h3>
+            <h5 class="text-center">Meet the Management Team of 2022/23 Term</h5>
+        </div>
+    </div>
+    <div class="row text-center" style="min-height:5rem;">
+        {% for user in view_bag.management %}
+            <div class="col-lg-3 col-md-3 col-sm-6">
+                <div class="my-3 d-block mx-auto avatar-md rounded-circle">
+                    {% if user.member.avatar %}
+                        <img class='img-fluid' src="{{ user.member.avatar.url }}" />
+                    {% else %}
+                        <img class="img-fluid"
+                             src="{% static 'PublicSite/img/placeholder-user.png' %}">
+                    {% endif %}
+                </div>
+                <h5>{{ user.role.roleName }}</h5>
+                <h4>{{ user.member.get_full_EN_name }}</h4>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+<div class="bloc my-3">
+    <div class="row">
+        <div class="col-12">
+            <h3 class="mg-md text-center">2022/23届 部门成员</h3>
+            <h5 class="text-center">Meet the Committee Members of 2022/23 Term</h5>
+        </div>
     </div>
     <div class="row" style="min-height:20rem">
         {% for user in view_bag.general %}
             <div class="col-lg-3 col-md-4 col-sm-6 text-center">
                 <div class="my-3 d-block mx-auto avatar-sm rounded-circle">
                     {% if user.member.avatar %}
-                        <img class='img-fluid' src="{{user.member.avatar.url}}" />
+                        <img class='img-fluid' src="{{ user.member.avatar.url }}" />
                     {% else %}
-                        <img class="img-fluid" src="{% static 'PublicSite/img/placeholder-user.png' %}">
+                        <img class="img-fluid"
+                             src="{% static 'PublicSite/img/placeholder-user.png' %}">
                     {% endif %}
                 </div>
-                <h5>{{user.member.get_full_EN_name}}</h5>
+                <h5>{{ user.member.get_full_EN_name }}</h5>
             </div>
         {% endfor %}
     </div>
 </div>
 <!-- bloc-7 END -->
-
 <hr>
 <div class="bloc py-2">
-	<p>页面作者 Page developed by</p>
+    <p>页面作者 Page developed by</p>
     <p>&copy; 2019 Qingyi Yang, Ruixuan Guo</p>
 </div>
-
-
-
 {% endblock 'pg_body' %}

@@ -1,53 +1,53 @@
-*{
+* {
     color: rgb(65, 65, 65);
 }
 
-.blogContainer{
+.blogContainer {
     background-color: white;
 }
 
-.blogEditContainer{
-    min-width: 500px
+.blogEditContainer {
+    min-width: 500px;
 }
 
-#blogEdit, #blogEditAnother{
+#blogEdit,
+#blogEditAnother {
     min-height: 300px;
     max-height: 500px;
     margin-bottom: 10px;
     overflow: scroll;
-
 }
 
-#blogEditAnother{
-        background-color: pink;
-        overflow-y: scroll;
-    }
-    h4{
-        margin-bottom: 12px;
-    }
+#blogEditAnother {
+    background-color: pink;
+    overflow-y: scroll;
+}
+h4 {
+    margin-bottom: 12px;
+}
 
-    .blogEditHead{
-        margin: 25px 0px;
-    }
-    .handButton{
-        background-color: rgba(0, 0, 0, 0.05)
-    }
+.blogEditHead {
+    margin: 25px 0px;
+}
+.handButton {
+    background-color: rgba(0, 0, 0, 0.05);
+}
 
-    .handButtonAnother{
-        color: white;
-        background-color: #158CBA !important;
-    }
+.handButtonAnother {
+    color: white;
+    background-color: #158cba !important;
+}
 
-    .handButton{
-        background-color: rgba(0, 0, 0, 0.05)
-    }
+.handButton {
+    background-color: rgba(0, 0, 0, 0.05);
+}
 
-    .handButtonAnother{
-        color: white;
-        background-color: #158CBA !important;
-    }
-    .handButtonOther{
-        float: right;
-        color: white;
-        background-color: #993333;
-    }
+.handButtonAnother {
+    color: white;
+    background-color: #158cba !important;
+}
+.handButtonOther {
+    float: right;
+    color: white;
+    background-color: #993333;
+}

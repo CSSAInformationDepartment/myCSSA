@@ -1,133 +1,130 @@
-{% extends 'myCSSAhub/component/_layout.html' %}
+{% extends "myCSSAhub/component/_layout.html" %}
 {% block ExtraHeader %}
-	{% load static %}
-	<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.5.1/css/fileinput.min.css" media="all" rel="stylesheet" type="text/css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.0-alpha14/css/tempusdominus-bootstrap-4.min.css"/>
-
+    {% load static %}
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.5.1/css/fileinput.min.css"
+          media="all"
+          rel="stylesheet"
+          type="text/css" />
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.0-alpha14/css/tempusdominus-bootstrap-4.min.css" />
 {% endblock ExtraHeader %}
-
 {% block pageContent %}
-{% load widget_tweaks %}
-<div class="col-6">
-    <div class="card">
-    <form action="{{submit_url}}" method="POST" enctype="multipart/form-data">
-        {% csrf_token %}
-        <div class="card-header">
-            <i class="fa fa-align-justify"></i> 添加新活动
-        </div>
-        <div class="card-body">
-
-            {% for hidden_field in form.hidden_fields %}
-                {{ hidden_field }}
-            {% endfor %}
-
-            {% if form.non_field_errors %}
-            <div class="alert alert-danger" role="alert">
-                {% for error in form.non_field_errors %}
-                    {{ error }}
-                {% endfor %}
-            </div>
-            {% endif %}
-
-            {% for field in form.visible_fields %}
-                <div class="form-group">
-                    {{ field.label_tag }}
-                    {% if field.errors %}
-                        {% if field.name == "eventSignUpTime" or field.name == "eventActualStTime" %}
-                            <div class="input-group date" id="id_{{field.name}}_picker" data-target-input="nearest">
-                                {% render_field field class="form-control is-invalid datetimepicker-input" %}
-
-                                <div class="input-group-append" data-target="#id_{{field.name}}_picker" data-toggle="datetimepicker">
-                                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                                </div>
-                                {% for error in field.errors %}
-                                <div class="invalid-feedback">
-                                    {{ error }}
-                                </div>
-                                {% endfor %}
-                            </div>
-                        {% else %}
-                            {% render_field field class="form-control is-invalid" %}
-                            {% for error in field.errors %}
-                                <div class="invalid-feedback">
-                                    {{ error }}
-                                </div>
-                            {% endfor %}
-                        {% endif %}
-
-                    {% else %}
-                        {% if field.name == "eventSignUpTime" or field.name == "eventActualStTime" %}
-                            <div class="input-group date" id="id_{{field.name}}_picker" data-target-input="nearest">
-                                {% render_field field class="form-control datetimepicker-input"%}
-                                <div class="input-group-append" data-target="#id_{{field.name}}_picker" data-toggle="datetimepicker">
-                                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                                </div>
-                            </div>
-                        {% else %}
-                            {% render_field field class="form-control" %}
-                        {% endif %}
-                    {% endif %}
-
-                    {% if field.help_text %}
-                        <small class="form-text text-muted">{{ field.help_text }}</small>
-                    {% endif %}
+    {% load widget_tweaks %}
+    <div class="col-6">
+        <div class="card">
+            <form action="{{ submit_url }}" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="card-header">
+                    <i class="fa fa-align-justify"></i> 添加新活动
                 </div>
-            {% endfor %}
+                <div class="card-body">
+                    {% for hidden_field in form.hidden_fields %}{{ hidden_field }}{% endfor %}
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-danger" role="alert">
+                            {% for error in form.non_field_errors %}{{ error }}{% endfor %}
+                        </div>
+                    {% endif %}
+                    {% for field in form.visible_fields %}
+                        <div class="form-group">
+                            {{ field.label_tag }}
+                            {% if field.errors %}
+                                {% if field.name == "eventSignUpTime" or field.name == "eventActualStTime" %}
+                                    <div class="input-group date"
+                                         id="id_{{ field.name }}_picker"
+                                         data-target-input="nearest">
+                                        {% render_field field class="form-control is-invalid datetimepicker-input" %}
+                                        <div class="input-group-append"
+                                             data-target="#id_{{ field.name }}_picker"
+                                             data-toggle="datetimepicker">
+                                            <div class="input-group-text">
+                                                <i class="fa fa-calendar"></i>
+                                            </div>
+                                        </div>
+                                        {% for error in field.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+                                    </div>
+                                {% else %}
+                                    {% render_field field class="form-control is-invalid" %}
+                                    {% for error in field.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+                                {% endif %}
+                            {% else %}
+                                {% if field.name == "eventSignUpTime" or field.name == "eventActualStTime" %}
+                                    <div class="input-group date"
+                                         id="id_{{ field.name }}_picker"
+                                         data-target-input="nearest">
+                                        {% render_field field class="form-control datetimepicker-input" %}
+                                        <div class="input-group-append"
+                                             data-target="#id_{{ field.name }}_picker"
+                                             data-toggle="datetimepicker">
+                                            <div class="input-group-text">
+                                                <i class="fa fa-calendar"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% else %}
+                                    {% render_field field class="form-control" %}
+                                {% endif %}
+                            {% endif %}
+                            {% if field.help_text %}<small class="form-text text-muted">{{ field.help_text }}</small>{% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="card-footer">
+                    <button class="btn btn-sm btn-success" type="submit">
+                        <i class="fa fa-dot-circle-o"></i> 发布活动
+                    </button>
+                    <button class="btn btn-sm btn-danger" type="reset">
+                        <i class="fa fa-ban"></i> 取消
+                    </button>
+                </div>
+            </form>
         </div>
-        <div class='card-footer'>
-            <button class="btn btn-sm btn-success" type="submit"><i class="fa fa-dot-circle-o"></i> 发布活动</button>
-            <button class="btn btn-sm btn-danger" type="reset"><i class="fa fa-ban"></i> 取消 </button>
-        </div>
-
-    </form>
-</div>
-{% endblock %}
-
-
+    </div>
+{% endblock pageContent %}
 {% block ExtraJS %}
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.23.0/moment.min.js"></script>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.0-alpha14/js/tempusdominus-bootstrap-4.min.js"></script>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.5.1/js/plugins/piexif.min.js" type="text/javascript"></script>
-<!-- sortable.min.js is only needed if you wish to sort / rearrange files in initial preview.
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.23.0/moment.min.js"></script>
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.0-alpha14/js/tempusdominus-bootstrap-4.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.5.1/js/plugins/piexif.min.js"
+            type="text/javascript"></script>
+    <!-- sortable.min.js is only needed if you wish to sort / rearrange files in initial preview.
     This must be loaded before fileinput.min.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.5.1/js/plugins/sortable.min.js" type="text/javascript"></script>
-<!-- purify.min.js is only needed if you wish to purify HTML content in your preview for
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.5.1/js/plugins/sortable.min.js"
+            type="text/javascript"></script>
+    <!-- purify.min.js is only needed if you wish to purify HTML content in your preview for
     HTML files. This must be loaded before fileinput.min.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.5.1/js/plugins/purify.min.js" type="text/javascript"></script>
-
-<!-- the main fileinput plugin file -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.5.1/js/fileinput.min.js"></script>
-<!-- following theme script is needed to use the Font Awesome 5.x theme (`fas`) -->
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.5.1/themes/fa/theme.min.js"></script>
-<script>
-    $('#id_mainVisual, #id_WechatQRcode').fileinput({
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.5.1/js/plugins/purify.min.js"
+            type="text/javascript"></script>
+    <!-- the main fileinput plugin file -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.5.1/js/fileinput.min.js"></script>
+    <!-- following theme script is needed to use the Font Awesome 5.x theme (`fas`) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.5.1/themes/fa/theme.min.js"></script>
+    <script>
+        $('#id_mainVisual, #id_WechatQRcode').fileinput({
 			theme: "fa",
-	        allowedFileExtensions: ['jpeg','jpg', 'png'],
-	        overwriteInitial: false,
+            allowedFileExtensions: ['jpeg', 'jpg', 'png'],
+            overwriteInitial: false,
             showUpload: false,
-	        maxFileSize: 2048,
-	        maxFilesNum: 1,
-	        slugCallback: function (filename) {
-	            return filename.replace('(', '_').replace(']', '_');
-	        },
-					{% if prev_submission %}
-					initialPreview: [
-						{% if prev_submission.attachment %}
-								"{{ prev_submission.attachment.url }}"
-						{% endif %}
-						,
-					],
-					initialPreviewAsData: true,
-					{% endif %}
-	    });
-    $('#id_eventSignUpTime_picker').datetimepicker({
-        format: 'Y-M-D HH:mm'
-    })
-    $('#id_eventActualStTime_picker').datetimepicker({
-        format: 'Y-M-D HH:mm'
-    })
-</script>
-
-{% endblock %}
+            maxFileSize: 2048,
+            maxFilesNum: 1,
+            slugCallback: function(filename) {
+                return filename.replace('(', '_').replace(']', '_');
+            },
+            {% if prev_submission %}
+            initialPreview: [
+                {% if prev_submission.attachment %}
+                        "{{ prev_submission.attachment.url }}"
+                {% endif %}
+                ,
+            ],
+            initialPreviewAsData: true,
+            {% endif %}
+        });
+        $('#id_eventSignUpTime_picker').datetimepicker({
+            format: 'Y-M-D HH:mm'
+        })
+        $('#id_eventActualStTime_picker').datetimepicker({
+            format: 'Y-M-D HH:mm'
+        })
+    </script>
+{% endblock ExtraJS %}

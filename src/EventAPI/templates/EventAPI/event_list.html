@@ -1,74 +1,68 @@
-{% extends 'myCSSAhub/component/_layout.html' %}
+{% extends "myCSSAhub/component/_layout.html" %}
 {% load static %}
 {% block ExtraHeader %}
-<link href="{% static 'myCSSAhub/vendors/DataTables/datatables.min.css'%}" rel="stylesheet">
+    <link href="{% static 'myCSSAhub/vendors/DataTables/datatables.min.css' %}"
+          rel="stylesheet">
 {% endblock ExtraHeader %}
-
 {% block pageTitle %}
-活动计划
+    活动计划
 {% endblock pageTitle %}
-
 {% block BreadcrumbPath %}
-  <li class="breadcrumb-item">活动管理</li>
-  <li class="breadcrumb-item">
-    <a href="{% url 'myCSSAhub:EventAPI:event_list' %}">活动计划</a>
-  </li>
+    <li class="breadcrumb-item">活动管理</li>
+    <li class="breadcrumb-item">
+        <a href="{% url 'myCSSAhub:EventAPI:event_list' %}">活动计划</a>
+    </li>
 {% endblock BreadcrumbPath %}
-
 {% block pageContent %}
-<div class="row mb-3">
-  <div class="col-6">
-
-  </div>
-  
-  {% if user.is_staff %}
-  <div class="col-6">
-      <div class="btn-group float-right" role="group">
-          <a class="btn btn-pill btn-block btn-primary" role="button" href="{% url 'myCSSAhub:EventAPI:add_event' %}">添加新活动信息</a>
-      </div>
-  </div>
-  {% endif %}
-</div>
-<div class="row">
-  <div class="col-md-12">
-    <div class="card" >
-      <div class="card-header">
-        活动列表
-      </div>
-      <div class="card-body">
-          <table id="main-datatable" class="table table-responsive-md"  style="width:100%" >
-          <thead>
-              <tr>
-                <th>ID</th>
-                <th>活动名称</th>
-                <th>报名开始时间</th>
-                <th>活动开始时间</th>
-                <th>活动场馆</th>
-              </tr>
-          </thead>
-          </table>
-      </div>
-    </div>
-  </div>
-</div>
-{% endblock %}
-
-{% block ExtraJS %}
-
-<script src="{% static 'myCSSAhub/vendors/DataTables/datatables.js'%}"></script>
-<script>
-$(document).ready(function() {
-    var oTable = $('#main-datatable').dataTable({
-        "responsive": true,
-        "processing": true,
-        "serverSide": true,
-        {% if event_attended_count %}
-          "ajax": "",
-        {% else %}
-          "ajax": "{% url 'myCSSAhub:EventAPI:events_json' %}",
+    <div class="row mb-3">
+        <div class="col-6"></div>
+        {% if user.is_staff %}
+            <div class="col-6">
+                <div class="btn-group float-right" role="group">
+                    <a class="btn btn-pill btn-block btn-primary"
+                       role="button"
+                       href="{% url 'myCSSAhub:EventAPI:add_event' %}">添加新活动信息</a>
+                </div>
+            </div>
         {% endif %}
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">活动列表</div>
+                <div class="card-body">
+                    <table id="main-datatable"
+                           class="table table-responsive-md"
+                           style="width: 100%">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>活动名称</th>
+                                <th>报名开始时间</th>
+                                <th>活动开始时间</th>
+                                <th>活动场馆</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock pageContent %}
+{% block ExtraJS %}
+    <script src="{% static 'myCSSAhub/vendors/DataTables/datatables.js'%}"></script>
+    <script>
+    $(document).ready(function() {
+        var oTable = $('#main-datatable').dataTable({
+            "responsive": true,
+            "processing": true,
+            "serverSide": true,
+            {% if event_attended_count %}
+              "ajax": "",
+            {% else %}
+              "ajax": "{% url 'myCSSAhub:EventAPI:events_json' %}",
+            {% endif %}
+        });
     });
-});
-</script>
-
+    </script>
 {% endblock ExtraJS %}

@@ -1,28 +1,26 @@
 $(function () {
+    "use strict";
 
-    'use strict';
-
-
-    var $citypicker1 = $('#city-picker1');
+    var $citypicker1 = $("#city-picker1");
 
     $citypicker1.citypicker();
 
-    var $citypicker2 = $('#city-picker2');
+    var $citypicker2 = $("#city-picker2");
 
     $citypicker2.citypicker({
-        province: '江苏省',
-        city: '常州市',
-        district: '溧阳市'
+        province: "江苏省",
+        city: "常州市",
+        district: "溧阳市",
     });
 
-    var $citypicker3 = $('#city-picker3');
+    var $citypicker3 = $("#city-picker3");
 
-    $('#reset').click(function () {
-        $citypicker3.citypicker('reset');
+    $("#reset").click(function () {
+        $citypicker3.citypicker("reset");
     });
 
-    $('#destroy').click(function () {
-        $citypicker3.citypicker('destroy');
+    $("#destroy").click(function () {
+        $citypicker3.citypicker("destroy");
     });
     //
     //$('#distpicker1').distpicker();
@@ -46,5 +44,4 @@ $(function () {
     //$('#distpicker5').distpicker({
     //  autoSelect: false
     //});
-
 });

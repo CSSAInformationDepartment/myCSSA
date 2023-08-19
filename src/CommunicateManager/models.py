@@ -1,9 +1,10 @@
-from django.db import models
-from django.core.validators import MaxValueValidator
-from UserAuthAPI import models as userModels
-import uuid
 import django.utils.timezone as timezone
+from django.db import models
+from UserAuthAPI import models as userModels
+
 # Create your models here.
+
+
 class Notification_DB(models.Model):
     id = models.AutoField(primary_key=True, editable=False)
     # 如果为all@cssa.com的特定ID,则代表群发
@@ -26,7 +27,8 @@ class EmailDB(models.Model):
         userModels.User, related_name="发信者id", on_delete=models.DO_NOTHING)
     recID = models.ForeignKey(
         userModels.User, related_name="接信者id", on_delete=models.DO_NOTHING)
-    content = models.CharField(verbose_name="email内容", max_length=200, null=True)
+    content = models.CharField(
+        verbose_name="email内容", max_length=200, null=True)
     title = models.CharField(verbose_name="email标题", max_length=200, null=True)
     # 默认加入时间为写入数据库的时间
     add_date = models.DateTimeField(
