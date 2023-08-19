@@ -1,116 +1,117 @@
-{% extends 'myCSSAhub/component/_layout.html' %}
-
+{% extends "myCSSAhub/component/_layout.html" %}
 {% block ExtraHeader %}
-
 {% endblock ExtraHeader %}
-
 {% block BreadcrumbPath %}
   <li class="breadcrumb-item">Photo Competition管理</li>
   <li class="breadcrumb-item">
     <a href="{% url 'myCSSAhub:PhotoComp:submission-list' %}">用户提交照片</a>
   </li>
 {% endblock BreadcrumbPath %}
-
 {% block pageContent %}
-<div class="row mb-3">
-  <div class="col-12 col-sm-12">
-    {% load widget_tweaks %}
+  <div class="row mb-3">
+    <div class="col-12 col-sm-12">
+      {% load widget_tweaks %}
       <form class="form" action="" method="get" id="filter_bar">
         <div class="form-group row">
-            <label class="col-form-label" for="select1">审核状态</label>
-            <div class="col-sm-2">
-              {%render_field filter.form.shortlist_status class="form-control"%}
-            </div>
-            <label class="col-form-label" for="select1">设备类型</label>
-            <div class="col-sm-2">
-              {%render_field filter.form.device_type class="form-control"%}
-            </div>
-            <!-- <label class="col-form-label" for="select1">题材类型</label> -->
-            <label class="col-form-label" for="select1">主题类型</label>
-            <div class="col-sm-2">
-              {% comment %}{%render_field filter.form.category_type class="form-control"%}{% endcomment %}
-              {%render_field filter.form.theme_type class="form-control"%}
-            </div>
+          <label class="col-form-label" for="select1">审核状态</label>
+          <div class="col-sm-2">{% render_field filter.form.shortlist_status class="form-control" %}</div>
+          <label class="col-form-label" for="select1">设备类型</label>
+          <div class="col-sm-2">{% render_field filter.form.device_type class="form-control" %}</div>
+          <!-- <label class="col-form-label" for="select1">题材类型</label> -->
+          <label class="col-form-label" for="select1">主题类型</label>
+          <div class="col-sm-2">
+            {% comment %}{%render_field filter.form.category_type class="form-control"%}{% endcomment %}
+            {% render_field filter.form.theme_type class="form-control" %}
+          </div>
         </div>
       </form>
+    </div>
   </div>
-</div>
-<div class="row">
-  <div class="col-md-12">
-    <div class="card" >
-      <div class="card-header">
-        提交记录
-        <div class="float-right">
-          <!-- 记录数量：{{ filter.qs.count }} 手机类：{{device_phone}} 相机类：{{device_camera}} 风景类：{{category_nature}} 人文类：{{category_culture}} -->
-          记录数量：{{ filter.qs.count }} 手机类：{{device_phone}} 相机类：{{device_camera}} 水的模样：{{theme_water}} 美的定义：{{theme_beauty}}
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">
+          提交记录
+          <div class="float-right">
+            <!-- 记录数量：{{ filter.qs.count }} 手机类：{{device_phone}} 相机类：{{device_camera}} 风景类：{{category_nature}} 人文类：{{ category_culture }} -->
+            记录数量：{{ filter.qs.count }} 手机类：{{ device_phone }} 相机类：{{ device_camera }} 水的模样：{{ theme_water }} 美的定义：{{ theme_beauty }}
+          </div>
         </div>
-      </div>
-      <div class="card-body">
-          <table id="main-datatable" class="table table-responsive-md"  style="width:100%" >
-              <thead>
+        <div class="card-body">
+          <table id="main-datatable"
+                 class="table table-responsive-md"
+                 style="width:100%">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>作者</th>
+                <th>提交时间</th>
+                <th>题材</th>
+                <th>设备</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for submission in filter.qs %}
                 <tr>
-                  <th>ID</th>
-                  <th>作者</th>
-                  <th>提交时间</th>
-                  <th>题材</th>
-                  <th>设备</th>
-
+                  <td>
+                    <a href="{{ submission.get_absolute_url }}">{{ submission.submissionId }}</a>
+                  </td>
+                  <th>{{ submission.submissionUserId.get_full_EN_name }}</th>
+                  <td>{{ submission.submissionTime }}</td>
+                  <td>{{ submission.get_themeType_display }}</td>
+                  <td>{{ submission.get_deviceType_display }}</td>
                 </tr>
-              </thead>
-              <tbody>
-                {% for submission in filter.qs %}
-                  <tr>
-                    <td><a href="{{submission.get_absolute_url}}">{{submission.submissionId}}</a></td>
-                    <th>{{submission.submissionUserId.get_full_EN_name}}</th>
-                    <td>{{submission.submissionTime}}</td>
-                    <td>{{submission.get_themeType_display}}</td>
-                    <td>{{submission.get_deviceType_display}}</td>
-                    
-                  </tr>
-                {% endfor %}
-              </tbody>
+              {% endfor %}
+            </tbody>
           </table>
           {% if is_paginated %}
             <ul class="pagination">
               {% if page_obj.has_previous %}
-                <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Prev</a></li>
+                <li class="page-item">
+                  <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Prev</a>
+                </li>
               {% else %}
-                <li class="page-item disabled"><a class="page-link" href="#">Prev</a></li>
+                <li class="page-item disabled">
+                  <a class="page-link" href="#">Prev</a>
+                </li>
               {% endif %}
               {% for i in paginator.page_range %}
                 {% if page_obj.number == i %}
-                  <li class="page-item active"><a class="page-link" href="#">{{ i }} </a></li>
+                  <li class="page-item active">
+                    <a class="page-link" href="#">{{ i }}</a>
+                  </li>
                 {% else %}
-                  <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+                  <li class="page-item">
+                    <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+                  </li>
                 {% endif %}
               {% endfor %}
               {% if page_obj.has_next %}
-                <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
+                <li class="page-item">
+                  <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+                </li>
               {% else %}
-                <li class="page-item disabled"><a class="page-link" href="#">Prev</a></li>
+                <li class="page-item disabled">
+                  <a class="page-link" href="#">Prev</a>
+                </li>
               {% endif %}
             </ul>
           {% endif %}
+        </div>
       </div>
     </div>
   </div>
-</div>
 {% endblock pageContent %}
-
-
 {% block ExtraJS %}
+  <script>
+      let filter_bar = document.querySelector('#filter_bar'),
+          checked_all = document.querySelector('#checked-all'),
+          checked_approved = document.querySelector('#checked-approved'),
+          checked_not_approved = document.querySelector('#checked-not-approved')
 
-<script>
-let filter_bar = document.querySelector('#filter_bar'),
-  checked_all = document.querySelector('#checked-all'),
-  checked_approved = document.querySelector('#checked-approved'),
-  checked_not_approved = document.querySelector('#checked-not-approved')
-
-filter_bar.addEventListener('change', (e) => {
-  e.preventDefault()
-  e.currentTarget.submit()
-})
-
-</script>
-
+      filter_bar.addEventListener('change', (e) => {
+          e.preventDefault()
+          e.currentTarget.submit()
+      })
+  </script>
 {% endblock ExtraJS %}

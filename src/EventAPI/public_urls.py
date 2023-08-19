@@ -1,9 +1,10 @@
-from django.urls import path, re_path, include
+from django.urls import include, path
 from rest_framework import routers
+
 from . import views
 
 app_name = "EventAPI"
-EventsPublic = routers.DefaultRouter()   
+EventsPublic = routers.DefaultRouter()
 
 # For mobile-app api
 # router = routers.SimpleRouter()
@@ -12,7 +13,9 @@ EventsPublic = routers.DefaultRouter()
 
 
 urlpatterns = [
-    path('mobile-api/',include(EventsPublic.urls)),
-    path('mobile-api/events-past/', views.MobilePastEventAPI.as_view(), name='PastEventForMobileAPI'),
-    path('mobile-api/events-future/', views.MobileFutureEventAPI.as_view(), name='FutureEventForMobileAPI'),
+    path('mobile-api/', include(EventsPublic.urls)),
+    path('mobile-api/events-past/', views.MobilePastEventAPI.as_view(),
+         name='PastEventForMobileAPI'),
+    path('mobile-api/events-future/', views.MobileFutureEventAPI.as_view(),
+         name='FutureEventForMobileAPI'),
 ]

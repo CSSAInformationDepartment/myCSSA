@@ -1,95 +1,94 @@
-{% extends 'myCSSAhub/component/_layout.html' %}
+{% extends "myCSSAhub/component/_layout.html" %}
 {% load static %}
 {% block ExtraHeader %}
-<link href="{% static 'myCSSAhub/vendors/DataTables/datatables.min.css'%}" rel="stylesheet">
+  <link href="{% static 'myCSSAhub/vendors/DataTables/datatables.min.css' %}"
+        rel="stylesheet">
 {% endblock ExtraHeader %}
-
 {% block pageContent %}
-<div class="row">
+  <div class="row">
     <div class="col-6">
-        <p> 您的部门目前有 <strong> {{new_resume_count}} </strong> 份未读简历</p>
+      <p>
+        您的部门目前有 <strong>{{ new_resume_count }}</strong> 份未读简历
+      </p>
     </div>
-    {% if user.is_staff %}
-    <div class="col-6">
-    </div>
-    {% endif %}
-</div>
-
-<div class="row">
-  <div class="col-12">
-    <div class="card" >
-      <div class="card-header">
-        <i class="fa fa-align-justify"></i> 简历总表
-      </div>
-      <div class="card-body">
-          <table id="main-datatable" class="table table-responsive-md"  style="width:100%" >
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>申请人</th>
-              <th>相关部门</th>
-              <th>岗位名称</th>
-              <th>投递时间</th>
-              <th>状态</th>
-            </tr>
-          </thead>
+    {% if user.is_staff %}<div class="col-6"></div>{% endif %}
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <i class="fa fa-align-justify"></i> 简历总表
+        </div>
+        <div class="card-body">
+          <table id="main-datatable"
+                 class="table table-responsive-md"
+                 style="width:100%">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>申请人</th>
+                <th>相关部门</th>
+                <th>岗位名称</th>
+                <th>投递时间</th>
+                <th>状态</th>
+              </tr>
+            </thead>
           </table>
+        </div>
       </div>
     </div>
   </div>
-</div>
-
-<div class="row">
-  <div class="col-12">
-    <div class="card" >
-      <div class="card-header">
-        <i class="fa fa-align-justify"></i> 面试安排
-      </div>
-      <div class="card-body">
-          <table id="interview-datatable" class="table table-responsive-md"  style="width:100%" >
-          <thead>
-            <tr>
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <i class="fa fa-align-justify"></i> 面试安排
+        </div>
+        <div class="card-body">
+          <table id="interview-datatable"
+                 class="table table-responsive-md"
+                 style="width:100%">
+            <thead>
+              <tr>
                 <th>ID</th>
                 <th>受试者</th>
                 <th>日期</th>
                 <th>时间</th>
                 <th>地点</th>
-            </tr>
-          </thead>
+              </tr>
+            </thead>
           </table>
+        </div>
       </div>
     </div>
   </div>
-</div>
-
-{% endblock %}
-
+{% endblock pageContent %}
 {% block ExtraJS %}
+  <script src="{% static 'myCSSAhub/vendors/DataTables/datatables.js'%}"></script>
+  <script>
+      $(document).ready(function() {
+          var oTable = $('#main-datatable').dataTable({
+              "responsive": true,
+              "processing": true,
+              "serverSide": true,
+              "ajax": "{% url 'myCSSAhub:RecruitAPI:resume_jsonlist' %}",
+              "columnDefs": [{
+                  "targets": 5,
+                  "orderable": false
+              }],
+              order: [
+                  [4, "desc"]
+              ]
+          });
+      });
 
-<script src="{% static 'myCSSAhub/vendors/DataTables/datatables.js'%}"></script>
-<script>
-$(document).ready(function() {
-    var oTable = $('#main-datatable').dataTable({
-        "responsive": true,
-        "processing": true,
-        "serverSide": true,
-        "ajax": "{% url 'myCSSAhub:RecruitAPI:resume_jsonlist' %}",
-        "columnDefs": [{
-        "targets": 5,
-        "orderable": false
-        }],
-        order: [[ 4, "desc" ]]
-    });
-});
-
-$(document).ready(function() {
-    var oTable = $('#interview-datatable').dataTable({
-        "responsive": true,
-        "processing": true,
-        "serverSide": true,
-        "ajax": "{% url 'myCSSAhub:RecruitAPI:interview_jsonlist' %}",
-    });
-});
-</script>
-
+      $(document).ready(function() {
+          var oTable = $('#interview-datatable').dataTable({
+              "responsive": true,
+              "processing": true,
+              "serverSide": true,
+              "ajax": "{% url 'myCSSAhub:RecruitAPI:interview_jsonlist' %}",
+          });
+      });
+  </script>
 {% endblock ExtraJS %}

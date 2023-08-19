@@ -1,12 +1,9 @@
+from UserAuthAPI.models import User
+
 from .models import HttpAccessLogModel
-from UserAuthAPI.models import User, UserProfile
-import json
+
 
 def not_logging_whitelist(ip):
-    WHITE_LIST = [
-        '10.*.*.*',
-        '192.168.*.*',
-    ]
     if ip is None:
         return False
 
@@ -15,19 +12,18 @@ def not_logging_whitelist(ip):
 
 class HttpRequestLogMiddleware():
 
-
     def get_machine_ip_addr(self):
         import socket
-        #获取本机电脑名
-        myname = socket.getfqdn(socket.gethostname(  ))
-        #获取本机ip
+        # 获取本机电脑名
+        myname = socket.getfqdn(socket.gethostname())
+        # 获取本机ip
         myaddr = socket.gethostbyname(myname)
         print(myname)
         print(myaddr)
-    
+
     def __init__(self, get_response):
         self.get_response = get_response
-        
+
         # One-time configuration and initialization.
 
     def __call__(self, request):
@@ -43,31 +39,29 @@ class HttpRequestLogMiddleware():
         new_log.request_query_string = request.META.get('QUERY_STRING')
         new_log.request_method = request.method
 
-        #new_log.request_META = json.dumps(request.META)
-        
-        ## Save IP
+        # new_log.request_META = json.dumps(request.META)
+
+        # Save IP
         USE_HTTP_X_FORWARD_FOR = True
 
         if USE_HTTP_X_FORWARD_FOR:
             new_log.visitor_ipv4 = request.META.get('HTTP_X_FORWARDED_FOR')
             if new_log.visitor_ipv4 is not None and ',' in new_log.visitor_ipv4:
-                    proxy_parts = new_log.visitor_ipv4.split(',')
-                    new_log.visitor_ipv4 = proxy_parts[-1].strip()
+                proxy_parts = new_log.visitor_ipv4.split(',')
+                new_log.visitor_ipv4 = proxy_parts[-1].strip()
         else:
             new_log.visitor_ipv4 = request.META.get('REMOTE_ADDR')
-       
 
         if not_logging_whitelist(new_log.visitor_ipv4):
-            ## Store User Info
+            # Store User Info
             if request.user.is_authenticated:
                 new_log.is_anonymous = False
                 new_log.user = User.objects.get(pk=request.user.id)
             else:
                 new_log.is_anonymous = True
-            
+
             new_log.status_code = response.status_code
 
-            
             new_log.save()
             # Code to be executed for each request/response after
             # the view is called.

@@ -1,57 +1,61 @@
-{% extends 'components/base_page.html' %}
+{% extends "components/base_page.html" %}
 {% block 'pg_body' %}
-
-{% load static %}
-<style>
-  #bloc-1 {
-    background-image: url("{% static 'myCSSAhub/img/bg-login.jpg' %}");
-    min-height:100%;
-    background-color: rgba(255, 255, 255, 0.4);
-    background-blend-mode: lighten;
-  }
-
-</style>
-
-<div class="bloc none l-bloc" id="bloc-1" style="padding:40px">
-  <div class="container bloc-fill-screen justify-content-center">
-    <div class="row">
-      <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
-        <div id="ErrMsgArea">
-        </div>
-        <div class="card card-signin my-5">
-          <div class="card-body">
-            <h5 class="card-title text-center">登入 Sign In</h5>
-            <form id="main-login-form" class="form-signin" method='POST'>
-            {% csrf_token %}
-              <div class="form-label-group">
-                <label for="inputEmail">Email</label>
-                <input name="email" type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
-              </div>
-
-              <div class="form-label-group">
-                <label for="inputPassword">Password</label>
-                <input name="password" type="password" id="inputPassword" class="form-control" placeholder="Password" required>
-              </div>
-
-              <div class="custom-control custom-checkbox mb-3">
-                <input type="checkbox" class="custom-control-input" id="customCheck1">
-                <label class="custom-control-label" for="customCheck1">Remember Password</label>
-              </div>
-              <button class="btn btn-lg btn-primary btn-block text-uppercase" type="submit">登录</button>
-              <div class="justify-content-center text-center pt-2">
-              <a class="h6" href="{% url 'myCSSAhub:hub_regform' %}"><strong><u>还没有账号？点击此注册</u></strong></a></div>
-            </form>
+  {% load static %}
+  <style>
+      #bloc-1 {
+          background-image: url("{% static 'myCSSAhub/img/bg-login.jpg' %}");
+          min-height: 100%;
+          background-color: rgba(255, 255, 255, 0.4);
+          background-blend-mode: lighten;
+      }
+  </style>
+  <div class="bloc none l-bloc" id="bloc-1" style="padding:40px">
+    <div class="container bloc-fill-screen justify-content-center">
+      <div class="row">
+        <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
+          <div id="ErrMsgArea"></div>
+          <div class="card card-signin my-5">
+            <div class="card-body">
+              <h5 class="card-title text-center">登入 Sign In</h5>
+              <form id="main-login-form" class="form-signin" method='post'>
+                {% csrf_token %}
+                <div class="form-label-group">
+                  <label for="inputEmail">Email</label>
+                  <input name="email"
+                         type="email"
+                         id="inputEmail"
+                         class="form-control"
+                         placeholder="Email address"
+                         required
+                         autofocus>
+                </div>
+                <div class="form-label-group">
+                  <label for="inputPassword">Password</label>
+                  <input name="password"
+                         type="password"
+                         id="inputPassword"
+                         class="form-control"
+                         placeholder="Password"
+                         required>
+                </div>
+                <div class="custom-control custom-checkbox mb-3">
+                  <input type="checkbox" class="custom-control-input" id="customCheck1">
+                  <label class="custom-control-label" for="customCheck1">Remember Password</label>
+                </div>
+                <button class="btn btn-lg btn-primary btn-block text-uppercase" type="submit">登录</button>
+                <div class="justify-content-center text-center pt-2">
+                  <a class="h6" href="{% url 'myCSSAhub:hub_regform' %}"><strong><u>还没有账号？点击此注册</u></strong></a>
+                </div>
+              </form>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-</div>
-
-<!-- Optional JavaScript -->
-<!-- jQuery first, then Popper.js, then Bootstrap JS -->
-<script>
-
+  <!-- Optional JavaScript -->
+  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+  <script>
 function bs_alert_popup(){
   $('#ErrMsgArea').html('<div id="login-fail-alert" class="alert alert-dismissible alert-warning fade show" role="alert"><button type="button" class="close" data-dismiss="alert">&times;</button><h4 class="alert-heading">登陆失败 !</h4><p class="mb-0">您提供的用户名不存在或者与密码不匹配，请检查！</p></div>')
 }
@@ -86,6 +90,5 @@ $('#main-login-form').on('submit', function(event){
     create_post();
     console.log("form submitted!")  // sanity check
 });
-</script>
-
+  </script>
 {% endblock 'pg_body' %}

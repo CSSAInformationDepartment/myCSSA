@@ -1,6 +1,4 @@
 from typing import Optional
-from django.contrib import postgres
-from django.contrib.postgres import fields
 from rest_framework.exceptions import APIException
 from rest_framework.serializers import ValidationError
 from rest_framework import serializers
@@ -18,10 +16,12 @@ from . import caches
 
 logger = logging.getLogger('app.CommunityAPI.serializers')
 
+
 class TagSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Tag
         fields = ['id', 'title']
+
 
 class NotificationSerializer(serializers.ModelSerializer):
 
@@ -30,8 +30,8 @@ class NotificationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Notification
-        fields = ['id', 'targetPost','data', 'type', 'read', 'time',
-            'senderUsername', 'senderAvatar']
+        fields = ['id', 'targetPost', 'data', 'type', 'read', 'time',
+                  'senderUsername', 'senderAvatar']
 
     def get_senderUsername(self, instance) -> Optional[str]:
         if not instance.sender:
@@ -43,12 +43,15 @@ class NotificationSerializer(serializers.ModelSerializer):
         if not instance.sender:
             return None
         return resolve_avatar(instance.sender)
-        
+
+
 class PostImageSerializer(serializers.ModelSerializer):
 
     url = serializers.SerializerMethodField('getImageUrl', label='原图的url')
-    thumbnail = serializers.SerializerMethodField('getThumbnail', label='缩略图（显示在图片列表里）的url，大小为 50x50')
-    small = serializers.SerializerMethodField('getSmall', label='压缩图的url，最大为 300x300')
+    thumbnail = serializers.SerializerMethodField(
+        'getThumbnail', label='缩略图（显示在图片列表里）的url，大小为 50x50')
+    small = serializers.SerializerMethodField(
+        'getSmall', label='压缩图的url，最大为 300x300')
 
     class Meta:
         model = models.PostImage
@@ -64,17 +67,21 @@ class PostImageSerializer(serializers.ModelSerializer):
 
     @swagger_serializer_method(serializer_or_field=serializers.URLField)
     def getThumbnail(self, instance):
-        image = get_thumbnail(instance.image, '50x50', crop='center', quality=99)
+        image = get_thumbnail(instance.image, '50x50',
+                              crop='center', quality=99)
         return self._buildAbsoluteUrl(image)
 
     @swagger_serializer_method(serializer_or_field=serializers.URLField)
     def getSmall(self, instance):
-        image = get_thumbnail(instance.image, '300x300', crop='noop', quality=99)
+        image = get_thumbnail(instance.image, '300x300',
+                              crop='noop', quality=99)
         return self._buildAbsoluteUrl(image)
+
 
 class ReadContentSerializer(serializers.ModelSerializer):
     # images = PostImageSerializer(many=True, read_only=True)
-    images = serializers.SerializerMethodField(label='images. Can be null if parameter `noimg` is given')
+    images = serializers.SerializerMethodField(
+        label='images. Can be null if parameter `noimg` is given')
 
     @swagger_serializer_method(serializer_or_field=PostImageSerializer(many=True))
     def get_images(self, instance):
@@ -90,12 +97,12 @@ class ReadContentSerializer(serializers.ModelSerializer):
 
 class EditContentSerializer(serializers.ModelSerializer):
 
-    TEXT_LENGTH_MIN=1
-    TITLE_LENGTH_MIN=1
-    IMAGE_MAX_LENGTH=3
+    TEXT_LENGTH_MIN = 1
+    TITLE_LENGTH_MIN = 1
+    IMAGE_MAX_LENGTH = 3
 
     images = serializers.ListField(write_only=True, max_length=IMAGE_MAX_LENGTH,
-        child=serializers.UUIDField(label='图片的UUID列表，想要增删图片，修改这个列表即可。'))
+                                   child=serializers.UUIDField(label='图片的UUID列表，想要增删图片，修改这个列表即可。'))
 
     class Meta:
         model = models.Content
@@ -107,16 +114,19 @@ class EditContentSerializer(serializers.ModelSerializer):
             if not title:
                 raise ValidationError({'title': '主贴必须有标题'})
             elif len(title) < self.TITLE_LENGTH_MIN:
-                raise ValidationError({'title': f'主贴标题长度必须大于等于 {self.TITLE_LENGTH_MIN}'})
+                raise ValidationError(
+                    {'title': f'主贴标题长度必须大于等于 {self.TITLE_LENGTH_MIN}'})
         else:
-            if title != None:
+            if title is not None:
                 raise ValidationError({'title': '回复不能有标题'})
 
         text = attrs.get('text', None)
-        if text == None or len(text) < self.TEXT_LENGTH_MIN:
-            raise ValidationError({'text': f'帖子正文长度必须大于等于 {self.TEXT_LENGTH_MIN}'})
+        if text is None or len(text) < self.TEXT_LENGTH_MIN:
+            raise ValidationError(
+                {'text': f'帖子正文长度必须大于等于 {self.TEXT_LENGTH_MIN}'})
 
         return super().validate(attrs)
+
 
 def resolve_username(profile: UserProfile) -> str:
     if hasattr(profile, 'userinformation'):
@@ -124,6 +134,7 @@ def resolve_username(profile: UserProfile) -> str:
     else:
         # 用用户的全名来当作用户名
         return profile.firstNameEN + ' ' + profile.lastNameEN
+
 
 def resolve_avatar(profile: UserProfile) -> Optional[str]:
     if hasattr(profile, 'userinformation'):
@@ -133,11 +144,13 @@ def resolve_avatar(profile: UserProfile) -> Optional[str]:
     else:
         return None
 
+
 def resolve_post_content(post: models.Post) -> models.Content:
     content = models.Content.objects.filter(post=post).order_by('-editedTime') \
         .select_related('editedBy').first()
     assert content, '一个Post必定有一个Content'
     return content
+
 
 class PostSerializerMixin:
     """
@@ -152,7 +165,8 @@ class PostSerializerMixin:
         """
 
         contentModel = resolve_post_content(instance)
-        repr['content'] = self.fields['content'].to_representation(contentModel)
+        repr['content'] = self.fields['content'].to_representation(
+            contentModel)
 
         repr['createdBy'] = resolve_username(instance.createdBy)
         repr['creatorAvatar'] = resolve_avatar(instance.createdBy)
@@ -195,40 +209,44 @@ class PostSerializerMixin:
             return
 
         if is_text_invalid(openid, text, title):
-            raise APIException('根据相关法律法规，您不能发布此内容。', 451) 
+            raise APIException('根据相关法律法规，您不能发布此内容。', 451)
+
 
 class ReadMainPostSerializer(PostSerializerMixin, serializers.ModelSerializer):
     """
     只用来处理主贴的读取
     """
 
-    SUMMARY_TEXT_LENGTH = 200 # 前200字
+    SUMMARY_TEXT_LENGTH = 200  # 前200字
 
     content = ReadContentSerializer(read_only=True)
 
     createdBy = serializers.CharField(label='创建者的用户名')
-    creatorAvatar = serializers.URLField(label='创建者的头像', read_only=True, allow_null=True)
+    creatorAvatar = serializers.URLField(
+        label='创建者的头像', read_only=True, allow_null=True)
 
     favouriteCount = serializers.SerializerMethodField(label='收藏该帖子的人的数量')
-    isFavourite = serializers.SerializerMethodField(label='本人是否已收藏，如果用户未登录，这里也是false')
+    isFavourite = serializers.SerializerMethodField(
+        label='本人是否已收藏，如果用户未登录，这里也是false')
 
     my = serializers.SerializerMethodField(label='是否是我的帖子')
 
     class Meta:
         model = models.Post
         fields = ['id', 'tag', 'createTime', 'viewCount', 'viewableToGuest',
-            # 正常情况下我们不需要再声明下面两个field，但是不这么搞的话 drf_yasg 会报错
-            'content', 'createdBy', 'creatorAvatar', 'favouriteCount', 'isFavourite', 'my']
+                  # 正常情况下我们不需要再声明下面两个field，但是不这么搞的话 drf_yasg 会报错
+                  'content', 'createdBy', 'creatorAvatar', 'favouriteCount', 'isFavourite', 'my']
 
     def get_favouriteCount(self, instance) -> int:
         return caches.get_favourite_count_for_post(
-            instance.id, 
+            instance.id,
             self.context['view'].detail)
 
     def get_isFavourite(self, instance) -> bool:
         user = self.context['request'].user
         return False if user.is_anonymous else \
-            models.FavouritePost.objects.filter(post=instance, user_id=user.id).exists()
+            models.FavouritePost.objects.filter(
+                post=instance, user_id=user.id).exists()
 
     def to_representation(self, instance: models.Post):
         repr = super().to_representation(instance)
@@ -240,19 +258,21 @@ class ReadMainPostSerializer(PostSerializerMixin, serializers.ModelSerializer):
 
         return repr
 
+
 class EditMainPostSerializer(PostSerializerMixin, serializers.ModelSerializer):
     """
     处理主贴的添加和修改。
     """
     content = EditContentSerializer()
 
-    openid = serializers.CharField(label='用来调用微信API的 openid', write_only=True, allow_null=True)
+    openid = serializers.CharField(
+        label='用来调用微信API的 openid', write_only=True, allow_null=True)
 
     class Meta:
         model = models.Post
         fields = ['tag', 'viewableToGuest',
-            # 正常情况下我们不需要再声明下面的field，但是不这么搞的话 drf_yasg 会报错
-            'content', 'openid']
+                  # 正常情况下我们不需要再声明下面的field，但是不这么搞的话 drf_yasg 会报错
+                  'content', 'openid']
 
     @atomic
     def create(self, validated_data):
@@ -277,6 +297,7 @@ class EditMainPostSerializer(PostSerializerMixin, serializers.ModelSerializer):
 
         return instance
 
+
 class ReadCommentSerializer(PostSerializerMixin, serializers.ModelSerializer):
     """
     处理一级评论的读取
@@ -285,20 +306,22 @@ class ReadCommentSerializer(PostSerializerMixin, serializers.ModelSerializer):
     content = ReadContentSerializer(read_only=True)
 
     createdBy = serializers.CharField(label='创建者的用户名')
-    creatorAvatar = serializers.URLField(label='创建者的头像', read_only=True, allow_null=True)
+    creatorAvatar = serializers.URLField(
+        label='创建者的头像', read_only=True, allow_null=True)
 
     my = serializers.SerializerMethodField(label='是否是我的帖子')
 
     class Meta:
         model = models.Post
         fields = ['id', 'createTime',
-            # 正常情况下我们不需要再声明下面两个field，但是不这么搞的话 drf_yasg 会报错
-            'content', 'createdBy', 'creatorAvatar', 'my']
+                  # 正常情况下我们不需要再声明下面两个field，但是不这么搞的话 drf_yasg 会报错
+                  'content', 'createdBy', 'creatorAvatar', 'my']
 
     def to_representation(self, instance: models.Post):
         repr = super().to_representation(instance)
         self.fill_representation(repr, instance)
         return repr
+
 
 def get_post_by_id(id: int) -> models.Post:
     """
@@ -320,12 +343,14 @@ def get_post_from_url(view: APIView, key_name='post_id') -> models.Post:
     postId = view.kwargs[key_name]
     return get_post_by_id(postId)
 
+
 def verify_main_post(post: models.Post):
     """
     确保本帖子是主贴，否则抛出异常
     """
     if post.replyToComment or post.replyToId:
         raise serializers.ValidationError(f'只能给主贴回复，但帖子id={post.pk}不是主贴')
+
 
 class EditCommentSerializer(PostSerializerMixin, serializers.Serializer):
     """
@@ -334,7 +359,8 @@ class EditCommentSerializer(PostSerializerMixin, serializers.Serializer):
 
     content = EditContentSerializer()
 
-    openid = serializers.CharField(label='用来调用微信API的 openid', write_only=True, allow_null=True)
+    openid = serializers.CharField(
+        label='用来调用微信API的 openid', write_only=True, allow_null=True)
 
     @atomic
     def create(self, validated_data):
@@ -359,6 +385,7 @@ class EditCommentSerializer(PostSerializerMixin, serializers.Serializer):
         self.create_content(validated_data, instance)
         return instance
 
+
 class ReadSubCommentSerializer(PostSerializerMixin, serializers.ModelSerializer):
     """
     处理二级及以上评论的读取
@@ -367,7 +394,8 @@ class ReadSubCommentSerializer(PostSerializerMixin, serializers.ModelSerializer)
     content = ReadContentSerializer(read_only=True)
 
     createdBy = serializers.CharField(label='创建者的用户名')
-    creatorAvatar = serializers.URLField(label='创建者的头像', read_only=True, allow_null=True)
+    creatorAvatar = serializers.URLField(
+        label='创建者的头像', read_only=True, allow_null=True)
 
     replyToUser = serializers.CharField(label='回复的对象的用户名', read_only=True)
 
@@ -376,8 +404,8 @@ class ReadSubCommentSerializer(PostSerializerMixin, serializers.ModelSerializer)
     class Meta:
         model = models.Post
         fields = ['id', 'createTime', 'replyToId',
-            # 正常情况下我们不需要再声明下面两个field，但是不这么搞的话 drf_yasg 会报错
-            'content', 'createdBy', 'creatorAvatar', 'replyToUser', 'my']
+                  # 正常情况下我们不需要再声明下面两个field，但是不这么搞的话 drf_yasg 会报错
+                  'content', 'createdBy', 'creatorAvatar', 'replyToUser', 'my']
 
     def to_representation(self, instance: models.Post):
         repr = super().to_representation(instance)
@@ -385,12 +413,14 @@ class ReadSubCommentSerializer(PostSerializerMixin, serializers.ModelSerializer)
         repr['replyToUser'] = resolve_username(instance.replyToId.createdBy)
         return repr
 
+
 def verify_comment(post: models.Post):
     """
     确保post是一个一级评论，否则抛出异常
     """
     if not post.replyToId or post.replyToComment:
         raise ValidationError(f'comment_id 必须是一个一级回复，而id={post.pk}不是')
+
 
 class EditSubCommentSerializer(PostSerializerMixin, serializers.Serializer):
     """
@@ -400,9 +430,10 @@ class EditSubCommentSerializer(PostSerializerMixin, serializers.Serializer):
     content = EditContentSerializer()
 
     replyTo = serializers.IntegerField(label='要回复的评论的id；只在添加新评论时有效，其他情况下会'
-        '忽略此值')
+                                       '忽略此值')
 
-    openid = serializers.CharField(label='用来调用微信API的 openid', write_only=True, allow_null=True)
+    openid = serializers.CharField(
+        label='用来调用微信API的 openid', write_only=True, allow_null=True)
 
     @atomic
     def create(self, validated_data):
@@ -415,10 +446,11 @@ class EditSubCommentSerializer(PostSerializerMixin, serializers.Serializer):
         if comment == replyTarget:
             pass
         elif replyTarget.type != models.Post.SUBCOMMENT:
-            raise ValidationError('replyTo 指定的回复目标不能是主贴或一级评论，除非 replyTo = comment_id')
+            raise ValidationError(
+                'replyTo 指定的回复目标不能是主贴或一级评论，除非 replyTo = comment_id')
         elif replyTarget.replyToComment.pk != comment.pk:
             raise ValidationError('replyTo 指定的回复目标跟本评论不属于同一个一级评论。其目标'
-                f'id={replyTarget.replyToComment.pk}')
+                                  f'id={replyTarget.replyToComment.pk}')
 
         post = models.Post.objects.create(
             createdBy_id=userProfile.pk,
@@ -437,26 +469,32 @@ class EditSubCommentSerializer(PostSerializerMixin, serializers.Serializer):
         self.create_content(validated_data, instance)
         return instance
 
+
 class FavouritePostSerializer(serializers.ModelSerializer):
     post = ReadMainPostSerializer(read_only=True)
+
     class Meta:
         model = models.FavouritePost
         fields = ['post']
         depth = 1
         detail = False
 
+
 class UserInformationSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.UserInformation
         fields = ['username', 'avatarUrl']
+
 
 class ReportSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Report
         fields = '__all__'
-        read_only_fields = ['createdBy', 'resolved', 'resolvedBy', 'targetPost']
+        read_only_fields = ['createdBy',
+                            'resolved', 'resolvedBy', 'targetPost']
         depth = 1
+
 
 class CreateReportSerializer(serializers.ModelSerializer):
 
@@ -464,8 +502,10 @@ class CreateReportSerializer(serializers.ModelSerializer):
         model = models.Report
         fields = ('targetPost', 'reason', 'type')
 
+
 class HandleReportSerializer(serializers.ModelSerializer):
     id_list = serializers.ListField(child=serializers.IntegerField())
+
     class Meta:
         model = models.Report
         fields = ('id_list',)

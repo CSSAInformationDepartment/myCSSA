@@ -1,27 +1,15 @@
-{% extends 'myCSSAhub/component/_layout.html' %}
-
-
+{% extends "myCSSAhub/component/_layout.html" %}
 {% block pageContent %}
-{% load widget_tweaks %}
-<form action="" method="post">
-    {% csrf_token %}
-    {% for hidden_field in form.hidden_fields %}
-        {{ hidden_field }}
-    {% endfor %}
-
-    {% if form.non_field_errors %}
-    <div class="alert alert-danger" role="alert">
-        {% for error in form.non_field_errors %}
-            {{ error }}
-        {% endfor %}
-    </div>
-    {% endif %}
-    
-    <input type="submit" value="Submit">
-</form>
-{% endblock %}
-
-
- {% block ExtraJS %}
-
- {% endblock %}   
+    {% load widget_tweaks %}
+    <form action="" method="post">
+        {% csrf_token %}
+        {% for hidden_field in form.hidden_fields %}{{ hidden_field }}{% endfor %}
+        {% if form.non_field_errors %}
+            <div class="alert alert-danger" role="alert">
+                {% for error in form.non_field_errors %}{{ error }}{% endfor %}
+            </div>
+        {% endif %}
+        <input type="submit" value="Submit">
+    </form>
+{% endblock pageContent %}
+{% block ExtraJS %}{% endblock ExtraJS %}

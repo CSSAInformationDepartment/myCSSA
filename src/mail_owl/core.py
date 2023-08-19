@@ -1,4 +1,4 @@
-	
+
 #              ,' ``',
 #             '  (o)(o)
 #            `       > ;
@@ -13,13 +13,13 @@
 #                  |               Ver: 0.0.2 (Ricecake)               |
 #                  |                 M.I.T. Licensed                   |
 #                  |___________________________________________________|
-#    
+#
 
 
-## This is the communication module of Mail Owl
-## It will listen to port 44300 in the gateway
+# This is the communication module of Mail Owl
+# It will listen to port 44300 in the gateway
 
-## 组网思路
+# 组网思路
 # 1. 获取服务器容器的IP地址
 # 2. 向同网关下的44300端口广播自己的IP地址
 # 3. 收听其他节点44300端口发出的IP的地址，并记录

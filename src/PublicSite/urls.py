@@ -1,18 +1,20 @@
 from django.contrib import admin
-from django.urls import path, re_path, include
-from PublicSite import views as Views
-from Library.SiteManagement import LoadPagetoRegister
-
-from PhotoCompetition import public_urls as PhotoCompetitionPublicUrls
+from django.urls import include, path, re_path
 from EventAPI import public_urls as EventsPublicUrls
+from Library.SiteManagement import LoadPagetoRegister
+from PhotoCompetition import public_urls as PhotoCompetitionPublicUrls
+
+from PublicSite import views as Views
 
 app_name = "PublicSite"
 urlpatterns = [
     path('', Views.index, name='index'),
-    path('department/<str:dept>/', Views.DepartmentInfoView.as_view(), name='departments'),
+    path('department/<str:dept>/',
+         Views.DepartmentInfoView.as_view(), name='departments'),
     path('contact/', Views.ContactUs, name="contact"),
     path('recruitment/', Views.Recruitments, name='recruitment'),
-    path('resumes/<str:jobId>/', Views.ResumeSubmissionView.as_view(), name='resumes'),
+    path('resumes/<str:jobId>/',
+         Views.ResumeSubmissionView.as_view(), name='resumes'),
     path('merchants/', Views.Merchants, name='merchants'),
     path('support_merchants/', Views.SupportMerchants, name='supportMerchants'),
     path('blog/<int:blogId>/', Views.BlogContents, name='blogContent'),
@@ -21,8 +23,8 @@ urlpatterns = [
     path('events/', Views.EventsListView.as_view(), name='events'),
     path('events/<str:eventID>/', Views.EventDetails, name='eventsDetails'),
 
-    ### Apps Extension Urls
-    ### path('app/photo-competition/', include(PhotoCompetitionPublicUrls,  namespace='PhotoCompetition')), # 暂时移除摄影大赛接口
+    # Apps Extension Urls
+    # path('app/photo-competition/', include(PhotoCompetitionPublicUrls,  namespace='PhotoCompetition')), # 暂时移除摄影大赛接口
     path('app/events/', include(EventsPublicUrls,  namespace='EventAPI')),
 
 ]

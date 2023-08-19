@@ -1,11 +1,12 @@
 # 发送email的逻辑类
-from .models import EmailConfiguration, EmailDB
-from django.core.mail import EmailMultiAlternatives
-from UserAuthAPI import models as UserModels
 # 关键设定：不能直接调用CSSAnet这个module进行设定
 from django.conf import settings
+from django.core.mail import EmailMultiAlternatives
+from django.http import Http404
 from django.template.loader import get_template
-from django.template import Context
+from UserAuthAPI import models as UserModels
+
+from .models import EmailConfiguration, EmailDB
 
 officialEmail = 'automail.cssa@cssaunimelb.com'
 
@@ -32,29 +33,33 @@ def send_emails(title, content, targetID, currentUserId):
 
         jobName = content.jobRelated.jobName
         dept = content.jobRelated.dept.deptTitle
-        username = content.user.userprofile.lastNameEN + " " + content.user.userprofile.firstNameEN
+        username = content.user.userprofile.lastNameEN + \
+            " " + content.user.userprofile.firstNameEN
         html_content = get_template('myCSSAhub/email/cv_mail.html').render({'username': username, 'dept': dept,
-                                                                                  'jobName': jobName})
+                                                                            'jobName': jobName})
 
         targetEmail.append(targetID)
 
-        email_content(title+" 我们已经收到您的简历", 'CV Submitted', html_content, targetEmail)
-    
+        email_content(title+" 我们已经收到您的简历", 'CV Submitted',
+                      html_content, targetEmail)
+
     elif title == "Interview Scheduled":
 
         date = content.date
         time = content.time
         location = content.location
         note = content.note
-        username = content.resume.user.userprofile.lastNameEN + " " + content.resume.user.userprofile.firstNameEN
+        username = content.resume.user.userprofile.lastNameEN + \
+            " " + content.resume.user.userprofile.firstNameEN
         jobName = content.resume.jobRelated.jobName
 
         html_content = get_template('myCSSAhub/email/interview_notice.html').render({'username': username, 'date': date,
-                                                                                  'time': time, 'location': location, 'note':note, 'jobName':jobName})
+                                                                                     'time': time, 'location': location, 'note': note, 'jobName': jobName})
 
         targetEmail.append(targetID)
 
-        email_content(title+" 您的CSSA Committee面试即将开始", 'Interview Scheduled', html_content, targetEmail)
+        email_content(title+" 您的CSSA Committee面试即将开始",
+                      'Interview Scheduled', html_content, targetEmail)
     else:
 
         # 获得需要发送的email地址
@@ -67,13 +72,13 @@ def send_emails(title, content, targetID, currentUserId):
 
 def email_content(title, content, html_content, targetEmail):
 
-
     email_msg = EmailMultiAlternatives(
         title, content, officialEmail, targetEmail)
 
     email_msg.attach_alternative(html_content, "text/html")
 
     email_msg.send()
+
 
 def queryEmailConfiguration():
 

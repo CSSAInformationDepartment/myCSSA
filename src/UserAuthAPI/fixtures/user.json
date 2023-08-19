@@ -1,150 +1,157 @@
-
 [
- 	{ "model": "UserAuthAPI.user", 
-		"pk": "d146f94c-c900-49e2-a1fb-8ab0474daeff",
-		"fields": {
-			"email": "testM0@cssa.com",
-			"telNumber": "0400123456",
-			"password": "pbkdf2_sha256$120000$PUvUoK3ik8DO$lzZlkV8oJN6crOUuGCMmqcuScdcX+CZOynXUo3nZEpE=",
-			"is_superuser": false,
-			"is_staff": false,
-			"is_active": true
-		}
-	},
-    
-    { "model": "UserAuthAPI.user", 
-		"pk": "5a3502c7-4aee-4832-80d4-0c23aa1d2f86",
-		"fields": {
-			"email": "testM1@cssa.com",
-			"telNumber": "0400123453",
-			"password": "pbkdf2_sha256$120000$PUvUoK3ik8DO$lzZlkV8oJN6crOUuGCMmqcuScdcX+CZOynXUo3nZEpE=",
-			"is_superuser": false,
-			"is_staff": false,
-			"is_active": true
-		}
-	},
+    {
+        "model": "UserAuthAPI.user",
+        "pk": "d146f94c-c900-49e2-a1fb-8ab0474daeff",
+        "fields": {
+            "email": "testM0@cssa.com",
+            "telNumber": "0400123456",
+            "password": "pbkdf2_sha256$120000$PUvUoK3ik8DO$lzZlkV8oJN6crOUuGCMmqcuScdcX+CZOynXUo3nZEpE=",
+            "is_superuser": false,
+            "is_staff": false,
+            "is_active": true
+        }
+    },
 
-	{ "model": "UserAuthAPI.user", 
-		"pk": "d2c9fd9e-9346-4ec4-ae15-600431a3ed3a",
-		"fields": {
-			"email": "testM2@cssa.com",
-			"telNumber": "0400123433",
-			"password": "pbkdf2_sha256$120000$PUvUoK3ik8DO$lzZlkV8oJN6crOUuGCMmqcuScdcX+CZOynXUo3nZEpE=",
-			"is_superuser": false,
-			"is_staff": false,
-			"is_active": true
-		}
-	},
+    {
+        "model": "UserAuthAPI.user",
+        "pk": "5a3502c7-4aee-4832-80d4-0c23aa1d2f86",
+        "fields": {
+            "email": "testM1@cssa.com",
+            "telNumber": "0400123453",
+            "password": "pbkdf2_sha256$120000$PUvUoK3ik8DO$lzZlkV8oJN6crOUuGCMmqcuScdcX+CZOynXUo3nZEpE=",
+            "is_superuser": false,
+            "is_staff": false,
+            "is_active": true
+        }
+    },
 
-	{ "model": "UserAuthAPI.user", 
-		"pk": "d2c7ccbc-fa14-43df-93ad-ec824258aaa4",
-		"fields": {
-			"email": "testM3@cssa.com",
-			"telNumber": "0400123433",
-			"password": "pbkdf2_sha256$120000$PUvUoK3ik8DO$lzZlkV8oJN6crOUuGCMmqcuScdcX+CZOynXUo3nZEpE=",
-			"is_superuser": false,
-			"is_staff": true,
-			"is_active": true
-		}
-	},
+    {
+        "model": "UserAuthAPI.user",
+        "pk": "d2c9fd9e-9346-4ec4-ae15-600431a3ed3a",
+        "fields": {
+            "email": "testM2@cssa.com",
+            "telNumber": "0400123433",
+            "password": "pbkdf2_sha256$120000$PUvUoK3ik8DO$lzZlkV8oJN6crOUuGCMmqcuScdcX+CZOynXUo3nZEpE=",
+            "is_superuser": false,
+            "is_staff": false,
+            "is_active": true
+        }
+    },
 
-	{ "model": "UserAuthAPI.user", 
-		"pk": "4b419d90-6199-4b8b-b62e-476376384c96",
-		"fields": {
-			"email": "testM4@cssa.com",
-			"telNumber": "0402223433",
-			"password": "pbkdf2_sha256$120000$PUvUoK3ik8DO$lzZlkV8oJN6crOUuGCMmqcuScdcX+CZOynXUo3nZEpE=",
-			"is_superuser": false,
-			"is_staff": true,
-			"is_active": true
-		}
-	},
-     
-    { "model": "UserAuthAPI.user", 
-		"pk": "e9130754-3234-4b41-8520-fdaf4431bcd2",
-		"fields": {
-			"email": "testM5@cssa.com",
-			"telNumber": "0402723433",
-			"password": "pbkdf2_sha256$120000$PUvUoK3ik8DO$lzZlkV8oJN6crOUuGCMmqcuScdcX+CZOynXUo3nZEpE=",
-			"is_superuser": false,
-			"is_staff": true,
-			"is_active": true
-		}
-	},
+    {
+        "model": "UserAuthAPI.user",
+        "pk": "d2c7ccbc-fa14-43df-93ad-ec824258aaa4",
+        "fields": {
+            "email": "testM3@cssa.com",
+            "telNumber": "0400123433",
+            "password": "pbkdf2_sha256$120000$PUvUoK3ik8DO$lzZlkV8oJN6crOUuGCMmqcuScdcX+CZOynXUo3nZEpE=",
+            "is_superuser": false,
+            "is_staff": true,
+            "is_active": true
+        }
+    },
 
-	{ "model": "UserAuthAPI.user", 
-		"pk": "78de4724-6235-47c1-917c-fe81849ea2df",
-		"fields": {
-			"email": "testM6@cssa.com",
-			"telNumber": "0494723433",
-			"password": "pbkdf2_sha256$120000$PUvUoK3ik8DO$lzZlkV8oJN6crOUuGCMmqcuScdcX+CZOynXUo3nZEpE=",
-			"is_superuser": false,
-			"is_staff": true,
-			"is_active": true
-		}
-	}, 
+    {
+        "model": "UserAuthAPI.user",
+        "pk": "4b419d90-6199-4b8b-b62e-476376384c96",
+        "fields": {
+            "email": "testM4@cssa.com",
+            "telNumber": "0402223433",
+            "password": "pbkdf2_sha256$120000$PUvUoK3ik8DO$lzZlkV8oJN6crOUuGCMmqcuScdcX+CZOynXUo3nZEpE=",
+            "is_superuser": false,
+            "is_staff": true,
+            "is_active": true
+        }
+    },
 
-	{ "model": "UserAuthAPI.user", 
-		"pk": "fbefbb2c-65ac-4f35-aa90-49809b2b5bb7",
-		"fields": {
-			"email": "testM7@cssa.com",
-			"telNumber": "0494723433",
-			"password": "pbkdf2_sha256$120000$PUvUoK3ik8DO$lzZlkV8oJN6crOUuGCMmqcuScdcX+CZOynXUo3nZEpE=",
-			"is_superuser": false,
-			"is_staff": true,
-			"is_active": true
-		}
-	}, 
+    {
+        "model": "UserAuthAPI.user",
+        "pk": "e9130754-3234-4b41-8520-fdaf4431bcd2",
+        "fields": {
+            "email": "testM5@cssa.com",
+            "telNumber": "0402723433",
+            "password": "pbkdf2_sha256$120000$PUvUoK3ik8DO$lzZlkV8oJN6crOUuGCMmqcuScdcX+CZOynXUo3nZEpE=",
+            "is_superuser": false,
+            "is_staff": true,
+            "is_active": true
+        }
+    },
 
-	{ "model": "UserAuthAPI.user", 
-		"pk": "3e8df309-7447-4b5e-af98-1205de5ddb59",
-		"fields": {
-			"email": "testM8@cssa.com",
-			"telNumber": "0494711433",
-			"password": "pbkdf2_sha256$120000$PUvUoK3ik8DO$lzZlkV8oJN6crOUuGCMmqcuScdcX+CZOynXUo3nZEpE=",
-			"is_superuser": false,
-			"is_staff": true,
-			"is_active": true
-		}
-	}, 
-    
-    { "model": "UserAuthAPI.user", 
-		"pk": "c10a2acb-83a8-4921-9278-6c4f29bfe057",
-		"fields": {
-			"email": "testM9@cssa.com",
-			"telNumber": "0494321433",
-			"password": "pbkdf2_sha256$120000$PUvUoK3ik8DO$lzZlkV8oJN6crOUuGCMmqcuScdcX+CZOynXUo3nZEpE=",
-			"is_superuser": true,
-			"is_staff": true,
-			"is_active": true
-		}
-	}, 
+    {
+        "model": "UserAuthAPI.user",
+        "pk": "78de4724-6235-47c1-917c-fe81849ea2df",
+        "fields": {
+            "email": "testM6@cssa.com",
+            "telNumber": "0494723433",
+            "password": "pbkdf2_sha256$120000$PUvUoK3ik8DO$lzZlkV8oJN6crOUuGCMmqcuScdcX+CZOynXUo3nZEpE=",
+            "is_superuser": false,
+            "is_staff": true,
+            "is_active": true
+        }
+    },
 
-	{ "model": "UserAuthAPI.user", 
-		"pk": "8d93acaa-7e18-4628-bf4f-f7d55df89950",
-		"fields": {
-			"email": "testB@cssa.com",
-			"telNumber": "0494320033",
-			"password": "pbkdf2_sha256$120000$PUvUoK3ik8DO$lzZlkV8oJN6crOUuGCMmqcuScdcX+CZOynXUo3nZEpE=",
-			"is_superuser": false,
-			"is_staff": false,
-			"is_active": true
-		}
-	}, 
-    
-    { "model": "UserAuthAPI.user", 
-		"pk": "6b85fc79-a53d-43e6-a0ea-18ed2571c3d5",
-		"fields": {
-			"email": "testA@cssa.com",
-			"telNumber": "0477112233",
-			"password": "pbkdf2_sha256$120000$PUvUoK3ik8DO$lzZlkV8oJN6crOUuGCMmqcuScdcX+CZOynXUo3nZEpE=",
-			"is_superuser": false,
-			"is_staff": false,
-			"is_active": true
-		}
-	} 
+    {
+        "model": "UserAuthAPI.user",
+        "pk": "fbefbb2c-65ac-4f35-aa90-49809b2b5bb7",
+        "fields": {
+            "email": "testM7@cssa.com",
+            "telNumber": "0494723433",
+            "password": "pbkdf2_sha256$120000$PUvUoK3ik8DO$lzZlkV8oJN6crOUuGCMmqcuScdcX+CZOynXUo3nZEpE=",
+            "is_superuser": false,
+            "is_staff": true,
+            "is_active": true
+        }
+    },
 
+    {
+        "model": "UserAuthAPI.user",
+        "pk": "3e8df309-7447-4b5e-af98-1205de5ddb59",
+        "fields": {
+            "email": "testM8@cssa.com",
+            "telNumber": "0494711433",
+            "password": "pbkdf2_sha256$120000$PUvUoK3ik8DO$lzZlkV8oJN6crOUuGCMmqcuScdcX+CZOynXUo3nZEpE=",
+            "is_superuser": false,
+            "is_staff": true,
+            "is_active": true
+        }
+    },
+
+    {
+        "model": "UserAuthAPI.user",
+        "pk": "c10a2acb-83a8-4921-9278-6c4f29bfe057",
+        "fields": {
+            "email": "testM9@cssa.com",
+            "telNumber": "0494321433",
+            "password": "pbkdf2_sha256$120000$PUvUoK3ik8DO$lzZlkV8oJN6crOUuGCMmqcuScdcX+CZOynXUo3nZEpE=",
+            "is_superuser": true,
+            "is_staff": true,
+            "is_active": true
+        }
+    },
+
+    {
+        "model": "UserAuthAPI.user",
+        "pk": "8d93acaa-7e18-4628-bf4f-f7d55df89950",
+        "fields": {
+            "email": "testB@cssa.com",
+            "telNumber": "0494320033",
+            "password": "pbkdf2_sha256$120000$PUvUoK3ik8DO$lzZlkV8oJN6crOUuGCMmqcuScdcX+CZOynXUo3nZEpE=",
+            "is_superuser": false,
+            "is_staff": false,
+            "is_active": true
+        }
+    },
+
+    {
+        "model": "UserAuthAPI.user",
+        "pk": "6b85fc79-a53d-43e6-a0ea-18ed2571c3d5",
+        "fields": {
+            "email": "testA@cssa.com",
+            "telNumber": "0477112233",
+            "password": "pbkdf2_sha256$120000$PUvUoK3ik8DO$lzZlkV8oJN6crOUuGCMmqcuScdcX+CZOynXUo3nZEpE=",
+            "is_superuser": false,
+            "is_staff": false,
+            "is_active": true
+        }
+    }
 ]
-
-
-

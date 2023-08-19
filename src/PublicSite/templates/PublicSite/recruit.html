@@ -1,68 +1,56 @@
-{% extends 'components/base_page.html' %}
-
+{% extends "components/base_page.html" %}
 {% block 'pg_body' %}
-{% load static %}
-
-<div class="container bloc-fill-screen">
-<!-- bloc-20 -->
-<div class="bloc l-bloc" id="bloc-20">
-	<div class="container bloc-md">
-		<div class="row">
-			<div class="col">
-				<h1 class="mg-md">
-					加入我们
-					<br>
-				</h1>
-			</div>
-		</div>
-	</div>
-</div>
-<!-- bloc-20 END -->
-
-<!-- bloc-21 -->
-
-<div class="bloc l-bloc" id="bloc-21">
-	<div class="container bloc-md" style="min-height:100%">
-		<div class="row">
-			<div class="col-12">
-				<div class="row">
-					<div class="col-12">
-						<ul class="list-unstyled">
-							{% for job in job_list %}
-							<li class="bloc-4298-margin-bottom">
-								<div class="row bgc-light-gray">
-									<div class="col-lg-12 align-self-center text-left">
-										<h5 class="mg-md">
-											{{ job.dept.deptTitle}}
-										</h5>
-
-									</div>
-									<div class="col align-self-center" style="margin-top:10px">
-										<p>
-											{{ job.description}}
-										</p>
-										<a href="{% url 'PublicSite:resumes' job.jobId %}"
-											class="btn  btn-primary float-lg-right btn-margin-left"
-											style="margin-top:10px">申请加入</a>
-									</div>
-								</div>
-							</li>
-							{% empty %}
-							<h1 class="mg-md text-center">
-								目前没有岗位发布，请关注下学期招新
-							</h1>
-							{% endfor %}
-						</ul>
-					</div>
-				</div>
-			</div>
-			<div class="col offset-lg-0 bloc-margin-top">
-				<span class="empty-column"></span>
-			</div>
-		</div>
-	</div>
-</div>
-<!-- bloc-21 END -->
-</div>
-
+    {% load static %}
+    <div class="container bloc-fill-screen">
+        <!-- bloc-20 -->
+        <div class="bloc l-bloc" id="bloc-20">
+            <div class="container bloc-md">
+                <div class="row">
+                    <div class="col">
+                        <h1 class="mg-md">
+                            加入我们
+                            <br>
+                        </h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- bloc-20 END -->
+        <!-- bloc-21 -->
+        <div class="bloc l-bloc" id="bloc-21">
+            <div class="container bloc-md" style="min-height:100%">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="row">
+                            <div class="col-12">
+                                <ul class="list-unstyled">
+                                    {% for job in job_list %}
+                                        <li class="bloc-4298-margin-bottom">
+                                            <div class="row bgc-light-gray">
+                                                <div class="col-lg-12 align-self-center text-left">
+                                                    <h5 class="mg-md">{{ job.dept.deptTitle }}</h5>
+                                                </div>
+                                                <div class="col align-self-center" style="margin-top:10px">
+                                                    <p>{{ job.description }}</p>
+                                                    <a href="{% url 'PublicSite:resumes' job.jobId %}"
+                                                       class="btn  btn-primary float-lg-right btn-margin-left"
+                                                       style="margin-top:10px">申请加入</a>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    {% empty %}
+                                        <h1 class="mg-md text-center">目前没有岗位发布，请关注下学期招新</h1>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col offset-lg-0 bloc-margin-top">
+                        <span class="empty-column"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- bloc-21 END -->
+    </div>
 {% endblock 'pg_body' %}

@@ -1,9 +1,10 @@
 from django.urls import include, path
-from rest_framework import routers, viewsets
+from rest_framework import routers
 from . import views
 
 router = routers.DefaultRouter()
-router.register(r'favouriteposts', views.FavouritePostViewSet, 'favouriteposts')
+router.register(r'favouriteposts',
+                views.FavouritePostViewSet, 'favouriteposts')
 router.register(r'tag', views.TagViewSet)
 router.register(r'post', views.MainPostViewSet, 'post')
 router.register(r'notification', views.NotificationViewSet, 'notification')

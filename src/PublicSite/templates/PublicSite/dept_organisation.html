@@ -1,139 +1,122 @@
-{% extends 'components/base_page.html' %}
+{% extends "components/base_page.html" %}
 {% block 'pg_body' %}
-{% load static %}
-
-<div class="bloc dept-header l-bloc">
-    <div class="py-3"> 
-		<hr >
-		<h1 style="font-family: 'PingFang SC'; color: #393d3e; font-weight: normal; " class="mg-md text-center">
-		组织部
-		</h1>
-		<h3 style="font-family: 'PingFang SC'; color: #393d3e; font-weight: normal; " class="mg-md text-center">
-		Department of Organisation
-		</h3>
-		<hr >
-	</div>
-    <div class="row" style="min-height:20rem;">
-        <div class="col-lg-4 card" style='border:none;'>
-            <div class="card-body text-center">
-                <div class="my-3 d-block mx-auto avatar-lg rounded-circle">
-                    {% if view_bag.director.member.avatar %}
-                        <img class='img-fluid' src="{{view_bag.director.member.avatar.url}}" />
-                    {% else %}
-                        <img class="img-fluid" src="{% static 'PublicSite/img/placeholder-user.png' %}">
-                    {% endif %}
-                </div>
-                <h4 class="card-title ">部长 Director</h4>
-                <h3>{{view_bag.director.member.get_full_EN_name}}</h3>
-            </div>
+    {% load static %}
+    <div class="bloc dept-header l-bloc">
+        <div class="py-3">
+            <hr>
+            <h1 style="font-family: 'PingFang SC';
+                       color: #393d3e;
+                       font-weight: normal"
+                class="mg-md text-center">组织部</h1>
+            <h3 style="font-family: 'PingFang SC';
+                       color: #393d3e;
+                       font-weight: normal"
+                class="mg-md text-center">Department of Organisation</h3>
+            <hr>
         </div>
-        <div class="col-lg-8 card" style='border:none;'>
-            <div class='my-auto mx-auto'>
-                <h3 class="text-center card-title">部门简介 About us</h3>
-                <div class="card-text px-5" style="line-height:2">
-                “最天马行空的脑力碰撞，最浓墨重彩的精彩画卷” 是墨大学生会组织部最浪漫的简介。 
-                部如其名，组织部策划、组织、开展精彩纷呈的活动，始终坚守在社团的一线。我们收集各类奇思妙想，汇聚各色清奇脑洞付诸以活动， 呈现给广大的华人学生学者群体。
-                </br></br>组织部的活动涉猎广泛，在生活学习上，每年我们负责开展“迎新会”，将来自五湖四海的大家汇聚一堂，混脸熟的同时讲述在墨村“荒野求生”的小tips，还有老腊肉学姐学长的大腿随便抱。随之而来的“speed and city”，我们在游戏之余带领新生朋友们探索、感受这座城市厚重的文化底蕴。
-                在工作发展上，我们有各类学霸讲座，让你踏入社会前和精英人士深入浅出侃侃而谈。还有running man、舞会等一系列的人气活动，堪比“非诚勿扰”墨尔本专场。
+        <div class="row" style="min-height:20rem;">
+            <div class="col-lg-4 card" style="border:none;">
+                <div class="card-body text-center">
+                    <div class="my-3 d-block mx-auto avatar-lg rounded-circle">
+                        {% if view_bag.director.member.avatar %}
+                            <img class='img-fluid' src="{{ view_bag.director.member.avatar.url }}" />
+                        {% else %}
+                            <img class="img-fluid"
+                                 src="{% static 'PublicSite/img/placeholder-user.png' %}">
+                        {% endif %}
+                    </div>
+                    <h4 class="card-title ">部长 Director</h4>
+                    <h3>{{ view_bag.director.member.get_full_EN_name }}</h3>
                 </div>
-                <hr>
-                <div class="row">
-                    <div class="col-md-3 mx-auto">
-                        <h3 class="text-center">
-                            <strong>{{view_bag.number_of_member}}</strong>
-                        </h3>
-                        <h5 class="text-center">
-                            当届成员数量 
-                        </h5>
-                        <p class="text-center">
-                            Number of Members
-                        </p>
-                    </div>
-                    <div class="col-md-3 mx-auto">
-                        <h3 class="text-center">
-                            {% if view_bag.gender_div != 0 %}
-                                <strong>{{view_bag.gender_div}} : 1</strong>
-                            {% else %}
-                                Not updated yet
-                            {% endif %}
-                        </h3>
-                        <h5 class="text-center">
-                            成员性别多样性 
-                        </h5>
-                        <p class="text-center">
-                            Gender Diversity
-                        </p>
-                    </div>
+            </div>
+            <div class="col-lg-8 card" style="border:none;">
+                <div class="my-auto mx-auto">
+                    <h3 class="text-center card-title">部门简介 About us</h3>
+                    <div class="card-text px-5" style="line-height:2">
+                        “最天马行空的脑力碰撞，最浓墨重彩的精彩画卷” 是墨大学生会组织部最浪漫的简介。
+                        部如其名，组织部策划、组织、开展精彩纷呈的活动，始终坚守在社团的一线。我们收集各类奇思妙想，汇聚各色清奇脑洞付诸以活动， 呈现给广大的华人学生学者群体。
+                    </br>
+                </br>
+                组织部的活动涉猎广泛，在生活学习上，每年我们负责开展“迎新会”，将来自五湖四海的大家汇聚一堂，混脸熟的同时讲述在墨村“荒野求生”的小tips，还有老腊肉学姐学长的大腿随便抱。随之而来的“speed and city”，我们在游戏之余带领新生朋友们探索、感受这座城市厚重的文化底蕴。
+                在工作发展上，我们有各类学霸讲座，让你踏入社会前和精英人士深入浅出侃侃而谈。还有running man、舞会等一系列的人气活动，堪比“非诚勿扰”墨尔本专场。
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-md-3 mx-auto">
+                    <h3 class="text-center">
+                        <strong>{{ view_bag.number_of_member }}</strong>
+                    </h3>
+                    <h5 class="text-center">当届成员数量</h5>
+                    <p class="text-center">Number of Members</p>
+                </div>
+                <div class="col-md-3 mx-auto">
+                    <h3 class="text-center">
+                        {% if view_bag.gender_div != 0 %}
+                            <strong>{{ view_bag.gender_div }} : 1</strong>
+                        {% else %}
+                            Not updated yet
+                        {% endif %}
+                    </h3>
+                    <h5 class="text-center">成员性别多样性</h5>
+                    <p class="text-center">Gender Diversity</p>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
-<!-- bloc-7 -->
-<div class="bloc my-3">
-	<div class="row">
-		<div class="col-12">
-			<h3 class="mg-md text-center">
-				2022/23届 管理团队成员
-			</h3>
-			<h5 class="text-center">
-				Meet the Management Team of 2022/23 Term
-			</h5>
-		</div>
-	</div>
-	<div class="row text-center" style="min-height:5rem;">
-		{% for user in view_bag.management %}
-			<div class="col-lg-3 col-md-3 col-sm-6" >
-				<div class="my-3 d-block mx-auto avatar-md rounded-circle">
-					{% if user.member.avatar %}
-						<img class='img-fluid' src="{{user.member.avatar.url}}" />
-					{% else %}
-						<img class="img-fluid" src="{% static 'PublicSite/img/placeholder-user.png' %}">
-					{% endif %}
-				</div>
-				<h5>{{user.role.roleName}}</h5>
-				<h4> {{user.member.get_full_EN_name}} </h4>
-			</div>
-		{% endfor %}
-	</div>
 </div>
-
-
+<!-- bloc-7 -->
 <div class="bloc my-3">
     <div class="row">
         <div class="col-12">
-			<h3 class="mg-md text-center">
-				2022/23届 部门成员
-			</h3>
-			<h5 class="text-center">
-				Meet the Committee Members of 2022/23 Term
-			</h5>
-		</div>
+            <h3 class="mg-md text-center">2022/23届 管理团队成员</h3>
+            <h5 class="text-center">Meet the Management Team of 2022/23 Term</h5>
+        </div>
+    </div>
+    <div class="row text-center" style="min-height:5rem;">
+        {% for user in view_bag.management %}
+            <div class="col-lg-3 col-md-3 col-sm-6">
+                <div class="my-3 d-block mx-auto avatar-md rounded-circle">
+                    {% if user.member.avatar %}
+                        <img class='img-fluid' src="{{ user.member.avatar.url }}" />
+                    {% else %}
+                        <img class="img-fluid"
+                             src="{% static 'PublicSite/img/placeholder-user.png' %}">
+                    {% endif %}
+                </div>
+                <h5>{{ user.role.roleName }}</h5>
+                <h4>{{ user.member.get_full_EN_name }}</h4>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+<div class="bloc my-3">
+    <div class="row">
+        <div class="col-12">
+            <h3 class="mg-md text-center">2022/23届 部门成员</h3>
+            <h5 class="text-center">Meet the Committee Members of 2022/23 Term</h5>
+        </div>
     </div>
     <div class="row" style="min-height:20rem">
         {% for user in view_bag.general %}
             <div class="col-lg-3 col-md-4 col-sm-6 text-center">
                 <div class="my-3 d-block mx-auto avatar-sm rounded-circle">
                     {% if user.member.avatar %}
-                        <img class='img-fluid' src="{{user.member.avatar.url}}" />
+                        <img class='img-fluid' src="{{ user.member.avatar.url }}" />
                     {% else %}
-                        <img class="img-fluid" src="{% static 'PublicSite/img/placeholder-user.png' %}">
+                        <img class="img-fluid"
+                             src="{% static 'PublicSite/img/placeholder-user.png' %}">
                     {% endif %}
                 </div>
-                <h5>{{user.member.get_full_EN_name}}</h5>
+                <h5>{{ user.member.get_full_EN_name }}</h5>
             </div>
         {% endfor %}
     </div>
 </div>
 <!-- bloc-7 END -->
-
 <hr>
 <div class="bloc py-2">
-	<p>页面作者 Page developed by</p>
+    <p>页面作者 Page developed by</p>
     <p>&copy; 2019 Yijun Jia, Jialing Gu</p>
 </div>
-
-
-
 {% endblock 'pg_body' %}

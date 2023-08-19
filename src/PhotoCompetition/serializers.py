@@ -1,29 +1,32 @@
 from rest_framework import serializers
-from .models import Submission, ApprovedSubmission, SubmissionVoting
-from UserAuthAPI.models import User, UserProfile
+from UserAuthAPI.models import UserProfile
+
+from .models import ApprovedSubmission, Submission, SubmissionVoting
 
 
 class SubmissionListSerializers(serializers.ModelSerializer):
     detail_url = serializers.SerializerMethodField()
-    
+
     def get_detail_url(self, obj):
-        return obj.get_absolute_url() # return the absolute url of the object
+        return obj.get_absolute_url()  # return the absolute url of the object
 
     class Meta:
         model = Submission
-        fields = ('submissionId', 'submissionTime', 'deviceType', 'themeType','detail_url')
+        fields = ('submissionId', 'submissionTime',
+                  'deviceType', 'themeType', 'detail_url')
 
 
 class SubmissionSelectionControlSerializers(serializers.ModelSerializer):
     is_selected = serializers.SerializerMethodField()
-    submission = serializers.PrimaryKeyRelatedField(queryset=Submission.objects)
-    
+    submission = serializers.PrimaryKeyRelatedField(
+        queryset=Submission.objects)
+
     def get_is_selected(self, obj):
         if obj is not None:
             return True
-        else: 
+        else:
             return False
-    
+
     class Meta:
         model = ApprovedSubmission
         fields = ('id', 'is_selected', 'submission',)
@@ -37,12 +40,16 @@ class DisplayedSubmissionSerializers(serializers.ModelSerializer):
 
     class Meta:
         model = Submission
-        fields = ('submissionId','deviceType', 'themeType', 'upload_photo', 'description','author_name')
+        fields = ('submissionId', 'deviceType', 'themeType',
+                  'upload_photo', 'description', 'author_name')
 
 
 class VotingControlSerializers(serializers.ModelSerializer):
-    voter = serializers.PrimaryKeyRelatedField(queryset=UserProfile.objects, allow_null=True)
-    votable_submission = serializers.PrimaryKeyRelatedField(queryset=ApprovedSubmission.objects)
+    voter = serializers.PrimaryKeyRelatedField(
+        queryset=UserProfile.objects, allow_null=True)
+    votable_submission = serializers.PrimaryKeyRelatedField(
+        queryset=ApprovedSubmission.objects)
+
     class Meta:
         model = SubmissionVoting
         fields = ('time_stamp', 'voter', 'user_IPv4', 'votable_submission')
