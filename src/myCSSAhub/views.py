@@ -98,7 +98,7 @@ class PasswordResetView(View):
                     }
                     email = render_to_string(email_template_name, c)
                     try:
-                        raw_send_mail(subject, email, 'admin@example.com' , [user.email], fail_silently=False)
+                        raw_send_mail(subject, email, 'cssa_authenticator@163.com' , [user.email], fail_silently=False)
                     except BadHeaderError:
                         return HttpResponse('Invalid header found.')
                     
@@ -122,6 +122,8 @@ class PasswordResetConfirmView(View):
 
     def post(self, request, *args, **kwargs):
         password_reset_form = PasswordResetForm(request.POST)
+        return render(request=request, template_name='password_reset_complete.html')
+
 
 ################################# calendar ########################################
 class Calendar(LoginRequiredMixin, View):
