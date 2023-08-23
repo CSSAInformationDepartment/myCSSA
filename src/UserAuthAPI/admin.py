@@ -52,11 +52,11 @@ class CommitteeAdmin(admin.ModelAdmin):
 
 
 admin.site.register(models.User, CsutomUserAdmin)
-admin.site.register(models.UniMajor)
+# admin.site.register(models.UniMajor)
 admin.site.register(models.CSSADept)
 admin.site.register(models.CSSARole)
 admin.site.register(models.UserProfile, UserProfileAdmin)
 
-admin.site.register(models.UserAcademic)
+# admin.site.register(models.UserAcademic)
 
 admin.site.register(models.CSSACommitteProfile, CommitteeAdmin)

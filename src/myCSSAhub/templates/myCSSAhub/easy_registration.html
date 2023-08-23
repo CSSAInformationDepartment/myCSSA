@@ -200,44 +200,36 @@
                          value="{{ LegacyData.studentId }}" />
                 </div>
               </div>
-              <div id="div_id_select" class="form-label-group required">
-                <label for="degree" class="control-label  col-md-6  requiredField">
-                  Degree / 在读学位 <span class="asteriskField">*</span>
-                </label>
-                <div class="controls  col-md-12 ">
-                  <select class="selectpicker form-control"
-                          id="degree"
-                          name="degree"
-                          data-parsley-group="step3">
-                    <option value="BA">Bachelor</option>
-                    <option value="MA">Master</option>
-                    <option value="CR">Certificate</option>
-                    <option value="DP">Diploma</option>
-                    <option value="FN">Foundation</option>
-                    <option value="JD">Jurum Doctor</option>
-                    <option value="MD">Medical Doctor</option>
-                    <option value="PhD">Doctor of Philosophy</option>
-                  </select>
-                </div>
-                <div class="controls col">
-                  <p class="text-muted">
-                    <small>注: 若选择Master或以上学位，也自愿同时加入CSSA Graduates社团</small>
-                  </p>
-                </div>
-              </div>
-              <div id="major" class="form-label-group required">
-                <label for="major" class="control-label  col-md-6  requiredField">
-                  Major / 专业<span class="asteriskField">*</span>
-                </label>
-                <div class="controls  col-md-12 ">
-                  <select required
-                          class="selectpicker form-control"
-                          id="id_major"
-                          name="uniMajor"
-                          placeholder="选择你的专业所在的分类"
-                          data-parsley-group="step3"></select>
-                </div>
-              </div>
+              {% comment %} <div id="div_id_select" class="form-label-group ">
+            <label for="degree" class="control-label  col-md-6  requiredField">
+              Degree / 在读学位 <span class="asteriskField">*</span>
+            </label>
+          <div class="controls  col-md-12 ">
+            <select class="selectpicker form-control" id="degree" name="degree" data-parsley-group="step3">
+              <option value="BA"> Bachelor </option>
+              <option value="MA"> Master </option>
+              <option value="CR"> Certificate </option>
+              <option value="DP"> Diploma </option>
+              <option value="FN"> Foundation </option>
+              <option value="JD"> Jurum Doctor </option>
+              <option value="MD"> Medical Doctor </option>
+              <option value="PhD"> Doctor of Philosophy </option>
+            </select>
+          </div>
+          <div class="controls col">
+            <p class="text-muted"><small>注: 若选择Master或以上学位，也自愿同时加入CSSA Graduates社团</small></p>
+          </div>
+          </div>
+
+        <div id="major" class="form-label-group ">
+          <label for="major" class="control-label  col-md-6  requiredField">
+            Major / 专业<span class="asteriskField">*</span>
+          </label>
+          <div class="controls  col-md-12 ">
+            <select class="selectpicker form-control" id="id_major" name="uniMajor" placeholder="选择你的专业所在的分类" data-parsley-group="step3">
+            </select>
+          </div>
+              </div> {% endcomment %}
               <div class="form-label-group">
                 <div class="controls col-md-offset-3  col-md-12 ">
                   <div id="div_id_terms" class="checkbox required">
@@ -285,70 +277,69 @@
           src="{% static 'myCSSAhub/js/Password/password-score-options.js' %}"></script>
   <script src="{% static 'myCSSAhub/vendors/jquery-ui/jquery-ui.min.js'%}"></script>
   <script type="text/javascript">
-          //Password Strength Indicator
-          $(document).ready(function() {
-            $('#id_password').strengthMeter('progressBar', {
-              container: $('#progress-container'),
-              base: 80,
-              hierarchy: {
-                '0': 'progress-bar-danger',
-                '25': 'progress-bar-warning',
-                '50': 'progress-bar-success'
-              },
-              passwordScore: {
-                options: [],
-                append: true
-              }
-            });
-          });
+    //Password Strength Indicator
+    $(document).ready(function() {
+      $('#id_password').strengthMeter('progressBar', {
+        container: $('#progress-container'),
+        base: 80,
+        hierarchy: {
+          '0': 'progress-bar-danger',
+          '25': 'progress-bar-warning',
+          '50': 'progress-bar-success'
+        },
+        passwordScore: {
+          options: [],
+          append: true
+        }
+      });
+    });
 
-         //Major dropdown Handler
-         let dropdown = document.getElementById('id_major');
-          dropdown.length = 0;
+    {% comment %} //Major dropdown Handler
+    let dropdown = document.getElementById('id_major');
+    dropdown.length = 0;
 
-          let defaultOption = document.createElement('option');
+    let defaultOption = document.createElement('option');
 
-          dropdown.add(defaultOption);
-          dropdown.selectedIndex = 0;
+    dropdown.add(defaultOption);
+    dropdown.selectedIndex = 0;
 
-          const url = "{% static 'myCSSAhub/js/unimelb-major-picker.js' %}";
+    const url = "{% static 'myCSSAhub/js/unimelb-major-picker.js' %}";
 
-          const request = new XMLHttpRequest();
-          request.open('GET', url, true);
+    const request = new XMLHttpRequest();
+    request.open('GET', url, true);
 
-          request.onload = function() {
-            if (request.status === 200) {
-              const data = JSON.parse(request.responseText);
-              let option;
-              for (let i = 0; i < data.length; i++) {
-                option = document.createElement('option');
-                option.text = data[i].name;
-                option.value = data[i].abbreviation;
-                dropdown.add(option);
-              }
-            } else {
-              // Reached the server, but it returned an error
-            }
-          }
-          request.onerror = function() {
-            console.error('An error occurred fetching the JSON from ' + url);
-          };
+    request.onload = function() {
+      if (request.status === 200) {
+        const data = JSON.parse(request.responseText);
+        let option;
+        for (let i = 0; i < data.length; i++) {
+          option = document.createElement('option');
+          option.text = data[i].name;
+          option.value = data[i].abbreviation;
+          dropdown.add(option);
+        }
+      } else {
+        // Reached the server, but it returned an error
+      }
+    }
+    request.onerror = function() {
+      console.error('An error occurred fetching the JSON from ' + url);
+    };
 
-          request.send();
+request.send(); {% endcomment %}
+    $("#msform").parsley({
+      errorClass: "is-invalid",
+      successClass: "is-valid",
+      errorsWrapper: '<span class="form-text text-danger"></span>',
+      errorTemplate: "<span></span>",
+      trigger: "blur"
+    });
 
-          $("#msform").parsley({
-            errorClass: "is-invalid",
-            successClass: "is-valid",
-            errorsWrapper: '<span class="form-text text-danger"></span>',
-            errorTemplate: "<span></span>",
-            trigger: "blur"
-          });
-
-          $(function() {
-            $("#datetimepicker1").datetimepicker({
-              format: "YYYY-MM-DD"
-            });
-          });
+    $(function() {
+      $("#datetimepicker1").datetimepicker({
+        format: "YYYY-MM-DD"
+      });
+    });
 
 
   </script>

@@ -254,25 +254,25 @@ class CSSACommitteProfile(models.Model):
         CSSARole, on_delete=models.DO_NOTHING, default=None, null=True, blank=True)
 
 
-class UserAcademic (models.Model):
-    degreeChoice = (
-        ('CR', 'Certificate'),
-        ('DP', 'Diploma'),
-        ('FN', 'Foundation'),
-        ('BA', 'Bachelor'),
-        ('MA', 'Master'),
-        ('JD', 'Jurum Doctor'),
-        ('MD', 'Medical Doctor'),
-        ('PhD', 'Doctor of Philosophy'),
-    )
 
-    academicRecId = models.AutoField(primary_key=True, editable=False)
-    # 来自同一张表的外键变量名、配置需一致
-    userProfile = models.ForeignKey(
-        UserProfile, on_delete=models.CASCADE, blank=True)
-    # 不同模型中表示同一功能的变量名需一致
-    timeOfCreate = models.DateTimeField(auto_now_add=True)
+# class UserAcademic (models.Model):
+#     degreeChoice = (
+#         ('CR', 'Certificate'),
+#         ('DP', 'Diploma'),
+#         ('FN', 'Foundation'),
+#         ('BA', 'Bachelor'),
+#         ('MA', 'Master'),
+#         ('JD', 'Jurum Doctor'),
+#         ('MD', 'Medical Doctor'),
+#         ('PhD', 'Doctor of Philosophy'),
+#     )
 
-    degree = models.CharField(verbose_name="学位", choices=degreeChoice,
-                              max_length=32, default='BA')
-    uniMajor = models.CharField(verbose_name="专业", max_length=100)
+#     academicRecId = models.AutoField(primary_key=True, editable=False)
+#     # 来自同一张表的外键变量名、配置需一致
+#     userProfile = models.ForeignKey(UserProfile, on_delete = models.CASCADE, blank=True)
+#     # 不同模型中表示同一功能的变量名需一致
+#     timeOfCreate  = models.DateTimeField(auto_now_add=True)
+
+#     degree = models.CharField(verbose_name="学位", choices=degreeChoice,
+#         max_length=32, default='BA')
+#     uniMajor = models.CharField(verbose_name="专业" ,max_length=100, blank=True)

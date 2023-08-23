@@ -23,7 +23,6 @@ from UserAuthAPI.forms import (
     BasicSiginInForm,
     EasyRegistrationForm,
     MigrationForm,
-    UserAcademicForm,
     UserAvatarUpdateForm,
     UserInfoForm,
     UserProfileUpdateForm,
@@ -236,36 +235,38 @@ class EasyRegistrationView(View):
     def post(self, request, *args, **kwargs):
         account_form = BasicSiginInForm(data=request.POST)
         profile_form = EasyRegistrationForm(data=request.POST)
-        academic_form = UserAcademicForm(data=request.POST)
-        if account_form.is_valid() and profile_form.is_valid() and academic_form.is_valid():
+        # academic_form = UserAcademicForm(data=request.POST)
+        # and academic_form.is_valid():
+        if account_form.is_valid() and profile_form.is_valid():
             account_register = account_form.save(commit=False)
             profile = profile_form.save(commit=False)
             profile.user = account_register
-            academic = academic_form.save(commit=False)
-            academic.userProfile = profile
+            # academic = academic_form.save(commit=False)
+            # academic.userProfile = profile
             if profile.membershipId and profile.membershipId != '':
                 profile.isValid = True
             account_form.save()
             profile.save()
-            academic.save()
+            # academic.save()
 
-            # 完成信息保存以后，发送注册成功的邮件
-            username = profile.get_full_EN_name()
-            target_email = account_register.email
-            mail_content = {'username': username}
-            confirm_mail = AutoMailSender(
-                title="注册成功！Registraion Successful",
-                mail_text="",
-                template_path="myCSSAhub/email/register_mail.html",
-                fill_in_context=mail_content,
-                to_address=target_email,
-            )
-            confirm_mail.send_now()
+            # # 完成信息保存以后，发送注册成功的邮件
+            # username = profile.get_full_EN_name()
+            # target_email = account_register.email
+            # mail_content = {'username': username}
+            # confirm_mail = AutoMailSender(
+            #     title="注册成功！Registraion Successful",
+            #     mail_text="",
+            #     template_path="myCSSAhub/email/register_mail.html",
+            #     fill_in_context=mail_content,
+            #     to_address=target_email,
+            # )
+            # confirm_mail.send_now()
 
         else:
             return JsonResponse({
                 'success': False,
-                'errors': [dict(account_form.errors.items()), dict(profile_form.errors.items()), dict(academic_form.errors.items())]
+                # , dict(academic_form.errors.items())]
+                'errors': [dict(account_form.errors.items()), dict(profile_form.errors.items())]
             })
         return HttpResponseRedirect(reverse('myCSSAhub:hub_regformConfirmation'))
 
@@ -301,28 +302,30 @@ class NewUserSignUpView(View):
     def post(self, request, *args, **kwargs):
         account_form = BasicSiginInForm(data=request.POST)
         profile_form = UserInfoForm(data=request.POST, files=request.FILES)
-        academic_form = UserAcademicForm(data=request.POST)
-        if account_form.is_valid() and profile_form.is_valid() and academic_form.is_valid():
+        # academic_form = UserAcademicForm(data=request.POST)
+        # and academic_form.is_valid():
+        if account_form.is_valid() and profile_form.is_valid():
             account_register = account_form.save(commit=False)
             account_form.save()
             profile = profile_form.save(commit=False)
             profile.user = account_register
-            academic = academic_form.save(commit=False)
-            academic.userProfile = account_register
+            # academic = academic_form.save(commit=False)
+            # academic.userProfile = account_register
             if profile.membershipId and profile.membershipId != '':
                 profile.isValid = True
             profile.save()
-            academic.save()
+            # academic.save()
 
-            # 完成信息保存以后，发送注册成功的邮件
-            target_email = account_form.email
-            userName = profile_form.firstNameEN + " " + profile_form.lastNameEN
-            send_emails('Register Successful', userName, target_email, None)
+            # # 完成信息保存以后，发送注册成功的邮件
+            # target_email = account_form.email
+            # userName = profile_form.firstNameEN + " " + profile_form.lastNameEN
+            # send_emails('Register Successful', userName, target_email, None)
 
         else:
             return JsonResponse({
                 'success': False,
-                'errors': [dict(account_form.errors.items()), dict(profile_form.errors.items()), dict(academic_form.errors.items())]
+                # , dict(academic_form.errors.items())]
+                'errors': [dict(account_form.errors.items()), dict(profile_form.errors.items())]
             })
         return JsonResponse({
             'success': True, })
