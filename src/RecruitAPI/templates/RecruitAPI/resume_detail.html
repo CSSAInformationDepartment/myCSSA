@@ -1,21 +1,16 @@
-{% extends 'myCSSAhub/component/doc_view.html' %}
-
+{% extends "myCSSAhub/component/doc_view.html" %}
 {% block Toolbar %}
-<div class="row mb-4">
-    <div class="col-6">
-        
+    <div class="row mb-4">
+        <div class="col-6"></div>
+        {% if user.is_staff %}
+            <div class="col-6">
+                <div class="btn-group float-right" role="group">
+                    <a class="btn btn-round btn-danger mr-3" role="button" href="">拒绝该申请</a>
+                    <a class="btn btn-round btn-primary mr-3"
+                       role="button"
+                       href="{% url 'myCSSAhub:RecruitAPI:add_to_interview' DocView.id %}">添加面试计划</a>
+                </div>
+            </div>
+        {% endif %}
     </div>
-    {% if user.is_staff %}
-    <div class="col-6">
-        <div class="btn-group float-right" role="group">
-            <a class="btn btn-round btn-danger mr-3" role="button" href="">拒绝该申请</a>
-            <a class="btn btn-round btn-primary mr-3" role="button" href="{% url 'myCSSAhub:RecruitAPI:add_to_interview' DocView.id%}">添加面试计划</a>
-        </div>
-    </div>
-    {% endif %}
-</div>
 {% endblock Toolbar %}
-
-
-
-

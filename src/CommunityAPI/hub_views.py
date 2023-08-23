@@ -1,22 +1,20 @@
-import dateutil
-from django import views
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
-from django.shortcuts import render
-from django.views.generic.base import TemplateView, View
+from django.views.generic.base import TemplateView
 from django_datatables_view.base_datatable_view import BaseDatatableView
-from rest_framework.generics import get_object_or_404
-from django.db.models import OuterRef, Subquery, Count
+from django.db.models import OuterRef, Count
 from django.urls import reverse
 from dateutil.parser import parse as parse_date
 
-from CommunityAPI.models import Content, Post, PostImage, Report
+from CommunityAPI.models import Content, Post
 from .serializers import resolve_post_content
+
 
 def pk(instance):
     if not instance:
         return ''
     else:
         return instance.pk
+
 
 class ShowPostView(LoginRequiredMixin, TemplateView):
     login_url = '/hub/login/'
@@ -52,6 +50,7 @@ class ShowPostView(LoginRequiredMixin, TemplateView):
                 'id': id,
             }
 
+
 class PostListView(LoginRequiredMixin, TemplateView):
     """
     列出所有的帖子
@@ -61,13 +60,14 @@ class PostListView(LoginRequiredMixin, TemplateView):
     template_name = 'CommunityAPI/post_list.html'
     permission_required = ('CommunityAPI.censor_post',)
 
+
 class PostListJsonView(LoginRequiredMixin, PermissionRequiredMixin, BaseDatatableView):
     login_url = '/hub/login/'
     permission_required = ('CommunityAPI.censor_post',)
 
     columns = [
-        'id', 'type', 'tag', 'viewableToGuest', 'deleted', 'censored', 
-        'createTime', 'editedTime', 'viewCount', 'reported', 'title', 'text', 
+        'id', 'type', 'tag', 'viewableToGuest', 'deleted', 'censored',
+        'createTime', 'editedTime', 'viewCount', 'reported', 'title', 'text',
         'imageCount',
     ]
     order_columns = columns
@@ -89,9 +89,11 @@ class PostListJsonView(LoginRequiredMixin, PermissionRequiredMixin, BaseDatatabl
         if type == 'MAIN_POST':
             query = query.filter(replyToId__isnull=True)
         elif type == 'COMMENT':
-            query = query.filter(replyToComment__isnull=True, replyToId__isnull=False)
+            query = query.filter(
+                replyToComment__isnull=True, replyToId__isnull=False)
         elif type == 'SUBCOMMENT':
-            query = query.filter(replyToComment__isnull=False, replyToId__isnull=False)
+            query = query.filter(
+                replyToComment__isnull=False, replyToId__isnull=False)
 
         has_report = self.request.GET.get('has-report')
         if has_report == 'yes':
@@ -127,5 +129,5 @@ class PostListJsonView(LoginRequiredMixin, PermissionRequiredMixin, BaseDatatabl
                 reverse('myCSSAhub:CommunityAPI:show_post')}?id={row.id}">
                 {row.id}</a>'''
 
-        else: 
+        else:
             return super().render_column(row, column)

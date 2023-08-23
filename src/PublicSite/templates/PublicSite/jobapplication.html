@@ -1,185 +1,222 @@
-{% extends 'components/base_page.html' %}
+{% extends "components/base_page.html" %}
 {% block 'extra_header' %}
-	{% load static %}
-	<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.5.1/css/fileinput.min.css" media="all" rel="stylesheet"
-			type="text/css" />
-	<link rel="stylesheet" href="{% static 'PublicSite/vendors/css-loader/css-loader.css' %}" type="text/css" />
-
+    {% load static %}
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.5.1/css/fileinput.min.css"
+          media="all"
+          rel="stylesheet"
+          type="text/css" />
+    <link rel="stylesheet"
+          href="{% static 'PublicSite/vendors/css-loader/css-loader.css' %}"
+          type="text/css" />
 {% endblock 'extra_header' %}
 {% block 'pg_body' %}
-{% load widget_tweaks %}
-<title>纳新表单</title>
-<div class="page-container">
-<div id="submit-loader" class="loader loader-curtain" colorful data-curtain-text="Submitting..."></div>
-
-<!-- bloc-18 -->
-<div class="bloc l-bloc" id="bloc-18">
-	<div class="container bloc-sm">
-		<div class="row">
-			<div class="col">
-				<h1 class="mg-md">
-					提交申请 - {{job_data.jobName}}
-				</h1>
-			</div>
-		</div>
-	</div>
-</div>
-<!-- bloc-18 END -->
-
-<!-- bloc-19 -->
-<div class="bloc l-bloc" id="bloc-19">
-	<div class="container bloc-md">
-		<div class="row">
-			<div class="col">
-				<div class="row">
-					<div class="col-lg-9">
-					  <div id="ErrMsgArea">
-        		</div>
-						{% if prev_submission %}
-						<div class="card text-white bg-warning mb-3">
-                <div class="card-header">你已经提交过该职位的申请</div>
-                <div class="card-body">
-                  <p class="card-text">上次提交时间为：{{ prev_submission.timeOfCreate }}</p>
+    {% load widget_tweaks %}
+    <title>纳新表单</title>
+    <div class="page-container">
+        <div id="submit-loader"
+             class="loader loader-curtain"
+             colorful
+             data-curtain-text="Submitting..."></div>
+        <!-- bloc-18 -->
+        <div class="bloc l-bloc" id="bloc-18">
+            <div class="container bloc-sm">
+                <div class="row">
+                    <div class="col">
+                        <h1 class="mg-md">提交申请 - {{ job_data.jobName }}</h1>
+                    </div>
                 </div>
             </div>
-						{% endif %}
-
-						<form id="main_form">
-							{% csrf_token %}
-							{% for hidden_field in form.hidden_fields %}
-							{{ hidden_field }}
-							{% endfor %}
-
-							{% if form.non_field_errors %}
-							<div class="alert alert-danger" role="alert">
-									{% for error in form.non_field_errors %}
-									{{ error }}
-									{% endfor %}
-							</div>
-							{% endif %}
-							<input type="hidden" name='jobRelated' value="{{job_data.jobId}}"/>
-							<input type="hidden" name='user' value="{{user.id}}"/>
-							<div class="form-group">
-								<label>
-									您从何种渠道了解到CSSA Committe <span class="asteriskField">*</span><br>
-								</label>
-							</div>
-							<div class="form-group">
-								<select class="form-control" id="job-source" name="job-source">
-									<option value="SNS">
-										社交网站
-									</option>
-									<option value="Friend">
-										朋友介绍
-									</option>
-                  <option value="WebSearch">
-										网络搜索
-									</option>
-								</select>
-							</div>
-							<div class="form-group">
-								<label>
-									您为何想加入这个职位<span class="asteriskField">*</span><br>
-								</label><textarea id="job-reason" class="form-control" rows="4" cols="50" required name="reason"></textarea>
-							</div>
-							<div class="form-group">
-								<label>
-									简单介绍下您的个人学习生活，和相关经历（字数100字左右）<span class="asteriskField">*</span><br>
-								</label><textarea id="job-inSchoolExp" class="form-control" rows="4" cols="50" required name="inSchoolExp"></textarea>
-							</div>
-							<div class="form-group">
-								<label>
-									您有何特长或兴趣爱好（字数50字左右）<span class="asteriskField">*</span><br>
-								</label><textarea id="job-hobby" class="form-control" rows="4" cols="50" required name="hobby"></textarea>
-							</div>
-							<div class="form-group">
-								<label for="merchant_pic">
-									如果您有准备单独的简历，或与职位高度相关的个人作品，请于此上传：<br></label>
-  								<input id="input-b1" name="attachment" type="file" class="file" data-browse-on-zone-click="true">
-							</div>
-							<h6 class="mg-md h6-7-margin-top" style="margin-top:10px">
-								请注意：附件仅可上传一份，类型为.pdf或.doc, 大小不超过2MB。如果是个人作品，请将其上传至任意网盘（推荐Google Drive），并将链接附于文档之中
-							</h6>
-
-							<div class="form-group" style="margin-top:10px">
-								<label>
-									最后，您对CSSA有何问题或者建议？（选填）<br>
-								</label><textarea id="additionMsg" class="form-control" rows="4" cols="50" name="message"></textarea>
-							</div>
-							<div class="form-check">
-								<input class="form-check-input" type="checkbox" id="form-agreement" data-validation-minchecked-message="You must agree to this before we can take your information." data-validation-minchecked-minchecked="1" name="optin" />
-								<label class="form-check-label">
-									我了解CSSA的个人数据及敏感信息管理政策，并自愿分享用于在Australia Privacy Principle定义之下的合理用于范围内的个人信息供CSSA使用
-								</label>
-							</div>
-							<button id="form-submit" class="btn btn-secondary btn-lg btn-block" disabled="disabled" type="submit">
-								提交简历
-							</button>
-						</form>
-					</div>
-					<div class="col">
-						<h4 class="mg-md">
-							个人信息
-						</h4>
-						<div class="form-group">
-							<label>
-								姓<br>
-							</label>
-							<input class="form-control" value="{{user.userprofile.lastNameEN}}"/>
-						</div>
-						<div class="form-group">
-							<label>
-								名<br>
-							</label>
-							<input class="form-control" value="{{user.userprofile.firstNameEN}}"/>
-							<div class="form-group">
-								<label>
-									联系电话<br>
-								</label>
-								<input class="form-control" value="{{user.telNumber}}"/>
-							</div>
-							<div class="form-group">
-								<label>
-									邮箱<br>
-								</label>
-								<input class="form-control" value="{{ user.email }}" />
-								<p>
-									以上信息取自您的账号设定，他们将会被用于评估您的岗位申请。请确保以上信息准确无误。
-									<i class="glyphicon glyphicon-zoom-in"></i>
-								</p>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
-<!-- bloc-19 END -->
-<div class="modal fade" tabindex="-1" role="dialog" id="myModal">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title">提交成功</h4>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-      </div>
-      <div class="modal-body">
-      <p>你的简历已经提交成功咯，请随时关注邮箱，会有相关人员联系你面试。
-        <br>
-      <strong>不要忘记成为Committee前要先在oweek去摊位领取会员卡成为cssa会员哦！</strong></p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="gotoParentPage();">回到主页</button>
-      </div>
+        </div>
+        <!-- bloc-18 END -->
+        <!-- bloc-19 -->
+        <div class="bloc l-bloc" id="bloc-19">
+            <div class="container bloc-md">
+                <div class="row">
+                    <div class="col">
+                        <div class="row">
+                            <div class="col-lg-9">
+                                <div id="ErrMsgArea"></div>
+                                {% if prev_submission %}
+                                    <div class="card text-white bg-warning mb-3">
+                                        <div class="card-header">你已经提交过该职位的申请</div>
+                                        <div class="card-body">
+                                            <p class="card-text">上次提交时间为：{{ prev_submission.timeOfCreate }}</p>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                                <form id="main_form">
+                                    {% csrf_token %}
+                                    {% for hidden_field in form.hidden_fields %}{{ hidden_field }}{% endfor %}
+                                    {% if form.non_field_errors %}
+                                        <div class="alert alert-danger" role="alert">
+                                            {% for error in form.non_field_errors %}{{ error }}{% endfor %}
+                                        </div>
+                                    {% endif %}
+                                    <input type="hidden" name='jobRelated' value="{{ job_data.jobId }}" />
+                                    <input type="hidden" name='user' value="{{ user.id }}" />
+                                    <div class="form-group">
+                                        <label>
+                                            您从何种渠道了解到CSSA Committe <span class="asteriskField">*</span>
+                                            <br>
+                                        </label>
+                                    </div>
+                                    <div class="form-group">
+                                        <select class="form-control" id="job-source" name="job-source">
+                                            <option value="SNS">社交网站</option>
+                                            <option value="Friend">朋友介绍</option>
+                                            <option value="WebSearch">网络搜索</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>
+                                            您为何想加入这个职位<span class="asteriskField">*</span>
+                                            <br>
+                                        </label>
+                                        <textarea id="job-reason"
+                                                  class="form-control"
+                                                  rows="4"
+                                                  cols="50"
+                                                  required
+                                                  name="reason"></textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>
+                                            简单介绍下您的个人学习生活，和相关经历（字数100字左右）<span class="asteriskField">*</span>
+                                            <br>
+                                        </label>
+                                        <textarea id="job-inSchoolExp"
+                                                  class="form-control"
+                                                  rows="4"
+                                                  cols="50"
+                                                  required
+                                                  name="inSchoolExp"></textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>
+                                            您有何特长或兴趣爱好（字数50字左右）<span class="asteriskField">*</span>
+                                            <br>
+                                        </label>
+                                        <textarea id="job-hobby"
+                                                  class="form-control"
+                                                  rows="4"
+                                                  cols="50"
+                                                  required
+                                                  name="hobby"></textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="merchant_pic">
+                                            如果您有准备单独的简历，或与职位高度相关的个人作品，请于此上传：
+                                            <br>
+                                        </label>
+                                        <input id="input-b1"
+                                               name="attachment"
+                                               type="file"
+                                               class="file"
+                                               data-browse-on-zone-click="true">
+                                    </div>
+                                    <h6 class="mg-md h6-7-margin-top" style="margin-top:10px">
+                                        请注意：附件仅可上传一份，类型为.pdf或.doc, 大小不超过2MB。如果是个人作品，请将其上传至任意网盘（推荐Google Drive），并将链接附于文档之中
+                                    </h6>
+                                    <div class="form-group" style="margin-top:10px">
+                                        <label>
+                                            最后，您对CSSA有何问题或者建议？（选填）
+                                            <br>
+                                        </label>
+                                        <textarea id="additionMsg"
+                                                  class="form-control"
+                                                  rows="4"
+                                                  cols="50"
+                                                  name="message"></textarea>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input"
+                                               type="checkbox"
+                                               id="form-agreement"
+                                               data-validation-minchecked-message="You must agree to this before we can take your information."
+                                               data-validation-minchecked-minchecked="1"
+                                               name="optin" />
+                                        <label class="form-check-label">
+                                            我了解CSSA的个人数据及敏感信息管理政策，并自愿分享用于在Australia Privacy Principle定义之下的合理用于范围内的个人信息供CSSA使用
+                                        </label>
+                                    </div>
+                                    <button id="form-submit"
+                                            class="btn btn-secondary btn-lg btn-block"
+                                            disabled="disabled"
+                                            type="submit">提交简历</button>
+                                </form>
+                            </div>
+                            <div class="col">
+                                <h4 class="mg-md">个人信息</h4>
+                                <div class="form-group">
+                                    <label>
+                                        姓
+                                        <br>
+                                    </label>
+                                    <input class="form-control" value="{{ user.userprofile.lastNameEN }}" />
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        名
+                                        <br>
+                                    </label>
+                                    <input class="form-control" value="{{ user.userprofile.firstNameEN }}" />
+                                    <div class="form-group">
+                                        <label>
+                                            联系电话
+                                            <br>
+                                        </label>
+                                        <input class="form-control" value="{{ user.telNumber }}" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label>
+                                            邮箱
+                                            <br>
+                                        </label>
+                                        <input class="form-control" value="{{ user.email }}" />
+                                        <p>
+                                            以上信息取自您的账号设定，他们将会被用于评估您的岗位申请。请确保以上信息准确无误。
+                                            <i class="glyphicon glyphicon-zoom-in"></i>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- bloc-19 END -->
+        <div class="modal fade" tabindex="-1" role="dialog" id="myModal">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">提交成功</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p>
+                            你的简历已经提交成功咯，请随时关注邮箱，会有相关人员联系你面试。
+                            <br>
+                            <strong>不要忘记成为Committee前要先在oweek去摊位领取会员卡成为cssa会员哦！</strong>
+                        </p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button"
+                                class="btn btn-primary"
+                                data-dismiss="modal"
+                                onclick="gotoParentPage();">回到主页</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
-</div>
 {% endblock 'pg_body' %}
-
 {% block 'extra_js' %}
-
-	<script type="text/javascript" src="https://unpkg.com/file-upload-with-preview"></script>
-	<script type="text/javascript">
+    <script type="text/javascript"
+            src="https://unpkg.com/file-upload-with-preview"></script>
+    <script type="text/javascript">
 		{% if prev_submission %}
 			$("#main_form :input").prop("disabled", true);
 
@@ -234,25 +271,22 @@
 				});
 
 			});
-</script>
-
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.5.1/js/plugins/piexif.min.js" type="text/javascript"></script>
-<!-- sortable.min.js is only needed if you wish to sort / rearrange files in initial preview.
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.5.1/js/plugins/piexif.min.js"
+            type="text/javascript"></script>
+    <!-- sortable.min.js is only needed if you wish to sort / rearrange files in initial preview.
     This must be loaded before fileinput.min.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.5.1/js/plugins/sortable.min.js" type="text/javascript"></script>
-<!-- purify.min.js is only needed if you wish to purify HTML content in your preview for
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.5.1/js/plugins/sortable.min.js"
+            type="text/javascript"></script>
+    <!-- purify.min.js is only needed if you wish to purify HTML content in your preview for
     HTML files. This must be loaded before fileinput.min.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.5.1/js/plugins/purify.min.js" type="text/javascript"></script>
-
-<!-- the main fileinput plugin file -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.5.1/js/fileinput.min.js"></script>
-<!-- following theme script is needed to use the Font Awesome 5.x theme (`fas`) -->
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.5.1/themes/fa/theme.min.js"></script>
-
-
-<script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.5.1/js/plugins/purify.min.js"
+            type="text/javascript"></script>
+    <!-- the main fileinput plugin file -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.5.1/js/fileinput.min.js"></script>
+    <!-- following theme script is needed to use the Font Awesome 5.x theme (`fas`) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.5.1/themes/fa/theme.min.js"></script>
+    <script>
 	$("#input-b1").fileinput({
 					theme: "fa",
 	        allowedFileExtensions: ['pdf','doc'],
@@ -265,9 +299,7 @@
 	        },
 					{% if prev_submission %}
 					initialPreview: [
-						{% if prev_submission.attachment %}
-								"{{ prev_submission.attachment.url }}"
-						{% endif %}
+						{% if prev_submission.attachment %}"{{ prev_submission.attachment.url }}"{% endif %}
 						,		
 					],
 					initialPreviewAsData: true, 
@@ -275,6 +307,5 @@
 						 {type: "pdf", caption:'' ,key: 1}, ]
 					{% endif %}
 	    });
-</script>
-
+    </script>
 {% endblock 'extra_js' %}

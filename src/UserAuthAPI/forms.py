@@ -13,18 +13,16 @@
 #                             Version: 0.6a(C)                                #
 #                                                                             #
 ###############################################################################
-from django import forms
-from django.core.exceptions import ValidationError
-from django.utils.translation import ugettext_lazy as _
-from django.conf import settings
-from UserAuthAPI import models
+import base64
 import os
 
-import base64
+from django import forms
+from django.core.exceptions import ValidationError
 from django.core.files.base import ContentFile
+from django.utils.translation import ugettext_lazy as _
 
-from PIL import Image
-from django.core.files.storage import default_storage as storage
+from UserAuthAPI import models
+
 
 def get_file_extension(file):
     name, extension = os.path.splitext(file.name)
@@ -33,6 +31,8 @@ def get_file_extension(file):
     return 'jpeg'
 
 # 电话号码的验证
+
+
 def CheckTelNumber(value):
     data_telNumber = value
     # 对于澳洲号码的验证
@@ -44,13 +44,14 @@ def CheckTelNumber(value):
         if len(data_telNumber) != 14:
             raise ValidationError(_('Invalid Mobile Phone Number'))
     else:
-       raise ValidationError(_('Invalid Mobile Phone Number'))
+        raise ValidationError(_('Invalid Mobile Phone Number'))
+
 
 class BasicSiginInForm(forms.ModelForm):
     email = forms.EmailField()
     telNumber = forms.CharField()
-    password = forms.CharField(widget= forms.PasswordInput())
-    confirmPassword = forms.CharField(widget= forms.PasswordInput())
+    password = forms.CharField(widget=forms.PasswordInput())
+    confirmPassword = forms.CharField(widget=forms.PasswordInput())
 
     def clean(self):
         password = self.cleaned_data.get('password')
@@ -58,7 +59,8 @@ class BasicSiginInForm(forms.ModelForm):
 
         if password and password_confirm:
             if password != password_confirm:
-                raise forms.ValidationError("The two password fields must match.")
+                raise forms.ValidationError(
+                    "The two password fields must match.")
         return password_confirm
 
     def save(self, commit=True):
@@ -71,17 +73,21 @@ class BasicSiginInForm(forms.ModelForm):
 
     class Meta:
         model = models.User
-        fields = ('email','telNumber','password')
+        fields = ('email', 'telNumber', 'password')
+
 
 class UserInfoForm(forms.ModelForm):
     class Meta:
         model = models.UserProfile
         fields = '__all__'
 
+
 class UserProfileUpdateForm(forms.ModelForm):
     class Meta:
         model = models.UserProfile
-        fields = ('firstNameEN','lastNameEN','firstNameCN','lastNameCN','address','postcode')
+        fields = ('firstNameEN', 'lastNameEN', 'firstNameCN',
+                  'lastNameCN', 'address', 'postcode')
+
 
 class UserAvatarUpdateForm(forms.ModelForm):
     x = forms.FloatField(widget=forms.HiddenInput())
@@ -89,6 +95,7 @@ class UserAvatarUpdateForm(forms.ModelForm):
     width = forms.FloatField(widget=forms.HiddenInput())
     height = forms.FloatField(widget=forms.HiddenInput())
     cropped_b64 = forms.CharField()
+
     class Meta:
         model = models.UserProfile
         fields = ('avatar',)
@@ -96,30 +103,32 @@ class UserAvatarUpdateForm(forms.ModelForm):
     def save(self):
         form = super().save(commit=False)
 
-        x = self.cleaned_data.get('x')
-        y = self.cleaned_data.get('y')
-        w = self.cleaned_data.get('width')
-        h = self.cleaned_data.get('height')
+        self.cleaned_data.get('x')
+        self.cleaned_data.get('y')
+        self.cleaned_data.get('width')
+        self.cleaned_data.get('height')
         img_b64 = self.cleaned_data.get('cropped_b64')
 
-        format, imgstr = img_b64.split(';base64,') 
-        ext = format.split('/')[-1] 
+        format, imgstr = img_b64.split(';base64,')
+        ext = format.split('/')[-1]
 
-        ## Patch to avoid incorrect padding caused by some browsers
+        # Patch to avoid incorrect padding caused by some browsers
         missing_padding = len(imgstr) % 4
         if missing_padding:
-            imgstr += b'='* (4 - missing_padding)
+            imgstr += b'=' * (4 - missing_padding)
 
-        decoded_file = ContentFile(base64.b64decode(imgstr), name='avatar_lg.' + ext)
+        decoded_file = ContentFile(
+            base64.b64decode(imgstr), name='avatar_lg.' + ext)
         form.avatar = decoded_file
-        
+
         super().save()
         return form
 
-class UserAcademicForm(forms.ModelForm):
-    class Meta:
-        model = models.UserAcademic
-        fields = ('userProfile','degree','uniMajor')
+# class UserAcademicForm(forms.ModelForm):
+#     class Meta:
+#         model = models.UserAcademic
+#         fields = ('userProfile','degree','uniMajor')
+
 
 class MigrationForm(forms.Form):
     membershipId = forms.CharField(required=False)
@@ -132,4 +141,5 @@ class MigrationForm(forms.Form):
 class EasyRegistrationForm(forms.ModelForm):
     class Meta:
         model = models.UserProfile
-        fields = ('gender','dateOfBirth','studentId','firstNameEN','lastNameEN','studentId','membershipId')
+        fields = ('gender', 'dateOfBirth', 'studentId', 'firstNameEN',
+                  'lastNameEN', 'studentId', 'membershipId')

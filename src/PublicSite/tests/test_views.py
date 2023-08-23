@@ -1,7 +1,7 @@
-from django.test import TestCase, Client
+
+from django.test import Client, TestCase
 from django.urls import reverse
-from PublicSite import models, views
-import json
+
 
 '''
 ======================= Instructions of performing views unit tests =======================
@@ -15,6 +15,7 @@ import json
 Video Reference: https://www.youtube.com/watch?v=hA_VxnxCHbo
 ==========================================================================================
 '''
+
 
 class TestViews(TestCase):
 

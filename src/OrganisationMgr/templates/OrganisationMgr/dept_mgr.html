@@ -1,185 +1,198 @@
-{% extends 'myCSSAhub/component/_layout.html' %}
-
-{% block pageTitle %}
-{{PageHeader}}
-{% endblock %}
-
+{% extends "myCSSAhub/component/_layout.html" %}
+{% block pageTitle %}{{ PageHeader }}{% endblock pageTitle %}
 {% block ExtraHeader %}
-<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css"
+          rel="stylesheet" />
 {% endblock ExtraHeader %}
-
 {% block BreadcrumbPath %}
-<li class="breadcrumb-item">组织人事</li>
-<li class="breadcrumb-item active">
-    <a href="">{{PageHeader}}</a>
-</li>
+    <li class="breadcrumb-item">组织人事</li>
+    <li class="breadcrumb-item active">
+        <a href="">{{ PageHeader }}</a>
+    </li>
 {% endblock BreadcrumbPath %}
-
 {% block pageContent %}
-{% load static %}
-
-<div class="row">
-    <div class="col-sm-6 col-md-2">
-        <div class="card text-white bg-info">
-            <div class="card-body">
-                <div class="h1 text-muted text-right mb-4">
-                    <i class="icon-people"></i>
-                </div>
-                <div class="text-value">{{ member_count }}</div>
-                <small class="text-muted text-uppercase font-weight-bold">部门成员数量</small>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="row">
-    <div class="col">
-        <div class="card" id="dept-member-list">
-            <div class="card-header">
-                <strong>成员列表</strong>
-            </div>
-            <div class="card-body">
-                <div>
-                    <table class="table table-responsive-md">
-                        <thead>
-                            <th>部门</th>
-                            <th>姓名</th>
-                            <th>职位</th>
-                            <th>邮箱</th>
-                            <th>电话</th>
-                        </thead>
-                        <tbody>
-                            {% for member in dept_members  %}
-                                <tr>
-                                    <td>{{member.Department.deptTitle}}</td>
-                                    <td>{{member.member.get_full_EN_name}}</td>
-                                    <td>{{member.role.roleName}}</td>
-                                    <td>{{member.member.user.email}}</td>
-                                    <td>{{member.member.user.telNumber}}</td>
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                    {% if dept_members.has_other_pages %}
-                    <ul class="pagination">
-                    {% if dept_members.has_previous %}
-                        <li class="page-item"><a class="page-link" href="?page={{ dept_members.previous_page_number }}">Prev</a></li>
-                    {% else %}
-                        <li class="page-item disabled"><a class="page-link" href="#">Prev</a></li>
-                    {% endif %}
-                    {% for i in dept_members.paginator.page_range %}
-                        {% if dept_members.number == i %}
-                        <li class="page-item active"><a class="page-link" href="#">{{ i }} </a></li>
-                        {% else %}
-                        <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
-                        {% endif %}
-                    {% endfor %}
-                    {% if dept_members.has_next %}
-                        <li class="page-item"><a class="page-link" href="?page={{ dept_members.next_page_number }}">Next</a></li>
-                    {% else %}
-                        <li class="page-item disabled"><a class="page-link" href="#">Prev</a></li>
-                    {% endif %}
-                    </ul>
-                {% endif %}
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-{% if perms.UserAuthAPI.add_cssacommitteprofile%}
+    {% load static %}
     <div class="row">
-        <div class="col col-md-12">
-            <div class="card">
-                <div class="card-header"><strong>添加新成员</strong></div>
-                <form method="POST" id="membership-check" action="">
-                    <div class="card-body">
-                        
+        <div class="col-sm-6 col-md-2">
+            <div class="card text-white bg-info">
+                <div class="card-body">
+                    <div class="h1 text-muted text-right mb-4">
+                        <i class="icon-people"></i>
+                    </div>
+                    <div class="text-value">{{ member_count }}</div>
+                    <small class="text-muted text-uppercase font-weight-bold">部门成员数量</small>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <div class="card" id="dept-member-list">
+                <div class="card-header">
+                    <strong>成员列表</strong>
+                </div>
+                <div class="card-body">
+                    <div>
+                        <table class="table table-responsive-md">
+                            <thead>
+                                <th>部门</th>
+                                <th>姓名</th>
+                                <th>职位</th>
+                                <th>邮箱</th>
+                                <th>电话</th>
+                            </thead>
+                            <tbody>
+                                {% for member in dept_members %}
+                                    <tr>
+                                        <td>{{ member.Department.deptTitle }}</td>
+                                        <td>{{ member.member.get_full_EN_name }}</td>
+                                        <td>{{ member.role.roleName }}</td>
+                                        <td>{{ member.member.user.email }}</td>
+                                        <td>{{ member.member.user.telNumber }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        {% if dept_members.has_other_pages %}
+                            <ul class="pagination">
+                                {% if dept_members.has_previous %}
+                                    <li class="page-item">
+                                        <a class="page-link"
+                                           href="?page={{ dept_members.previous_page_number }}">Prev</a>
+                                    </li>
+                                {% else %}
+                                    <li class="page-item disabled">
+                                        <a class="page-link" href="#">Prev</a>
+                                    </li>
+                                {% endif %}
+                                {% for i in dept_members.paginator.page_range %}
+                                    {% if dept_members.number == i %}
+                                        <li class="page-item active">
+                                            <a class="page-link" href="#">{{ i }}</a>
+                                        </li>
+                                    {% else %}
+                                        <li class="page-item">
+                                            <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+                                        </li>
+                                    {% endif %}
+                                {% endfor %}
+                                {% if dept_members.has_next %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{ dept_members.next_page_number }}">Next</a>
+                                    </li>
+                                {% else %}
+                                    <li class="page-item disabled">
+                                        <a class="page-link" href="#">Prev</a>
+                                    </li>
+                                {% endif %}
+                            </ul>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% if perms.UserAuthAPI.add_cssacommitteprofile %}
+        <div class="row">
+            <div class="col col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <strong>添加新成员</strong>
+                    </div>
+                    <form method="post" id="membership-check" action="">
+                        <div class="card-body">
                             {% csrf_token %}
                             <div class="form-group col-sm-12">
                                 <label for="notification_user">可使用姓名、学生证号、邮箱、电话信息查询</label>
-                                <select required class="form-control" id="userlookup" name="lookUPId" style="width:100%"></select>
+                                <select required
+                                        class="form-control"
+                                        id="userlookup"
+                                        name="lookUPId"
+                                        style="width:100%"></select>
                             </div>
-                    </div>
-                    <div class="card-footer">
-                        <button class="btn btn-sm btn-success" type="submit"><i class="fa fa-dot-circle-o"></i> 查询</button>
-                        <button class="btn btn-sm btn-danger" type="reset" onclick="window.location.reload();"><i
-                                class="fa fa-ban"></i> 重置</button>
-                    </div>
-                </form>
+                        </div>
+                        <div class="card-footer">
+                            <button class="btn btn-sm btn-success" type="submit">
+                                <i class="fa fa-dot-circle-o"></i> 查询
+                            </button>
+                            <button class="btn btn-sm btn-danger"
+                                    type="reset"
+                                    onclick="window.location.reload();">
+                                <i class="fa fa-ban"></i> 重置
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
-    </div>
-{% endif %}
-
-
+    {% endif %}
 {% endblock pageContent %}
-
 {% block ExtraJS %}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+    <script>
+        //注意！！！ 此部分代码含服务器端渲染标签，不可移入单独的.js文件
 
-<script> //注意！！！ 此部分代码含服务器端渲染标签，不可移入单独的.js文件
+        $('#userlookup').select2({
+            allowClear: true,
+            // tags: true,  
+            // tokenSeparators: [',', ' '],
+            ajax: {
+                // url: "https://api.github.com/search/repositories",
+                url: '{% url "myCSSAhub:ajax_userLookup" %}',
+                dataType: 'json',
+                method: 'POST',
+                data: function(params) {
+                    return {
+                        search: params.term,
+                        page: params.page
+                    };
+                },
+                processResults: function(data, params) {
+                    params.page = params.page || 1;
 
-    $('#userlookup').select2({
-        allowClear: true,
-        // tags: true,  
-        // tokenSeparators: [',', ' '],
-        ajax: {
-            // url: "https://api.github.com/search/repositories",
-            url: '{% url "myCSSAhub:ajax_userLookup" %}',
-            dataType: 'json',
-            method: 'POST',
-            data: function (params) {
-                return {
-                    search: params.term, 
-                    page: params.page
-                };
+
+                    return {
+                        results: data.result,
+                        // results: data.items,
+                        pagination: {
+                            more: (params.page * 30) < data.length
+                        }
+                    };
+                }
             },
-            processResults: function (data, params) {
-                params.page = params.page || 1;
+            escapeMarkup: function(markup) {
+                return markup;
+            }, // let our custom formatter work
+            minimumInputLength: 2,
+            maximumSelectionLength: 1,
+            templateResult: formatRepo,
+            templateSelection: formatRepoSelection,
 
+        });
 
-                return {
-                    results: data.result,
-                    // results: data.items,
-                    pagination: {
-                        more: (params.page * 30) < data.length
-                    }
-                };
+        function formatRepo(repo) {
+            if (repo.loading) {
+                return repo.text;
             }
-        },
-        escapeMarkup: function (markup) { return markup; }, // let our custom formatter work
-        minimumInputLength: 2,
-        maximumSelectionLength: 1,
-        templateResult: formatRepo,
-        templateSelection: formatRepoSelection,
 
-    });
+            var markup = "<span><div id='" + repo.id + "' class='select2-result-repository__title'> ";
+            if (repo.avatar) { //有头像显示头像，没头像显示placeholder
+                markup += "<img src='" + repo.avatar + "'class='img-avatar' height='35px' width='35px' style='margin-right:20px' />"
+            } else {
+                markup += "<img src= '{% static 'myCSSAhub/img/avatar_placeholder.png'%}' class='img-avatar' height='35px' width='35px' style='margin-right:20px' />"
+            }
+            if (repo.full_name_cn && repo.full_name_cn != "None None") {
+                markup += "中文名：" + repo.full_name_cn + ";"
+            }
+            markup += " 英文名: " + repo.full_name + "; 邮箱: " + repo.email;
 
-    function formatRepo(repo) {
-        if (repo.loading) {
-            return repo.text;
+            markup += "</div></span>";
+
+            return markup;
         }
 
-        var markup = "<span><div id='" + repo.id + "' class='select2-result-repository__title'> ";
-        if (repo.avatar) { //有头像显示头像，没头像显示placeholder
-            markup += "<img src='" + repo.avatar + "'class='img-avatar' height='35px' width='35px' style='margin-right:20px' />"
-        } else {
-            markup += "<img src= '{% static 'myCSSAhub/img/avatar_placeholder.png'%}' class='img-avatar' height='35px' width='35px' style='margin-right:20px'/>"
+        function formatRepoSelection(repo) {
+            return repo.email;
         }
-        if (repo.full_name_cn && repo.full_name_cn != "None None") {
-            markup += "中文名：" + repo.full_name_cn + ";"
-        }
-        markup += " 英文名: " + repo.full_name + "; 邮箱: " + repo.email;
-
-        markup += "</div></span>";
-
-        return markup;
-    }
-
-    function formatRepoSelection(repo) {
-        return repo.email;
-    }
-
-</script>
+    </script>
 {% endblock ExtraJS %}

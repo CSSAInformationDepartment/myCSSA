@@ -1,20 +1,16 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Count, Q
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
-
-from django.shortcuts import render, get_object_or_404
-from django.db.models import Q, Count
-
-from .models import *
-from EventAPI.models import *
-from .forms import *
-from django.http import JsonResponse, HttpResponseRedirect, HttpResponse, Http404
-from django.contrib.auth.mixins import  LoginRequiredMixin, PermissionRequiredMixin
-from django.utils.formats import localize
 from django.views import View
-from django.views.generic import ListView, DetailView, FormView
-from django.urls import reverse
-from django.utils.html import escape
+from django.views.generic import ListView
+from EventAPI.models import *
 
-class FormListView(LoginRequiredMixin,ListView):
+from .forms import *
+from .models import *
+
+
+class FormListView(LoginRequiredMixin, ListView):
     '''
     Rendering the List of Flex Form Configuration
     '''
@@ -28,10 +24,10 @@ class FormListView(LoginRequiredMixin,ListView):
         for row in context[self.context_object_name]:
             print(row)
             setattr(row, 'field_count', FlexFormField.objects.filter(
-                Q(form__id=row.id)&Q(disabled=False)).count())
+                Q(form__id=row.id) & Q(disabled=False)).count())
             setattr(row, 'submission_count', FlexFormData.objects.filter(
-                Q(field__form__id=row.id)&Q(field__disabled=False)).values('field__form', entries=Count('user')).count())
-        
+                Q(field__form__id=row.id) & Q(field__disabled=False)).values('field__form', entries=Count('user')).count())
+
         return context
 
 
@@ -41,7 +37,7 @@ class CreateFormView(LoginRequiredMixin, View):
     form_class = NewFlexForm
 
     def get(self, request, *args, **kwargs):
-        return render(request, self.template_name, {'form':self.form_class})
+        return render(request, self.template_name, {'form': self.form_class})
 
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST)
@@ -49,7 +45,7 @@ class CreateFormView(LoginRequiredMixin, View):
             instance = form.save()
             return HttpResponseRedirect(instance.get_absolute_url())
 
-        return render(request, self.template_name, {'form':form})
+        return render(request, self.template_name, {'form': form})
 
 
 class AddFormFieldView(LoginRequiredMixin, View):
@@ -62,18 +58,18 @@ class AddFormFieldView(LoginRequiredMixin, View):
         print(form_id)
         fields = FlexFormField.objects.filter(form__id=form_id)
         if not form:
-            new_form = self.form_class(initial={'form':form_id})
+            new_form = self.form_class(initial={'form': form_id})
         else:
             new_form = form
-        
+
         if not event_bind_form:
-            event_bind_form = AttachInfoCollectionForm(initial={'form':form_id})
+            event_bind_form = AttachInfoCollectionForm(
+                initial={'form': form_id})
         else:
             event_bind_form = event_bind_form
 
         bind_events = EventAttendentInfoForm.objects.filter(form__id=form_id)
-        return {'form':new_form, 'FormConfig':fields, 'event_bind_form':event_bind_form, 'bind_events':bind_events}
-
+        return {'form': new_form, 'FormConfig': fields, 'event_bind_form': event_bind_form, 'bind_events': bind_events}
 
     def get(self, request, *args, **kwargs):
         return render(request, self.template_name, self.get_new_context())
@@ -88,5 +84,5 @@ class AddFormFieldView(LoginRequiredMixin, View):
             if event_bind.is_valid():
                 event_bind.save()
             return render(request, self.template_name, self.get_new_context())
-            
+
         return render(request, self.template_name, self.get_new_context(form=form, event_bind_form=event_bind))

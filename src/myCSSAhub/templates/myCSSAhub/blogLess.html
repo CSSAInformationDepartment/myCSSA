@@ -1,93 +1,89 @@
-{% extends 'myCSSAhub/component/_layout.html' %}
-
- {% block pageTitle %}
-操作blog
- {% endblock  %}
-
+{% extends "myCSSAhub/component/_layout.html" %}
+{% block pageTitle %}操作blog{% endblock pageTitle %}
 {% block ExtraHeader %}
-{% load static %}
-<link href="{% static 'myCSSAhub/css/blogeditstyle.css' %}" rel="stylesheet" />
-<link href="{% static 'PublicSite/css/blogstyle.css' %}" rel="stylesheet" />
-
-<!-- prohibit cache -->
-<meta http-equiv="Pragma" content="no-cache">
-<meta http-equiv="Cache-Control" content="no-store, must-revalidate">
-<meta http-equiv="Expires" content="Wed, 26 Feb 1997 08:21:57 GMT">
-<meta HTTP-EQUIV="expires" CONTENT="0">
-
+    {% load static %}
+    <link href="{% static 'myCSSAhub/css/blogeditstyle.css' %}"
+          rel="stylesheet" />
+    <link href="{% static 'PublicSite/css/blogstyle.css' %}" rel="stylesheet" />
+    <!-- prohibit cache -->
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-Control" content="no-store, must-revalidate">
+    <meta http-equiv="Expires" content="Wed, 26 Feb 1997 08:21:57 GMT">
+    <meta HTTP-EQUIV="expires" CONTENT="0">
 {% endblock ExtraHeader %}
-
-
 {% block pageContent %}
-<!-- bloc-4 -->
-{% load static %}
+    <!-- bloc-4 -->
+    {% load static %}
+    <style>
+        .blogsLessContainer {}
 
-<style>
-.blogsLessContainer{
+        .blogsLessContainer h2 {
+            margin: 23px 0px;
+        }
 
-}
-    
-    .blogsLessContainer h2{
-        margin: 23px 0px;
-    }
-    .blogsLessContainer a{
+        .blogsLessContainer a {}
 
-    }
-    .blogsLessContainer button{
-        margin: 0px 18px 0px 0px;
-        float: right
-    }
-</style>
-
-<div class="blogsLessContainer">
-    {% if writtenOrReview %}
-    <h2>你的文章</h2>
-    {% else %}
-    <h2>审核</h2>
-    <h5>点击文章标题可以查看文章内容</h5>
-    {% endif %}
-    <h5>看不到最新的文章？感觉文章状态有些问题吗 刷新一下试试<a href="javascript:window.location.reload();" onclick="window.location.reload();">刷新</a></h5>
-    <br />
-    <ul class="list-group">
-        {% for blog in blogs %}
-        
-        <li class="list-group-item">
-            {% if blog.blogReviewed == 2 %}
-            <a href="/blog/{{ blog.blogId }}/" target="_blank">
-            {% else %}
-                <a href="/reviewblog?blogId={{ blog.blogId }}" target="_blank">
-                    {% endif %}
-                <b>{{ blog.blogTitle }}</b> 
-                {{ blog.createDate|date:"Y-m-d H:i:s" }}</a>
-            
-            <i>{% if blog.blogReviewed == 2 %}
-            已审核
-            {% elif blog.blogReviewed == 1 %}
-            审核不通过，编辑后发布会重新提交审核
-        
-                {% else %}
-                未审核，未公开
-                {% endif %}</i>
-            ,
-            {% if blog.blogOpen %}
-                <span class="badge badge-info">对外</span>
-            {% else %}
-                <span class="badge badge-light">已保存</span>
-            {% endif %}
-            {% if writtenOrReview %}
-            <a href="/hub/blog/editbg?blogId={{ blog.blogId }}"><button class="btn btn-primary" id="out">编辑文章</button></a>
-            <button class="btn btn-danger" id="delete" onclick="blogAjax({{ blog.blogId }}, true, 2)">删除</button>
-            {% else %}
-            <button class="btn btn-primary" id="pass" onclick="blogAjax({{ blog.blogId }}, false, 2)">审核过</button>
-                
-                <button class="btn btn-danger" id="return" onclick="blogAjax({{ blog.blogId }}, false, 1)">审核不过</button>
-            {% endif %}
-            
-        </li>
-        {% endfor %}
-    </ul>
-    
-    <script>
+        .blogsLessContainer button {
+            margin: 0px 18px 0px 0px;
+            float: right
+        }
+    </style>
+    <div class="blogsLessContainer">
+        {% if writtenOrReview %}
+            <h2>你的文章</h2>
+        {% else %}
+            <h2>审核</h2>
+            <h5>点击文章标题可以查看文章内容</h5>
+        {% endif %}
+        <h5>
+            看不到最新的文章？感觉文章状态有些问题吗 刷新一下试试<a href="javascript:window.location.reload();"
+   onclick="window.location.reload();">刷新</a>
+        </h5>
+        <br />
+        <ul class="list-group">
+            {% for blog in blogs %}
+                <li class="list-group-item">
+                    {% if blog.blogReviewed == 2 %}
+                        <a href="/blog/{{ blog.blogId }}/" target="_blank">
+                        {% else %}
+                            <a href="/reviewblog?blogId={{ blog.blogId }}" target="_blank">
+                            {% endif %}
+                            <b>{{ blog.blogTitle }}</b>
+                        {{ blog.createDate|date:"Y-m-d H:i:s" }}</a>
+                        <i>
+                            {% if blog.blogReviewed == 2 %}
+                                已审核
+                            {% elif blog.blogReviewed == 1 %}
+                                审核不通过，编辑后发布会重新提交审核
+                            {% else %}
+                                未审核，未公开
+                            {% endif %}
+                        </i>
+                        ,
+                        {% if blog.blogOpen %}
+                            <span class="badge badge-info">对外</span>
+                        {% else %}
+                            <span class="badge badge-light">已保存</span>
+                        {% endif %}
+                        {% if writtenOrReview %}
+                            <a href="/hub/blog/editbg?blogId={{ blog.blogId }}">
+                                <button class="btn btn-primary" id="out">编辑文章</button>
+                            </a>
+                            <button class="btn btn-danger"
+                                    id="delete"
+                                    onclick="blogAjax({{ blog.blogId }}, true, 2)">删除</button>
+                        {% else %}
+                            <button class="btn btn-primary"
+                                    id="pass"
+                                    onclick="blogAjax({{ blog.blogId }}, false, 2)">审核过</button>
+                            <button class="btn btn-danger"
+                                    id="return"
+                                    onclick="blogAjax({{ blog.blogId }}, false, 1)">审核不过</button>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+            <script>
         let blogAjax = (blogId, isRem, reviewStatus) => {
             let url = '/hub/blog/ajax/deleteBlog?blogId=';
             let confAlStr = "确认要删除这篇文章吗？"
@@ -115,6 +111,6 @@
                     window.location.reload();
                 }
         }
-    </script>
-</div>
-{% endblock pageContent %}
+            </script>
+        </div>
+    {% endblock pageContent %}
