@@ -1,9 +1,16 @@
-{% extends 'components/base_page.html' %}
-
-
+{% extends "components/base_page.html" %}
 {% block 'extra_header' %}
+    <style media="screen">
+        .card-img {
+            padding-bottom: 70%;
+            position: relative;
+        }
 
-<style media="screen">
+        .card-img>img {
+            position: absolute;
+            max-width: 100%;
+            max-height: 100%;
+        }
 
 	.card-img {
 		padding-bottom: 70%;
@@ -80,8 +87,6 @@
 
 </style>
 {% endblock 'extra_header' %}
-
-
 {% block 'pg_body' %}
 
 

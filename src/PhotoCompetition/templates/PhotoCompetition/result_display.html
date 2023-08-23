@@ -1,253 +1,294 @@
-{% extends 'components/base_page.html' %}
-
+{% extends "components/base_page.html" %}
 {% block 'pg_body' %}
-{% load static %}
-<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.5.1/css/fileinput.min.css" media="all" rel="stylesheet"/>
-
-
-
-        
-<div class="container">
-	
-	<div class="row">
-		<div class="jumbotron jumbotron-fluid col-md-12" style="width:100%">
-			<div class="container-fluid">
-				<h1 class="display-3 text-center">摄影大赛获奖作品</h1><br>
-			</div>
-		</div>
-	</div>	
-	<div class="jumbotron jumbotron-fluid">
-		<div class="row">
-				<div class="container-fluid">
-					<h1 class="text-center">手机组</h1><br>
-				</div>
-		</div>
-	
-		<div class="row">
-				<div class="container-fluid">
-					<h2 class="text-center">自然风景</h2><br>
-				</div>
-		</div>
-		<div class="row" >
-			<div class='col-md-12 portfolio-item mt-3 text-center' >
-					<h4 class="card-title ">一等奖</h4>
-						<img id="mobileNature1" class="my-3 d-block mx-auto " style=' height:300px; widows: 500px; display: block;' alt=''>
-						
-					<p class='card-text' style='max-height:80px; overflow:auto;'>Kennis Liu</p>
-					<p class='card-text' style='max-height:80px; overflow:auto;'>願你在燈火闌珊之際有人可訴衷腸</p>
-					
-			</div> 
-		</div>
-		<div class="row" >
-				<div class='col-md-6 portfolio-item mt-3 text-center' >
-						<h4 class="card-title ">二等奖</h4>
-					<img id="mobileNature2" class="my-3 d-block mx-auto " style='height:300px; widows: 500px; display: block;' alt=''>
-					<p class='card-text' style='max-height:80px; overflow:auto;'>Jiaxin Lou</p>
-					<p class='card-text' style='max-height:80px; overflow:auto;'>微光斑斓，晨雾轻缓，在我的原野弥漫</p>
-				</div> 
-		
-				<div class='col-md-6 portfolio-item mt-3 text-center' >
-						<h4 class="card-title ">三等奖</h4>
-						<img id="mobileNature3" class="my-3 d-block mx-auto "style='height:300px; widows: 500px; display: block;' alt=''>
-						<p class='card-text' style='max-height:80px; overflow:auto;'>Fanyu Liu</p>
-						<p class='card-text' style='max-height:80px; overflow:auto;'>2019.03.16 #在墨尔本的第23天</p>
-					</div> 
-		</div>
-
-		<div class="row">
-			<div class="container-fluid">
-				<h2 class="text-center">人文</h2><br>
-			</div>
-		</div>
-		<p></p>
-		
-		<div class="row" >
-			<div class='col-md-12 portfolio-item mt-3 text-center' >
-					<h4 class="card-title ">一等奖</h4>
-					<img id="mobileCulture1" class="my-3 d-block mx-auto " style=' height:300px; widows: 500px; display: block;' alt=''>	
-					<p class='card-text' style='max-height:80px; overflow:auto;'>Ruixuan Guo</p>
-					<p class='card-text' style='max-height:80px; overflow:auto;'>Bourke Street</p>
-			</div> 
-		</div>
-		<div class="row" >
-			<div class='col-md-6 portfolio-item mt-3 text-center' >
-				<h4 class="card-title ">二等奖</h4>
-				<img id="mobileCulture2" class="my-3 d-block mx-auto " style='height:300px; widows: 500px; display: block;' alt=''>
-				<p class='card-text' style='max-height:80px; overflow:auto;'>Zhen Wang</p>
-				<p class='card-text' style='max-height:80px; overflow:auto;'>Waiting.</p>
-			</div> 
-
-			<div class='col-md-6 portfolio-item mt-3 text-center' >
-				<h4 class="card-title ">三等奖</h4>
-				<img id="mobileCulture3" class="my-3 d-block mx-auto "style='height:300px; widows: 500px; display: block;' alt=''>
-				<p class='card-text' style='max-height:80px; overflow:auto;'>Kelly Yuan</p>
-				<p class='card-text' style='max-height:80px; overflow:auto;'>你在我眼中就是风景啊</p>
-			</div> 
-		</div>
-	</div>
-	
-	<div class="jumbotron jumbotron-fluid">
-		<div class="row">
-				<div class="container-fluid">
-					<h1 class="text-center">相机组</h1><br>
-				</div>
-		</div>
-
-		<div class="row">
-				<div class="container-fluid">
-					<h2 class="text-center">自然风景</h2><br>
-				</div>
-		</div>
-		
-		<div class="row" >
-			<div class='col-md-12 portfolio-item mt-3 text-center' >
-					<h4 class="card-title ">一等奖</h4>
-					<img id="cameraNature1" class="my-3 d-block mx-auto " style=' height:300px; widows: 500px; display: block;'  alt=''>	
-					<p class='card-text' style='max-height:80px; overflow:auto;'>Jianyi Huang</p>
-					<p class='card-text' style='max-height:80px; overflow:auto;'>无数木桩伫立港口 似乎在等待着 与你相逢</p>
-			</div> 
-		</div>
-		<div class="row" >
-			<div class='col-md-6 portfolio-item mt-3 text-center' >
-					<h4 class="card-title ">二等奖</h4>
-					<img id="cameraNature2" class="my-3 d-block mx-auto " style='height:300px; widows: 500px; display: block;' alt=''>
-					<p class='card-text' style='max-height:80px; overflow:auto;'>Rachel Zhu</p>
-					<p class='card-text' style='max-height:80px; overflow:auto;'>橙色/黄色/绿色</p>
-				</div> 
-		
-				<div class='col-md-6 portfolio-item mt-3 text-center' >
-					<h4 class="card-title ">三等奖</h4>
-					<div style='height:300px; width:500px; overflow: hidden;'	>
-						<img id="cameraNature3" class="my-3 d-block mx-auto " style='height:300px; widows: 500px; display: block; background-position:center;  background-repeat:no-repeat;' alt=''>
-					</div>
-					<p class='card-text' style='max-height:80px; overflow:auto;'>Jiacong Lin</p>
-					<p class='card-text' style='max-height:80px; overflow:auto;'>夕阳的余晖下，墨大和不远处的city交相呼应。古朴的墨大校园和摩登的城市高楼，向这片天空讲述着这座城市历史的沉淀和未来的朝气</p>
-				</div> 
-			</div>
-
-		<div class="row">
-			<div class="container-fluid">
-				<h2 class="text-center">人文</h2><br>
-			</div>
-		</div>
-
-		<div class="row" >
-			<div class='col-md-12 portfolio-item mt-3 text-center' >
-					<h4 class="card-title ">一等奖</h4>
-					<img id="cameraCulture1" class="my-3 d-block mx-auto " style=' height:300px; widows: 500px; display: block;' alt=''>	
-					<p class='card-text' style='max-height:80px; overflow:auto;'>Rachel Zhu</p>
-					<p class='card-text' style='max-height:80px; overflow:auto;'>车站/雨后/你好么</p>
-			</div> 
-		</div>
-		<div class="row" >
-			<div class='col-md-6 portfolio-item mt-3 text-center' >
-				<h4 class="card-title ">二等奖</h4>
-				<img id="cameraCulture2" class="my-3 d-block mx-auto " style='height:300px; widows: 500px; display: block;' alt=''>
-				<p class='card-text' style='max-height:80px; overflow:auto;'>Xin Wu</p>
-				<p class='card-text' style='max-height:80px; overflow:auto;'>.</p>
-			</div> 
-
-			<div class='col-md-6 portfolio-item mt-3 text-center' >
-				<h4 class="card-title ">三等奖</h4>
-				<img id="cameraCulture3" class="my-3 d-block mx-auto "style='height:300px; widows: 500px; display: block;' alt=''>
-				<p class='card-text' style='max-height:80px; overflow:auto;'>Xiaolong Chen</p>
-				<p class='card-text' style='max-height:80px; overflow:auto;'>周三晚，维妈市场</p>
-			</div> 
-		</div>
-	</div>
-</div>
-
-<hr>
-
-
+    {% load static %}
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.5.1/css/fileinput.min.css"
+          media="all"
+          rel="stylesheet" />
+    <div class="container">
+        <div class="row">
+            <div class="jumbotron jumbotron-fluid col-md-12" style="width:100%">
+                <div class="container-fluid">
+                    <h1 class="display-3 text-center">摄影大赛获奖作品</h1>
+                    <br>
+                </div>
+            </div>
+        </div>
+        <div class="jumbotron jumbotron-fluid">
+            <div class="row">
+                <div class="container-fluid">
+                    <h1 class="text-center">手机组</h1>
+                    <br>
+                </div>
+            </div>
+            <div class="row">
+                <div class="container-fluid">
+                    <h2 class="text-center">自然风景</h2>
+                    <br>
+                </div>
+            </div>
+            <div class="row">
+                <div class='col-md-12 portfolio-item mt-3 text-center'>
+                    <h4 class="card-title ">一等奖</h4>
+                    <img id="mobileNature1"
+                         class="my-3 d-block mx-auto"
+                         style='height:300px;
+                                widows: 500px;
+                                display: block'
+                         alt=''>
+                    <p class='card-text' style='max-height:80px; overflow:auto;'>Kennis Liu</p>
+                    <p class='card-text' style='max-height:80px; overflow:auto;'>願你在燈火闌珊之際有人可訴衷腸</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class='col-md-6 portfolio-item mt-3 text-center'>
+                    <h4 class="card-title ">二等奖</h4>
+                    <img id="mobileNature2"
+                         class="my-3 d-block mx-auto"
+                         style='height:300px;
+                                widows: 500px;
+                                display: block'
+                         alt=''>
+                    <p class='card-text' style='max-height:80px; overflow:auto;'>Jiaxin Lou</p>
+                    <p class='card-text' style='max-height:80px; overflow:auto;'>微光斑斓，晨雾轻缓，在我的原野弥漫</p>
+                </div>
+                <div class='col-md-6 portfolio-item mt-3 text-center'>
+                    <h4 class="card-title ">三等奖</h4>
+                    <img id="mobileNature3"
+                         class="my-3 d-block mx-auto"
+                         style='height:300px;
+                                widows: 500px;
+                                display: block'
+                         alt=''>
+                    <p class='card-text' style='max-height:80px; overflow:auto;'>Fanyu Liu</p>
+                    <p class='card-text' style='max-height:80px; overflow:auto;'>2019.03.16 #在墨尔本的第23天</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="container-fluid">
+                    <h2 class="text-center">人文</h2>
+                    <br>
+                </div>
+            </div>
+            <p></p>
+            <div class="row">
+                <div class='col-md-12 portfolio-item mt-3 text-center'>
+                    <h4 class="card-title ">一等奖</h4>
+                    <img id="mobileCulture1"
+                         class="my-3 d-block mx-auto"
+                         style='height:300px;
+                                widows: 500px;
+                                display: block'
+                         alt=''>
+                    <p class='card-text' style='max-height:80px; overflow:auto;'>Ruixuan Guo</p>
+                    <p class='card-text' style='max-height:80px; overflow:auto;'>Bourke Street</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class='col-md-6 portfolio-item mt-3 text-center'>
+                    <h4 class="card-title ">二等奖</h4>
+                    <img id="mobileCulture2"
+                         class="my-3 d-block mx-auto"
+                         style='height:300px;
+                                widows: 500px;
+                                display: block'
+                         alt=''>
+                    <p class='card-text' style='max-height:80px; overflow:auto;'>Zhen Wang</p>
+                    <p class='card-text' style='max-height:80px; overflow:auto;'>Waiting.</p>
+                </div>
+                <div class='col-md-6 portfolio-item mt-3 text-center'>
+                    <h4 class="card-title ">三等奖</h4>
+                    <img id="mobileCulture3"
+                         class="my-3 d-block mx-auto"
+                         style='height:300px;
+                                widows: 500px;
+                                display: block'
+                         alt=''>
+                    <p class='card-text' style='max-height:80px; overflow:auto;'>Kelly Yuan</p>
+                    <p class='card-text' style='max-height:80px; overflow:auto;'>你在我眼中就是风景啊</p>
+                </div>
+            </div>
+        </div>
+        <div class="jumbotron jumbotron-fluid">
+            <div class="row">
+                <div class="container-fluid">
+                    <h1 class="text-center">相机组</h1>
+                    <br>
+                </div>
+            </div>
+            <div class="row">
+                <div class="container-fluid">
+                    <h2 class="text-center">自然风景</h2>
+                    <br>
+                </div>
+            </div>
+            <div class="row">
+                <div class='col-md-12 portfolio-item mt-3 text-center'>
+                    <h4 class="card-title ">一等奖</h4>
+                    <img id="cameraNature1"
+                         class="my-3 d-block mx-auto"
+                         style='height:300px;
+                                widows: 500px;
+                                display: block'
+                         alt=''>
+                    <p class='card-text' style='max-height:80px; overflow:auto;'>Jianyi Huang</p>
+                    <p class='card-text' style='max-height:80px; overflow:auto;'>无数木桩伫立港口 似乎在等待着 与你相逢</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class='col-md-6 portfolio-item mt-3 text-center'>
+                    <h4 class="card-title ">二等奖</h4>
+                    <img id="cameraNature2"
+                         class="my-3 d-block mx-auto"
+                         style='height:300px;
+                                widows: 500px;
+                                display: block'
+                         alt=''>
+                    <p class='card-text' style='max-height:80px; overflow:auto;'>Rachel Zhu</p>
+                    <p class='card-text' style='max-height:80px; overflow:auto;'>橙色/黄色/绿色</p>
+                </div>
+                <div class='col-md-6 portfolio-item mt-3 text-center'>
+                    <h4 class="card-title ">三等奖</h4>
+                    <div style='height:300px; width:500px; overflow: hidden;'>
+                        <img id="cameraNature3"
+                             class="my-3 d-block mx-auto"
+                             style='height:300px;
+                                    widows: 500px;
+                                    display: block;
+                                    background-position:center;
+                                    background-repeat:no-repeat'
+                             alt=''>
+                    </div>
+                    <p class='card-text' style='max-height:80px; overflow:auto;'>Jiacong Lin</p>
+                    <p class='card-text' style='max-height:80px; overflow:auto;'>
+                        夕阳的余晖下，墨大和不远处的city交相呼应。古朴的墨大校园和摩登的城市高楼，向这片天空讲述着这座城市历史的沉淀和未来的朝气
+                    </p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="container-fluid">
+                    <h2 class="text-center">人文</h2>
+                    <br>
+                </div>
+            </div>
+            <div class="row">
+                <div class='col-md-12 portfolio-item mt-3 text-center'>
+                    <h4 class="card-title ">一等奖</h4>
+                    <img id="cameraCulture1"
+                         class="my-3 d-block mx-auto"
+                         style='height:300px;
+                                widows: 500px;
+                                display: block'
+                         alt=''>
+                    <p class='card-text' style='max-height:80px; overflow:auto;'>Rachel Zhu</p>
+                    <p class='card-text' style='max-height:80px; overflow:auto;'>车站/雨后/你好么</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class='col-md-6 portfolio-item mt-3 text-center'>
+                    <h4 class="card-title ">二等奖</h4>
+                    <img id="cameraCulture2"
+                         class="my-3 d-block mx-auto"
+                         style='height:300px;
+                                widows: 500px;
+                                display: block'
+                         alt=''>
+                    <p class='card-text' style='max-height:80px; overflow:auto;'>Xin Wu</p>
+                    <p class='card-text' style='max-height:80px; overflow:auto;'>.</p>
+                </div>
+                <div class='col-md-6 portfolio-item mt-3 text-center'>
+                    <h4 class="card-title ">三等奖</h4>
+                    <img id="cameraCulture3"
+                         class="my-3 d-block mx-auto"
+                         style='height:300px;
+                                widows: 500px;
+                                display: block'
+                         alt=''>
+                    <p class='card-text' style='max-height:80px; overflow:auto;'>Xiaolong Chen</p>
+                    <p class='card-text' style='max-height:80px; overflow:auto;'>周三晚，维妈市场</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr>
 {% endblock 'pg_body' %}
-
 {% block 'extra_js' %}
-<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-<script type="text/javascript">
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script type="text/javascript">
+        // phone 
+        // Nature
+        // 1. 2d790fbe-8de7-42a8-bba7-52e3056b0aa0
+        // 2. 418da5c8-7f5e-4208-aa37-704a28b65fb4
+        // 3. c2dd9020-1acb-4394-a470-90fe7313c46f
+        // Culture
+        // 1. 03875f5e-1693-4496-bf32-dbbec7d766cc
+        // 2. 6b09051c-42af-45b7-a0cf-fb64c6fc8377
+        // 3. 2e25b41b-c934-4102-8eea-b307fa9de079
 
-	
+        // Camera
+        // Nature
+        // 1. f0ef9c2b-f0bd-437f-91d4-9e8f811bec09
+        // 2. e72352c9-33d4-4b56-b53a-ee748469c557
+        // 3. 4c5c0a22-aae9-41c3-b004-fb18b2324c56
+        // Culture
+        // 1. d4e73a4e-621b-4d18-b5c8-c55e6986a4b5
+        // 2. 579245d3-4573-4fda-833f-208e8b7a0cff
+        // 3. 6cf7791b-0047-4d18-a0e5-30ace22b9b3e
 
-// phone 
-// Nature
-// 1. 2d790fbe-8de7-42a8-bba7-52e3056b0aa0
-// 2. 418da5c8-7f5e-4208-aa37-704a28b65fb4
-// 3. c2dd9020-1acb-4394-a470-90fe7313c46f
-// Culture
-// 1. 03875f5e-1693-4496-bf32-dbbec7d766cc
-// 2. 6b09051c-42af-45b7-a0cf-fb64c6fc8377
-// 3. 2e25b41b-c934-4102-8eea-b307fa9de079
+        axios.defaults.xsrfCookieName = 'csrftoken'
+        axios.defaults.xsrfHeaderName = "X-CSRFTOKEN"
+        let sourceURI_1 = '/app/photo-competition/api/photos/';
+        loader(sourceURI_1);
 
-// Camera
-// Nature
-// 1. f0ef9c2b-f0bd-437f-91d4-9e8f811bec09
-// 2. e72352c9-33d4-4b56-b53a-ee748469c557
-// 3. 4c5c0a22-aae9-41c3-b004-fb18b2324c56
-// Culture
-// 1. d4e73a4e-621b-4d18-b5c8-c55e6986a4b5
-// 2. 579245d3-4573-4fda-833f-208e8b7a0cff
-// 3. 6cf7791b-0047-4d18-a0e5-30ace22b9b3e
+        function loader(source) {
+            album.innerHTML = ''
+            axios.get(source)
+                .then((res) => {
+                    //console.log(res.data);
+                    let data = res.data
+                    for (var i = 0; i < data.length; i++) {
+                        //Mobile Nature
+                        if (data[i]["submissionId"] == "2d790fbe-8de7-42a8-bba7-52e3056b0aa0") {
+                            document.getElementById('mobileNature1').setAttribute("src", data[i]["upload_photo"])
+                        } else if (data[i]["submissionId"] == "418da5c8-7f5e-4208-aa37-704a28b65fb4") {
+                            document.getElementById('mobileNature2').setAttribute("src", data[i]["upload_photo"])
+                        } else if (data[i]["submissionId"] == "c2dd9020-1acb-4394-a470-90fe7313c46f") {
+                            document.getElementById('mobileNature3').setAttribute("src", data[i]["upload_photo"])
+                        }
 
-	axios.defaults.xsrfCookieName = 'csrftoken'
-    axios.defaults.xsrfHeaderName = "X-CSRFTOKEN"
-    let sourceURI_1 ='/app/photo-competition/api/photos/';
-    loader(sourceURI_1);
-    function loader(source){
-        album.innerHTML = ''
-        axios.get(source)
-            .then((res)=>{
-            //console.log(res.data);
-            let data = res.data
-            for(var i = 0; i < data.length; i++){
-		    	//Mobile Nature
-		        if(data[i]["submissionId"] == "2d790fbe-8de7-42a8-bba7-52e3056b0aa0"){
-		            document.getElementById('mobileNature1').setAttribute("src", data[i]["upload_photo"])
-		        } else if(data[i]["submissionId"] == "418da5c8-7f5e-4208-aa37-704a28b65fb4"){
-		            document.getElementById('mobileNature2').setAttribute("src", data[i]["upload_photo"])
-		        } else if(data[i]["submissionId"] == "c2dd9020-1acb-4394-a470-90fe7313c46f"){
-		            document.getElementById('mobileNature3').setAttribute("src", data[i]["upload_photo"])
-		        } 
+                        //Mobile Culture
+                        else if (data[i]["submissionId"] == "03875f5e-1693-4496-bf32-dbbec7d766cc") {
+                            document.getElementById('mobileCulture1').setAttribute("src", data[i]["upload_photo"])
+                        } else if (data[i]["submissionId"] == "6b09051c-42af-45b7-a0cf-fb64c6fc8377") {
+                            document.getElementById('mobileCulture2').setAttribute("src", data[i]["upload_photo"])
+                        } else if (data[i]["submissionId"] == "2e25b41b-c934-4102-8eea-b307fa9de079") {
+                            document.getElementById('mobileCulture3').setAttribute("src", data[i]["upload_photo"])
+                        }
 
-		        //Mobile Culture
-		        else if(data[i]["submissionId"] == "03875f5e-1693-4496-bf32-dbbec7d766cc"){
-		            document.getElementById('mobileCulture1').setAttribute("src", data[i]["upload_photo"])
-		        } else if(data[i]["submissionId"] == "6b09051c-42af-45b7-a0cf-fb64c6fc8377"){
-		            document.getElementById('mobileCulture2').setAttribute("src", data[i]["upload_photo"])
-		        } else if(data[i]["submissionId"] == "2e25b41b-c934-4102-8eea-b307fa9de079"){
-		            document.getElementById('mobileCulture3').setAttribute("src", data[i]["upload_photo"])
-		        } 
+                        //Camera Nature
+                        else if (data[i]["submissionId"] == "f0ef9c2b-f0bd-437f-91d4-9e8f811bec09") {
+                            document.getElementById('cameraNature1').setAttribute("src", data[i]["upload_photo"])
+                        } else if (data[i]["submissionId"] == "e72352c9-33d4-4b56-b53a-ee748469c557") {
+                            document.getElementById('cameraNature2').setAttribute("src", data[i]["upload_photo"])
+                        } else if (data[i]["submissionId"] == "4c5c0a22-aae9-41c3-b004-fb18b2324c56") {
+                            document.getElementById('cameraNature3').setAttribute("src", data[i]["upload_photo"])
+                        }
 
-		        //Camera Nature
-		        else if(data[i]["submissionId"] == "f0ef9c2b-f0bd-437f-91d4-9e8f811bec09"){
-		            document.getElementById('cameraNature1').setAttribute("src", data[i]["upload_photo"])
-		        } else if(data[i]["submissionId"] == "e72352c9-33d4-4b56-b53a-ee748469c557"){
-		            document.getElementById('cameraNature2').setAttribute("src", data[i]["upload_photo"])
-		        } else if(data[i]["submissionId"] == "4c5c0a22-aae9-41c3-b004-fb18b2324c56"){
-		            document.getElementById('cameraNature3').setAttribute("src", data[i]["upload_photo"])
-		        } 
-
-		        //Camera Culture
-		        else if(data[i]["submissionId"] == "d4e73a4e-621b-4d18-b5c8-c55e6986a4b5"){
-		            document.getElementById('cameraCulture1').setAttribute("src", data[i]["upload_photo"])
-		        } else if(data[i]["submissionId"] == "579245d3-4573-4fda-833f-208e8b7a0cff"){
-		            document.getElementById('cameraCulture2').setAttribute("src", data[i]["upload_photo"])
-		        } else if(data[i]["submissionId"] == "6cf7791b-0047-4d18-a0e5-30ace22b9b3e"){
-		            document.getElementById('cameraCulture3').setAttribute("src", data[i]["upload_photo"])
-		        }
-		    }   
-        })
-        .catch( (err)=> {
-            console.log(err);
-        })
-        .finally(function () {
-        // always executed
-        });
-    }
-    
-</script>
-
-
+                        //Camera Culture
+                        else if (data[i]["submissionId"] == "d4e73a4e-621b-4d18-b5c8-c55e6986a4b5") {
+                            document.getElementById('cameraCulture1').setAttribute("src", data[i]["upload_photo"])
+                        } else if (data[i]["submissionId"] == "579245d3-4573-4fda-833f-208e8b7a0cff") {
+                            document.getElementById('cameraCulture2').setAttribute("src", data[i]["upload_photo"])
+                        } else if (data[i]["submissionId"] == "6cf7791b-0047-4d18-a0e5-30ace22b9b3e") {
+                            document.getElementById('cameraCulture3').setAttribute("src", data[i]["upload_photo"])
+                        }
+                    }
+                })
+                .catch((err) => {
+                    console.log(err);
+                })
+                .finally(function() {
+                    // always executed
+                });
+        }
+    </script>
 {% endblock 'extra_js' %}
-
-
-

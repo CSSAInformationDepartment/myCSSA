@@ -1,6 +1,5 @@
-{% extends 'components/base_page.html' %}
+{% extends "components/base_page.html" %}
 {% load static %}
-
 {% block 'extra_header' %}
 
 <link rel="stylesheet" type="text/css" href="{% static 'PublicSite/css/add-in.css'%}">
@@ -155,7 +154,6 @@
 </style>
 
 {% endblock 'extra_header' %}
-
 {% block 'pg_body' %}
 
 {% include 'components/index/_hero.html' %}
@@ -510,11 +508,5 @@
         <button type="button" class="btn btn-primary">Save changes</button>
       </div>
     </div>
-  </div>
-</div>
-</div>
-
-
-<script src="{% static 'myCSSAhub/js/index.js'%}" defer></script>
-
+    <script src="{% static 'myCSSAhub/js/index.js'%}" defer></script>
 {% endblock 'pg_body' %}

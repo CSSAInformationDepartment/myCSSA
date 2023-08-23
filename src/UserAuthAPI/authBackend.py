@@ -1,8 +1,8 @@
 from django.contrib.auth import backends, get_user_model
 from django.db.models import Q
 
-
 UserModel = get_user_model()
+
 
 class ModelBackend(backends.ModelBackend):
 
@@ -11,7 +11,7 @@ class ModelBackend(backends.ModelBackend):
             username = kwargs.get(UserModel.USERNAME_FIELD)
         try:
             # user = UserModel._default_manager.get_by_natural_key(username)
-            # You can customise what the given username is checked against, here I compare to both 
+            # You can customise what the given username is checked against, here I compare to both
             # username and email fields of the User model
             user = UserModel.objects.get(Q(email__iexact=username))
         except UserModel.DoesNotExist:

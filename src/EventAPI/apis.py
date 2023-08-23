@@ -1,21 +1,22 @@
 import secrets
 
-from django.db.models import F, Q
-from django.db import transaction
-from django.http import HttpResponseRedirect
+from django.db.models import Q
+from UserAuthAPI.models import UserProfile
 
 from .models import *
-from UserAuthAPI.models import User, UserProfile
 
-def is_duplicated_purchase(user,event):
+
+def is_duplicated_purchase(user, event):
     '''
     Check if the user is going to proceed a duplicated purchase.
     '''
-    current_ticket = AttendEvent.objects.filter(Q(attendedEventId=event) & Q(attendedUserId__user=user) & Q(disabled=False))
+    current_ticket = AttendEvent.objects.filter(
+        Q(attendedEventId=event) & Q(attendedUserId__user=user) & Q(disabled=False))
     if current_ticket:
         return True
 
-    return False 
+    return False
+
 
 def check_availability(event):
     '''
@@ -25,7 +26,8 @@ def check_availability(event):
     '''
     if event.hasMaxAttendent:
         event_max_attendent = event.maxAttendent
-        current_attendent = AttendEvent.objects.filter(attendedEventId = event).count()
+        current_attendent = AttendEvent.objects.filter(
+            attendedEventId=event).count()
         if event_max_attendent > current_attendent:
             return (event_max_attendent - current_attendent)
         else:
@@ -33,26 +35,28 @@ def check_availability(event):
     else:
         return True
 
+
 def issue_token_for_ticket(ticket):
     '''
     Issue token for a ticket, which also make the ticket able to use
     '''
 
     _token = None
-    
+
     while not _token:
         _token = secrets.token_urlsafe(256)
-        check_duplicate_token = AttendEvent.objects.filter(token=_token).first()
+        check_duplicate_token = AttendEvent.objects.filter(
+            token=_token).first()
         if check_duplicate_token:
             _token = None
         else:
-            ticket.token = _token 
+            ticket.token = _token
             ticket.save()
-    
+
     return ticket
 
 
-def get_ticket(user, event_id, ticket_id=None ,is_paid=False):
+def get_ticket(user, event_id, ticket_id=None, is_paid=False):
     '''
     Create Ticket for event attendent
     Will only give token when the event is free or fee is paid
@@ -61,16 +65,17 @@ def get_ticket(user, event_id, ticket_id=None ,is_paid=False):
 
     if not is_duplicated_purchase(user, event):
         if ticket_id and is_paid:
-            ticket = AttendEvent.objects.select_for_update().filter(attendedId=ticket_id).first()
+            ticket = AttendEvent.objects.select_for_update().filter(
+                attendedId=ticket_id).first()
             if ticket:
                 ticket.paid = True
                 return issue_token_for_ticket(ticket)
         elif check_availability(event):
             user_pf = UserProfile.objects.get(pk=user.id)
             new_ticket = AttendEvent(
-                attendedEventId = event,
-                attendedUserId = user_pf,
-                paid = is_paid,
+                attendedEventId=event,
+                attendedUserId=user_pf,
+                paid=is_paid,
             )
             if event.isFree:
                 return issue_token_for_ticket(new_ticket)

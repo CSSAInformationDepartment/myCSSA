@@ -1,216 +1,213 @@
 {% load static %}
 <div class="sidebar">
-        <nav class="sidebar-nav">
-          <ul class="nav">
+  <nav class="sidebar-nav">
+    <ul class="nav">
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'myCSSAhub:home' %}">
+          <i class="nav-icon icon-speedometer"></i> Dashboard
+        </a>
+      </li>
+      <li class="nav-title">我的myCSSA账户</li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'myCSSAhub:userInfo' %}">
+          <i class="nav-icon cui-user"></i>个人信息</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'myCSSAhub:update-password' %}">
+          <i class="nav-icon cui-shield"></i>安全与隐私</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'myCSSAhub:membership-info' %}">
+          <i class="nav-icon cui-credit-card"></i>我的会员卡</a>
+      </li>
+      <li class="nav-item nav-dropdown">
+        <a class="nav-link nav-dropdown-toggle" href="#">
+          <i class="nav-icon icon-puzzle"></i>myCSSA应用</a>
+        <ul class="nav-dropdown-items">
+          <li class="nav-item">
+            <a class="nav-link"
+               href="{% url 'myCSSAhub:EventAPI:user_ticket_list' %}">
+              <i class="nav-icon cui-star"></i>活动票务</a>
+          </li>
+          {% if user.is_superuser %}
             <li class="nav-item">
-              <a class="nav-link" href="{% url 'myCSSAhub:home' %}">
-                <i class="nav-icon icon-speedometer"></i> Dashboard
-              </a>
+              <a class="nav-link" href="{% url 'myCSSAhub:under-dev' %}">
+                <i class="nav-icon cui-people"></i>求职招聘</a>
             </li>
-            <li class="nav-title">我的myCSSA账户</li>
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'myCSSAhub:userInfo' %}">
-                <i class="nav-icon cui-user"></i>个人信息</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'myCSSAhub:update-password' %}">
-                <i class="nav-icon cui-shield"></i>安全与隐私</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'myCSSAhub:membership-info' %}">
-                <i class="nav-icon cui-credit-card"></i>我的会员卡</a>
-            </li>
-            <li class="nav-item nav-dropdown">
-              <a class="nav-link nav-dropdown-toggle" href="#">
-                <i class="nav-icon icon-puzzle"></i>myCSSA应用</a>
-                <ul class="nav-dropdown-items">
-                  <li class="nav-item">
-                    <a class="nav-link" href="{% url 'myCSSAhub:EventAPI:user_ticket_list' %}">
-                      <i class="nav-icon cui-star"></i>活动票务</a>
-                  </li>
-                  {% if user.is_superuser %}
-                  <li class="nav-item">
-                    <a class="nav-link" href="{% url 'myCSSAhub:under-dev' %}">
-                      <i class="nav-icon cui-people"></i>求职招聘</a>
-                  </li>
-                  {% endif %}
-
-                </ul>
-            </li>
-            {% if user.is_superuser or user.is_staff %}
-            <li class="nav-title">myCSSA Committe</li>
-              <li class="nav-item nav-dropdown">
-                <a class="nav-link nav-dropdown-toggle" href="#">
-                  <i class="nav-icon cui-star"></i>活动</a>
-                  <ul class="nav-dropdown-items">
-                  {% if perms.EventAPI.add_event %}
-                    <li class="nav-item">
-                      <a class="nav-link" href="{% url 'myCSSAhub:EventAPI:event_list' %}">
-                        <i class="nav-icon cui-calendar"></i> 活动计划 </a>
-                    </li>
-                    <li class="nav-item">
-                      <a class="nav-link" href="{% url 'myCSSAhub:FlexForm:formlist' %}">
-                        <i class="nav-icon cui-layers"></i> 活动信息收集表 </a>
-                    </li>
-                  {% endif %}
-                  {% if perms.EventAPI.view_event %}
-                    <li class="nav-item">
-                      <a class="nav-link" href="{% url 'myCSSAhub:EventAPI:event_stat' %}">
-                        <i class="nav-icon cui-tags"></i> 报名管理 </a>
-                    </li>
-                    <li class="nav-item">
-                      <a class="nav-link" href="{% url 'myCSSAhub:EventAPI:check-in' %}">
-                        <i class="nav-icon fa fa-check-circle"></i> 来访者签到 </a>
-                    </li>
-                    <li class="nav-item">
-                      <a class="nav-link" href="{% url 'myCSSAhub:luckydraw_event_list' %}">
-                        <i class="nav-icon fa fa-tag"></i> 活动抽奖 </a>
-                    </li>
-                  {% endif %}
-                  
-
-                  </ul>
+          {% endif %}
+        </ul>
+      </li>
+      {% if user.is_superuser or user.is_staff %}
+        <li class="nav-title">myCSSA Committe</li>
+        <li class="nav-item nav-dropdown">
+          <a class="nav-link nav-dropdown-toggle" href="#">
+            <i class="nav-icon cui-star"></i>活动</a>
+          <ul class="nav-dropdown-items">
+            {% if perms.EventAPI.add_event %}
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'myCSSAhub:EventAPI:event_list' %}">
+                  <i class="nav-icon cui-calendar"></i> 活动计划 </a>
               </li>
-              {% if perms.BlogAPI.change_blog %}
-              <li class="nav-item nav-dropdown">
-                <a class="nav-link nav-dropdown-toggle" href="#">
-                  <i class="nav-icon cui-justify-center"></i>稿件系统</a>
-                  <ul class="nav-dropdown-items">
-                    <li class="nav-item">
-                      <a class="nav-link" href="{% url 'myCSSAhub:BlogAPI:writtenBlogs' %}">
-                        <i class="nav-icon icon-list"></i>稿件列表</a>
-                    </li>
-                    <li class="nav-item">
-                      <a class="nav-link" href="{% url 'myCSSAhub:BlogAPI:editblog' %}?blogId=-1">
-                        <i class="nav-icon cui-pencil"></i>发布新稿件</a>
-                    </li>
-                    {% if perms.BlogAPI.add_blogreviewed %}
-                    <li class="nav-item">
-                      <a class="nav-link" href="{% url 'myCSSAhub:BlogAPI:reviewBlogs' %}">
-                        <i class="nav-icon cui-check"></i>审阅稿件</a>
-                    </li>
-                    {% endif %}
-                  </ul>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'myCSSAhub:FlexForm:formlist' %}">
+                  <i class="nav-icon cui-layers"></i> 活动信息收集表 </a>
               </li>
-              {% endif %}
-              <li class="nav-item nav-dropdown">
-                <a class="nav-link nav-dropdown-toggle" href="#">
-                  <i class="nav-icon cui-people"></i>会员</a>
-                  <ul class="nav-dropdown-items">
-                    {% if perms.UserAuthAPI.activate_membership  %}
-                    <li class="nav-item">
-                      <a class="nav-link" href="{% url 'myCSSAhub:OrganisationMgr:new_member' %}">
-                        <i class="nav-icon cui-credit-card"></i> 会员卡激活 </a>
-                    </li>
-                    {% endif %}
-                    {% if  perms.UserAuthAPI.change_indentity_data %}
-                    <li class="nav-item">
-                      <a class="nav-link" href="{% url 'myCSSAhub:OrganisationMgr:member_list' %}">
-                        <i class="nav-icon cui-magnifying-glass"></i> 会员信息管理 </a>
-                    </li>
-                    {% endif %}
-                  </ul>
+            {% endif %}
+            {% if perms.EventAPI.view_event %}
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'myCSSAhub:EventAPI:event_stat' %}">
+                  <i class="nav-icon cui-tags"></i> 报名管理 </a>
               </li>
-              <li class="nav-item nav-dropdown">
-                <a class="nav-link nav-dropdown-toggle" href="#">
-                  <i class="nav-icon cui-globe"></i>组织人事</a>
-                  <ul class="nav-dropdown-items">
-                    <li class="nav-item">
-                      <a class="nav-link" href="{% url 'myCSSAhub:OrganisationMgr:dept_management' %}">
-                        <i class="nav-icon cui-user-follow"></i>部门人事管理</a>
-                    </li>
-                    {% if perms.RecruitAPI.view_resume %}
-                        <li class="nav-item">
-                          <a class="nav-link" href="{% url 'myCSSAhub:RecruitAPI:resume_list' %}">
-                            <i class="nav-icon cui-inbox"></i>纳新管理</a>
-                        </li>
-                    {% endif %}
-
-                    {% if perms.RecruitAPI.change_joblist %}
-                      <li class="nav-item">
-                        <a class="nav-link" href="{% url 'myCSSAhub:RecruitAPI:job_list' %}">
-                          <i class="nav-icon cui-inbox"></i>岗位信息发布</a>
-                      </li>
-                    {% endif %}
-                    <li class="nav-item">
-                      <a class="nav-link" href="{% url 'myCSSAhub:under-dev' %}">
-                        <i class="nav-icon cui-task"></i>日程表</a>
-                    </li>
-                  </ul>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'myCSSAhub:EventAPI:check-in' %}">
+                  <i class="nav-icon fa fa-check-circle"></i> 来访者签到 </a>
               </li>
-              <li class="nav-item nav-dropdown">
-                <a class="nav-link nav-dropdown-toggle" href="#">
-                  <i class="nav-icon cui-dollar"></i>财务</a>
-                  <ul class="nav-dropdown-items">
-                  {% if perms.FinanceAPI.view_transaction %}
-                    <li class="nav-item">
-                      <a class="nav-link" href="{% url 'myCSSAhub:FinanceAPI:transaction_list' %}">
-                        <i class="nav-icon icon-list"></i> 交易流水 </a>
-                    </li>
-                  {% endif %}
-
-                    <li class="nav-item">
-                      <a class="nav-link" href="{% url 'myCSSAhub:FinanceAPI:invoice_lodge' %}">
-                        <i class="nav-icon cui-inbox"></i> 公务报销申请</a>
-                    </li>
-                    {% if user.is_superuser %}
-                    <li class="nav-item">
-                      <a class="nav-link" href="{% url 'myCSSAhub:under-dev' %}">
-                        <i class="nav-icon icon-check"></i> 收款核查</a>
-                    </li>
-                    <li class="nav-item">
-                      <a class="nav-link" href="{% url 'myCSSAhub:under-dev' %}">
-                        <i class="nav-icon cui-magnifying-glass"></i> 报销核查 </a>
-                    </li>
-                    {% endif %}
-
-                  </ul>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'myCSSAhub:luckydraw_event_list' %}">
+                  <i class="nav-icon fa fa-tag"></i> 活动抽奖 </a>
               </li>
-
-              {% if perms.myCSSAhub.change_discountmerchant %}
-                <li class="nav-item nav-dropdown">
-                  <a class="nav-link nav-dropdown-toggle" href="#">
-                    <i class="nav-icon fa fa-shopping-bag"></i>商家与合作机构</a>
-                    <ul class="nav-dropdown-items">
-                      <li class="nav-item">
-                        <a class="nav-link" href="{% url 'myCSSAhub:merchants_list' %}">
-                          <i class="nav-icon cui-list"></i> 商家总览 </a>
-                      </li>
-                      <li class="nav-item">
-                        <a class="nav-link" href="{% url 'myCSSAhub:merchants_add' %}">
-                          <i class="nav-icon fa fa-plus-circle"></i> 新增折扣商家 </a>
-                      </li>
-                    </ul>
-                </li>
-              {% endif %}
-
-              {% if perms.PhotoCompetition.view_submission %}
-                <li class="nav-item">
-                  <a class="nav-link" href="{% url 'myCSSAhub:PhotoComp:submission-list' %}">
-                    <i class="nav-icon fa fa-camera-retro"></i> 投稿管理 </a>
-                </li>
-              {% endif %}
-
-              {% if perms.CommunityAPI.censor_post%}
-                <li class="nav-item nav-dropdown">
-                  <a class="nav-link nav-dropdown-toggle" href="#">
-                    <i class="nav-icon fa fa-shopping-bag"></i>圈子审核</a>
-                    <ul class="nav-dropdown-items">
-                      <li class="nav-item">
-                        <a class="nav-link" href="{% url 'myCSSAhub:CommunityAPI:post_list' %}">
-                          <i class="nav-icon cui-list"></i> 文章列表 </a>
-                      </li>
-                      <li class="nav-item">
-                        <a class="nav-link" href="{% url 'myCSSAhub:CommunityAPI:show_post' %}">
-                          <i class="nav-icon fa fa-plus-circle"></i> 查看文章 </a>
-                      </li>
-                    </ul>
-                </li>
-              {% endif %}
-
-
-              {% endif %}
+            {% endif %}
           </ul>
-        </nav>
-        <button class="sidebar-minimizer brand-minimizer" type="button"></button>
+        </li>
+        {% if perms.BlogAPI.change_blog %}
+          <li class="nav-item nav-dropdown">
+            <a class="nav-link nav-dropdown-toggle" href="#">
+              <i class="nav-icon cui-justify-center"></i>稿件系统</a>
+            <ul class="nav-dropdown-items">
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'myCSSAhub:BlogAPI:writtenBlogs' %}">
+                  <i class="nav-icon icon-list"></i>稿件列表</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link"
+                   href="{% url 'myCSSAhub:BlogAPI:editblog' %}?blogId=-1">
+                  <i class="nav-icon cui-pencil"></i>发布新稿件</a>
+              </li>
+              {% if perms.BlogAPI.add_blogreviewed %}
+                <li class="nav-item">
+                  <a class="nav-link" href="{% url 'myCSSAhub:BlogAPI:reviewBlogs' %}">
+                    <i class="nav-icon cui-check"></i>审阅稿件</a>
+                </li>
+              {% endif %}
+            </ul>
+          </li>
+        {% endif %}
+        <li class="nav-item nav-dropdown">
+          <a class="nav-link nav-dropdown-toggle" href="#">
+            <i class="nav-icon cui-people"></i>会员</a>
+          <ul class="nav-dropdown-items">
+            {% if perms.UserAuthAPI.activate_membership %}
+              <li class="nav-item">
+                <a class="nav-link"
+                   href="{% url 'myCSSAhub:OrganisationMgr:new_member' %}">
+                  <i class="nav-icon cui-credit-card"></i> 会员卡激活 </a>
+              </li>
+            {% endif %}
+            {% if perms.UserAuthAPI.change_indentity_data %}
+              <li class="nav-item">
+                <a class="nav-link"
+                   href="{% url 'myCSSAhub:OrganisationMgr:member_list' %}">
+                  <i class="nav-icon cui-magnifying-glass"></i> 会员信息管理 </a>
+              </li>
+            {% endif %}
+          </ul>
+        </li>
+        <li class="nav-item nav-dropdown">
+          <a class="nav-link nav-dropdown-toggle" href="#">
+            <i class="nav-icon cui-globe"></i>组织人事</a>
+          <ul class="nav-dropdown-items">
+            <li class="nav-item">
+              <a class="nav-link"
+                 href="{% url 'myCSSAhub:OrganisationMgr:dept_management' %}">
+                <i class="nav-icon cui-user-follow"></i>部门人事管理</a>
+            </li>
+            {% if perms.RecruitAPI.view_resume %}
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'myCSSAhub:RecruitAPI:resume_list' %}">
+                  <i class="nav-icon cui-inbox"></i>纳新管理</a>
+              </li>
+            {% endif %}
+            {% if perms.RecruitAPI.change_joblist %}
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'myCSSAhub:RecruitAPI:job_list' %}">
+                  <i class="nav-icon cui-inbox"></i>岗位信息发布</a>
+              </li>
+            {% endif %}
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'myCSSAhub:under-dev' %}">
+                <i class="nav-icon cui-task"></i>日程表</a>
+            </li>
+          </ul>
+        </li>
+        <li class="nav-item nav-dropdown">
+          <a class="nav-link nav-dropdown-toggle" href="#">
+            <i class="nav-icon cui-dollar"></i>财务</a>
+          <ul class="nav-dropdown-items">
+            {% if perms.FinanceAPI.view_transaction %}
+              <li class="nav-item">
+                <a class="nav-link"
+                   href="{% url 'myCSSAhub:FinanceAPI:transaction_list' %}">
+                  <i class="nav-icon icon-list"></i> 交易流水 </a>
+              </li>
+            {% endif %}
+            <li class="nav-item">
+              <a class="nav-link"
+                 href="{% url 'myCSSAhub:FinanceAPI:invoice_lodge' %}">
+                <i class="nav-icon cui-inbox"></i> 公务报销申请</a>
+            </li>
+            {% if user.is_superuser %}
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'myCSSAhub:under-dev' %}">
+                  <i class="nav-icon icon-check"></i> 收款核查</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'myCSSAhub:under-dev' %}">
+                  <i class="nav-icon cui-magnifying-glass"></i> 报销核查 </a>
+              </li>
+            {% endif %}
+          </ul>
+        </li>
+        {% if perms.myCSSAhub.change_discountmerchant %}
+          <li class="nav-item nav-dropdown">
+            <a class="nav-link nav-dropdown-toggle" href="#">
+              <i class="nav-icon fa fa-shopping-bag"></i>商家与合作机构</a>
+            <ul class="nav-dropdown-items">
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'myCSSAhub:merchants_list' %}">
+                  <i class="nav-icon cui-list"></i> 商家总览 </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'myCSSAhub:merchants_add' %}">
+                  <i class="nav-icon fa fa-plus-circle"></i> 新增折扣商家 </a>
+              </li>
+            </ul>
+          </li>
+        {% endif %}
+        {% if perms.PhotoCompetition.view_submission %}
+          <li class="nav-item">
+            <a class="nav-link"
+               href="{% url 'myCSSAhub:PhotoComp:submission-list' %}">
+              <i class="nav-icon fa fa-camera-retro"></i> 投稿管理 </a>
+          </li>
+        {% endif %}
+        {% if perms.CommunityAPI.censor_post %}
+          <li class="nav-item nav-dropdown">
+            <a class="nav-link nav-dropdown-toggle" href="#">
+              <i class="nav-icon fa fa-shopping-bag"></i>圈子审核</a>
+            <ul class="nav-dropdown-items">
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'myCSSAhub:CommunityAPI:post_list' %}">
+                  <i class="nav-icon cui-list"></i> 文章列表 </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'myCSSAhub:CommunityAPI:show_post' %}">
+                  <i class="nav-icon fa fa-plus-circle"></i> 查看文章 </a>
+              </li>
+            </ul>
+          </li>
+        {% endif %}
+      {% endif %}
+    </ul>
+  </nav>
+  <button class="sidebar-minimizer brand-minimizer" type="button"></button>
 </div>

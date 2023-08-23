@@ -1,30 +1,26 @@
-{% extends 'myCSSAhub/component/_layout.html' %}
-
+{% extends "myCSSAhub/component/_layout.html" %}
 {% block ExtraHeader %}
-<style>
-.hide {
-    display: none;
-}
-</style>
+    <style>
+        .hide {
+            display: none;
+        }
+    </style>
 {% endblock ExtraHeader %}
-
 {% block BreadcrumbPath %}
-  <li class="breadcrumb-item">Photo Competition管理</li>
-  <li class="breadcrumb-item">
-    <a href="{% url 'myCSSAhub:PhotoComp:submission-list' %}">用户提交照片</a>
-  </li>
-  <li class="breadcrumb-item">{{ object.pk }}</li>
+    <li class="breadcrumb-item">Photo Competition管理</li>
+    <li class="breadcrumb-item">
+        <a href="{% url 'myCSSAhub:PhotoComp:submission-list' %}">用户提交照片</a>
+    </li>
+    <li class="breadcrumb-item">{{ object.pk }}</li>
 {% endblock BreadcrumbPath %}
-
 {% block pageContent %}
     {% load i18n %}
     <div class="row mb-4">
+        <div class="col-6">
+            <p id="photo-status"></p>
+        </div>
+        {% if user.is_staff %}
             <div class="col-6">
-                <p id="photo-status"></p>
-            </div>
-            {% if user.is_staff %}
-            <div class="col-6">
-                
                 <div class="float-right" role="group">
                     <div class="d-inline-block pt-2">加入到决赛作品</div>
                     <label class="switch switch-3d switch-primary d-inline-block">
@@ -33,27 +29,25 @@
                     </label>
                 </div>
             </div>
-            {% endif %}
-        </div>
+        {% endif %}
+    </div>
     <div class="row">
         <div class="col-lg-6 col-md-12 col-sm-12">
             <div class="card">
                 <div class="card-header">
-                <i class="fa fa-align-justify"></i> 表单内容
+                    <i class="fa fa-align-justify"></i> 表单内容
                 </div>
                 <div class="card-body">
                     <div class="list-group">
                         <div class="list-group-item">
                             <div class="d-felx w-100 justify-content-between">
-                                <h5 class="mb-1"> 提交时间 </h5>
+                                <h5 class="mb-1">提交时间</h5>
                             </div>
-                            <p class="mb-1">
-                                {{ object.submissionTime }}
-                            </p>
+                            <p class="mb-1">{{ object.submissionTime }}</p>
                         </div>
                         <div class="list-group-item">
                             <div class="d-felx w-100 justify-content-between">
-                                <h5 class="mb-1"> 题材组别 </h5>
+                                <h5 class="mb-1">题材组别</h5>
                             </div>
                             <p class="mb-1">
                                 {% comment %}{{ object.get_categoryType_display }}{% endcomment %}
@@ -62,21 +56,16 @@
                         </div>
                         <div class="list-group-item">
                             <div class="d-felx w-100 justify-content-between">
-                                <h5 class="mb-1"> 使用器材 </h5>
+                                <h5 class="mb-1">使用器材</h5>
                             </div>
-                            <p class="mb-1">
-                                {{ object.get_deviceType_display }}
-                            </p>
+                            <p class="mb-1">{{ object.get_deviceType_display }}</p>
                         </div>
                         <div class="list-group-item">
                             <div class="d-felx w-100 justify-content-between">
-                                <h5 class="mb-1"> 作者描述 </h5>
+                                <h5 class="mb-1">作者描述</h5>
                             </div>
-                            <p class="mb-1">
-                                {{ object.description }}
-                            </p>
+                            <p class="mb-1">{{ object.description }}</p>
                         </div>
-
                     </div>
                 </div>
             </div>
@@ -84,22 +73,22 @@
         <div class="col-lg-6 col-md-12 col-sm-12">
             <div class="card">
                 <div class="card-header">
-                <i class="fa fa-align-justify"></i> 用户信息
+                    <i class="fa fa-align-justify"></i> 用户信息
                 </div>
                 <div class="card-body">
                     <div class="list-group">
                         <ul>
-                            <li>英文姓名：{{UserInfo.lastNameEN}} {{UserInfo.firstNameEN}}</li>
-                            <li>中文姓名：{{UserInfo.lastNameCN}} {{UserInfo.firstNameCN}}</li>
-                            <li>电话：{{AccountInfo.telNumber}} </li>
-                            <li>邮箱：{{AccountInfo.email}} </li>
+                            <li>英文姓名：{{ UserInfo.lastNameEN }} {{ UserInfo.firstNameEN }}</li>
+                            <li>中文姓名：{{ UserInfo.lastNameCN }} {{ UserInfo.firstNameCN }}</li>
+                            <li>电话：{{ AccountInfo.telNumber }}</li>
+                            <li>邮箱：{{ AccountInfo.email }}</li>
                         </ul>
                     </div>
                 </div>
             </div>
             <div class="card">
                 <div class="card-header">
-                <i class="fa fa-align-justify"></i> 作品
+                    <i class="fa fa-align-justify"></i> 作品
                 </div>
                 <div class="card-body">
                     <div class="mw-100">
@@ -109,67 +98,61 @@
             </div>
         </div>
     </div>
-
-
-{% endblock %}
-
-
+{% endblock pageContent %}
 {% block ExtraJS %}
-<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-<script>
-    //const axios = require('axios');
-    axios.defaults.xsrfCookieName = 'csrftoken'
-    axios.defaults.xsrfHeaderName = "X-CSRFTOKEN"
-    const SHORT_LISTED = "作品已经加入决赛名单",
-        NOT_LISTED = "备选作品",
-        ERR = "系统发生错误";
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script>
+        //const axios = require('axios');
+        axios.defaults.xsrfCookieName = 'csrftoken'
+        axios.defaults.xsrfHeaderName = "X-CSRFTOKEN"
+        const SHORT_LISTED = "作品已经加入决赛名单",
+            NOT_LISTED = "备选作品",
+            ERR = "系统发生错误";
 
-    let submissionId = "{{object.pk}}",
-        toggler_url = " {% url 'myCSSAhub:PhotoComp:toggle-approval'%}",
-        photoStatus = document.querySelector('#photo-status'),
-        approvalCheck = document.querySelector('#approval-check');
+        let submissionId = "{{object.pk}}",
+            toggler_url = " {% url 'myCSSAhub:PhotoComp:toggle-approval'%}",
+            photoStatus = document.querySelector('#photo-status'),
+            approvalCheck = document.querySelector('#approval-check');
 
-    var photoShortListed = false;
+        var photoShortListed = false;
 
-    approvalCheck.addEventListener('change', (e) =>{
-        if (approvalCheck.checked) {
-            approvalCheck.setAttribute('disabled','disabled')
-            axios.post(toggler_url,{
-                csrftoken: csrftoken,
-                submission:submissionId
-            }).then((res) => {
-                photoStatus.innerHTML = SHORT_LISTED;
-                approvalCheck.removeAttribute('disabled');
-                photoShortListed = true;
-            }).catch((err)=>{
-                photoStatus.innerHTML = ERR;
-                approvalCheck.checked = !approvalCheck.checked;
-            })
-        } else if (photoShortListed) {
-            approvalCheck.setAttribute('disabled','disabled');
-            axios.delete(toggler_url + '?pk=' + submissionId)
-                .then((res) => {
-                    photoStatus.innerHTML = NOT_LISTED;
+        approvalCheck.addEventListener('change', (e) => {
+            if (approvalCheck.checked) {
+                approvalCheck.setAttribute('disabled', 'disabled')
+                axios.post(toggler_url, {
+                    csrftoken: csrftoken,
+                    submission: submissionId
+                }).then((res) => {
+                    photoStatus.innerHTML = SHORT_LISTED;
                     approvalCheck.removeAttribute('disabled');
-                }).catch((err)=>{
+                    photoShortListed = true;
+                }).catch((err) => {
                     photoStatus.innerHTML = ERR;
                     approvalCheck.checked = !approvalCheck.checked;
                 })
-        }
-    })
-
-    axios.get(toggler_url + '?pk=' +submissionId)
-        .then(function(response){
-            if (response.data.is_selected === true) {
-                approvalCheck.checked = true
-                photoStatus.innerHTML = SHORT_LISTED;
-                photoShortListed = true;
-            } else {
-                photoStatus.innerHTML = NOT_LISTED;
-                approvalCheck.checked = false
+            } else if (photoShortListed) {
+                approvalCheck.setAttribute('disabled', 'disabled');
+                axios.delete(toggler_url + '?pk=' + submissionId)
+                    .then((res) => {
+                        photoStatus.innerHTML = NOT_LISTED;
+                        approvalCheck.removeAttribute('disabled');
+                    }).catch((err) => {
+                        photoStatus.innerHTML = ERR;
+                        approvalCheck.checked = !approvalCheck.checked;
+                    })
             }
-        });
+        })
 
-</script>
-
+        axios.get(toggler_url + '?pk=' + submissionId)
+            .then(function(response) {
+                if (response.data.is_selected === true) {
+                    approvalCheck.checked = true
+                    photoStatus.innerHTML = SHORT_LISTED;
+                    photoShortListed = true;
+                } else {
+                    photoStatus.innerHTML = NOT_LISTED;
+                    approvalCheck.checked = false
+                }
+            });
+    </script>
 {% endblock ExtraJS %}

@@ -1,59 +1,58 @@
-{% extends 'myCSSAhub/component/_layout.html' %}
+{% extends "myCSSAhub/component/_layout.html" %}
 {% load static %}
 {% block ExtraHeader %}
-<link href="{% static 'myCSSAhub/vendors/DataTables/datatables.min.css'%}" rel="stylesheet">
+  <link href="{% static 'myCSSAhub/vendors/DataTables/datatables.min.css' %}"
+        rel="stylesheet">
 {% endblock ExtraHeader %}
-
 {% block pageContent %}
-<div class="row">
+  <div class="row">
     <div class="row">
-        <div class="col-6">
-            <p> 目前有{{a}}个招聘信息</p>
-        </div>
-        {% if user.is_staff %}
-        <div class="col-6">
-            <div class="btn-group float-right" role="group">
-                <a class="btn btn-pill btn-block btn-primary" role="button" href="#">添加新招聘信息</a>
-            </div>
-        </div>
-        {% endif %}
-    </div>
-</div>
-<div class="row">
-  <div class="col-md-12">
-    <div class="card" >
-      <div class="card-header">
-        <i class="fa fa-align-justify"></i> 已发布工作
+      <div class="col-6">
+        <p>目前有{{ a }}个招聘信息</p>
       </div>
-      <div class="card-body">
-          <table id="main-datatable" class="table table-responsive-md"  style="width:100%" >
-          <thead>
-            <tr>
-              <th>岗位名称</th>
-              <th>相关部门</th>
-              <th>发布时间</th>
-              <th>截止日期</th>
-            </tr>
-          </thead>
+      {% if user.is_staff %}
+        <div class="col-6">
+          <div class="btn-group float-right" role="group">
+            <a class="btn btn-pill btn-block btn-primary" role="button" href="#">添加新招聘信息</a>
+          </div>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">
+          <i class="fa fa-align-justify"></i> 已发布工作
+        </div>
+        <div class="card-body">
+          <table id="main-datatable"
+                 class="table table-responsive-md"
+                 style="width:100%">
+            <thead>
+              <tr>
+                <th>岗位名称</th>
+                <th>相关部门</th>
+                <th>发布时间</th>
+                <th>截止日期</th>
+              </tr>
+            </thead>
           </table>
+        </div>
       </div>
     </div>
   </div>
-</div>
-{% endblock %}
-
+{% endblock pageContent %}
 {% block ExtraJS %}
-
-<script src="{% static 'myCSSAhub/vendors/DataTables/datatables.js'%}"></script>
-<script>
-$(document).ready(function() {
-    var oTable = $('#main-datatable').dataTable({
-        "responsive": true,
-        "processing": true,
-        "serverSide": true,
-        "ajax": "{% url 'myCSSAhub:RecruitAPI:job_jsonlist' %}",
-    });
-});
-</script>
-
+  <script src="{% static 'myCSSAhub/vendors/DataTables/datatables.js'%}"></script>
+  <script>
+      $(document).ready(function() {
+          var oTable = $('#main-datatable').dataTable({
+              "responsive": true,
+              "processing": true,
+              "serverSide": true,
+              "ajax": "{% url 'myCSSAhub:RecruitAPI:job_jsonlist' %}",
+          });
+      });
+  </script>
 {% endblock ExtraJS %}

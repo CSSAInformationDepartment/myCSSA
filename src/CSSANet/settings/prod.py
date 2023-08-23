@@ -4,11 +4,11 @@
 ###        Composed by Le (Josh). Lu          ###
 #################################################
 
-### WARINING!: You should NEVER includes any real value of keys/credentials/passwords in this file
-### To store a new sercret value for the production ENV, please disscuss with the director or lead
-### developer of CSSA Information Technology Department first.
+# WARINING!: You should NEVER includes any real value of keys/credentials/passwords in this file
+# To store a new sercret value for the production ENV, please disscuss with the director or lead
+# developer of CSSA Information Technology Department first.
 
-from .base import * 
+from .base import *
 
 import os
 env_dist = os.environ
@@ -16,16 +16,17 @@ env_dist = os.environ
 DEBUG = False
 
 SECRET_KEY = env_dist.get('DJANGOKEYPD')
-ALLOWED_HOSTS = ['cssanet','.cssaunimelb.com', 'cloud.digitalocean.com', '.digitalocean.com', '165.227.240.43']
+ALLOWED_HOSTS = ['cssanet', '.cssaunimelb.com',
+                 'cloud.digitalocean.com', '.digitalocean.com', '165.227.240.43']
 CSRF_COOKIE_SECURE = True
-SESSION_COOKIE_SECURE = True ## <- Activate in HTTPS envrioment only
+SESSION_COOKIE_SECURE = True  # <- Activate in HTTPS envrioment only
 SECURE_CONTENT_TYPE_NOSNIFF = True
 SECURE_BROWSER_XSS_FILTER = True
 SECURE_SSL_REDIRECT = False
 X_FRAME_OPTIONS = 'DENY'
 
 
-## S3 Elastic Storage Configuration
+# S3 Elastic Storage Configuration
 
 AWS_DEFAULT_ACL = None
 AWS_ACCESS_KEY_ID = env_dist.get('AWS_ACCESS_KEY_ID')
@@ -66,7 +67,7 @@ DATABASES = {
     }
 }
 
-## Redis Message Cache Serivce
+# Redis Message Cache Serivce
 # REDIS_ADDRESS = 'redis://redis:6379/6'
 
 CELERY_BROKER_URL = 'redis://redis-service:6379'
@@ -82,7 +83,8 @@ MAILOWL_MASTER_NODE = ''
 MAILOWL_PORT = 44300
 
 
-ADMINS = [('Master Inbox', 'information@cssaunimelb.com'), ('Lead Engineer', 'joshlubox@gmail.com')]
+ADMINS = [('Master Inbox', 'information@cssaunimelb.com'),
+          ('Lead Engineer', 'joshlubox@gmail.com')]
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TLS = True

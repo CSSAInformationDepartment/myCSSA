@@ -1,5 +1,6 @@
 from django.test import SimpleTestCase
-from django.urls import reverse, resolve
+from django.urls import resolve, reverse
+
 from .. import views
 
 '''
@@ -17,8 +18,9 @@ Video Reference: https://www.youtube.com/watch?v=0MrgsYswT1c
 
 '''
 
+
 class TestUrls(SimpleTestCase):
-    
+
     def test_index_url_resolved(self):
         '''
         Testing root url of public site

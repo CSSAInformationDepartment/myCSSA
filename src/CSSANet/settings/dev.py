@@ -2,7 +2,7 @@ from .base import *
 
 DEBUG = True
 
-ALLOWED_HOSTS = ['10.0.2.2','*']
+ALLOWED_HOSTS = ['10.0.2.2', '*']
 
 # DATABASES = {
 #     'default': {
@@ -14,7 +14,6 @@ ALLOWED_HOSTS = ['10.0.2.2','*']
 #         'PORT': '5432'
 #     }
 # }
-
 
 
 CELERY_BROKER_URL = 'redis://redis:6379'
@@ -45,8 +44,8 @@ MAILOWL_PORT = 44300
 
 ### Email Configuration
 
-# To test the mail sending related features, adding your personal email accounts credentials here. 
-# Remember !!! You must REMOVE your credentails when you push this to the public repo, otherwise your 
+# To test the mail sending related features, adding your personal email accounts credentials here.
+# Remember !!! You must REMOVE your credentails when you push this to the public repo, otherwise your
 # credentials will be at risk.
 EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
 

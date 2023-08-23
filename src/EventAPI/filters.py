@@ -1,7 +1,6 @@
-from django_filters import rest_framework as filters
 from django_filters import DateFilter
+from django_filters import rest_framework as filters
 
-from .models import Event
 
 class EventFilterSet(filters.FilterSet):
     """

@@ -3,10 +3,12 @@ from rest_framework.filters import BaseFilterBackend
 from rest_framework.compat import coreapi, coreschema
 from rest_framework.serializers import ValidationError
 
+
 class IsOwnerFilterBackend(BaseFilterBackend):
     """
     Filter that only allows users to see their own objects.
     """
+
     def filter_queryset(self, request: HttpRequest, queryset, view):
         if not request.query_params.get('my'):
             return queryset
@@ -29,10 +31,12 @@ class IsOwnerFilterBackend(BaseFilterBackend):
             )
         ]
 
+
 class TagFilter(BaseFilterBackend):
     """
     Filter the posts belonged to assigned tags.
     """
+
     def filter_queryset(self, request: HttpRequest, queryset, view):
         if not request.query_params.get('tagid'):
             return queryset
@@ -51,6 +55,7 @@ class TagFilter(BaseFilterBackend):
                 )
             )
         ]
+
 
 class NoImgFilter(BaseFilterBackend):
     def filter_queryset(self, request: HttpRequest, queryset, view):
