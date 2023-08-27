@@ -5,6 +5,7 @@
 {% endblock BreadcrumbPath %}
 {% block pageContent %}
     <div id="list-message">
+        
         <!-- List all sponsor merchants -->
         <div class="row">
             <div class="col-md-6">
@@ -15,7 +16,7 @@
                     <div class="btn-group float-right" role="group">
                         <a class="btn btn-pill btn-block btn-primary"
                            role="button"
-                           href="/hub/merchant_add">添加赞助商家</a>
+                           href="/hub/merchant_add">添加商家</a>
                     </div>
                 </div>
             {% endif %}
@@ -89,20 +90,12 @@
         <br>
         <br>
 
+
         <!-- List all discount merchants -->
         <div class="row">
             <div class="col-md-6">
                 <p>目前有{{ discount_merchants|length }}个折扣商家</p>
             </div>
-            {% if user.is_staff %}
-                <div class="col-md-6">
-                    <div class="btn-group float-right" role="group">
-                        <a class="btn btn-pill btn-block btn-primary"
-                           role="button"
-                           href="/hub/merchant_add">添加折扣商家</a>
-                    </div>
-                </div>
-            {% endif %}
         </div>
         <br>
         <div class="row">
