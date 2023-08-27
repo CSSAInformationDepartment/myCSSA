@@ -5,16 +5,17 @@
 {% endblock BreadcrumbPath %}
 {% block pageContent %}
     <div id="list-message">
+        <!-- List all sponsor merchants -->
         <div class="row">
             <div class="col-md-6">
-                <p>目前有{{ infos|length }}个折扣商家</p>
+                <p>目前有{{ sponsor_merchants|length }}个赞助商家</p>
             </div>
             {% if user.is_staff %}
                 <div class="col-md-6">
                     <div class="btn-group float-right" role="group">
                         <a class="btn btn-pill btn-block btn-primary"
                            role="button"
-                           href="/hub/merchant_add">添加商户</a>
+                           href="/hub/merchant_add">添加赞助商家</a>
                     </div>
                 </div>
             {% endif %}
@@ -26,20 +27,104 @@
                     <div class="row clearfix">
                         <div class="col-md-12 col-lg-12 col-xl-12">
                             <ul class="mail_list list-group list-unstyled">
-                                {% for info in infos %}
-                                    <a href="/hub/merchant_profile/{{ info.merchant_id }}"
-                                       class="m-r-10 noti_link">
+                                {% for sponsor_merchant in sponsor_merchants %}
+                                    <a href="/hub/merchant_profile/{{ sponsor_merchant.merchant_id}}"
+                                    class="m-r-10 noti_link">
                                         <li class="list-group-item">
                                             <div class="media">
                                                 <div class="media-body">
                                                     <div class="media-heading">
-                                                        {{ forloop.counter }}.&nbsp;{{ info.merchant_name }}
+                                                        {{ forloop.counter }}.&nbsp;{{ sponsor_merchant.merchant_name }}
                                                         <!-- <span class="badge bg-blue">Family</span> -->
                                                         <div class="float-right text-muted">
-                                                            <div>{{ info.merchant_add_date|date:"y/m/d H:i" }}</div>
+                                                            <div>{{ sponsor_merchant.merchant_add_date|date:"y/m/d H:i" }}</div>
                                                         </div>
                                                     </div>
-                                                    {% comment %} <p class="msg" style="width: 300px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">{{info.merchant_description}}
+                                                    {% comment %} <p class="msg" style="width: 300px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">{{sponsor_merchant.merchant_description}}
+                                                    </p> {% endcomment %}
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </a>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                {% if is_paginated %}
+                    <ul class="pagination">
+                        {% if page_obj.has_previous %}
+                            <li>
+                                <a href="?page={{ page_obj.previous_page_number }}">&laquo;</a>
+                            </li>
+                        {% else %}
+                            <li class="disabled">
+                                <span>&laquo;</span>
+                            </li>
+                        {% endif %}
+                        {% for i in paginator.page_range %}
+                            {% if page_obj.number == i %}
+                                <li class="active">
+                                    <span>{{ i }} <span class="sr-only">(current)</span></span>
+                                </li>
+                            {% else %}
+                                <li>
+                                    <a href="?page={{ i }}">{{ i }}</a>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+                        {% if page_obj.has_next %}
+                            <li>
+                                <a href="?page={{ page_obj.next_page_number }}">&raquo;</a>
+                            </li>
+                        {% else %}
+                            <li class="disabled">
+                                <span>&raquo;</span>
+                            </li>
+                        {% endif %}
+                    </ul>
+                {% endif %}
+            </div>
+        </div>
+        <br>
+        <br>
+
+        <!-- List all discount merchants -->
+        <div class="row">
+            <div class="col-md-6">
+                <p>目前有{{ discount_merchants|length }}个折扣商家</p>
+            </div>
+            {% if user.is_staff %}
+                <div class="col-md-6">
+                    <div class="btn-group float-right" role="group">
+                        <a class="btn btn-pill btn-block btn-primary"
+                           role="button"
+                           href="/hub/merchant_add">添加折扣商家</a>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-md-12 col-lg-12 col-xl-12">
+                <div class="container-fluid">
+                    <div class="row clearfix">
+                        <div class="col-md-12 col-lg-12 col-xl-12">
+                            <ul class="mail_list list-group list-unstyled">
+                                {% for discount_merchant in discount_merchants %}
+                                    <a href="/hub/merchant_profile/{{ discount_merchant.merchant_id}}"
+                                    class="m-r-10 noti_link">
+                                        <li class="list-group-item">
+                                            <div class="media">
+                                                <div class="media-body">
+                                                    <div class="media-heading">
+                                                        {{ forloop.counter }}.&nbsp;{{ discount_merchant.merchant_name }}
+                                                        <!-- <span class="badge bg-blue">Family</span> -->
+                                                        <div class="float-right text-muted">
+                                                            <div>{{ discount_merchant.merchant_add_date|date:"y/m/d H:i" }}</div>
+                                                        </div>
+                                                    </div>
+                                                    {% comment %} <p class="msg" style="width: 300px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">{{discount_merchant.merchant_description}}
                                                     </p> {% endcomment %}
                                                 </div>
                                             </div>
