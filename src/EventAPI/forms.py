@@ -13,7 +13,7 @@ class AddEventForm(forms.ModelForm):
         model = Event
         exclude = ('eventStartTime', 'disabled')
         help_texts = {
-            'eventName': _("名称最大长度位50，不可重复"),
+            'eventName': _("名称最大长度位30，不可重复"),
             'eventSignUpTime': _("活动开始接受报名的时间"),
             'eventActualStTime': _("活动实际开始的时间"),
             'DisplayArticleType': _("选择活动介绍所要显示的文章来源"),
