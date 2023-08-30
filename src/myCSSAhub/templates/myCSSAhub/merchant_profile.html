@@ -84,9 +84,16 @@ wish to resize images before upload. This must be loaded before fileinput.min.js
                 {{ form.merchant_Category.label_tag }}<span class="asteriskField">*</span>
                 {% render_field form.merchant_Category class="form-control" %}
             </div>
-            <label id = "address_label" for="merchant_address">
-                地址：<span class="asteriskField">*</span>
+            <label id="address_label" for="merchant_address">
+                <span class="asteriskField">
+                    {% if form.merchant_type.value != "赞助商家" %}
+                        地址：*
+                    {% else %}
+                        公众号推文：*
+                    {% endif %}
+                </span>
             </label>
+
             <input class="form-control"
                    name="merchant_address"
                    value="{{ form.merchant_address.value }}"
