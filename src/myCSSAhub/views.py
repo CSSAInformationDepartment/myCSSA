@@ -11,7 +11,7 @@ from django.contrib.auth.models import update_last_login
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
 from django.http import HttpResponseBadRequest, HttpResponseRedirect, JsonResponse
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse
 from django.utils.decorators import method_decorator
 from django.views import View
@@ -19,6 +19,7 @@ from django.views.decorators.debug import sensitive_post_parameters
 from LegacyDataAPI import models as LegacyDataModels
 from mail_owl.utils import AutoMailSender
 from UserAuthAPI import models as UserModels
+from .models import DiscountMerchant
 from UserAuthAPI.forms import (
     BasicSiginInForm,
     EasyRegistrationForm,
@@ -91,7 +92,6 @@ class Email_Compose(LoginRequiredMixin, View):
 
 ################################# merchants ########################################
 
-
 class Merchants_list(PermissionRequiredMixin, LoginRequiredMixin, View):
     login_url = '/hub/login/'
     template_name = 'myCSSAhub/merchants_list.html'
@@ -99,7 +99,8 @@ class Merchants_list(PermissionRequiredMixin, LoginRequiredMixin, View):
 
     def get(self, request):
         if request.user.is_authenticated:
-            infos = DiscountMerchant.objects.all().order_by("merchant_add_date").values()
+            sponsor_merchants = DiscountMerchant.objects.filter(merchant_type = '赞助商家').order_by("merchant_add_date").values()
+            discount_merchants = DiscountMerchant.objects.filter(merchant_type = '折扣商家').order_by("merchant_add_date").values()
 
         return render(request, self.template_name, locals())
 
@@ -162,13 +163,18 @@ class Merchant_profile(LoginRequiredMixin, View):
         have_update = False
         profileID = self.kwargs.get('id')
         obj = get_object_or_404(DiscountMerchant, merchant_id=profileID)
-        form = self.form_class(data=request.POST or None,
-                               files=request.FILES or None, instance=obj)
-        if form.is_valid():
-            form.save()
-            have_update = True
+        if 'save' in request.POST.keys():
+            form = self.form_class(data=request.POST or None,
+                                    files=request.FILES or None, instance=obj)
+            if form.is_valid():
+                form.save()
+                have_update = True
 
-        return render(request, self.template_name, {'update': have_update, 'form': form, 'submit_url': reverse('myCSSAhub:merchant_profile', args=[str(profileID)])})
+            return render(request, self.template_name, {'update': have_update, 'form': form, 'submit_url': reverse('myCSSAhub:merchant_profile', args=[str(profileID)])})
+        elif 'del' in request.POST.keys():
+            obj.delete()
+            return redirect(reverse('myCSSAhub:merchants_list'))
+        
 
 
 ###### logout page ##########

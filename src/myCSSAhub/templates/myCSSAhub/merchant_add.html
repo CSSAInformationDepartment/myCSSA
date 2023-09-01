@@ -104,8 +104,8 @@ wish to resize images before upload. This must be loaded before fileinput.min.js
                 {{ form.merchant_Category.label_tag }}<span class="asteriskField">*</span>
                 {% render_field form.merchant_Category class="form-control" %}
             </div>
-            <label for="merchant_address">
-                地址：<span class="asteriskField">*</span>
+            <label id="address_label" for="merchant_address">
+                <span class="asteriskField">地址：*</span>
             </label>
             <input class="form-control" name="merchant_address" type="text" required />
             <label for="merchant_phone">联系电话：</label>
@@ -398,15 +398,18 @@ wish to resize images before upload. This must be loaded before fileinput.min.js
     var promotionImageDiv = document.getElementById("promotion-image-div");
     var discountMerchantCategoryDiv = document.getElementById("merchant_Category");
     var sponsorMerchantLevelDiv = document.getElementById("merchant_level");
+    var addressLabel = document.getElementById("address_label");
     merchantTypeSelect.addEventListener("change", function() {
         if (merchantTypeSelect.value != "赞助商家") {
             promotionImageDiv.style.display = "none";
             discountMerchantCategoryDiv.style.display = "";
             sponsorMerchantLevelDiv.style.display = "none";
+            addressLabel.textContent = "地址：*";
         } else {
             promotionImageDiv.style.display = "";
             discountMerchantCategoryDiv.style.display = "none";
             sponsorMerchantLevelDiv.style.display = "";
+            addressLabel.textContent = "公众号推文：*";
         }
     });
     </script>
