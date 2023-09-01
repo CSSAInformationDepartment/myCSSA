@@ -11,7 +11,7 @@ from django.contrib.auth.models import update_last_login
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
 from django.http import HttpResponseBadRequest, HttpResponseRedirect, JsonResponse
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse
 from django.utils.decorators import method_decorator
 from django.views import View
@@ -149,13 +149,18 @@ class Merchant_profile(LoginRequiredMixin, View):
         have_update = False
         profileID = self.kwargs.get('id')
         obj = get_object_or_404(DiscountMerchant, merchant_id=profileID)
-        form = self.form_class(data=request.POST or None,
-                               files=request.FILES or None, instance=obj)
-        if form.is_valid():
-            form.save()
-            have_update = True
+        if 'save' in request.POST.keys():
+            form = self.form_class(data=request.POST or None,
+                                    files=request.FILES or None, instance=obj)
+            if form.is_valid():
+                form.save()
+                have_update = True
 
-        return render(request, self.template_name, {'update': have_update, 'form': form, 'submit_url': reverse('myCSSAhub:merchant_profile', args=[str(profileID)])})
+            return render(request, self.template_name, {'update': have_update, 'form': form, 'submit_url': reverse('myCSSAhub:merchant_profile', args=[str(profileID)])})
+        elif 'del' in request.POST.keys():
+            obj.delete()
+            return redirect(reverse('myCSSAhub:merchants_list'))
+        
 
 
 ###### logout page ##########

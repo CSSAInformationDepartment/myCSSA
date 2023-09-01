@@ -72,13 +72,28 @@ wish to resize images before upload. This must be loaded before fileinput.min.js
                    required />
             {{ form.merchant_type.label_tag }}<span class="asteriskField">*</span>
             {% render_field form.merchant_type class="form-control" %}
-            {{ form.merchant_level.label_tag }}<span class="asteriskField">*</span>
-            {% render_field form.merchant_level class="form-control" %}
-            {{ form.merchant_Category.label_tag }}<span class="asteriskField">*</span>
-            {% render_field form.merchant_Category class="form-control" %}
-            <label for="merchant_address">
-                地址：<span class="asteriskField">*</span>
+            <div class="form-group"
+                 id="merchant_level"
+                 {% if form.merchant_type.value != "赞助商家" %}style="display:none;"{% endif %}>
+                {{ form.merchant_level.label_tag }}<span class="asteriskField">*</span>
+                {% render_field form.merchant_level class="form-control" %}
+            </div>
+            <div class="form-group"
+                 id="merchant_Category"
+                 {% if form.merchant_type.value == "赞助商家" %}style="display:none;"{% endif %}>
+                {{ form.merchant_Category.label_tag }}<span class="asteriskField">*</span>
+                {% render_field form.merchant_Category class="form-control" %}
+            </div>
+            <label id="address_label" for="merchant_address">
+                <span class="asteriskField">
+                    {% if form.merchant_type.value != "赞助商家" %}
+                        地址：*
+                    {% else %}
+                        公众号推文：*
+                    {% endif %}
+                </span>
             </label>
+
             <input class="form-control"
                    name="merchant_address"
                    value="{{ form.merchant_address.value }}"
@@ -131,8 +146,8 @@ wish to resize images before upload. This must be loaded before fileinput.min.js
                        data-browse-on-zone-click="true">
             </div>
         </div>
-        <button class="btn btn-primary" type="submit">保存</button>
-        <button class="btn btn-danger" type="reset">删除</button>
+        <button class="btn btn-primary" type="submit" name = "save">保存</button>
+        <button class="btn btn-danger" type="submit" name = "del">删除</button>
     </form>
 {% endblock pageContent %}
 {% block ExtraJS %}
@@ -220,11 +235,20 @@ wish to resize images before upload. This must be loaded before fileinput.min.js
     <script>
     var promotionImageDiv = document.getElementById("promotion-image-div");
     var merchantTypeSelect = document.getElementsByName("merchant_type")[0];
+    var discountMerchantCategoryDiv = document.getElementById("merchant_Category");
+    var sponsorMerchantLevelDiv = document.getElementById("merchant_level");
+    var addressLabel = document.getElementById("address_label");
     merchantTypeSelect.addEventListener("change", function() {
         if (merchantTypeSelect.value !== "赞助商家") {
             promotionImageDiv.style.display = "none";
+            discountMerchantCategoryDiv.style.display = "";
+            sponsorMerchantLevelDiv.style.display = "none";
+            addressLabel.textContent = "地址：*";
         } else {
             promotionImageDiv.style.display = "";
+            discountMerchantCategoryDiv.style.display = "none";
+            sponsorMerchantLevelDiv.style.display = "";
+            addressLabel.textContent = "公众号推文：*";
         }
     });
     </script>
