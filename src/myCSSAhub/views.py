@@ -19,6 +19,7 @@ from django.views.decorators.debug import sensitive_post_parameters
 from LegacyDataAPI import models as LegacyDataModels
 from mail_owl.utils import AutoMailSender
 from UserAuthAPI import models as UserModels
+from .models import DiscountMerchant
 from UserAuthAPI.forms import (
     BasicSiginInForm,
     EasyRegistrationForm,
@@ -87,7 +88,6 @@ class Email_Compose(LoginRequiredMixin, View):
 
 ################################# merchants ########################################
 
-
 class Merchants_list(PermissionRequiredMixin, LoginRequiredMixin, View):
     login_url = '/hub/login/'
     template_name = 'myCSSAhub/merchants_list.html'
@@ -95,7 +95,8 @@ class Merchants_list(PermissionRequiredMixin, LoginRequiredMixin, View):
 
     def get(self, request):
         if request.user.is_authenticated:
-            infos = DiscountMerchant.objects.all().order_by("merchant_add_date").values()
+            sponsor_merchants = DiscountMerchant.objects.filter(merchant_type = '赞助商家').order_by("merchant_add_date").values()
+            discount_merchants = DiscountMerchant.objects.filter(merchant_type = '折扣商家').order_by("merchant_add_date").values()
 
         return render(request, self.template_name, locals())
 
