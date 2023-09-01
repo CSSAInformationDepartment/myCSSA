@@ -20,6 +20,27 @@
     <!-- <script src="https://code.jquery.com/jquery-3.3.1.min.js" crossorigin="anonymous"></script> -->
     <!-- piexif.min.js is needed for auto orienting image files OR when restoring exif data in resized images and when you
 wish to resize images before upload. This must be loaded before fileinput.min.js -->
+
+
+    {% load static %}
+    <link rel="stylesheet"
+        type="text/css"
+        href="{% static 'PublicSite/avatar.css' %}">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.1/cropper.min.css"
+        crossorigin="anonymous">
+    <link rel="stylesheet"
+        href="https://use.fontawesome.com/releases/v5.5.0/css/all.css"
+        crossorigin="anonymous">
+    <style rel="stylesheet/scss">
+        img {
+            max-width: 100%;
+        }
+
+        .hide {
+            display: none;
+        }
+    </style>
 {% endblock ExtraHeader %}
 {% block pageContent %}
     {% load widget_tweaks %}
@@ -98,15 +119,10 @@ wish to resize images before upload. This must be loaded before fileinput.min.js
                 <textarea class="form-control" name="merchant_description" rows="11" required></textarea>
             </div>
             <div class="form-group">
-                <label for="merchant_pic">
-                    选择商家图片：<span class="asteriskField">*</span>
-                </label>
-                <input id="input-b1"
-                       name="merchant_image"
-                       type="file"
-                       class="file"
-                       data-browse-on-zone-click="true">
-            </div>
+                <label for="merchant_pic">选择商家图片：<span class="asteriskField">*</span></label>
+                <button class="btn btn-primary btn-block" id="upload-btn" type="button" style="max-width: 60px;">选择并裁剪图片</button>
+                <input type="hidden" id="base64-input" name="merchant_image_base64">
+            </div>            
             <div class="form-group">
                 {{ form.merchant_qrcode.label_tag }}<span class="asteriskField">*</span>
                 <input id="input-b2"
@@ -129,6 +145,65 @@ wish to resize images before upload. This must be loaded before fileinput.min.js
         <button class="btn btn-primary" type="submit">添加</button>
         <button class="btn btn-danger" type="reset">删除</button>
     </form>
+
+    <div class="modal fade"
+       id="modal"
+       tabindex="-1"
+       role="dialog"
+       aria-labelledby="exampleModalLabel"
+       aria-hidden="true">
+    <form id="crop_form"
+          method="post"
+          action="{% url 'myCSSAhub:update_user_avatar' %}"
+          enctype="multipart/form-data">
+      {% csrf_token %}
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">上传商家图片</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <button class="btn btn-primary btn-block" id="upload-img">点击此处上传图片</button>
+              <input class="hide"
+                     name="avatar"
+                     type="file"
+                     id="file-input"
+                     accept="image/jpeg" />
+              <input name="x" type="hidden" id="anchor-x" />
+              <input name="y" type="hidden" id="anchor-y" />
+              <input name="width" type="hidden" id="anchor-width" />
+              <input name="height" type="hidden" id="anchor-height" />
+              <input name="cropped_b64" type="hidden" id="cropped_b64" />
+            </div>
+            <div id='file-size-exceed-warning'
+                 class="alert alert-danger hide"
+                 role="alert">上传的文件过大! 商家图片格式只可为.jpg/.jpeg, 且不能超过2Mb</div>
+            <div class="row" style="max-height:100%">
+              <div class="col-12 col-md-6 col-lg-6">
+                <div class="result"></div>
+              </div>
+              <div class="col-12 col-md-6 col-lg-6">
+                <div class="col hide img-result" style="max-width:100%">
+                  效果预览：
+                  <div class="my-3 d-block mx-auto avatar-lg cropped-preview">
+                    <img class="img-fluid" src="" alt="">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-primary hide" id="submit-cropped">保存</button>
+            <button class="btn btn-secondary" type="reset" data-dismiss="modal">取消</button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
 {% endblock pageContent %}
 {% block ExtraJS %}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.5.1/js/plugins/piexif.min.js"
@@ -148,7 +223,111 @@ wish to resize images before upload. This must be loaded before fileinput.min.js
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.5.1/themes/fas/theme.min.js"></script>
     <!-- optionally if you need translation for your language then include the locale file as mentioned below (replace LANG.js with your language locale) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.5.1/js/locales/LANG.js"></script>
+
+    <script type="text/javascript"
+    src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.1/cropper.min.js"></script>
+    <script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.23.0/moment.min.js"></script>
+    <script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.0-alpha14/js/tempusdominus-bootstrap-4.min.js"></script>
+
     <script>
+        document.getElementById("upload-btn").addEventListener("click", function() {
+            $('#modal').modal('show');
+        });
+        $('.cropped-preview').css({ 
+            width: '100%',
+            overflow: 'hidden',
+            });
+
+            // vars
+            let result = document.querySelector('.result'),
+            upload_btn = document.querySelector('#upload-img'),
+            img_result = document.querySelector('.img-result'),
+            save = document.querySelector('#submit-cropped'),
+            cropped = document.querySelector('.cropped-preview'),
+            upload = document.querySelector('#file-input'),
+            base64_input = document.querySelector('#base64-input'), // 您的hidden input
+            cropper = '';
+
+            checkFileSize = (size) => {
+            const MB = 1024;
+            const KB = 1024;
+            let limit = 2; // Measured in MB
+            if (size/KB/MB > limit) {
+                document.querySelector('#file-size-exceed-warning').classList.remove('hide');
+                if (!save.classList.contains('hide')){
+                save.classList.add('hide');
+                img_result.classList.add('hide');
+                }
+            } else {
+                document.querySelector('#file-size-exceed-warning').classList.add('hide');
+                return true
+            }
+            }
+
+            // init upload dialog
+            upload_btn.addEventListener('click', (e) => {
+            e.preventDefault()
+            upload.click()
+            })
+
+            // on change show image with crop options
+            upload.addEventListener('change', (e) => {
+            if (e.target.files.length) {
+                    // start file reader
+                const reader = new FileReader();
+                // clean result before
+                result.innerHTML = '';
+                reader.onload = (e)=> {
+                if(e.target.result && checkFileSize(upload.files[0].size)){
+                    // create new image
+                            let img = document.createElement('img');
+                            img.id = 'image';
+                            img.src = e.target.result;
+                            // append new image
+                    result.appendChild(img);
+                            // show save btn and options
+                            save.classList.remove('hide');
+                    img_result.classList.remove('hide');
+                            // init cropper
+                            cropper = new Cropper(img,{
+                    preview: '.cropped-preview',
+                    aspectRatio: NaN,
+                    });
+                }
+                };
+                reader.readAsDataURL(e.target.files[0]);
+            }
+            });
+
+            // save on click
+            save.addEventListener('click', (e) => {
+            e.preventDefault();
+            base64_input.value = cropper.getCroppedCanvas().toDataURL('image/jpeg'); // Save cropped image's base64 to hidden input
+            $('#modal').modal('hide'); // 关闭模态框
+            });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     {% if form.merchant_image.value %}
         $("#input-b1").fileinput({
             theme: "fa",

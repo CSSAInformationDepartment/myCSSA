@@ -31,6 +31,10 @@ from UserAuthAPI.forms import (
 from .forms import MerchantsForm
 from .models import AccountMigration, DiscountMerchant
 
+from django.core.files.base import ContentFile
+import base64
+import uuid
+
 # Create your views here.
 
 
@@ -114,14 +118,24 @@ class Merchant_add(PermissionRequiredMixin, LoginRequiredMixin, View):
 
     def post(self, request, *args, **kwargs):
         have_update = False
-        # 从表单获取图片并上传
-        form = self.form_class(request.POST, request.FILES)
+        form = self.form_class(request.POST)
+        
         if form.is_valid():
-            # 标注：所有跟表单相关的保存操作，用ModelForm绑定，不要手写model field，容易出错
-            form.save()
-            have_update = True
-        # return render(request, self.template_name, {'update': have_update})
+            merchant = form.save(commit=False)  # We use commit=False to avoid saving the model immediately.
 
+            # Extracting the base64 encoded image from the hidden input
+            base64_data = request.POST.get('merchant_image_base64', '').split(';base64,')
+            
+            if len(base64_data) == 2:
+                mime, data = base64_data
+                # Generating a unique filename using UUID
+                filename = f"{uuid.uuid4().hex}.jpg"
+                data = base64.b64decode(data)
+                
+                merchant.merchant_image.save(filename, ContentFile(data, name=filename))
+                merchant.save()
+                have_update = True
+        
         return render(request, self.template_name, {'update': have_update, 'form': form})
 
 #
