@@ -83,7 +83,7 @@ class Event (models.Model):
     eventID = models.UUIDField(
         primary_key=True, default=uuid.uuid4, editable=False)
     eventName = models.CharField(verbose_name=_(
-        "活动名称"), max_length=50, unique=True)
+        "活动名称"), max_length=30, unique=True)
     eventInfo = models.CharField(verbose_name=_("活动简介"), max_length=600)
 
     eventStartTime = models.DateTimeField(auto_now_add=True)
