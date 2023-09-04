@@ -107,7 +107,9 @@ wish to resize images before upload. This must be loaded before fileinput.min.js
                        class="file"
                        data-browse-on-zone-click="true">
             </div>
-            <div class="form-group">
+            <div class="form-group"
+                 id="qrcode-image-div"
+                {% if form.merchant_type.value != "赞助商家" %}style="display:none;"{% endif %}>
                 {{ form.merchant_qrcode.label_tag }}<span class="asteriskField">*</span>
                 <input id="input-b2"
                        name="merchant_qrcode"
@@ -216,17 +218,20 @@ wish to resize images before upload. This must be loaded before fileinput.min.js
     </script>
     <script>
     var merchantTypeSelect = document.getElementsByName("merchant_type")[0];
+    var qrcodeImageDiv = document.getElementById("qrcode-image-div");
     var promotionImageDiv = document.getElementById("promotion-image-div");
     var discountMerchantCategoryDiv = document.getElementById("merchant_Category");
     var sponsorMerchantLevelDiv = document.getElementById("merchant_level");
     var addressLabel = document.getElementById("address_label");
     merchantTypeSelect.addEventListener("change", function() {
         if (merchantTypeSelect.value != "赞助商家") {
+            qrcodeImageDiv.style.display = "none";
             promotionImageDiv.style.display = "none";
             discountMerchantCategoryDiv.style.display = "";
             sponsorMerchantLevelDiv.style.display = "none";
             addressLabel.textContent = "地址：*";
         } else {
+            qrcodeImageDiv.style.display = "";
             promotionImageDiv.style.display = "";
             discountMerchantCategoryDiv.style.display = "none";
             sponsorMerchantLevelDiv.style.display = "";

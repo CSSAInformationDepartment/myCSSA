@@ -21,7 +21,8 @@ class Migration(migrations.Migration):
                 ('merchant_address', models.CharField(max_length=200, null=True, verbose_name='商家地址')),
                 ('merchant_link', models.CharField(max_length=200, null=True, verbose_name='商家网站')),
                 ('merchant_add_date', models.DateTimeField(default=django.utils.timezone.now, verbose_name='商户加入时间')),
-                ('merchant_image', models.ImageField(default='img/merchants/noneImg.jpg', upload_to='img/merchants/')),
+                ('merchant_image', models.ImageField(upload_to='img/merchants/')),
+                # ('merchant_image', models.ImageField(default='img/merchants/noneImg.jpg', upload_to='img/merchants/')),
             ],
         ),
     ]
