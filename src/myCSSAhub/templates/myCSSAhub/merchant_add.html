@@ -120,8 +120,10 @@ wish to resize images before upload. This must be loaded before fileinput.min.js
             </div>
             <div class="form-group">
                 <label for="merchant_pic">选择商家图片：<span class="asteriskField">*</span></label>
-                <button class="btn btn-primary btn-block" id="upload-btn" type="button" style="max-width: 60px;">选择并裁剪图片</button>
+                <button class="btn btn-primary btn-block" id="upload-btn" type="button" style="max-width: 120px;">选择并裁剪图片</button>
                 <input type="hidden" id="base64-input" name="merchant_image_base64">
+                <!-- preview -->
+                <div id="image-preview-container" style="margin-top: 20px;"></div>
             </div>            
             <div class="form-group">
                 {{ form.merchant_qrcode.label_tag }}<span class="asteriskField">*</span>
@@ -146,6 +148,8 @@ wish to resize images before upload. This must be loaded before fileinput.min.js
         <button class="btn btn-danger" type="reset">删除</button>
     </form>
 
+
+    <!-- 裁剪模态框 -->
     <div class="modal fade"
        id="modal"
        tabindex="-1"
@@ -204,6 +208,20 @@ wish to resize images before upload. This must be loaded before fileinput.min.js
       </div>
     </form>
   </div>
+
+
+
+
+  <!-- preview 模态框 -->
+    <div class="modal fade" id="imageModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+            <img src="" id="modalImage" class="img-fluid">
+            </div>
+        </div>
+        </div>
+    </div>
 {% endblock pageContent %}
 {% block ExtraJS %}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.5.1/js/plugins/piexif.min.js"
@@ -305,9 +323,22 @@ wish to resize images before upload. This must be loaded before fileinput.min.js
             save.addEventListener('click', (e) => {
             e.preventDefault();
             base64_input.value = cropper.getCroppedCanvas().toDataURL('image/jpeg'); // Save cropped image's base64 to hidden input
+            // 显示图像预览
+            let previewContainer = document.getElementById("image-preview-container");
+            previewContainer.innerHTML = '';  // 清除之前的预览
+            let previewImage = document.createElement("img");
+            previewImage.src = base64_input.value;
+            previewImage.style.width = "100px";  // 或任何您想要的大小
+            previewContainer.appendChild(previewImage);
             $('#modal').modal('hide'); // 关闭模态框
             });
 
+            document.getElementById("image-preview-container").addEventListener("click", function() {
+            let imageSrc = this.querySelector("img").src;  // 获取当前容器中的图片URL
+            let modalImage = document.getElementById("modalImage");
+            modalImage.src = imageSrc;  // 将模态框中的img标签的src设置为点击的图片的src
+            $("#imageModal").modal('show');  // 使用jQuery来显示模态框
+            });
 
 
 
