@@ -105,6 +105,7 @@ wish to resize images before upload. This must be loaded before fileinput.min.js
                        name="merchant_image"
                        type="file"
                        class="file"
+                       required="true"
                        data-browse-on-zone-click="true">
             </div>
             <div class="form-group"
@@ -230,12 +231,18 @@ wish to resize images before upload. This must be loaded before fileinput.min.js
             discountMerchantCategoryDiv.style.display = "";
             sponsorMerchantLevelDiv.style.display = "none";
             addressLabel.textContent = "地址：*";
+
+            document.getElementById("input-b2").removeAttribute("required");
+            document.getElementById("input-b3").removeAttribute("required");
         } else {
             qrcodeImageDiv.style.display = "";
             promotionImageDiv.style.display = "";
             discountMerchantCategoryDiv.style.display = "none";
             sponsorMerchantLevelDiv.style.display = "";
             addressLabel.textContent = "公众号推文：*";
+
+            document.getElementById("input-b2").setAttribute("required", true);
+            document.getElementById("input-b3").setAttribute("required", true);
         }
     });
     </script>
