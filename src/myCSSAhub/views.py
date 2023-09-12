@@ -1,23 +1,26 @@
 import json
 
 from BlogAPI import models as BlogModels
-from CommunicateManager.send_email import send_emails
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib.auth.forms import PasswordChangeForm, PasswordResetForm
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.auth.models import update_last_login
+from django.contrib.auth.tokens import default_token_generator
+from django.core.mail import send_mail as raw_send_mail, BadHeaderError
 from django.core.exceptions import ObjectDoesNotExist
+from django.template.loader import render_to_string
 from django.db.models import Q
-from django.http import HttpResponseBadRequest, HttpResponseRedirect, JsonResponse
+from django.http import HttpResponseBadRequest, HttpResponseRedirect, JsonResponse, HttpResponse
 from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse
 from django.utils.decorators import method_decorator
+from django.utils.http import urlsafe_base64_encode
+from django.utils.encoding import force_bytes
 from django.views import View
 from django.views.decorators.debug import sensitive_post_parameters
 from LegacyDataAPI import models as LegacyDataModels
-from mail_owl.utils import AutoMailSender
 from UserAuthAPI import models as UserModels
 from .models import DiscountMerchant
 from UserAuthAPI.forms import (
@@ -440,6 +443,70 @@ class MembershipCardView(LoginRequiredMixin, View):
 
     def get(self, request, *args, **kwargs):
         return render(request, self.template_name)
+    
+################################# password reset ########################################
+
+class PasswordResetView(View):
+    template_name = 'myCSSAhub/password_reset.html'
+
+    def get(self, request, *args, **kwargs):
+        return render(request=request, template_name="myCSSAhub/password_reset.html")
+
+    def post(self, request, *args, **kwargs):
+        password_reset_form = PasswordResetForm(request.POST)
+        if password_reset_form.is_valid():
+            data = password_reset_form.cleaned_data['email']
+
+            # If the user exists in the database with matched email
+            associated_users = UserModels.User.objects.filter(Q(email=data))
+            if associated_users.exists():
+
+                # Send password reset email to the given address
+                # === Currently only work locally ===
+                for user in associated_users:
+                    subject = "CSSA Password Reset Requested"
+                    email_template_name = "password_reset_email.txt"
+                    c = {
+                    "email":user.email,
+                    'domain':'127.0.0.1:8000',
+                    'site_name': 'CSSA',
+                    "uid": urlsafe_base64_encode(force_bytes(user.pk)),
+                    'token': default_token_generator.make_token(user),
+                    'protocol': 'http',
+                    }
+                    email = render_to_string(email_template_name, c)
+                    try:
+                        raw_send_mail(subject, 
+                                      email, 
+                                      'cssa_authenticator@163.com', 
+                                      [user.email], 
+                                      fail_silently=False
+                                    )
+                    except BadHeaderError:
+                        return HttpResponse('Invalid header found.')
+                    
+                    # If success, pop up a success message
+                    messages.success(request, 
+                        'A message with reset password instructions ' \
+                        'has been sent to your email inbox.')
+                    print("Success")
+                    return HttpResponseRedirect("/hub/home/")
+            # Otherwise let user to retype the email
+            else:
+                print("Invalid email")
+                messages.error(request, 'An invalid email has been entered.')
+            return render(request=request, 
+                          template_name="myCSSAhub/password_reset.html",
+                          context={"password_reset_form":PasswordResetForm(request.POST)})
+        else:
+            return render(request=request, 
+                          template_name="myCSSAhub/password_reset.html",
+                          context={"password_reset_form":PasswordResetForm(request.POST)})
+
+class PasswordResetCompleteView(View):
+
+    def get(self, request, *args, **kwargs):
+        return render(request=request, template_name='password_reset_complete.html')
 
 ############################# blog ####################################################
 

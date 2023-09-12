@@ -3,6 +3,7 @@ from BlogAPI import urls as BlogUrls
 from CommunicateManager import urls as CommUrls
 from CommunityAPI import hub_urls as CommunityUrls
 from django.urls import include, path
+from django.contrib.auth import views as auth_views
 from EventAPI import urls as EventUrls
 from FinanceAPI import urls as FinanceUrls
 from FlexForm import urls as FlexFormUrls
@@ -47,7 +48,13 @@ urlpatterns = [
     path('luckydraw/event_pool/', LuckyDrawEventView.as_view(),
          name="luckydraw_event_list"),
     path('luckydraw/event_pool/<str:id>/',
-         LuckyDrawView.as_view(), name="luckydraw_event_draw")
+         LuckyDrawView.as_view(), name="luckydraw_event_draw"),
+    path('password_reset/', Views.PasswordResetView.as_view(), name="password_reset"),
+    path('password_reset/<uidb64>/<token>/', 
+         auth_views.PasswordResetConfirmView.as_view(template_name="password_reset_confirm.html", 
+         success_url="/hub/password_reset_complete"), name='password_reset_confirm'),
+    path('password_reset_complete/', 
+         Views.PasswordResetCompleteView.as_view(), name="password_reset_complete"),
 ]
 
 
