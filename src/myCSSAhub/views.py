@@ -490,7 +490,7 @@ class PasswordResetView(View):
                         'A message with reset password instructions ' \
                         'has been sent to your email inbox.')
                     print("Success")
-                    return HttpResponseRedirect("/hub/home/")
+                    return HttpResponseRedirect("/hub/password_reset_sent/")
             # Otherwise let user to retype the email
             else:
                 print("Invalid email")
@@ -506,7 +506,14 @@ class PasswordResetView(View):
 class PasswordResetCompleteView(View):
 
     def get(self, request, *args, **kwargs):
-        return render(request=request, template_name='password_reset_complete.html')
+        return render(request=request, 
+                      template_name='myCSSAhub/password_reset_complete.html')
+    
+class PasswordResetSentView(View):
+
+    def get(self, request, *args, **kwargs):
+        return render(request=request, 
+                      template_name='myCSSAhub/password_reset_sent.html')
 
 ############################# blog ####################################################
 
