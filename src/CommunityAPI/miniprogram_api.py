@@ -2,8 +2,7 @@
 这个文件包含了小程序相关的API
 """
 
-from typing import Any, Dict, List, Optional
-from datetime import datetime
+from typing import Any, Dict, Optional
 from time import time
 import requests
 from django.conf import settings
@@ -15,6 +14,7 @@ from .models import WxMiniProgramData
 logger = logging.getLogger('app.CommunityAPI.miniprogram_api')
 
 # 获取 access token 的过程每天只能调用2000次。所以必须把它缓存起来。
+
 
 def get_access_token() -> Optional[str]:
     """
@@ -50,7 +50,8 @@ def get_access_token() -> Optional[str]:
         }).json()
 
         if ret.get('errcode'):
-            logger.warning('获取 access token 出错，code: %s, msg: %s', ret['errcode'], ret['errmsg'])
+            logger.warning('获取 access token 出错，code: %s, msg: %s',
+                           ret['errcode'], ret['errmsg'])
             return None
 
         token = ret['access_token']
@@ -66,7 +67,8 @@ def get_access_token() -> Optional[str]:
 
         return token
 
-def is_text_invalid(openid: str, text: str, title: Optional[str]=None):
+
+def is_text_invalid(openid: str, text: str, title: Optional[str] = None):
     """
     使用微信API检测文本是否合法。
 
@@ -95,21 +97,23 @@ def is_text_invalid(openid: str, text: str, title: Optional[str]=None):
     for x in text_list:
         # api doc: https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/sec-check/security.msgSecCheck.html
         res = requests.post('https://api.weixin.qq.com/wxa/msg_sec_check', params={'access_token': token},
-            json={
-                'version': 2,
-                'openid': openid,
-                'scene': 3, # 场景固定为论坛
-                'content': x,
-                'title': title,
-            }).json()
+                            json={
+            'version': 2,
+            'openid': openid,
+            'scene': 3,  # 场景固定为论坛
+            'content': x,
+            'title': title,
+        }).json()
         logger.debug('内容审查 %s ，结果 %s', x, res)
-        title = None # after first iteration, do not send title anymore
+        title = None  # after first iteration, do not send title anymore
 
         if res.get('errcode'):
-            logger.warning('获取检测结果出错，code: %s, msg: %s', res['errcode'], res['errmsg'])
+            logger.warning('获取检测结果出错，code: %s, msg: %s',
+                           res['errcode'], res['errmsg'])
             if res['errcode'] == '40001':
                 # remove old access token
-                WxMiniProgramData.objects.filter(type=WxMiniProgramData.Type.ACCESS_TOKEN).delete()
+                WxMiniProgramData.objects.filter(
+                    type=WxMiniProgramData.Type.ACCESS_TOKEN).delete()
             # 如果 access token 出错，我们就不重试了，因为这个功能不是很重要，可以忽略不频繁的错误
             return None
 

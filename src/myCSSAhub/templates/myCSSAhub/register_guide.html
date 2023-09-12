@@ -1,48 +1,53 @@
-{% extends 'components/base_page.html' %}
+{% extends "components/base_page.html" %}
 {% block 'pg_body' %}
+    {% load static %}
+    <style>
+        #bloc-1 {
+            background-image: url("{% static 'myCSSAhub/img/bg-login.jpg' %}");
+            background-color: rgba(255, 255, 255, 0.4);
+            background-blend-mode: lighten;
+        }
 
-{% load static %}
-<style>
-  #bloc-1 {
-    background-image: url("{% static 'myCSSAhub/img/bg-login.jpg' %}");
-    background-color: rgba(255, 255, 255, 0.4);
-    background-blend-mode: lighten;
-  }
-  p {
-	  	width: 100%;
-	    word-wrap: break-word;
-	}
-</style>
-
-<div class="bloc none l-bloc" id="bloc-1" style="padding:40px">
-  <div class="container bloc-fill-screen justify-content-center">
-    <div class="row ">
-      <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
-		<div class="card card-signin my-5">
-			<div class="card-body">
-			<h3 class="card-title text-center">欢迎来到myCSSA</h3>
-			<div class="container mt-3">
-				<h6 class="card-title text-center">如果您已拥有myCSSA账号</h6>
-				<a href="{% url 'myCSSAhub:hub_login' %}" class="btn btn-block btn-lg btn-info">登录myCSSA</a>
-			</div>
-			<div class="container mt-3">
-				<h6 class="card-title text-center">如果您还未注册myCSSA账号</h6>
-				<a href="{% url 'myCSSAhub:hub_regform' %}" class="btn btn-block btn-lg btn-success">成为myCSSA会员</a>
-			</div>
-			<div class="container mt-3">
-				<h6 class="card-title text-center">如果您持有CSSA会员卡, 但为首次使用myCSSA服务</br>请进行</h6>
-				<a href="{% url 'myCSSAhub:hub_migration' %}" class="btn btn-block btn-lg btn-warning">myCSSA账号迁移</a>
-			</div>
-			</div>
-		</div>
-      </div>
+        p {
+            width: 100%;
+            word-wrap: break-word;
+        }
+    </style>
+    <div class="bloc none l-bloc" id="bloc-1" style="padding:40px">
+        <div class="container bloc-fill-screen justify-content-center">
+            <div class="row ">
+                <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
+                    <div class="card card-signin my-5">
+                        <div class="card-body">
+                            <h3 class="card-title text-center">欢迎来到myCSSA</h3>
+                            <div class="container mt-3">
+                                <h6 class="card-title text-center">如果您已拥有myCSSA账号</h6>
+                                <a href="{% url 'myCSSAhub:hub_login' %}"
+                                   class="btn btn-block btn-lg btn-info">登录myCSSA</a>
+                            </div>
+                            <div class="container mt-3">
+                                <h6 class="card-title text-center">如果您还未注册myCSSA账号</h6>
+                                <a href="{% url 'myCSSAhub:hub_regform' %}"
+                                   class="btn btn-block btn-lg btn-success">成为myCSSA会员</a>
+                            </div>
+                            <div class="container mt-3">
+                                <h6 class="card-title text-center">
+                                    如果您持有CSSA会员卡, 但为首次使用myCSSA服务
+                                </br>
+                                请进行
+                            </h6>
+                            <a href="{% url 'myCSSAhub:hub_migration' %}"
+                               class="btn btn-block btn-lg btn-warning">myCSSA账号迁移</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
 </div>
-
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-
-
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+        integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+        crossorigin="anonymous"></script>
 {% endblock 'pg_body' %}

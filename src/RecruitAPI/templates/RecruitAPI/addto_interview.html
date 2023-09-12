@@ -1,170 +1,140 @@
-{% extends 'myCSSAhub/component/_layout.html' %}
+{% extends "myCSSAhub/component/_layout.html" %}
 {% load static %}
 {% block ExtraHeader %}
-<link href="{% static 'myCSSAhub/vendors/DataTables/datatables.min.css'%}" rel="stylesheet">
+    <link href="{% static 'myCSSAhub/vendors/DataTables/datatables.min.css' %}"
+          rel="stylesheet">
 {% endblock ExtraHeader %}
-
 {% block pageContent %}
-{% load widget_tweaks %}
-<div class="row">
-  <div class="col-lg-4 col-sm-12">
-  {% if current_arrangement %}
-    <div class="card text-white bg-primary mb-3">
-        <div class="card-header">该申请人的面试已安排！</div>
-        <div class="card-body">
-            <p class="card-text">日期：{{ current_arrangement.date }}</p>
-            <p class="card-text">开始时间：{{ current_arrangement.time }}</p>
-            <p class="card-text">地点：{{ current_arrangement.location }}</p>
+    {% load widget_tweaks %}
+    <div class="row">
+        <div class="col-lg-4 col-sm-12">
+            {% if current_arrangement %}
+                <div class="card text-white bg-primary mb-3">
+                    <div class="card-header">该申请人的面试已安排！</div>
+                    <div class="card-body">
+                        <p class="card-text">日期：{{ current_arrangement.date }}</p>
+                        <p class="card-text">开始时间：{{ current_arrangement.time }}</p>
+                        <p class="card-text">地点：{{ current_arrangement.location }}</p>
+                    </div>
+                </div>
+            {% else %}
+                <div class="card">
+                    <div class="card-header">
+                        <strong>添加面试安排</strong>
+                    </div>
+                    <div class="card-body">
+                        <div class="alert alert-warning" role="alert">
+                            注意！以下信息在确认提交后，系统会自动发送消息提醒受试者参加面试。请在提交前<strong>务必仔细核对所有信息！</strong>
+                        </div>
+                        <form method="post"
+                              action="{% url 'myCSSAhub:RecruitAPI:add_to_interview' id %}">
+                            {% csrf_token %}
+                            {% for hidden_field in form.hidden_fields %}{{ hidden_field }}{% endfor %}
+                            <input type="hidden" name="resume" value="{{ id }}" />
+                            {% if form.non_field_errors %}
+                                <div class="alert alert-danger" role="alert">
+                                    {% for error in form.non_field_errors %}{{ error }}{% endfor %}
+                                </div>
+                            {% endif %}
+                            <div class="form-group">
+                                <label for="date">面试日期</label>
+                                {% if form.is_bound %}
+                                    {% if form.date.errors %}
+                                        {% render_field form.date class="form-control is-invalid" %}
+                                        {% for error in form.date.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+                                    {% else %}
+                                        {% render_field form.date class="form-control is-valid" %}
+                                    {% endif %}
+                                {% else %}
+                                    {% render_field form.date class="form-control" type="date" placeholder="date" %}
+                                {% endif %}
+                                {% if form.date.help_text %}<small class="form-text text-muted">{{ form.date.help_text }}</small>{% endif %}
+                            </div>
+                            <div class="form-group">
+                                <label for="time">面试时间</label>
+                                {% if form.is_bound %}
+                                    {% if form.time.errors %}
+                                        {% render_field form.time class="form-control is-invalid" %}
+                                        {% for error in form.time.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+                                    {% else %}
+                                        {% render_field form.time class="form-control is-valid" %}
+                                    {% endif %}
+                                {% else %}
+                                    {% render_field form.time class="form-control" type="time" placeholder="time" %}
+                                {% endif %}
+                                {% if form.time.help_text %}<small class="form-text text-muted">{{ form.time.help_text }}</small>{% endif %}
+                            </div>
+                            <div class="form-group">
+                                <label for="location">面试地点</label>
+                                {% if form.is_bound %}
+                                    {% if form.location.errors %}
+                                        {% render_field form.location class="form-control is-invalid" %}
+                                        {% for error in form.location.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+                                    {% else %}
+                                        {% render_field form.location class="form-control is-valid" %}
+                                    {% endif %}
+                                {% else %}
+                                    {% render_field form.location class="form-control" %}
+                                {% endif %}
+                                {% if form.location.help_text %}<small class="form-text text-muted">{{ form.location.help_text }}</small>{% endif %}
+                            </div>
+                            <div class="form-group">
+                                <label for="note">对受试者的备注</label>
+                                {% if form.is_bound %}
+                                    {% if form.note.errors %}
+                                        {% render_field form.note class="form-control is-invalid" %}
+                                        {% for error in form.note.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+                                    {% else %}
+                                        {% render_field form.note class="form-control is-valid" %}
+                                    {% endif %}
+                                {% else %}
+                                    {% render_field form.note class="form-control" %}
+                                {% endif %}
+                                {% if form.note.help_text %}<small class="form-text text-muted">{{ form.note.help_text }}</small>{% endif %}
+                            </div>
+                            <input type="submit"
+                                   class="btn btn-block btn-outline-primary"
+                                   placeholder="" />
+                            <small class="form-text text-muted">以上信息将同步发送至申请人电子邮箱</small>
+                        </form>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+        <div class="col-lg-8 col-sm-12">
+            <div class="card">
+                <div class="card-header">
+                    <i class="fa fa-align-justify"></i> 现有面试安排
+                </div>
+                <div class="card-body">
+                    <table id="interview-datatable"
+                           class="table table-responsive-md"
+                           style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>受试者</th>
+                                <th>日期</th>
+                                <th>时间</th>
+                                <th>地点</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
-  {% else %}
-  <div class="card">
-    <div class="card-header"><strong>添加面试安排 </strong></div>
-    <div class="card-body">
-        <div class="alert alert-warning" role="alert">注意！以下信息在确认提交后，系统会自动发送消息提醒受试者参加面试。请在提交前<strong>务必仔细核对所有信息！</strong></div>
-        <form method="POST" action="{% url 'myCSSAhub:RecruitAPI:add_to_interview' id%}">
-            {% csrf_token %}
-            {% for hidden_field in form.hidden_fields %}
-            {{ hidden_field }}
-            {% endfor %}
-            <input type="hidden" name="resume" value="{{id}}"/>
-            {% if form.non_field_errors %}
-            <div class="alert alert-danger" role="alert">
-                {% for error in form.non_field_errors %}
-                {{ error }}
-                {% endfor %}
-            </div>
-            {% endif %}
-            
-            <div class="form-group">
-                <label for="date">面试日期</label>
-                {% if form.is_bound %}
-                {% if form.date.errors %}
-                    {% render_field form.date class="form-control is-invalid" %}
-                    {% for error in form.date.errors %}
-                    <div class="invalid-feedback">
-                        {{ error }}
-                    </div>
-                    {% endfor %}
-                {% else %}
-                    {% render_field form.date class="form-control is-valid" %}
-                {% endif %}
-                {% else %}
-                    {% render_field form.date class="form-control" type="date" placeholder="date"%}
-                {% endif %}
-
-                {% if form.date.help_text %}
-                    <small class="form-text text-muted">{{ form.date.help_text }}</small>
-                {% endif %}
-            </div>
-
-            <div class="form-group">
-                <label for="time">面试时间</label>
-                {% if form.is_bound %}
-                {% if form.time.errors %}
-                    {% render_field form.time class="form-control is-invalid" %}
-                    {% for error in form.time.errors %}
-                    <div class="invalid-feedback">
-                        {{ error }}
-                    </div>
-                    {% endfor %}
-                {% else %}
-                    {% render_field form.time class="form-control is-valid" %}
-                {% endif %}
-                {% else %}
-                    {% render_field form.time class="form-control" type="time" placeholder="time" %}
-                {% endif %}
-
-                {% if form.time.help_text %}
-                    <small class="form-text text-muted">{{ form.time.help_text }}</small>
-                {% endif %}
-            </div>
-
-            <div class="form-group">
-                <label for="location">面试地点</label>
-                {% if form.is_bound %}
-                {% if form.location.errors %}
-                    {% render_field form.location class="form-control is-invalid" %}
-                    {% for error in form.location.errors %}
-                    <div class="invalid-feedback">
-                        {{ error }}
-                    </div>
-                    {% endfor %}
-                {% else %}
-                    {% render_field form.location class="form-control is-valid" %}
-                {% endif %}
-                {% else %}
-                    {% render_field form.location class="form-control" %}
-                {% endif %}
-
-                {% if form.location.help_text %}
-                    <small class="form-text text-muted">{{ form.location.help_text }}</small>
-                {% endif %}
-            </div>
-            <div class="form-group">
-                <label for="note">对受试者的备注</label>
-                {% if form.is_bound %}
-                {% if form.note.errors %}
-                    {% render_field form.note class="form-control is-invalid" %}
-                    {% for error in form.note.errors %}
-                    <div class="invalid-feedback">
-                        {{ error }}
-                    </div>
-                    {% endfor %}
-                {% else %}
-                    {% render_field form.note class="form-control is-valid" %}
-                {% endif %}
-                {% else %}
-                    {% render_field form.note class="form-control" %}
-                {% endif %}
-
-                {% if form.note.help_text %}
-                    <small class="form-text text-muted">{{ form.note.help_text }}</small>
-                {% endif %}
-            </div>
-            <input type="submit" class="btn btn-block btn-outline-primary" placeholder=""/>
-            <small class="form-text text-muted">以上信息将同步发送至申请人电子邮箱</small>
-        </form>
-    </div>
-  </div>
-  {% endif %}
-  </div>
-  <div class="col-lg-8 col-sm-12">
-    <div class="card" >
-      <div class="card-header">
-        <i class="fa fa-align-justify"></i> 现有面试安排
-      </div>
-      <div class="card-body">
-          <table id="interview-datatable" class="table table-responsive-md"  style="width:100%" >
-          <thead>
-            <tr>
-                <th>ID</th>
-                <th>受试者</th>
-                <th>日期</th>
-                <th>时间</th>
-                <th>地点</th>
-            </tr>
-          </thead>
-          </table>
-      </div>
-    </div>
-  </div>
-</div>
-{% endblock %}
-    
+{% endblock pageContent %}
 {% block ExtraJS %}
-
-<script src="{% static 'myCSSAhub/vendors/DataTables/datatables.js'%}"></script>
-<script>
-
-$(document).ready(function() {
-    var oTable = $('#interview-datatable').dataTable({
-        "responsive": true,
-        "processing": true,
-        "serverSide": true,
-        "ajax": "{% url 'myCSSAhub:RecruitAPI:interview_jsonlist' %}",
-    });
-});
-</script>
-
+    <script src="{% static 'myCSSAhub/vendors/DataTables/datatables.js'%}"></script>
+    <script>
+        $(document).ready(function() {
+            var oTable = $('#interview-datatable').dataTable({
+                "responsive": true,
+                "processing": true,
+                "serverSide": true,
+                "ajax": "{% url 'myCSSAhub:RecruitAPI:interview_jsonlist' %}",
+            });
+        });
+    </script>
 {% endblock ExtraJS %}

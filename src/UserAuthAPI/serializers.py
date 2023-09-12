@@ -26,37 +26,28 @@
 ###############################################################################
 
 import random
-import string
 import re
+import string
 
-from rest_framework import serializers, exceptions
-from rest_auth.serializers import LoginSerializer
-from rest_auth.registration.serializers import RegisterSerializer
-from rest_auth.models import TokenModel
-from rest_auth.utils import import_callable
-from django.contrib.auth import get_user_model, authenticate
-from django.contrib.auth.forms import PasswordResetForm, SetPasswordForm
-from django.contrib.auth.tokens import default_token_generator
-from allauth.account.adapter import DefaultAccountAdapter
-
-from django.utils.http import urlsafe_base64_decode as uid_decoder
+from django.conf import settings
+from django.contrib.auth import authenticate, get_user_model
 from django.utils.translation import ugettext_lazy as _
-from django.utils.encoding import force_text
+from rest_auth.registration.serializers import RegisterSerializer
+from rest_auth.serializers import LoginSerializer
+from rest_framework import exceptions, serializers
 
 from UserAuthAPI import models
-from django.conf import settings
-from django.http import HttpRequest
 
 try:
     from allauth.account import app_settings as allauth_settings
-    from allauth.utils import (email_address_exists,
-                               get_username_max_length)
     from allauth.account.adapter import get_adapter
     from allauth.account.utils import setup_user_email
+    from allauth.utils import email_address_exists, get_username_max_length 
 except ImportError:
     raise ImportError("allauth needs to be added to INSTALLED_APPS.")
 
 UserModel = get_user_model()
+
 
 def getRandomStringSubFix():
     salt = ''.join(random.sample(string.ascii_letters + string.digits, 6))
@@ -129,7 +120,8 @@ class APILoginSerializer(serializers.Serializer):
             # Authentication without using allauth
             if email:
                 try:
-                    username = UserModel.objects.get(email__iexact=email).get_username()
+                    username = UserModel.objects.get(
+                        email__iexact=email).get_username()
                 except UserModel.DoesNotExist:
                     pass
 
@@ -151,16 +143,19 @@ class APILoginSerializer(serializers.Serializer):
             if app_settings.EMAIL_VERIFICATION == app_settings.EmailVerificationMethod.MANDATORY:
                 email_address = user.emailaddress_set.get(email=user.email)
                 if not email_address.verified:
-                    raise serializers.ValidationError(_('E-mail is not verified.'))
+                    raise serializers.ValidationError(
+                        _('E-mail is not verified.'))
 
         attrs['user'] = user
         return attrs
 
 # This enalbes the fundamental registration
+
+
 class AcccountInitRegisterSerializer(serializers.Serializer):
     email = serializers.EmailField(required=allauth_settings.EMAIL_REQUIRED)
-    #firstNameEN = serializers.CharField(required=True, write_only=True)
-    #lastNameEN = serializers.CharField(required=True, write_only=True)
+    # firstNameEN = serializers.CharField(required=True, write_only=True)
+    # lastNameEN = serializers.CharField(required=True, write_only=True)
     telNumber = serializers.CharField(required=True, write_only=True)
     password1 = serializers.CharField(required=True, write_only=True)
     password2 = serializers.CharField(required=True, write_only=True)
@@ -173,8 +168,8 @@ class AcccountInitRegisterSerializer(serializers.Serializer):
                     _("Occupied E-mail Address."))
         return email
 
-    def validate_telNumber(self,telNumber):
-        #telNumber = get_adapter().get_user_search_fields("telNumber")
+    def validate_telNumber(self, telNumber):
+        # telNumber = get_adapter().get_user_search_fields("telNumber")
         telNumberChecker = models.User.objects.filter(telNumber=telNumber)
         if telNumberChecker.exists():
             raise serializers.ValidationError(
@@ -195,10 +190,10 @@ class AcccountInitRegisterSerializer(serializers.Serializer):
 
     def get_cleaned_data(self):
         return {
-    #        'first_name': self.validated_data.get('first_name', ''),
-    #        'last_name': self.validated_data.get('last_name', ''),
+            #        'first_name': self.validated_data.get('first_name', ''),
+            #        'last_name': self.validated_data.get('last_name', ''),
             'password1': self.validated_data.get('password1', ''),
-            'telNumber': self.validated_data.get('telNumber',''),
+            'telNumber': self.validated_data.get('telNumber', ''),
             'email': self.validated_data.get('email', ''),
         }
 
@@ -206,7 +201,8 @@ class AcccountInitRegisterSerializer(serializers.Serializer):
         adapter = get_adapter()
         user = adapter.new_user(request)
         self.cleaned_data = self.get_cleaned_data()
-        user.username = self.cleaned_data['email'].split('@')[0] + getRandomStringSubFix()
+        user.username = self.cleaned_data['email'].split(
+            '@')[0] + getRandomStringSubFix()
         user.telNumber = self.cleaned_data['telNumber']
         adapter.save_user(request, user, self)
         setup_user_email(request, user, [])
@@ -217,14 +213,15 @@ class AcccountInitRegisterSerializer(serializers.Serializer):
 class UserDetailSerializer(serializers.Serializer):
     class Meta:
         model = models.User
-        fields = ('id','firstNameEN','lastNameEN', 'gender',
-        'dateOfBirth', 'studentId','address', 'postcode', 'originate')
+        fields = ('id', 'firstNameEN', 'lastNameEN', 'gender',
+                  'dateOfBirth', 'studentId', 'address', 'postcode', 'originate')
 
         read_only_fields = ('id', )
 
     def update(self, validated_data, instance):
 
         return instance()
+
 
 class UserEasyRegistrationSerializer(serializers.Serializer):
     genderChoice = (
@@ -253,48 +250,51 @@ class UserEasyRegistrationSerializer(serializers.Serializer):
     gender = serializers.ChoiceField(choices=genderChoice, required=True)
     dateOfBirth = serializers.DateField(required=True)
     studentId = serializers.CharField(required=True, max_length=8)
-    degree = serializers.ChoiceField(choices=degreeChoice, required=True)
-    uniMajor = serializers.CharField(max_length=100, required=True)
+    # degree = serializers.ChoiceField(choices=degreeChoice, required=False)
+    # uniMajor = serializers.CharField(max_length=100, required=False)
 
     def validate_telNumber(self, value):
         data_telNumber = value
-        if (not(data_telNumber[0:2] == '04' or data_telNumber[0:4] == '+861' or \
-                data_telNumber[0:4] == '0861' or data_telNumber[0:3] == '861') 
-            or (data_telNumber[0:2] == '04' and len(data_telNumber) != 10)\
-            or (data_telNumber[0:4] == '+861' and len(data_telNumber) != 14)\
-            or (data_telNumber[0:4] == '0861' and len(data_telNumber) != 14)\
-            or (data_telNumber[0:4] == '861' and len(data_telNumber) != 13)):
-                raise serializers.ValidationError(_("Invalid Mobile Phone Number"))
-        
+        if (not (data_telNumber[0:2] == '04' or data_telNumber[0:4] == '+861' or
+                 data_telNumber[0:4] == '0861' or data_telNumber[0:3] == '861')
+            or (data_telNumber[0:2] == '04' and len(data_telNumber) != 10)
+            or (data_telNumber[0:4] == '+861' and len(data_telNumber) != 14)
+            or (data_telNumber[0:4] == '0861' and len(data_telNumber) != 14)
+                or (data_telNumber[0:4] == '861' and len(data_telNumber) != 13)):
+            raise serializers.ValidationError(_("Invalid Mobile Phone Number"))
+
         userQuery = models.User.objects.filter(telNumber=value).first()
         if userQuery is not None:
-            raise serializers.ValidationError(_("The contact number has been occupied by exisiting account. Contact support for further information."))
-        
+            raise serializers.ValidationError(
+                _("The contact number has been occupied by exisiting account. Contact support for further information."))
+
         return value
 
     def validate_email(self, value):
         # regex extracted from https://emailregex.com/
         regex = r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)"
-        if(not re.search(regex, value)): 
+        if (not re.search(regex, value)):
             raise serializers.ValidationError(_('Invalid email Address'))
 
         userQuery = models.User.objects.filter(email=value).first()
         if userQuery is not None:
-            raise serializers.ValidationError(_("The email address has been occupied by exisiting account. Contact support for further information."))
+            raise serializers.ValidationError(
+                _("The email address has been occupied by exisiting account. Contact support for further information."))
 
         return value
 
     def validate_studentId(self, value):
-        if not(len(value) >= 6 and len(value) <= 8):
+        if not (len(value) >= 6 and len(value) <= 8):
             raise serializers.ValidationError(_('Invalid student ID'))
-        
+
         userQuery = models.UserProfile.objects.filter(studentId=value).first()
         if userQuery is not None:
-            raise serializers.ValidationError(_("The student ID has been occupied by exisiting account. Contact support for further information."))
+            raise serializers.ValidationError(
+                _("The student ID has been occupied by exisiting account. Contact support for further information."))
 
         return value
 
-    def create(self,validated_data):
+    def create(self, validated_data):
         if validated_data.get('telNumber').startswith('0861'):
             validated_data['telNumber'] = '+' + validated_data['telNumber'][1:]
         elif validated_data.get('telNumber').startswith('861'):
@@ -305,24 +305,21 @@ class UserEasyRegistrationSerializer(serializers.Serializer):
             validated_data.get('telNumber'),
             validated_data.get('password')
         )
-        
+
         profile = models.UserProfile.objects.create(
-            user = new_user,
-            identiyConfirmed = False,
-            isValid = False,
-            firstNameEN = validated_data.get('firstNameEN'),
-            lastNameEN = validated_data.get('lastNameEN'),
-            studentId = validated_data.get('studentId'),
-            dateOfBirth = validated_data.get('dateOfBirth')
+            user=new_user,
+            identiyConfirmed=False,
+            isValid=False,
+            firstNameEN=validated_data.get('firstNameEN'),
+            lastNameEN=validated_data.get('lastNameEN'),
+            studentId=validated_data.get('studentId'),
+            dateOfBirth=validated_data.get('dateOfBirth')
         )
 
-        models.UserAcademic.objects.create(
-            userProfile = profile,
-            degree = validated_data.get('degree'),
-            uniMajor = validated_data.get('uniMajor') 
-        )
+        # models.UserAcademic.objects.create(
+        #     userProfile = profile,
+        #     degree = validated_data.get('degree'),
+        #     uniMajor = validated_data.get('uniMajor') 
+        # )
 
         return new_user
-
-
-

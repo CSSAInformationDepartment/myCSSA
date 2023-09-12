@@ -13,13 +13,10 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django import views
 from django.conf import settings
 from django.contrib import admin
-from django.urls import path,re_path ,include
+from django.urls import path, re_path, include
 from django.conf.urls import handler400, handler403, handler404, handler500
-from django.views.defaults import server_error
-from django.contrib.auth import views as auth_views
 
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
@@ -38,19 +35,19 @@ from rest_framework import permissions
 import debug_toolbar
 
 schema_view = get_schema_view(
-   openapi.Info(
-      title="CSSANet API",
-      default_version='v1',
-      description="The document of the api of cssanet",
-   ),
-   public=True,
-   authentication_classes=[],
-   permission_classes=[permissions.AllowAny],
+    openapi.Info(
+        title="CSSANet API",
+        default_version='v1',
+        description="The document of the api of cssanet",
+    ),
+    public=True,
+    authentication_classes=[],
+    permission_classes=[permissions.AllowAny],
 )
 
 urlpatterns = [
-    path('', include(PublicUrl)), 
-    path('hub/',include(HubUrl)),
+    path('', include(PublicUrl)),
+    path('hub/', include(HubUrl)),
     path('admin/', admin.site.urls),
     path('api/users/', include(AuthUrl)),
     path('api/legacy/', include(LegacyUrl)),
@@ -61,13 +58,16 @@ urlpatterns = [
     path('api/community/', include(CommunityUrl)),
     path('api/event/', include(EventApiUrl)),
 
-    re_path(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),
-    re_path(r'^swagger/$', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
-    re_path(r'^redoc/$', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
+    re_path(r'^swagger(?P<format>\.json|\.yaml)$',
+            schema_view.without_ui(cache_timeout=0), name='schema-json'),
+    re_path(r'^swagger/$', schema_view.with_ui('swagger',
+            cache_timeout=0), name='schema-swagger-ui'),
+    re_path(r'^redoc/$', schema_view.with_ui('redoc',
+            cache_timeout=0), name='schema-redoc'),
 
     # Routers for Debug Toolbar
     path('__debug__/', include(debug_toolbar.urls))
-] 
+]
 handler400 = 'PublicSite.views.bad_request'
 handler403 = 'PublicSite.views.permission_denied'
 handler404 = 'PublicSite.views.page_not_found'
@@ -75,7 +75,8 @@ handler500 = 'PublicSite.views.server_error'
 
 if settings.DEBUG:
     from django.conf.urls.static import static
-    from django.contrib.staticfiles.urls import staticfiles_urlpatterns
     # Routers for Static Files and User Upload Media
-    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(settings.STATIC_URL,
+                          document_root=settings.STATIC_ROOT)
+    urlpatterns += static(settings.MEDIA_URL,
+                          document_root=settings.MEDIA_ROOT)

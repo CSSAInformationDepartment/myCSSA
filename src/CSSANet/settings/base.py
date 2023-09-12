@@ -13,7 +13,8 @@ import datetime
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 DEBUG = False
-PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+PROJECT_DIR = os.path.dirname(os.path.dirname(
+    os.path.dirname(os.path.abspath(__file__))))
 BASE_DIR = os.path.dirname(PROJECT_DIR)
 SECRET_KEY = '=3qm1_ubi+$_bzvcj0yxoq+52q!l9+k*za&s06@z1#pee9bd2l'
 
@@ -27,7 +28,7 @@ INSTALLED_APPS = [
     'RecruitAPI',
     'UserAuthAPI',
     'FinanceAPI',
-    'OrganisationMgr',    
+    'OrganisationMgr',
     'PublicSite',
     'myCSSAhub',
     'BlogAPI',
@@ -38,7 +39,7 @@ INSTALLED_APPS = [
     'MobileAppAPI',
     'CommunityAPI',
 
-    ## RESTful Support
+    # RESTful Support
     'rest_framework',
     'rest_framework.authtoken',
     'rest_auth',
@@ -56,9 +57,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'drf_yasg', # swagger
+    'drf_yasg',  # swagger
 
-    ## Server add-in
+    # Server add-in
     'gunicorn',
     'widget_tweaks',
     'django_filters',
@@ -82,7 +83,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-#    'guard_angel.middleware.HttpRequestLogMiddleware',
+    #    'guard_angel.middleware.HttpRequestLogMiddleware',
 ]
 
 ROOT_URLCONF = 'CSSANet.urls'
@@ -114,7 +115,7 @@ REST_FRAMEWORK = {
         'django_filters.rest_framework.DjangoFilterBackend',
     ),
     'DEFAULT_PARSER_CLASSES': (
-        'rest_framework.parsers.JSONParser', 
+        'rest_framework.parsers.JSONParser',
     ),
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated'
@@ -130,12 +131,12 @@ AUTHENTICATION_BACKENDS = (
     'social_core.backends.weixin.WeixinOAuth2',
     # Needed to login by username in Django admin, regardless of `allauth`
     'UserAuthAPI.authBackend.ModelBackend'
-#    'UserAuthAPI.auth.EmailOrUsernameModelBackend',
+    #    'UserAuthAPI.auth.EmailOrUsernameModelBackend',
 )
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': datetime.timedelta(days=7),
-    'REFRESH_TOKEN_LIFETIME': datetime.timedelta(days=30)
+    'ACCESS_TOKEN_LIFETIME': datetime.timedelta(days=365),
+    'REFRESH_TOKEN_LIFETIME': datetime.timedelta(days=365)
 }
 
 REST_AUTH_SERIALIZERS = {
@@ -203,68 +204,69 @@ USE_L10N = True
 
 LANGUAGE_CODE = 'zh-hans'
 
-### Logging configuration
+# Logging configuration
 LOGGING = {
-	'version': 1,
-	'disable_existing_loggers': False,
-	'filters': {
-		'require_debug_false': {
-			'()': 'django.utils.log.RequireDebugFalse',
-		},
-		'require_debug_true': {
-			'()': 'django.utils.log.RequireDebugTrue',
-		},
-	},
-	'formatters': {
-		'django.server': {
-			'()': 'django.utils.log.ServerFormatter',
-			'format': '[%(server_time)s] %(message)s',
-		},
+    'version': 1,
+    'disable_existing_loggers': False,
+    'filters': {
+        'require_debug_false': {
+            '()': 'django.utils.log.RequireDebugFalse',
+        },
+        'require_debug_true': {
+            '()': 'django.utils.log.RequireDebugTrue',
+        },
+    },
+    'formatters': {
+        'django.server': {
+            '()': 'django.utils.log.ServerFormatter',
+            'format': '[%(server_time)s] %(message)s',
+        },
         'console': {
             'format': '%(asctime)s - %(name)s - %(levelname)s - %(message)s',
         },
-	},
-	'handlers': {
-		'console': {
-			'level': 'INFO',
-			'filters': ['require_debug_true'],
-			'class': 'logging.StreamHandler',
+    },
+    'handlers': {
+        'console': {
+            'level': 'INFO',
+            'filters': ['require_debug_true'],
+            'class': 'logging.StreamHandler',
             'formatter': 'console',
-		},
-		'console_debug_false': {
-			'level': 'ERROR',
-			'filters': ['require_debug_false'],
-			'class': 'logging.StreamHandler',
+        },
+        'console_debug_false': {
+            'level': 'ERROR',
+            'filters': ['require_debug_false'],
+            'class': 'logging.StreamHandler',
             'formatter': 'console',
-		},
-		'django.server': {
-			'level': 'INFO',
-			'class': 'logging.StreamHandler',
-			'formatter': 'django.server',
-		},
-		'mail_admins': {
-			'level': 'ERROR',
-			'filters': ['require_debug_false'],
-			'class': 'django.utils.log.AdminEmailHandler'
-		}
-	},
-	'loggers': {
-		'django': {
-			'handlers': ['console', 'console_debug_false', 'mail_admins'],
-			'level': 'INFO',
-		},
-		'django.server': {
-			'handlers': ['django.server'],
-			'level': 'INFO',
-			'propagate': False,
-		},
-        'app': { # App logger 
+        },
+        'django.server': {
+            'level': 'INFO',
+            'class': 'logging.StreamHandler',
+            'formatter': 'django.server',
+        },
+        'mail_admins': {
+            'level': 'ERROR',
+            'filters': ['require_debug_false'],
+            'class': 'django.utils.log.AdminEmailHandler'
+        }
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console', 'console_debug_false', 'mail_admins'],
+            'level': 'INFO',
+        },
+        'django.server': {
+            'handlers': ['django.server'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        'app': {  # App logger
             'handlers': ['console', 'console_debug_false'],
             'level': 'DEBUG',
         },
-	}
+    }
 }
-ADMINS = [('Master Inbox', 'information@cssaunimelb.com'), ('Lead Engineer', 'joshlubox@gmail.com')]
+ADMINS = [('Master Inbox', 'information@cssaunimelb.com'),
+          ('Lead Engineer', 'joshlubox@gmail.com')]
 
 SWAGGER_SETTINGS = {
     'USE_SESSION_AUTH': False,
@@ -278,5 +280,5 @@ SWAGGER_SETTINGS = {
 }
 
 # 小程序API相关
-MINIPROGRAM_APPID = '' 
-MINIPROGRAM_SECRET ='' 
+MINIPROGRAM_APPID = ''
+MINIPROGRAM_SECRET = ''

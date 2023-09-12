@@ -1,69 +1,60 @@
-{% extends 'myCSSAhub/component/_layout.html' %}
+{% extends "myCSSAhub/component/_layout.html" %}
 {% load static %}
 {% block ExtraHeader %}
 {% endblock ExtraHeader %}
-
 {% block pageTitle %}
-信息收集表配置
+    信息收集表配置
 {% endblock pageTitle %}
-
 {% block BreadcrumbPath %}
-  <li class="breadcrumb-item">活动信息收集表</li>
-  <li class="breadcrumb-item">
-    <a href="{% url 'myCSSAhub:EventAPI:event_list' %}">表配置</a>
-  </li>
+    <li class="breadcrumb-item">活动信息收集表</li>
+    <li class="breadcrumb-item">
+        <a href="{% url 'myCSSAhub:EventAPI:event_list' %}">表配置</a>
+    </li>
 {% endblock BreadcrumbPath %}
-
-
 {% block pageContent %}
-<div class="row mb-3">
-  <div class="col-6">
-
-  </div>
-  
-  {% if user.is_staff %}
-  <div class="col-6">
-      <div class="btn-group float-right" role="group">
-          <a class="btn btn-pill btn-block btn-primary" role="button" href="{% url 'myCSSAhub:FlexForm:create_new_form' %}">新建信息收集表</a>
-      </div>
-  </div>
-  {% endif %}
-</div>
-<div class="row">
-  <div class="col-md-12">
-    <div class="card" >
-      <div class="card-header">
-        信息收集表配置
-      </div>
-      <div class="card-body">
-          <table class="table table-responsive-sm" >
-          <thead>
-            <th>表名称</th>
-            <th>字段数量</th>
-            <th>总数据记录量（份）</th>
-          </thead>
-          <tbody>
-            {% if FormConfig|length > 0 %}
-            {% for row in FormConfig %}
-              <tr>
-                <td><a href="{{row.get_absolute_url}}">{{ row.name }}</a></td>
-                <td>{{ row.field_count }}</td>
-                <td>{{ row.submission_count }}</td>
-              </tr>
-            {% endfor %}
-
-            {% else %}
-            <div class="alert alert-warning" role="alert">当前无可用配置</div>
-            {% endif %}
-          </tbody>
-          </table>
-      </div>
+    <div class="row mb-3">
+        <div class="col-6"></div>
+        {% if user.is_staff %}
+            <div class="col-6">
+                <div class="btn-group float-right" role="group">
+                    <a class="btn btn-pill btn-block btn-primary"
+                       role="button"
+                       href="{% url 'myCSSAhub:FlexForm:create_new_form' %}">新建信息收集表</a>
+                </div>
+            </div>
+        {% endif %}
     </div>
-  </div>
-</div>
-{% endblock %}
-
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">信息收集表配置</div>
+                <div class="card-body">
+                    <table class="table table-responsive-sm">
+                        <thead>
+                            <th>表名称</th>
+                            <th>字段数量</th>
+                            <th>总数据记录量（份）</th>
+                        </thead>
+                        <tbody>
+                            {% if FormConfig|length > 0 %}
+                                {% for row in FormConfig %}
+                                    <tr>
+                                        <td>
+                                            <a href="{{ row.get_absolute_url }}">{{ row.name }}</a>
+                                        </td>
+                                        <td>{{ row.field_count }}</td>
+                                        <td>{{ row.submission_count }}</td>
+                                    </tr>
+                                {% endfor %}
+                            {% else %}
+                                <div class="alert alert-warning" role="alert">当前无可用配置</div>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock pageContent %}
 {% block ExtraJS %}
-
-
 {% endblock ExtraJS %}

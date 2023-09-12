@@ -1,5 +1,6 @@
 # 这个文件是用来处理关于站内信的所有相关业务逻辑，使得view.py不会过于冗长
 # 这是发给全部用户的的特定ID: '3a4b499e-b49d-4e19-9c02-d0123dd196a4'，如果后台收到这个id,则说明用户要群发邮件
+from django.http import Http404
 from UserAuthAPI import models as UserModels
 
 from .models import Notification_DB
@@ -66,9 +67,11 @@ def queryMessageContent(id):
         info_list.status = 1
         info_list.save()
 
-        receiver = UserModels.UserProfile.objects.filter(user=info_list.recID).first()
+        receiver = UserModels.UserProfile.objects.filter(
+            user=info_list.recID).first()
         print(info_list.recID)
-        sender = UserModels.UserProfile.objects.filter(user=info_list.sendID).first()
+        sender = UserModels.UserProfile.objects.filter(
+            user=info_list.sendID).first()
 
     except info_list.model.DoesNotExist:
         raise Http404('No %s matches the given query.' %

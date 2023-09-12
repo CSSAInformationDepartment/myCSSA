@@ -13,31 +13,19 @@
 #                             Version: 0.6a(C)                                #
 #                                                                             #
 ###############################################################################
-from django.contrib.auth import get_user_model, authenticate
-from django.contrib.auth.tokens import default_token_generator
-from django.contrib.auth.forms import PasswordResetForm
-from django.contrib import messages
-from django.template.loader import render_to_string
-from django.db.models.query_utils import Q
-from django.utils.http import urlsafe_base64_encode
-from django.utils.encoding import force_bytes
-from django.shortcuts import render, redirect
-from django.http import HttpResponse
+import base64
 
-from django.core.mail import send_mail, BadHeaderError
-
-from rest_framework import authentication, permissions, status, response
+from django.core.files.base import ContentFile
+from rest_framework import authentication, permissions, status
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.generics import GenericAPIView, ListCreateAPIView
 from rest_framework.parsers import JSONParser
-from rest_framework.response import Response, Serializer
-from rest_framework.decorators import api_view,permission_classes,authentication_classes
-from rest_framework.views import APIView
-from rest_framework.generics import GenericAPIView, ListCreateAPIView, ListAPIView
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from mail_owl.utils import AutoMailSender
+from UserAuthAPI import models, serializers
 
-from UserAuthAPI import models, forms, serializers
 
 class UserListView(ListCreateAPIView):
     queryset = models.User.objects.all()
@@ -53,12 +41,14 @@ class EditUserDetails(GenericAPIView):
 
     def post(self, request):
         self.object = self.get_object()
-        serializer = serializers.UserDetailSerializer(self.object, data=request.data)
+        serializer = serializers.UserDetailSerializer(
+            self.object, data=request.data)
         if serializer.is_valid():
             self.object.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
-            return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 @api_view(['POST'])
 @permission_classes([])
@@ -74,7 +64,7 @@ def user_easy_registry_api(request):
         }
         return Response(res, status=status.HTTP_201_CREATED)
 
-    return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['GET'])
@@ -93,42 +83,29 @@ def get_login_user_info(request):
         'avatarUrl': userProfile.avatar.url if userProfile.avatar else 'None'
     })
 
-# Password reset
-def password_reset_request(request):
-	if request.method == "POST":
-		password_reset_form = PasswordResetForm(request.POST)
-		if password_reset_form.is_valid():
-			data = password_reset_form.cleaned_data['email']
 
-			# If the user exists in the database with matched email
-			associated_users = models.User.objects.filter(Q(email=data))
-			if associated_users.exists():
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def update_user_avatar(request):
+    model = models.UserProfile
+    current_user = model.objects.get(user=request.user)
+    data = JSONParser().parse(request)
+    if data["img_base64"]:
+        img_b64 = data["img_base64"]
+        # print(data["img_base64"])
 
-				# Send password reset email to the given address
-				# === Currently only work locally ===
-				for user in associated_users:
-					subject = "CSSA Password Reset Requested"
-					email_template_name = "password_reset_email.txt"
-					c = {
-					"email":user.email,
-					'domain':'127.0.0.1:8000',
-					'site_name': 'CSSA',
-					"uid": urlsafe_base64_encode(force_bytes(user.pk)),
-					'token': default_token_generator.make_token(user),
-					'protocol': 'http',
-					}
-					email = render_to_string(email_template_name, c)
-					try:
-						send_mail(subject, email, 'admin@example.com' , [user.email], fail_silently=False)
-					except BadHeaderError:
-						return HttpResponse('Invalid header found.')
-						
-					# If success, pop up a success message
-					messages.success(request, 'A message with reset password instructions has been sent to your inbox.')
-					# return redirect ("/hub/login/")
-			# Otherwise let user to retype the email
-			else:
-				messages.error(request, 'An invalid email has been entered.')
-	else:
-		password_reset_form = PasswordResetForm()
-	return render(request=request, template_name="password_reset.html", context={"password_reset_form":password_reset_form})
+        format, imgstr = img_b64.split(';base64,')
+        ext = format.split('/')[-1]
+
+        # Patch to avoid incorrect padding caused by some browsers
+        missing_padding = len(imgstr) % 4
+        if missing_padding:
+            imgstr += b'=' * (4 - missing_padding)
+
+        decoded_file = ContentFile(
+            base64.b64decode(imgstr), name='avatar_lg.' + ext)
+        current_user.avatar = decoded_file
+        current_user.save()
+        return Response(status=status.HTTP_200_OK)
+
+    return Response(status=status.HTTP_400_BAD_REQUEST)

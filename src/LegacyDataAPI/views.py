@@ -1,10 +1,10 @@
-from django.shortcuts import render
-
 # Create your views here.
-from django.shortcuts import render, get_object_or_404
-from LegacyDataAPI import models
-import LegacyDataAPI.serializers as ModelSerializers
+from django.shortcuts import get_object_or_404
 from rest_framework import generics
+
+import LegacyDataAPI.serializers as ModelSerializers
+from LegacyDataAPI import models
+
 
 class MultipleFieldLookupORMixin(object):
     """
@@ -12,6 +12,7 @@ class MultipleFieldLookupORMixin(object):
     Apply this mixin to any view or viewset to get multiple field filtering
     based on a `lookup_fields` attribute, instead of the default single field filtering.
     """
+
     def get_object(self):
         queryset = self.get_queryset()             # Get the base queryset
         queryset = self.filter_queryset(queryset)  # Apply any filter backends
@@ -23,15 +24,18 @@ class MultipleFieldLookupORMixin(object):
                 pass
         return get_object_or_404(queryset, **filter)  # Lookup the object
 
-class LegacyUserLookup(MultipleFieldLookupORMixin,generics.RetrieveAPIView):
+
+class LegacyUserLookup(MultipleFieldLookupORMixin, generics.RetrieveAPIView):
     queryset = models.LegacyUsers.objects.all()
-    serializer_class =  ModelSerializers.LegacyUserSerializers
+    serializer_class = ModelSerializers.LegacyUserSerializers
     lookup_fields = ('email')
 
-class LegacyUserCheck(MultipleFieldLookupORMixin,generics.RetrieveAPIView):
+
+class LegacyUserCheck(MultipleFieldLookupORMixin, generics.RetrieveAPIView):
     queryset = models.LegacyUsers.objects.all()
     serializer_class = ModelSerializers.LegitCheck
-    lookup_fields = ('membershipId','studentId','firstNameEN','lastNameEN','dateOfBirth','telNumber','email')
+    lookup_fields = ('membershipId', 'studentId', 'firstNameEN',
+                     'lastNameEN', 'dateOfBirth', 'telNumber', 'email')
 
 
 class ExpCreateLegacyUser(generics.ListCreateAPIView):

@@ -1,280 +1,283 @@
-{% extends 'components/base_page.html' %}
+{% extends "components/base_page.html" %}
 {% load static %}
-
 {% block 'extra_header' %}
-
-<link rel="stylesheet" type="text/css" href="{% static 'PublicSite/css/add-in.css'%}">
-
-
-<style>
-	.bg-light {
-    background-color: #f8f9fa!important;
-}
-
-
-	</style>
-
+    <link rel="stylesheet"
+          type="text/css"
+          href="{% static 'PublicSite/css/add-in.css' %}">
+    <style>
+        .bg-light {
+            background-color: #f8f9fa !important;
+        }
+    </style>
 {% endblock 'extra_header' %}
-
 {% block 'pg_body' %}
-
-{% include 'components/index/_hero.html' %}
-
-<!-- bloc-2 -->
-
-<!-- <div class="row">
+    {% include "components/index/_hero.html" %}
+    <!-- bloc-2 -->
+    <!-- <div class="row">
 		<div class="jumbotron jumbotron-fluid col-md-12" style="width:100%">
 			<div class="container-fluid">
 				<h1 class="display-3 text-center"><a href="">摄影大赛报名</a></h1><br>
 				<p class="lead text-center display-4">-我与墨尔本-</p>
 			</div>
 		</div>
-	</div> -->
-
-	<section class="bg-light" id="portfolio">
-		<div class="container">
-			<div class="row">
-				<div class="col-lg-12 text-center">
-					<h2 class="section-heading text-uppercase">近期活动</h2>
-					<h3 class="section-subheading text-muted">近期cssa活动</h3>
-				</div>
-			</div>
-			<div class="row justify-content-center">
-				{% for event in eventsFuture|slice:":4" %}
-				<div class="col-md-3 portfolio-item ">
-					<a class="portfolio-link" data-toggle="modal" href="#model{{event.eventID}}">
-						<div class="portfolio-hover">
-							<div class="portfolio-hover-content">
-								<i class="fa fa-plus fa-3x"></i>
-							</div>
-						</div>
-						<div class="card-img">
-							<img class="img-fluid" src="{{event.mainVisual.url}}"
-								style="min-height:200px; max-height:200px; width:100%">
-						</div>
-					</a>
-					<div class="portfolio-caption" style="max-height:200px; height:100%;">
-						<h4>{{event.eventName}}</h4>
-						<p class="text-muted mt-3" style="max-height:80px; overflow:auto;">{{event.eventInfo}}</p>
-					</div>
-				</div>
-				{% empty %}
-				<h4 class="mg-md text-center">
-					目前没有活动预览，敬请期待
-				</h4>
-				{% endfor %}
-			</div>
-		</div>
-	</section>
-
-	<section class="bg-light" id="portfolio" style="margin-top:-100px">
-		<div class="container">
-			<div class="row">
-				<div class="col-lg-12 text-center">
-					<h2 class="section-heading text-uppercase">活动回顾</h2>
-					<h3 class="section-subheading text-muted">cssa过去活动回顾</h3>
-				</div>
-			</div>
-			<div class="row justify-content-center">
-				{% for event in eventsPast|slice:":4" %}
-				<div class="col-md-3 portfolio-item ">
-					<a class="portfolio-link" data-toggle="modal" href="#model2{{event.eventID}}">
-						<div class="portfolio-hover">
-							<div class="portfolio-hover-content">
-								<i class="fa fa-plus fa-3x"></i>
-							</div>
-						</div>
-						<img class="img-fluid" src="{{event.mainVisual.url}}" style="min-height:200px; max-height:200px; width:100%">
-					</a>
-					<div class="portfolio-caption" style="max-height:200px; height:100%;">
-						<h4>{{event.eventName}}</h4>
-						<p class="text-muted m-3" style="max-height:80px; overflow:auto;">{{event.eventInfo}}</p>
-					</div>
-				</div>
-				{% empty %}
-				<h4 class="mg-md text-center">
-					目前没有活动回顾，敬请期待
-				</h4>
-
-				{% endfor %}
-			</div>
-		</div>
-	</section>
-
-
-
-<section id="about">
-	<div class="container">
-		<div class="row">
-			<div class="col-lg-12 text-center">
-				<h2 class="section-heading text-uppercase pb-5">关于我们</h2>
-			</div>
-		</div>
-		<div class="row">
-			<div class="col-lg-12">
-				<ul class="timeline">
-					<li>
-						<div class="timeline-image">
-							<img class="rounded-circle img-fluid" src="{% static 'myCSSAhub/img/1.jpg'%}" alt="">
-						</div>
-						<div class="timeline-panel">
-							<div class="timeline-heading pt-5">
-								<h4>2003</h4>
-								<h4 class="subheading">墨尔本大学中国学联成立</h4>
-							</div>
-							<div class="timeline-body">
-
-							</div>
-						</div>
-					</li>
-					<li class="timeline-inverted">
-						<div class="timeline-image">
-							<img class="rounded-circle img-fluid" src="{% static 'myCSSAhub/img/4.jpg'%}" alt="">
-						</div>
-						<div class="timeline-panel">
-							<div class="timeline-heading pt-5">
-								<h4>2011</h4>
-								<h4 class="subheading">CSSA网站成立</h4>
-							</div>
-							<div class="timeline-body">
-
-							</div>
-						</div>
-					</li>
-					<li>
-						<div class="timeline-image">
-							<img class="rounded-circle img-fluid" src="{% static 'myCSSAhub/img/2.jpg'%}" alt="">
-						</div>
-						<div class="timeline-panel">
-							<div class="timeline-heading pt-5">
-								<h4>2019</h4>
-								<h4 class="subheading">CSSA 2.0 全新改版上线</h4>
-							</div>
-							<div class="timeline-body">
-
-							</div>
-						</div>
-					</li>
-
-					<li class="timeline-inverted">
-						<div class="timeline-image">
-							<img class="rounded-circle img-fluid" src="{% static 'myCSSAhub/img/3.jpg'%}" alt="">
-						</div>
-						<div class="timeline-panel">
-							<div class="timeline-heading pt-5">
-								<h4>2020</h4>
-								<h4 class="subheading">CSSA微信小程序上线</h4>
-							</div>
-							<div class="timeline-body">
-
-							</div>
-						</div>
-					</li>
-				</ul>
-			</div>
-		</div>
-	</div>
-</section>
-
- <!-- Portfolio Modals -->
- {% for event in eventsFuture|slice:":4" %}
-<div class="portfolio-modal modal fade" id="model{{event.eventID}}" tabindex="-1" role="dialog" aria-hidden="true">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="close-modal" data-dismiss="modal">
-					<div class="lr">
-						<div class="rl"></div>
-					</div>
-				</div>
-				<div class="container">
-					<div class="row">
-						<div class="col-lg-8 mx-auto">
-							<div class="modal-body">
-								<!-- Project Details Go Here -->
-								<h2 class="text-uppercase">{{event.eventName}}</h2>
-								<p class="item-intro text-muted">活动主办方: {{event.eventBy}}</p>
-								<img class="img-fluid d-block mx-auto" src="{{event.mainVisual.url}}" style="max-height:300px">
-								<p>{{event.eventInfo}}</p>
-								<ul class="list-inline">
-									<li>地址: {{event.address}}</li>
-									<li>时间: {{event.eventActualStTime}}</li>
-									<li>报名开始时间: {{event.eventStartTime}}</li>
-								</ul>
-								<p><a href="{% url 'PublicSite:eventsDetails' event.eventID %}"><u>查看详情以及报名</u></a></p>
-								<button class="btn btn-primary" data-dismiss="modal" type="button">
-									<i class="fa fa-times"></i>
-									Close</button>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-{% endfor %}
-
-<!-- Portfolio Modals -->
-{% for event in eventsPast|slice:":4" %}
-<div class="portfolio-modal modal fade" id="model2{{event.eventID}}" tabindex="-1" role="dialog" aria-hidden="true">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="close-modal" data-dismiss="modal">
-					<div class="lr">
-						<div class="rl"></div>
-					</div>
-				</div>
-				<div class="container">
-					<div class="row">
-						<div class="col-lg-8 mx-auto">
-							<div class="modal-body">
-								<!-- Project Details Go Here -->
-								<h2 class="text-uppercase">{{event.eventName}}</h2>
-								<p class="item-intro text-muted">{{event.eventBy}}</p>
-								<img class="img-fluid d-block mx-auto" src="{{event.mainVisual.url}}" style="max-height:300px">
-								<p>{{event.eventInfo}}</p>
-								<ul class="list-inline">
-									<li>地址: {{event.address}}</li>
-									<li>时间: {{event.eventActualStTime}}</li>
-									<li>报名开始时间: {{event.eventStartTime}}</li>
-
-								</ul>
-									<p><a href="{% url 'PublicSite:eventsDetails' event.eventID %}"><u>查看详情</u></a></p>
-								<button class="btn btn-primary" data-dismiss="modal" type="button">
-									<i class="fa fa-times"></i>
-									Close Project</button>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-{% endfor %}
-
-<!-- bloc-2 END -->
-
-<div class="modal fade" id="WeChatQRCode" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        ...
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
-      </div>
+</div> -->
+    <section class="bg-light" id="portfolio">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <h2 class="section-heading text-uppercase">近期活动</h2>
+                    <h3 class="section-subheading text-muted">近期cssa活动</h3>
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                {% for event in eventsFuture|slice:":4" %}
+                    <div class="col-md-3 portfolio-item ">
+                        <a class="portfolio-link"
+                           data-toggle="modal"
+                           href="#model{{ event.eventID }}">
+                            <div class="portfolio-hover">
+                                <div class="portfolio-hover-content">
+                                    <i class="fa fa-plus fa-3x"></i>
+                                </div>
+                            </div>
+                            <div class="card-img">
+                                <img class="img-fluid"
+                                     src="{{ event.mainVisual.url }}"
+                                     style="min-height:200px;
+                                            max-height:200px;
+                                            width:100%">
+                            </div>
+                        </a>
+                        <div class="portfolio-caption" style="max-height:200px; height:100%;">
+                            <h4>{{ event.eventName }}</h4>
+                            <p class="text-muted mt-3" style="max-height:80px; overflow:auto;">{{ event.eventInfo }}</p>
+                        </div>
+                    </div>
+                {% empty %}
+                    <h4 class="mg-md text-center">目前没有活动预览，敬请期待</h4>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+    <section class="bg-light" id="portfolio" style="margin-top:-100px">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <h2 class="section-heading text-uppercase">活动回顾</h2>
+                    <h3 class="section-subheading text-muted">cssa过去活动回顾</h3>
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                {% for event in eventsPast|slice:":4" %}
+                    <div class="col-md-3 portfolio-item ">
+                        <a class="portfolio-link"
+                           data-toggle="modal"
+                           href="#model2{{ event.eventID }}">
+                            <div class="portfolio-hover">
+                                <div class="portfolio-hover-content">
+                                    <i class="fa fa-plus fa-3x"></i>
+                                </div>
+                            </div>
+                            <img class="img-fluid"
+                                 src="{{ event.mainVisual.url }}"
+                                 style="min-height:200px;
+                                        max-height:200px;
+                                        width:100%">
+                        </a>
+                        <div class="portfolio-caption" style="max-height:200px; height:100%;">
+                            <h4>{{ event.eventName }}</h4>
+                            <p class="text-muted m-3" style="max-height:80px; overflow:auto;">{{ event.eventInfo }}</p>
+                        </div>
+                    </div>
+                {% empty %}
+                    <h4 class="mg-md text-center">目前没有活动回顾，敬请期待</h4>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+    <section id="about">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <h2 class="section-heading text-uppercase pb-5">关于我们</h2>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <ul class="timeline">
+                        <li>
+                            <div class="timeline-image">
+                                <img class="rounded-circle img-fluid"
+                                     src="{% static 'myCSSAhub/img/1.jpg' %}"
+                                     alt="">
+                            </div>
+                            <div class="timeline-panel">
+                                <div class="timeline-heading pt-5">
+                                    <h4>2003</h4>
+                                    <h4 class="subheading">墨尔本大学中国学联成立</h4>
+                                </div>
+                                <div class="timeline-body"></div>
+                            </div>
+                        </li>
+                        <li class="timeline-inverted">
+                            <div class="timeline-image">
+                                <img class="rounded-circle img-fluid"
+                                     src="{% static 'myCSSAhub/img/4.jpg' %}"
+                                     alt="">
+                            </div>
+                            <div class="timeline-panel">
+                                <div class="timeline-heading pt-5">
+                                    <h4>2011</h4>
+                                    <h4 class="subheading">CSSA网站成立</h4>
+                                </div>
+                                <div class="timeline-body"></div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="timeline-image">
+                                <img class="rounded-circle img-fluid"
+                                     src="{% static 'myCSSAhub/img/2.jpg' %}"
+                                     alt="">
+                            </div>
+                            <div class="timeline-panel">
+                                <div class="timeline-heading pt-5">
+                                    <h4>2019</h4>
+                                    <h4 class="subheading">CSSA 2.0 全新改版上线</h4>
+                                </div>
+                                <div class="timeline-body"></div>
+                            </div>
+                        </li>
+                        <li class="timeline-inverted">
+                            <div class="timeline-image">
+                                <img class="rounded-circle img-fluid"
+                                     src="{% static 'myCSSAhub/img/3.jpg' %}"
+                                     alt="">
+                            </div>
+                            <div class="timeline-panel">
+                                <div class="timeline-heading pt-5">
+                                    <h4>2020</h4>
+                                    <h4 class="subheading">CSSA微信小程序上线</h4>
+                                </div>
+                                <div class="timeline-body"></div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Portfolio Modals -->
+    {% for event in eventsFuture|slice:":4" %}
+        <div class="portfolio-modal modal fade"
+             id="model{{ event.eventID }}"
+             tabindex="-1"
+             role="dialog"
+             aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="close-modal" data-dismiss="modal">
+                        <div class="lr">
+                            <div class="rl"></div>
+                        </div>
+                    </div>
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-lg-8 mx-auto">
+                                <div class="modal-body">
+                                    <!-- Project Details Go Here -->
+                                    <h2 class="text-uppercase">{{ event.eventName }}</h2>
+                                    <p class="item-intro text-muted">活动主办方: {{ event.eventBy }}</p>
+                                    <img class="img-fluid d-block mx-auto"
+                                         src="{{ event.mainVisual.url }}"
+                                         style="max-height:300px">
+                                    <p>{{ event.eventInfo }}</p>
+                                    <ul class="list-inline">
+                                        <li>地址: {{ event.address }}</li>
+                                        <li>时间: {{ event.eventActualStTime }}</li>
+                                        <li>报名开始时间: {{ event.eventStartTime }}</li>
+                                    </ul>
+                                    <p>
+                                        <a href="{% url 'PublicSite:eventsDetails' event.eventID %}"><u>查看详情以及报名</u></a>
+                                    </p>
+                                    <button class="btn btn-primary" data-dismiss="modal" type="button">
+                                        <i class="fa fa-times"></i>
+                                        Close
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+    <!-- Portfolio Modals -->
+    {% for event in eventsPast|slice:":4" %}
+        <div class="portfolio-modal modal fade"
+             id="model2{{ event.eventID }}"
+             tabindex="-1"
+             role="dialog"
+             aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="close-modal" data-dismiss="modal">
+                        <div class="lr">
+                            <div class="rl"></div>
+                        </div>
+                    </div>
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-lg-8 mx-auto">
+                                <div class="modal-body">
+                                    <!-- Project Details Go Here -->
+                                    <h2 class="text-uppercase">{{ event.eventName }}</h2>
+                                    <p class="item-intro text-muted">{{ event.eventBy }}</p>
+                                    <img class="img-fluid d-block mx-auto"
+                                         src="{{ event.mainVisual.url }}"
+                                         style="max-height:300px">
+                                    <p>{{ event.eventInfo }}</p>
+                                    <ul class="list-inline">
+                                        <li>地址: {{ event.address }}</li>
+                                        <li>时间: {{ event.eventActualStTime }}</li>
+                                        <li>报名开始时间: {{ event.eventStartTime }}</li>
+                                    </ul>
+                                    <p>
+                                        <a href="{% url 'PublicSite:eventsDetails' event.eventID %}"><u>查看详情</u></a>
+                                    </p>
+                                    <button class="btn btn-primary" data-dismiss="modal" type="button">
+                                        <i class="fa fa-times"></i>
+                                        Close Project
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+    <!-- bloc-2 END -->
+    <div class="modal fade"
+         id="WeChatQRCode"
+         tabindex="-1"
+         role="dialog"
+         aria-labelledby="exampleModalCenterTitle"
+         aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">...</div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
-</div>
-</div>
-
-
-<script src="{% static 'myCSSAhub/js/index.js'%}" defer></script>
-
+    <script src="{% static 'myCSSAhub/js/index.js'%}" defer></script>
 {% endblock 'pg_body' %}

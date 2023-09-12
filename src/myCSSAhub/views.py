@@ -1,57 +1,36 @@
-from django.shortcuts import get_object_or_404
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from .forms import MerchantsForm
-from django.shortcuts import render
-from django.http import JsonResponse, HttpResponseRedirect, HttpResponse, HttpResponseBadRequest
+import json
+
+from BlogAPI import models as BlogModels
+from CommunicateManager.send_email import send_emails
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
-from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin
-from django.contrib.auth.forms import SetPasswordForm, PasswordChangeForm, PasswordResetForm
-from django.contrib.auth.tokens import default_token_generator
-from django.template.loader import render_to_string
-
-from django.core.mail import send_mail as raw_send_mail, BadHeaderError
-
-
-from django.views import View
-from django.views.generic import CreateView, UpdateView, FormView, ListView
-from django.contrib.auth.models import update_last_login
-from django.db.models import Q
-from django.core.exceptions import ObjectDoesNotExist
-from django.http import JsonResponse, HttpResponseRedirect, HttpResponse, Http404
-
-from django.utils.decorators import method_decorator
-from django.utils.http import urlsafe_base64_encode
-from django.utils.encoding import force_bytes
-from django.views.decorators.debug import sensitive_post_parameters, sensitive_variables
 from django.contrib.auth.decorators import login_required
-
-
-from .models import AccountMigration, DiscountMerchant
-from PrizeAPI.models import Prize
-from UserAuthAPI import models as UserModels
-from BlogAPI import models as BlogModels
-from UserAuthAPI.forms import (BasicSiginInForm, UserInfoForm, MigrationForm,
-                               UserAcademicForm, UserProfileUpdateForm, EasyRegistrationForm, UserAvatarUpdateForm)
-from LegacyDataAPI import models as LegacyDataModels
-from CommunicateManager.send_email import send_emails
-from EventAPI.models import Event
-from mail_owl.utils import AutoMailSender
-
-
-import json
-import base64
-import io
-import hashlib
-import random
-
-from urllib import parse
-
-from django.core.files import File
-
-import datetime
-
+from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.contrib.auth.models import update_last_login
+from django.core.exceptions import ObjectDoesNotExist
+from django.db.models import Q
+from django.http import HttpResponseBadRequest, HttpResponseRedirect, JsonResponse
+from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse
+from django.utils.decorators import method_decorator
+from django.views import View
+from django.views.decorators.debug import sensitive_post_parameters
+from LegacyDataAPI import models as LegacyDataModels
+from mail_owl.utils import AutoMailSender
+from UserAuthAPI import models as UserModels
+from .models import DiscountMerchant
+from UserAuthAPI.forms import (
+    BasicSiginInForm,
+    EasyRegistrationForm,
+    MigrationForm,
+    UserAvatarUpdateForm,
+    UserInfoForm,
+    UserProfileUpdateForm,
+)
+
+from .forms import MerchantsForm
+from .models import AccountMigration, DiscountMerchant
 
 # Create your views here.
 
@@ -65,59 +44,6 @@ def register_guide(request):
 @login_required(login_url='/hub/login/')
 def home(request):
     return render(request, 'myCSSAhub/home.html')
-
-################################# password reset ########################################
-
-class PasswordResetView(View):
-    template_name = 'myCSSAhub/password_reset.html'
-
-    def get(self, request, *args, **kwargs):
-        return render(request=request, template_name="myCSSAhub/password_reset.html")
-
-    def post(self, request, *args, **kwargs):
-        password_reset_form = PasswordResetForm(request.POST)
-        if password_reset_form.is_valid():
-            data = password_reset_form.cleaned_data['email']
-
-            # If the user exists in the database with matched email
-            associated_users = UserModels.User.objects.filter(Q(email=data))
-            if associated_users.exists():
-
-                # Send password reset email to the given address
-                # === Currently only work locally ===
-                for user in associated_users:
-                    subject = "CSSA Password Reset Requested"
-                    email_template_name = "password_reset_email.txt"
-                    c = {
-                    "email":user.email,
-                    'domain':'127.0.0.1:8000',
-                    'site_name': 'CSSA',
-                    "uid": urlsafe_base64_encode(force_bytes(user.pk)),
-                    'token': default_token_generator.make_token(user),
-                    'protocol': 'http',
-                    }
-                    email = render_to_string(email_template_name, c)
-                    try:
-                        raw_send_mail(subject, email, 'cssa_authenticator@163.com' , [user.email], fail_silently=False)
-                    except BadHeaderError:
-                        return HttpResponse('Invalid header found.')
-                    
-                    # If success, pop up a success message
-                    messages.success(request, 'A message with reset password instructions has been sent to your email inbox.')
-                    print("Success")
-                    return HttpResponseRedirect("/hub/home/")
-            # Otherwise let user to retype the email
-            else:
-                print("Invalid email")
-                messages.error(request, 'An invalid email has been entered.')
-            return render(request=request, template_name="myCSSAhub/password_reset.html", context={"password_reset_form":PasswordResetForm(request.POST)})
-        else:
-            return render(request=request, template_name="myCSSAhub/password_reset.html", context={"password_reset_form":PasswordResetForm(request.POST)})
-
-class PasswordResetCompleteView(View):
-
-    def get(self, request, *args, **kwargs):
-        return render(request=request, template_name='password_reset_complete.html')
 
 
 ################################# calendar ########################################
@@ -162,7 +88,6 @@ class Email_Compose(LoginRequiredMixin, View):
 
 ################################# merchants ########################################
 
-
 class Merchants_list(PermissionRequiredMixin, LoginRequiredMixin, View):
     login_url = '/hub/login/'
     template_name = 'myCSSAhub/merchants_list.html'
@@ -170,7 +95,8 @@ class Merchants_list(PermissionRequiredMixin, LoginRequiredMixin, View):
 
     def get(self, request):
         if request.user.is_authenticated:
-            infos = DiscountMerchant.objects.all().order_by("merchant_add_date").values()
+            sponsor_merchants = DiscountMerchant.objects.filter(merchant_type = '赞助商家').order_by("merchant_add_date").values()
+            discount_merchants = DiscountMerchant.objects.filter(merchant_type = '折扣商家').order_by("merchant_add_date").values()
 
         return render(request, self.template_name, locals())
 
@@ -223,13 +149,18 @@ class Merchant_profile(LoginRequiredMixin, View):
         have_update = False
         profileID = self.kwargs.get('id')
         obj = get_object_or_404(DiscountMerchant, merchant_id=profileID)
-        form = self.form_class(data=request.POST or None,
-                               files=request.FILES or None, instance=obj)
-        if form.is_valid():
-            form.save()
-            have_update = True
+        if 'save' in request.POST.keys():
+            form = self.form_class(data=request.POST or None,
+                                    files=request.FILES or None, instance=obj)
+            if form.is_valid():
+                form.save()
+                have_update = True
 
-        return render(request, self.template_name, {'update': have_update, 'form': form, 'submit_url': reverse('myCSSAhub:merchant_profile', args=[str(profileID)])})
+            return render(request, self.template_name, {'update': have_update, 'form': form, 'submit_url': reverse('myCSSAhub:merchant_profile', args=[str(profileID)])})
+        elif 'del' in request.POST.keys():
+            obj.delete()
+            return redirect(reverse('myCSSAhub:merchants_list'))
+        
 
 
 ###### logout page ##########
@@ -310,37 +241,38 @@ class EasyRegistrationView(View):
     def post(self, request, *args, **kwargs):
         account_form = BasicSiginInForm(data=request.POST)
         profile_form = EasyRegistrationForm(data=request.POST)
-        academic_form = UserAcademicForm(data=request.POST)
-        if account_form.is_valid() and profile_form.is_valid() and academic_form.is_valid():
+        # academic_form = UserAcademicForm(data=request.POST)
+        # and academic_form.is_valid():
+        if account_form.is_valid() and profile_form.is_valid():
             account_register = account_form.save(commit=False)
             profile = profile_form.save(commit=False)
             profile.user = account_register
-            academic = academic_form.save(commit=False)
-            academic.userProfile = profile
+            # academic = academic_form.save(commit=False)
+            # academic.userProfile = profile
             if profile.membershipId and profile.membershipId != '':
                 profile.isValid = True
             account_form.save()
             profile.save()
-            academic.save()
+            # academic.save()
 
-            # 完成信息保存以后，发送注册成功的邮件
-            username = profile.get_full_EN_name()
-            target_email = account_register.email
-            mail_content = {'username':username}
-            confirm_mail = AutoMailSender(
-                title="注册成功！Registraion Successful",
-                mail_text="",
-                template_path="myCSSAhub/email/register_mail.html",
-                fill_in_context=mail_content,
-                to_address=target_email,
-            )
-            confirm_mail.send_now()
-            
+            # # 完成信息保存以后，发送注册成功的邮件
+            # username = profile.get_full_EN_name()
+            # target_email = account_register.email
+            # mail_content = {'username': username}
+            # confirm_mail = AutoMailSender(
+            #     title="注册成功！Registraion Successful",
+            #     mail_text="",
+            #     template_path="myCSSAhub/email/register_mail.html",
+            #     fill_in_context=mail_content,
+            #     to_address=target_email,
+            # )
+            # confirm_mail.send_now()
 
         else:
             return JsonResponse({
                 'success': False,
-                'errors': [dict(account_form.errors.items()), dict(profile_form.errors.items()), dict(academic_form.errors.items())]
+                # , dict(academic_form.errors.items())]
+                'errors': [dict(account_form.errors.items()), dict(profile_form.errors.items())]
             })
         return HttpResponseRedirect(reverse('myCSSAhub:hub_regformConfirmation'))
 
@@ -376,28 +308,30 @@ class NewUserSignUpView(View):
     def post(self, request, *args, **kwargs):
         account_form = BasicSiginInForm(data=request.POST)
         profile_form = UserInfoForm(data=request.POST, files=request.FILES)
-        academic_form = UserAcademicForm(data=request.POST)
-        if account_form.is_valid() and profile_form.is_valid() and academic_form.is_valid():
+        # academic_form = UserAcademicForm(data=request.POST)
+        # and academic_form.is_valid():
+        if account_form.is_valid() and profile_form.is_valid():
             account_register = account_form.save(commit=False)
             account_form.save()
             profile = profile_form.save(commit=False)
             profile.user = account_register
-            academic = academic_form.save(commit=False)
-            academic.userProfile = account_register
+            # academic = academic_form.save(commit=False)
+            # academic.userProfile = account_register
             if profile.membershipId and profile.membershipId != '':
                 profile.isValid = True
             profile.save()
-            academic.save()
+            # academic.save()
 
-            # 完成信息保存以后，发送注册成功的邮件
-            target_email = account_form.email
-            userName = profile_form.firstNameEN + " " + profile_form.lastNameEN
-            send_emails('Register Successful', userName, target_email, None)
+            # # 完成信息保存以后，发送注册成功的邮件
+            # target_email = account_form.email
+            # userName = profile_form.firstNameEN + " " + profile_form.lastNameEN
+            # send_emails('Register Successful', userName, target_email, None)
 
         else:
             return JsonResponse({
                 'success': False,
-                'errors': [dict(account_form.errors.items()), dict(profile_form.errors.items()), dict(academic_form.errors.items())]
+                # , dict(academic_form.errors.items())]
+                'errors': [dict(account_form.errors.items()), dict(profile_form.errors.items())]
             })
         return JsonResponse({
             'success': True, })
@@ -471,7 +405,7 @@ class UpdateUserProfileView(LoginRequiredMixin, View):
         form = self.form_class(request.POST or None,
                                request.FILES or None, instance=current_data)
         if form.is_valid():
-            user = form.save()
+            form.save()
             messages.success(request, 'User Profile has been updated!')
             return HttpResponseRedirect('/hub/userinfo/')
         else:
@@ -493,7 +427,7 @@ class UpdateUserAvatarView(LoginRequiredMixin, View):
         form = self.form_class(request.POST or None,
                                request.FILES or None, instance=current_data)
         if form.is_valid():
-            user = form.save()
+            form.save()
             return HttpResponseRedirect('/hub/userinfo/')
         else:
             messages.error(request, 'Please double-check your input.')
@@ -550,7 +484,7 @@ def editBlog(request):
                     wrote = True
 
             # user没有写blog
-            if wrote == False:
+            if wrote is False:
                 return permission_denied(request)
         blog = BlogModels.Blog.objects.filter(blogId=blogId)
         if not blog:
@@ -694,7 +628,6 @@ class UserLookup(LoginRequiredMixin, PermissionRequiredMixin, View):
             })
 
 
-
 ################################# errors pages ########################################
 
 
@@ -720,8 +653,3 @@ def under_dev_notice(request):
 
 ################################# LoginAPI for mobile ########################################
 # using token_authentication for mobile client
-
-from rest_framework.views import APIView
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
-
