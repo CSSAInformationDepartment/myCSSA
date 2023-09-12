@@ -12,7 +12,11 @@ from django.core.mail import send_mail as raw_send_mail, BadHeaderError
 from django.core.exceptions import ObjectDoesNotExist
 from django.template.loader import render_to_string
 from django.db.models import Q
-from django.http import HttpResponseBadRequest, HttpResponseRedirect, JsonResponse, HttpResponse
+from django.http import (
+    HttpResponseBadRequest, 
+    HttpResponseRedirect, 
+    JsonResponse, 
+    HttpResponse)
 from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse
 from django.utils.decorators import method_decorator
@@ -468,11 +472,11 @@ class PasswordResetView(View):
                     email_template_name = "password_reset_email.txt"
                     c = {
                     "email":user.email,
-                    'domain':'127.0.0.1:8000',
+                    'domain':request.META['HTTP_HOST'],
                     'site_name': 'CSSA',
                     "uid": urlsafe_base64_encode(force_bytes(user.pk)),
                     'token': default_token_generator.make_token(user),
-                    'protocol': 'http',
+                    'protocol': request.scheme,
                     }
                     email = render_to_string(email_template_name, c)
                     try:
