@@ -472,7 +472,7 @@ class PasswordResetView(View):
                     email_template_name = "password_reset_email.txt"
                     c = {
                     "email":user.email,
-                    'domain':request.META['HTTP_HOST'],
+                    'domain':request.get_host(),
                     'site_name': 'CSSA',
                     "uid": urlsafe_base64_encode(force_bytes(user.pk)),
                     'token': default_token_generator.make_token(user),
