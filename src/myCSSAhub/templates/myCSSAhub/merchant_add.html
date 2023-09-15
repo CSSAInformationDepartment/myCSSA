@@ -265,7 +265,7 @@ wish to resize images before upload. This must be loaded before fileinput.min.js
             save = document.querySelector('#submit-cropped'),
             cropped = document.querySelector('.cropped-preview'),
             upload = document.querySelector('#file-input'),
-            base64_input = document.querySelector('#base64-input'), // 您的hidden input
+            base64_input = document.querySelector('#base64-input'), 
             cropper = '';
 
             checkFileSize = (size) => {
@@ -311,7 +311,7 @@ wish to resize images before upload. This must be loaded before fileinput.min.js
                             // init cropper
                             cropper = new Cropper(img,{
                     preview: '.cropped-preview',
-                    aspectRatio: NaN,
+                    aspectRatio: 14/9,
                     });
                 }
                 };
@@ -319,43 +319,28 @@ wish to resize images before upload. This must be loaded before fileinput.min.js
             }
             });
 
+
             // save on click
             save.addEventListener('click', (e) => {
-            e.preventDefault();
-            base64_input.value = cropper.getCroppedCanvas().toDataURL('image/jpeg'); // Save cropped image's base64 to hidden input
-            // 显示图像预览
-            let previewContainer = document.getElementById("image-preview-container");
-            previewContainer.innerHTML = '';  // 清除之前的预览
-            let previewImage = document.createElement("img");
-            previewImage.src = base64_input.value;
-            previewImage.style.width = "100px";  // 或任何您想要的大小
-            previewContainer.appendChild(previewImage);
-            $('#modal').modal('hide'); // 关闭模态框
+                e.preventDefault();
+                base64_input.value = cropper.getCroppedCanvas().toDataURL('image/jpeg'); // Save cropped image's base64 to hidden input
+                // 显示图像预览
+                let previewContainer = document.getElementById("image-preview-container");
+                previewContainer.innerHTML = '';  
+                let previewImage = document.createElement("img");
+                previewImage.src = base64_input.value;
+                previewImage.style.width = "100px";  
+                previewContainer.appendChild(previewImage);
+                $('#modal').modal('hide'); 
             });
+
 
             document.getElementById("image-preview-container").addEventListener("click", function() {
             let imageSrc = this.querySelector("img").src;  // 获取当前容器中的图片URL
             let modalImage = document.getElementById("modalImage");
-            modalImage.src = imageSrc;  // 将模态框中的img标签的src设置为点击的图片的src
-            $("#imageModal").modal('show');  // 使用jQuery来显示模态框
+            modalImage.src = imageSrc;  
+            $("#imageModal").modal('show');  
             });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
