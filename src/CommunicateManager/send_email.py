@@ -8,7 +8,7 @@ from UserAuthAPI import models as UserModels
 
 from .models import EmailConfiguration, EmailDB
 
-officialEmail = 'automail.cssa@cssaunimelb.com'
+officialEmail = 'automail@cssaunimelb.com'
 
 
 def send_emails(title, content, targetID, currentUserId):

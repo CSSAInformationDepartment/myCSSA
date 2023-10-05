@@ -16,6 +16,11 @@
             padding-right: 0px;
 
         }
+        .img-fluid {
+            width: 100%;
+            height: auto;
+            /* object-fit: cover; */
+        }
     </style>
     <hr>
     <div class="text-center ">
@@ -38,31 +43,27 @@
             <div class="jumbotron jumbotron-fluid">
                 <h2 class="text-center">致辞</h2>
                 <div class="mg-md mx-auto d-block col-12 col-lg-7 col-md-10 col-sm-12">
-                    <p style="font-size:16px; padding-top:0.5rem;">亲爱的学弟学妹们，大家好！</p>
-                    <p style="font-size:16px; padding-top:0.5rem;">我是墨尔本大学中国学生学者联谊会2022届主席何泓熹。</p>
-                    <p style="font-size:16px; padding-top:0.5rem;">在此我代表墨尔本大学中国学生学者联谊会的全体成员对你们表示由衷的欢迎。</p>
+                    <p style="font-size:16px; padding-top:0.5rem;">大家好！</p>
+                    <p style="font-size:16px; padding-top:0.5rem;">我是墨尔本大学中国学生学者联谊会<span class="year"></span>届主席{{ view_bag.president.member.get_full_CN_name }}。</p>
+                    <p style="font-size:16px; padding-top:0.5rem;">在此我代表墨尔本大学中国学生学者联谊会的全体成员对所有中国留学生表示由衷的欢迎。</p>
                     <p style="font-size:16px; padding-top:0.5rem;">
-                        墨尔本大学中国学生学者联谊会（Chinese Students and Scholars Association），简称为墨尔本大学中国学生会（CSSA），创立于2003年，是在墨尔本大学UMSU注册下的非宗教，非政治，非盈利性质社团，且是目前规模最大的华人学生社团。CSSA分为主席团和其他五个职能部门，分别为组织部，外联部，宣传部，人力资源部和信息部，目前共计干事201名。注册会员超过7000人，合作商家100余家，2011年网站和2020年小程序的建立为会员们提供了更便捷查询折扣和活动资讯的方式。
-                    </p>
+                        我们是墨尔本大学中国学生学者联谊会（Chinese Students and Scholars Association），简称为墨尔本大学中国学生会（CSSA），创立于2003年，是在墨尔本大学UMSU注册下的非宗教，非政治，非盈利性质社团，且是目前规模最大的华人学生社团。CSSA分为主席团和其他五个职能部门，分别为组织部，外联部，宣传部，人力资源部和信息部，目前共计干事177名。如果你有幸成为我们的注册会员，你将享受到100余家折扣商家提供的折扣，这可以通过CSSA的官网和我们的小程序查询折扣，同时大家也可以通过我们的公众号了解我们多元的活动，欢迎大家来参与。                    </p>
                     <p style="font-size:16px; padding-top:0.5rem;">
-                        我们始终坚持为墨尔本广大华人学生学者们服务，致力于提供更多学习生活上的帮助并让留学生们感受到温暖与关怀。与此同时，我们也希望无论在你遇到什么困难的时候，都可以联系我们，我们永远是在外留学生最坚强的后盾。
-                    </p>
+                        我们社团始终坚持为墨尔本广大华人学生学者们服务，致力于提供更多学习生活上的帮助并让留学生们感受到温暖与关怀。我们会帮助你融入陌生的环境，指导你学习，提升的一些要领，带领你从社交互动中认识更旷阔的世界，结交更多朋友，肯定自己。与此同时，我们也希望无论在你遇到什么困难的时候，都可以联系我们，我们永远是一面中国留学生坚强的后盾。                    </p>
                     <p style="font-size:16px; padding-top:0.5rem;">
-                        希望你在大洋彼岸的日子里，你可以在面对陌生的环境可以努力融入，可以获得思想的自由和独立思考的能力，也希望你可以坚定你的梦想，认识世界，认识你自己。
-                    </p>
+                        希望你在大洋彼岸的日子里，不忘初心，砥砺前行，CSSA永远是你的港湾。历遍山河，学联值得！                    </p>
                     <p style="font-size:16px; padding-top:0.5rem;">
-                        世间所有的相遇，都是久别重逢。感谢缘分让大家可以在墨尔本相遇。希望在这个重新焕发生机的墨尔本，你也可以与我们一起成长一起变好。你要记住：只要你有与众不同的想法，请保持初心，CSSA必然会给你一个舞台展示你自己！
+                        最后我想说，世界上两件最酷的事情，一件是给别人带来温暖，另一件就是做最快乐的自己。在外留学的生活，我们将承诺第一件，至于第二件事情，就看你自己啦！愿你过尽千帆，归来仍是少年！
                     </p>
-                    <p style="font-size:16px; padding-top:0.5rem;">出发，永远是最有意义的事情。在外留学的生活，祝你快乐，同时也愿你遍历山河，仍觉人间值得。CSSA永远愿意做你坚实的港湾！</p>
-                    <h5 align="right">何泓熹</h5>
-                    <h5 align="right">墨尔本大学中国学生会</h5>
+                    <h5 align="right">{{ view_bag.president.member.get_full_CN_name }}</h5>
+                    <h5 align="right">墨尔本大学中国学生学者联谊会</h5>
                 </div>
             </div>
         </div>
         <div class="row">
             <div class="col-12">
-                <h3 class="mg-md text-center">2022/23届 主席团成员</h3>
-                <h5 class="text-center">Meet the Council Board Members of 2022/23 Term</h5>
+                <h3 class="mg-md text-center"><span class="lastyear"></span>/<span class="year"></span>届 主席团成员</h3>
+                <h5 class="text-center">Meet the Council Board Members of <span class="lastyear"></span>/<span class="year"></span> Term</h5>
             </div>
         </div>
         <div class="row">
@@ -94,7 +95,7 @@
                             {% endif %}
                         </div>
                         <h4 class="card-title ">副主席 Vice-President</h4>
-                        <h3>{{ user.member.get_full_EN_name }}</h3>
+                        <h3>{{ user.member.get_full_EN_name}}</h3>
                     </div>
                 </div>
             {% endfor %}
@@ -136,4 +137,21 @@
         <p>页面作者 Page developed by</p>
         <p>&copy; 2019  Tianyi Mo, Yuxiang Xie</p>
     </div>
+
+    <script>
+        let currentYear = new Date().getFullYear();
+        const month = new Date().getMonth();
+        if (month < 9) {
+            currentYear -= 1;
+        }
+
+        document.querySelectorAll(".year").forEach(element => {
+            element.textContent = currentYear;
+        });
+
+        document.querySelectorAll(".lastyear").forEach(element => {
+            element.textContent = currentYear - 1;
+        });
+    </script>
 {% endblock 'pg_body' %}
+
