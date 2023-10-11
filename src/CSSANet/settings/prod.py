@@ -83,8 +83,7 @@ MAILOWL_MASTER_NODE = ''
 MAILOWL_PORT = 44300
 
 
-ADMINS = [('Master Inbox', 'information@cssaunimelb.com'),
-          ('Lead Engineer', 'joshlubox@gmail.com')]
+ADMINS = [('Master Inbox', 'information@cssaunimelb.com')]
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TLS = True
