@@ -17,7 +17,7 @@ DEBUG = False
 
 SECRET_KEY = env_dist.get('DJANGOKEYPD')
 ALLOWED_HOSTS = ['cssanet', '.cssaunimelb.com',
-                 'cloud.digitalocean.com', '.digitalocean.com', '165.227.240.43', '139.59.222.235']
+                 'cloud.digitalocean.com', '.digitalocean.com', '165.227.240.43']
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True  # <- Activate in HTTPS envrioment only
 SECURE_CONTENT_TYPE_NOSNIFF = True
