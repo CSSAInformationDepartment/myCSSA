@@ -7,7 +7,6 @@ from django.utils.html import escape
 from django.views import View
 from django.views.generic import CreateView
 from django_datatables_view.base_datatable_view import BaseDatatableView
-from mail_owl.utils import AutoMailSender
 from myCSSAhub.apis import GetDocViewData
 from pytz import timezone
 from rest_framework import permissions, viewsets
