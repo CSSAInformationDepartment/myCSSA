@@ -265,8 +265,7 @@ LOGGING = {
         },
     }
 }
-ADMINS = [('Master Inbox', 'information@cssaunimelb.com'),
-          ('Lead Engineer', 'joshlubox@gmail.com')]
+ADMINS = [('Master Inbox', 'information@cssaunimelb.com')]
 
 SWAGGER_SETTINGS = {
     'USE_SESSION_AUTH': False,

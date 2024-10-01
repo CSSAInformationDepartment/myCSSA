@@ -466,7 +466,6 @@ class PasswordResetView(View):
             if associated_users.exists():
 
                 # Send password reset email to the given address
-                # === Currently only work locally ===
                 for user in associated_users:
                     subject = "CSSA Password Reset Requested"
                     email_template_name = "password_reset_email.txt"
@@ -482,7 +481,7 @@ class PasswordResetView(View):
                     try:
                         raw_send_mail(subject, 
                                       email, 
-                                      'cssa_authenticator@163.com', 
+                                      'automail@cssaunimelb.com', 
                                       [user.email], 
                                       fail_silently=False
                                     )
