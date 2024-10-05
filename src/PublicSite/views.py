@@ -18,7 +18,6 @@ from django.shortcuts import get_object_or_404, render
 from django.utils import timezone
 from django.views import View
 from EventAPI import models as eventModels
-from mail_owl.utils import AutoMailSender
 from myCSSAhub import models as HubModels
 from RecruitAPI import models as JobModels
 from RecruitAPI.forms import ResumeSubmissionForm
