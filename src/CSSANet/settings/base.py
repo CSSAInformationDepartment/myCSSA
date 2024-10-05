@@ -35,7 +35,7 @@ INSTALLED_APPS = [
     'FlexForm',
     'PhotoCompetition',
     'PrizeAPI',
-    # 'mail_owl',
+    'mail_owl',
     'MobileAppAPI',
     'CommunityAPI',
 
