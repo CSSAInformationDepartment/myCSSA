@@ -109,6 +109,16 @@ wish to resize images before upload. This must be loaded before fileinput.min.js
                    name="merchant_link"
                    value="{{ form.merchant_link.value }}"
                    type="link" />
+            <label for="longitude">地址经度：</label>
+            <input class="form-control" 
+                   name="longitude" 
+                   value="{{ form.longitude.value }}"
+                   type="float" />
+            <label for="latitude">地址纬度：</label>
+            <input class="form-control" 
+                   name="latitude" 
+                   value="{{ form.latitude.value }}"
+                   type="float" />
             <div class="form-group">
                 <label for="merchant_description">
                     商家简介：<span class="asteriskField">*</span>

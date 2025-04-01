@@ -73,6 +73,9 @@ class DiscountMerchant(models.Model):
     promotion_image = models.ImageField(
         verbose_name="宣传图片", upload_to='uploads/usrImage/promotionImage', default=None, null=True, blank=True)
 
+    longitude = models.FloatField(verbose_name="地址经度", null=True, blank=True)
+    latitude = models.FloatField(verbose_name="地址纬度", null=True, blank=True)
+    
     def __str__(self):
         return self.merchant_name
 
