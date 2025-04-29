@@ -109,10 +109,6 @@ def AddMerchants(request):
     else:
         return HttpResponseForbidden("No permission")
 
-        category = self.kwargs.get('category')
-        merchants = DiscountMerchant.objects.filter(merchant_Category=category).order_by("merchant_add_date").values()
-        return render(request, self.template_name, locals())
-
 def MerchantsByCategory(request):
     """
     Return merchants filtered by category
