@@ -108,3 +108,33 @@ def AddMerchants(request):
         return HttpResponse(json.dumps({'update': have_update}), content_type='application/json')
     else:
         return HttpResponseForbidden("No permission")
+
+def MerchantsByCategory(request):
+    """
+    Return merchants filtered by category
+    """
+
+    # Decode the request body from bytes to string using UTF-8
+    body_unicode = request.body.decode('utf-8')
+    body_data = json.loads(body_unicode)
+    category = body_data.get('category')
+    # print(request.body) 
+    # print(category)
+
+    merchants = DiscountMerchant.objects.filter(
+        merchant_type='折扣商家',
+        merchant_Category=category
+    ).order_by("merchant_add_date")
+    
+    jsonRes = []
+    for merchant in merchants:
+        jsonObj = dict(
+            id=merchant.merchant_id, 
+            name=merchant.merchant_name, 
+            sale=merchant.merchant_description,
+            location=merchant.merchant_address, 
+            img=str(merchant.merchant_image.url)
+        ) 
+        jsonRes.append(jsonObj)
+        
+    return HttpResponse(json.dumps(jsonRes), content_type='application/json')

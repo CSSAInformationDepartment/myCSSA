@@ -16,5 +16,6 @@ urlpatterns = [
     path('update_merchants/', Views.UpdateMerchants, name="update_merchants"),
     path('update_sponsors/', Views.UpdateMerchants, name="update_sponsers"),
     path('add_merchants/', Views.AddMerchants, name="add_merchants"),
-    path('add_sponsors/', Views.AddMerchants, name="add_sponsers")
+    path('add_sponsors/', Views.AddMerchants, name="add_sponsers"),
+    path('get_merchants_by_category/', Views.MerchantsByCategory, name='get_merchants_by_category')
 ]
