@@ -1,6 +1,6 @@
 import json
 
-from django.http import HttpResponse, HttpResponseForbidden
+from django.http import HttpResponse, HttpResponseForbidden, JsonResponse
 from django.shortcuts import get_object_or_404
 from myCSSAhub.forms import MerchantsForm
 from myCSSAhub.models import *
@@ -36,6 +36,28 @@ def Sponsors(request):
                        promotion_image=None if not merchant.promotion_image else merchant.promotion_image.url)
         jsonRes.append(jsonObj)
     return HttpResponse(json.dumps(jsonRes), content_type='application/json')
+
+
+# New function to get merchant location (longitude and latitude)
+def MerchantLocation(request):
+    merchant_id = request.GET.get('id')
+    if not merchant_id:
+        return JsonResponse({'error': 'Merchant ID is required'}, status=400)
+
+    try:
+        merchant = DiscountMerchant.objects.get(merchant_id=merchant_id, merchant_type='折扣商家')
+        # Assuming merchant_longitude and merchant_latitude fields exist in your model
+        location_data = {
+            'id': merchant.merchant_id,
+            'name': merchant.merchant_name,
+            'longitude': merchant.longitude,
+            'latitude': merchant.latitude,
+            'address': merchant.merchant_address
+        }
+        return JsonResponse(location_data)
+    except DiscountMerchant.DoesNotExist:
+        return JsonResponse({'error': 'Merchant not found'}, status=404)
+
 
 # api_view documentation:
 # https://www.django-rest-framework.org/api-guide/views/
@@ -108,3 +130,33 @@ def AddMerchants(request):
         return HttpResponse(json.dumps({'update': have_update}), content_type='application/json')
     else:
         return HttpResponseForbidden("No permission")
+
+def MerchantsByCategory(request):
+    """
+    Return merchants filtered by category
+    """
+
+    # Decode the request body from bytes to string using UTF-8
+    body_unicode = request.body.decode('utf-8')
+    body_data = json.loads(body_unicode)
+    category = body_data.get('category')
+    # print(request.body) 
+    # print(category)
+
+    merchants = DiscountMerchant.objects.filter(
+        merchant_type='折扣商家',
+        merchant_Category=category
+    ).order_by("merchant_add_date")
+    
+    jsonRes = []
+    for merchant in merchants:
+        jsonObj = dict(
+            id=merchant.merchant_id, 
+            name=merchant.merchant_name, 
+            sale=merchant.merchant_description,
+            location=merchant.merchant_address, 
+            img=str(merchant.merchant_image.url)
+        ) 
+        jsonRes.append(jsonObj)
+        
+    return HttpResponse(json.dumps(jsonRes), content_type='application/json')
