@@ -19,7 +19,7 @@ def Merchants(request):
     jsonRes = []
     for merchant in merchants:
         jsonObj = dict(id=merchant.merchant_id, name=merchant.merchant_name, sale=merchant.merchant_description,
-                       location=merchant.merchant_address, img=str(merchant.merchant_image.url))
+                       location=merchant.merchant_address, img=str(merchant.merchant_image.url), longitude=merchant.longitude, latitude=merchant.latitude, category=merchant.merchant_Category)
         jsonRes.append(jsonObj)
     return HttpResponse(json.dumps(jsonRes), content_type='application/json')
 
