@@ -67,6 +67,7 @@ class DepartmentInfoView(View):
         'information': 'PublicSite/dept_Information.html',
         'liaison': 'PublicSite/dept_liaison.html',
         'publicity': 'PublicSite/dept_publicity.html',
+        'academic': 'PublicSite/dept_academic.html',
     }
     members_model = UserModels.CSSACommitteProfile
     dept_model = UserModels.CSSADept

@@ -44,6 +44,7 @@ services:
     container_name: CSSAnet
     environment:
       DJANGO_SETTINGS_MODULE: CSSANet.settings.dev
+      SYSTEM_VERSION: 2026.03.31.01
     volumes:
       - ./src:/code
       - ./data/static:/static
