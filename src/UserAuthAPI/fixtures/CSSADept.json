@@ -70,5 +70,17 @@
             "description": "",
             "head_image": ""
         }
+    },
+    {
+        "model": "UserAuthAPI.cssadept",
+        "pk": 7,
+        "fields": {
+            "deptName": "academic",
+            "deptTitle": "\u5b66\u672f\u90e8",
+            "deptTitleEN": "Department of Academic",
+            "brief": null,
+            "description": "",
+            "head_image": ""
+        }
     }
 ]
