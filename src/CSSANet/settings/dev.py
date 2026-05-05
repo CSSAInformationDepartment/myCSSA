@@ -47,7 +47,7 @@ MAILOWL_PORT = 44300
 # To test the mail sending related features, adding your personal email accounts credentials here.
 # Remember !!! You must REMOVE your credentails when you push this to the public repo, otherwise your
 # credentials will be at risk.
-EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 ## Add debug middleware
 MIDDLEWARE = [

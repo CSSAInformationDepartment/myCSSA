@@ -54,7 +54,7 @@ urlpatterns = [
          Views.PasswordResetSentView.as_view(), name="password_reset_sent"),
     path('password_reset/<uidb64>/<token>/', 
          auth_views.PasswordResetConfirmView.as_view(template_name="myCSSAhub/password_reset_confirm.html", 
-         success_url="/hub/password_reset_complete"), name='password_reset_confirm'),
+         success_url="/hub/password_reset_complete/"), name='password_reset_confirm'),
     path('password_reset_complete/', 
          Views.PasswordResetCompleteView.as_view(), name="password_reset_complete"),
 ]
