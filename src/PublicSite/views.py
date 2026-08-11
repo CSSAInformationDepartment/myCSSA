@@ -76,7 +76,7 @@ class DepartmentInfoView(View):
         view_bag: Dict = {}
         dept: str = self.kwargs.get('dept')
         dept_profiles = self.members_model.objects.filter(
-            Q(Department__deptName=dept) & Q(is_active=True))
+            Q(Department__deptName__iexact=dept) & Q(is_active=True))
         view_bag['director'] = dept_profiles.filter(
             role__roleFlag='director').first()
         view_bag['management'] = dept_profiles.filter(Q(role__roleFlag='vice-director') | Q(
