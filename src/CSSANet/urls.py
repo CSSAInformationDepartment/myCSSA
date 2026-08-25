@@ -27,6 +27,7 @@ from myCSSAhub import urls as HubUrl
 from MobileAppAPI import urls as MobileUrl
 from CommunityAPI import urls as CommunityUrl
 from EventAPI import api_urls as EventApiUrl
+from MiniProgramAPI import urls as MiniProgramUrl
 
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
@@ -57,6 +58,7 @@ urlpatterns = [
     path('mobile/', include(MobileUrl)),
     path('api/community/', include(CommunityUrl)),
     path('api/event/', include(EventApiUrl)),
+    path('api/v1/', include(MiniProgramUrl)),
 
     re_path(r'^swagger(?P<format>\.json|\.yaml)$',
             schema_view.without_ui(cache_timeout=0), name='schema-json'),
