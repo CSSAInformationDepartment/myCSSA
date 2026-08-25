@@ -16,7 +16,8 @@
 - [x] 已完成全新 PostgreSQL 迁移验证和 API 自动化测试。
 - [x] 已确认复用现有 CSSANet 邮箱/JWT 登录，不新建第二套登录体系。
 - [x] 已实现 `/api/v1/auth/wechat-bind`，安全绑定内容审核所需微信身份。
-- [ ] 在 `cssa-minprogram` 增加统一 `/api/v1` 请求封装并接入新页面。
+- [x] 已在 `cssa-minprogram/miniprogram-api-v1` 增加统一 `/api/v1` 请求封装。
+- [ ] 新页面完成后按需调用 `utils/apiV1.js` 并进行真机联调。
 - [ ] 接入图片安全审核、生产对象存储、队列、域名和监控。
 - [ ] 轮换启动资料中出现过的全部凭据后再进行远程环境联调。
 

@@ -39,7 +39,7 @@ Base Path：`/api/v1`
 
 小程序继续使用既有 CSSANet 邮箱/JWT 登录，不新建第二套用户体系。登录后通过一次 `wx.login` 将当前微信身份绑定到已登录 CSSANet 账号，仅用于内容安全审核。
 
-小程序代码仓库：[cssa-uom/cssa-minprogram](https://github.com/cssa-uom/cssa-minprogram)。当前调用层需要统一封装 `/api/v1`，避免页面继续直接写死域名和旧 `/api/community/` 路径。
+小程序代码仓库：[cssa-uom/cssa-minprogram](https://github.com/cssa-uom/cssa-minprogram)。其 `miniprogram-api-v1` 分支已新增 `miniprogram/utils/apiV1.js`，统一封装本文件中的 `/api/v1` 调用，避免新页面继续直接写死域名和旧 `/api/community/` 路径。
 
 基础设施约束：
 
