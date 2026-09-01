@@ -41,7 +41,7 @@ export default class Dashboard extends Component {
             </Menu.Item>
             <Menu.Item key="4">
               <Icon type="idcard" />
-              <span>我的会员卡</span>
+              <span>我的Insider卡</span>
             </Menu.Item>
             <Menu.Item key="5">
               <Icon type="appstore" />
@@ -60,7 +60,7 @@ export default class Dashboard extends Component {
             </Menu.Item>
             <Menu.Item key="9">
               <Icon type="team" />
-              <span>会员</span>
+              <span>Insider</span>
             </Menu.Item>
             <Menu.Item key="10">
               <Icon type="global" />

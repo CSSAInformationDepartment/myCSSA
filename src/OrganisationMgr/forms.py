@@ -12,7 +12,7 @@ class BindingMembershipCardForm(forms.ModelForm):
         model = UserProfile
         fields = ('user', 'membershipId')
         help_texts = {
-            'membershipId': _("会员卡号最多10位"),
+            'membershipId': _("Insider卡号最多10位"),
         }
         widgets = {
             'user': forms.HiddenInput,
@@ -30,7 +30,7 @@ class BindingMembershipCardForm(forms.ModelForm):
 
         if prev_member or legacy_member:
             raise ValidationError(
-                _(mark_safe('<li>该会员卡状态异常，请更换</li>')), code='abnormal card')
+                _(mark_safe('<li>该Insider卡状态异常，请更换</li>')), code='abnormal card')
 
 
 class UserProfileEditForm(forms.ModelForm):
