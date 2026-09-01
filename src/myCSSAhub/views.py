@@ -1,4 +1,5 @@
 import json
+import logging
 import smtplib
 
 from BlogAPI import models as BlogModels
@@ -41,6 +42,8 @@ from .forms import MerchantsForm
 from .models import AccountMigration, DiscountMerchant
 
 # Create your views here.
+
+logger = logging.getLogger(__name__)
 
 
 def register_guide(request):
@@ -478,8 +481,9 @@ class PasswordResetView(View):
                     'token': default_token_generator.make_token(user),
                     'protocol': request.scheme,
                     }
-                    email = render_to_string(email_template_name, c, request=request)
                     try:
+                        email = render_to_string(
+                            email_template_name, c, request=request)
                         raw_send_mail(subject,
                                       email,
                                       'automail@cssaunimelb.com',
@@ -489,11 +493,30 @@ class PasswordResetView(View):
                     except BadHeaderError:
                         return HttpResponse('Invalid header found.')
                     except (smtplib.SMTPException, ConnectionError, OSError):
+                        logger.exception(
+                            "Password reset email delivery failed for user %s",
+                            user.pk,
+                        )
                         messages.error(request,
                             'Failed to send reset email. Please try again later or contact support.')
                         return render(request=request,
                                       template_name="myCSSAhub/password_reset.html",
-                                      context={"password_reset_form": PasswordResetForm()})
+                                      context={"password_reset_form": password_reset_form})
+                    except Exception:
+                        # Email backends and production configuration can raise
+                        # exceptions outside the SMTP hierarchy (for example,
+                        # malformed or missing environment settings). Record the
+                        # traceback for operators, but never expose a 500 page or
+                        # sensitive configuration details to the requester.
+                        logger.exception(
+                            "Unexpected password reset failure for user %s",
+                            user.pk,
+                        )
+                        messages.error(request,
+                            'Failed to send reset email. Please try again later or contact support.')
+                        return render(request=request,
+                                      template_name="myCSSAhub/password_reset.html",
+                                      context={"password_reset_form": password_reset_form})
 
                     # If success, pop up a success message
                     messages.success(request,
