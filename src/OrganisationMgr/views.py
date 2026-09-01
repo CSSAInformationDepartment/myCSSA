@@ -122,7 +122,7 @@ class GetCommitteeDetail(LoginRequiredMixin, PermissionRequiredMixin, View):
     def post(self, request, *args, **kwargs):
         pass
 
-# ============================  新会员激活    =============================
+# ============================  新Insider激活    =============================
 
 
 class MemberSearchView(LoginRequiredMixin, PermissionRequiredMixin, View):
@@ -130,7 +130,7 @@ class MemberSearchView(LoginRequiredMixin, PermissionRequiredMixin, View):
     permission_required = ('UserAuthAPI.activate_membership')
     template_name = 'OrganisationMgr/user_mgr.html'
     ViewBag = {}
-    ViewBag['PageHeader'] = _("查找新会员")
+    ViewBag['PageHeader'] = _("查找新Insider")
 
     def get(self, request, *args, **kwargs):
         self.ViewBag['total_user_count'] = UserProfile.objects.all().count()
@@ -148,7 +148,7 @@ class MembershipActivationView(LoginRequiredMixin, PermissionRequiredMixin, View
     permission_required = ('UserAuthAPI.activate_membership')
     template_name = 'OrganisationMgr/activate_user_view.html'
     ViewBag = {}
-    ViewBag['PageHeader'] = _("新会员身份信息核查")
+    ViewBag['PageHeader'] = _("新Insider身份信息核查")
 
     def get(self, request, *args, **kwargs):
 
@@ -177,7 +177,7 @@ class MembershipActivationView(LoginRequiredMixin, PermissionRequiredMixin, View
             return HttpResponseRedirect(reverse('myCSSAhub:OrganisationMgr:confirm_activation', args=[str(usr_id)]))
         return render(request, self.template_name, self.ViewBag)
 
-# ============================   会员管理   =============================
+# ============================   Insider管理   =============================
 
 
 class MemberListView(LoginRequiredMixin, PermissionRequiredMixin, View):
@@ -185,7 +185,7 @@ class MemberListView(LoginRequiredMixin, PermissionRequiredMixin, View):
     permission_required = ('UserAuthAPI.change_indentity_data')
     template_name = 'OrganisationMgr/user_mgr.html'
     ViewBag = {}
-    ViewBag['PageHeader'] = _("会员信息管理")
+    ViewBag['PageHeader'] = _("Insider信息管理")
 
     def get(self, request, *args, **kwargs):
         self.ViewBag['total_user_count'] = UserProfile.objects.all().count()
@@ -203,7 +203,7 @@ class UserProfileEditView(LoginRequiredMixin, PermissionRequiredMixin, View):
     permission_required = ('UserAuthAPI.change_indentity_data')
     template_name = 'OrganisationMgr/update_user_profile.html'
     ViewBag = {}
-    ViewBag['PageHeader'] = _("修改会员信息")
+    ViewBag['PageHeader'] = _("修改Insider信息")
     ViewBag['left_form_header'] = _("用户信息表")
     ViewBag['right_form_header'] = _("账户信息表")
 

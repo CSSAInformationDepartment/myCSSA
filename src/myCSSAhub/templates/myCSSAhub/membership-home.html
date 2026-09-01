@@ -2,7 +2,7 @@
 {% block pageContent %}
     <div class="col-sm-6 col-md-4">
         <div class="card card-accent-primary">
-            <div class="card-header">会员卡信息</div>
+            <div class="card-header">Insider卡信息</div>
             <div class="card-body">
                 {% load static %}
                 <img class="mx-auto d-block"
@@ -11,9 +11,9 @@
                      width="90%" />
                 <ul class="list-group" style="margin-top:20px;">
                     {% if user.userprofile.membershipId %}
-                        <li class="list-group-item active">您当前持有的会员卡号为：{{ user.userprofile.membershipId }}</li>
+                        <li class="list-group-item active">您当前持有的Insider卡号为：{{ user.userprofile.membershipId }}</li>
                     {% else %}
-                        <li class="list-group-item list-group-item-action list-group-item-danger">您尚未绑定有效的CSSA会员卡</li>
+                        <li class="list-group-item list-group-item-action list-group-item-danger">您尚未绑定有效的CSSA Insider卡</li>
                     {% endif %}
                 </ul>
             </div>

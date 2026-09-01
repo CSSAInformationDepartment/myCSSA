@@ -121,7 +121,7 @@
                                     <p class="card-text" style="height:50px; overflow:auto;">{{ event.eventInfo }}</p>
                                     {% if event.isMemberOnly %}
                                         <a href="{% url 'PublicSite:eventsDetails' event.eventID %}"
-                                           class="btn btn-block btn-mustard mt-3">CSSA会员专享</a>
+                                           class="btn btn-block btn-mustard mt-3">CSSA Insider专享</a>
                                     {% elif event.eventSignUpTime > now_time %}
                                         <a href="{% url 'PublicSite:eventsDetails' event.eventID %}"
                                            class="btn btn-block btn-light-gray mt-3">报名将于 {{ event.eventSignUpTime|date:"SHORT_DATE_FORMAT" }} 开始</a>
