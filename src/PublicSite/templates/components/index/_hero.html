@@ -1,27 +1,17 @@
 {% load static %}
 
-<section class="cssa-hero" aria-labelledby="cssa-hero-title">
+<section class="cssa-hero" aria-labelledby="cssa-hero-title" data-loop>
+    <div class="cssa-hero__aurora" aria-hidden="true" data-loop><span></span><span></span><span></span></div>
+    <div class="cssa-hero__ink" aria-hidden="true" data-loop></div>
     <div class="container cssa-hero__container">
         <div class="cssa-hero__content">
-            <p class="cssa-eyebrow">墨尔本大学中国学生学者联谊会 <span lang="en">· Since 2003</span></p>
             <h1 id="cssa-hero-title">连接彼此，<br><span>在墨大找到归属</span></h1>
             <p class="cssa-hero__title-en" lang="en">Connect, Belong, Thrive at Melbourne</p>
-            <p class="cssa-hero__lead">从校园资讯、精彩活动到生活支持，墨大 CSSA 陪伴每一位中国学生探索校园、认识伙伴、融入社区。</p>
+            <p class="cssa-hero__lead">从校园资讯、精彩活动到生活支持，墨尔本大学中国学生学者联谊会（CSSA）陪伴每一位中国学生探索校园、认识伙伴、融入社区。</p>
             <p class="cssa-hero__lead-en" lang="en">From campus updates and vibrant events to everyday support, CSSA is here to help every Chinese student explore, connect and belong.</p>
             <div class="cssa-hero__actions">
-                <a class="btn cssa-btn cssa-btn--primary" href="{% url 'PublicSite:events' %}">浏览近期活动 <span lang="en">Explore Events</span></a>
                 <a class="btn cssa-btn cssa-btn--secondary" href="{% url 'PublicSite:contact' %}">联系我们 <span lang="en">Contact Us</span></a>
             </div>
-            <dl class="cssa-hero__facts" aria-label="CSSA 简介">
-                <div><dt>2003</dt><dd>成立于墨尔本大学 <span lang="en">Founded at Melbourne</span></dd></div>
-                <div><dt>7</dt><dd>专业职能部门 <span lang="en">Professional teams</span></dd></div>
-                <div><dt>中英双语</dt><dd>学生服务与社区连接 <span lang="en">Bilingual support</span></dd></div>
-            </dl>
-        </div>
-        <div class="cssa-hero__mark" aria-hidden="true">
-            <span class="cssa-hero__seal">CSSA<br><strong>UOM</strong></span>
-            <img src="{% static 'PublicSite/img/Logo_c.png' %}" alt="">
-            <p>Chinese Students &amp;<br>Scholars Association</p>
         </div>
     </div>
 </section>
