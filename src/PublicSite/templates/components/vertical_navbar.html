@@ -1,66 +1,60 @@
 {% load i18n %}
-
 {% load static %}
 
+<nav class="navbar navbar-expand-xl navbar-light cssa-navbar sticky-top" aria-label="网站主导航">
+    <a class="navbar-brand cssa-navbar__brand" href="{% url 'PublicSite:index' %}" aria-label="墨尔本大学中国学生会首页">
+        <img src="{% static 'PublicSite/img/Logo_c.png' %}" alt="墨尔本大学中国学生会 CSSA">
+    </a>
 
-<nav class="navbar navbar-expand-lg navbar-light bg-light" style="border:none;">
-<a class="navbar-brand" href="/"><img class="img-fluid" src="{% static 'PublicSite/img/Logo_c.png' %}" style="max-width: 5rem;" /></a>
-	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
-		<span class="navbar-toggler-icon"></span>
-	</button>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#cssaMainNavigation" aria-controls="cssaMainNavigation" aria-expanded="false" aria-label="展开或收起导航">
+        <span class="navbar-toggler-icon"></span>
+    </button>
 
-	<div class="collapse navbar-collapse" id="navbarColor01">
-		<ul class="navbar-nav mr-auto">
-			<li class="nav-item">
-				<a class="nav-link" href="/">{%trans "首页" %}<span class="sr-only">(current)</span></a>
-			</li>
-			<li class="nav-item dropdown">
-				<a class="nav-link dropdown-toggle" href="{% url 'PublicSite:events' %}" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-				活动与竞赛
-				</a>
-				<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-				<a class="dropdown-item" href="{% url 'PublicSite:events' %}"> {%trans "活动消息" %} </a>
-				</div>
-			</li>
-			<li class="nav-item dropdown">
-				<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-				{%trans "部门构成" %}
-				</a>
-				<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-				<a class="dropdown-item" href="{% url 'PublicSite:departments' 'council' %}">{%trans "主席团" %} </a>
-				<a class="dropdown-item" href="{% url 'PublicSite:departments' 'organisation' %}">{%trans "组织部" %}</a>
-				<a class="dropdown-item" href="{% url 'PublicSite:departments' 'liaison' %}">{%trans "外联部" %}</a>
-				<a class="dropdown-item" href="{% url 'PublicSite:departments' 'publicity' %}">{%trans "宣传部 " %}</a>
-				<a class="dropdown-item" href="{% url 'PublicSite:departments' 'information' %}">{%trans "信息技术部" %}</a>
-				<a class="dropdown-item" href="{% url 'PublicSite:departments' 'recruitment' %}">{%trans "人力资源部" %}</a>
-				<a class="dropdown-item" href="{% url 'PublicSite:departments' 'academic' %}">{%trans "学术部" %}</a>
-				</div>
-			</li>
-			<!--li class="nav-item">
-				<a class="nav-link" href="{% url 'PublicSite:blogs' %}?page=1">{%trans "新闻公告" %}</a>
-			</li-->
-			<li class="nav-item" >
-				<a class="nav-link" href="{% url 'PublicSite:merchants' %}">{%trans "折扣商家 " %}</a>
-			</li>
-			<li class="nav-item">
-				<a class="nav-link" href="{% url 'PublicSite:recruitment' %}">岗位信息</a>
-			</li>
-			<li class="nav-item">
-				<a class="nav-link" href="{% url 'PublicSite:contact' %}">{%trans "联系我们" %}</a>
-			</li>
-			<li class="nav-item" >
-				<a class="nav-link" href="{% url 'PublicSite:supportMerchants' %}">{%trans "赞助商 " %}</a>
-			</li>
+    <div class="collapse navbar-collapse" id="cssaMainNavigation">
+        <ul class="navbar-nav cssa-navbar__links mr-auto">
+            <li class="nav-item{% if request.resolver_match.url_name == 'index' %} active{% endif %}">
+                <a class="nav-link" href="{% url 'PublicSite:index' %}">{% trans "首页" %}</a>
+            </li>
+            <li class="nav-item dropdown{% if request.resolver_match.url_name == 'events' %} active{% endif %}">
+                <a class="nav-link dropdown-toggle" href="#" id="eventsNavigation" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">活动与竞赛</a>
+                <div class="dropdown-menu" aria-labelledby="eventsNavigation">
+                    <a class="dropdown-item" href="{% url 'PublicSite:events' %}">{% trans "活动消息" %}</a>
+                </div>
+            </li>
+            <li class="nav-item dropdown{% if request.resolver_match.url_name == 'departments' %} active{% endif %}">
+                <a class="nav-link dropdown-toggle" href="#" id="departmentsNavigation" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{% trans "部门构成" %}</a>
+                <div class="dropdown-menu" aria-labelledby="departmentsNavigation">
+                    <a class="dropdown-item" href="{% url 'PublicSite:departments' 'council' %}">{% trans "主席团" %}</a>
+                    <a class="dropdown-item" href="{% url 'PublicSite:departments' 'organisation' %}">{% trans "组织部" %}</a>
+                    <a class="dropdown-item" href="{% url 'PublicSite:departments' 'liaison' %}">{% trans "外联部" %}</a>
+                    <a class="dropdown-item" href="{% url 'PublicSite:departments' 'publicity' %}">{% trans "宣传部" %}</a>
+                    <a class="dropdown-item" href="{% url 'PublicSite:departments' 'information' %}">{% trans "信息技术部" %}</a>
+                    <a class="dropdown-item" href="{% url 'PublicSite:departments' 'recruitment' %}">{% trans "人力资源部" %}</a>
+                    <a class="dropdown-item" href="{% url 'PublicSite:departments' 'academic' %}">{% trans "学术部" %}</a>
+                </div>
+            </li>
+            <li class="nav-item{% if request.resolver_match.url_name == 'merchants' %} active{% endif %}">
+                <a class="nav-link" href="{% url 'PublicSite:merchants' %}">{% trans "折扣商家" %}</a>
+            </li>
+            <li class="nav-item{% if request.resolver_match.url_name == 'recruitment' %} active{% endif %}">
+                <a class="nav-link" href="{% url 'PublicSite:recruitment' %}">岗位信息</a>
+            </li>
+            <li class="nav-item{% if request.resolver_match.url_name == 'contact' %} active{% endif %}">
+                <a class="nav-link" href="{% url 'PublicSite:contact' %}">{% trans "联系我们" %}</a>
+            </li>
+            <li class="nav-item{% if request.resolver_match.url_name == 'supportMerchants' %} active{% endif %}">
+                <a class="nav-link" href="{% url 'PublicSite:supportMerchants' %}">{% trans "赞助商" %}</a>
+            </li>
+        </ul>
 
-		</ul>
-		<ul class="navbar-nav navbar-right" > <!--Login Info-->
-		{% if user.is_authenticated %}
-			<li class="nav-item"><a class="nav-link" href="{% url 'myCSSAhub:home' %}"> 欢迎你：{{ user.email }}</a></li>
-			<li class="nav-item"><a class="nav-link" href="{% url 'myCSSAhub:hub_logout' %}"> 注销 </a></li>
-		{% else %}
-			<li class="nav-item"><a class="nav-link" href="{% url 'myCSSAhub:hub_login' %}"> 登录</a></li>
-			<li class="nav-item"><a class="nav-link" href="{% url 'myCSSAhub:hub_reg' %}"> 成为CSSA会员 </a> </li>
-		{% endif %}
-		</ul>
-	</div>
+        <ul class="navbar-nav cssa-navbar__account">
+            {% if user.is_authenticated %}
+                <li class="nav-item"><a class="nav-link" href="{% url 'myCSSAhub:home' %}">个人中心</a></li>
+                <li class="nav-item"><a class="nav-link cssa-navbar__quiet" href="{% url 'myCSSAhub:hub_logout' %}">注销</a></li>
+            {% else %}
+                <li class="nav-item"><a class="nav-link cssa-navbar__quiet" href="{% url 'myCSSAhub:hub_login' %}">登录</a></li>
+                <li class="nav-item"><a class="nav-link cssa-navbar__cta" href="{% url 'myCSSAhub:hub_reg' %}">成为会员</a></li>
+            {% endif %}
+        </ul>
+    </div>
 </nav>

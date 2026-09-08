@@ -1,121 +1,71 @@
-<footer class='footer'>
-<!-- bloc-20 -->
 {% load static %}
-{% load get_system_version %}
-<div class="bloc d-bloc none" id="bloc-20" style="background-color:RoyalBlue">
-	<div class="container bloc-sm">
-		<div class="row">
-			<div class="col-md-3 col-sm-6">
-				<h4 class="mg-md text-sm-left text-center tc-white">
-					Affiliate with
-					</h4>
-						<a href="https://umsu.unimelb.edu.au/">
-							<div class="mt-3 text-sm-left text-center">
-							<img src="{% static 'PublicSite/img/umsuLogo.png'%}"  class=" d-inline img-logo-style"/>
-							</div>
-						</a>
-						<a href="https://gsa.unimelb.edu.au/">
-							<div class="mt-3 text-sm-left text-center">
-								<img src="{% static 'PublicSite/img/gsaLogo.png'%}" class=" d-inline img-logo-style"/>
-							</div>
-						</a>
-			</div>
 
-			<div class="col-md-3 col-sm-6">
-				<h4 class="mg-md text-sm-left text-center tc-white">
-					Quick Links
-				</h4>
-					<div class="text-sm-left text-center">
-						<a class="tc-gray" href="https://www.unimelb.edu.au/">University of Melbourne Homepage</a>
-					</div>
-					<div class="text-sm-left text-center"> 
-						<a class="tc-gray" href="https://students.unimelb.edu.au/">Student information</a>
-					</div>
-					<div class="text-sm-left text-center">
-						<a class="tc-gray" href="https://auth.unimelb.edu.au/login/pages/login.jsp">MyUnimelb Student Portal</a>
-					</div>
-					<div class="text-sm-left text-center">
-						<a class="tc-gray" href="https://library.unimelb.edu.au/">Library</a>
-					</div>	
-			</div>
+<footer class="cssa-footer" id="site-footer">
+    <div class="container cssa-footer__main">
+        <div class="cssa-footer__top">
+            <section class="cssa-footer__column cssa-footer__partners" aria-labelledby="footer-partners-title">
+                <h2 id="footer-partners-title">合作组织 <span lang="en">Affiliations</span></h2>
+                <div class="cssa-footer__partner-logos">
+                    <a href="https://umsu.unimelb.edu.au/" aria-label="University of Melbourne Student Union">
+                        <img src="{% static 'PublicSite/img/umsuLogo.png' %}" alt="University of Melbourne Student Union">
+                    </a>
+                    <a href="https://gsa.unimelb.edu.au/" aria-label="Graduate Student Association">
+                        <img src="{% static 'PublicSite/img/gsaLogo.png' %}" alt="Graduate Student Association">
+                    </a>
+                </div>
+            </section>
 
-			<div class="col-md-4 col-sm-6">
-				<h4 class="mg-md text-sm-left text-center tc-white">
-					Contact Mailbox
-				</h4>
-				<ul class="mg-md text-sm-left text-center">
-					<li><strong>President: </strong>president@cssaunimelb.com</li>
-					<li><strong>Public Relation: </strong>pr@cssaunimelb.com </li>
-					<li><strong>Event: </strong>activity@cssaunimelb.com </li>
-					<li><strong>Publicity: </strong>publicity@cssaunimelb.com </li>
-					<li><strong>IT & Dev Team: </strong>information@cssaunimelb.com </li>
-					<li><strong>Human Resources: </strong>hr@cssaunimelb.com</li>
-					<li><strong>Scholars: </strong>scholars@cssaunimelb.com</li>
-				</ul>
-			</div>
+            <section class="cssa-footer__column" aria-labelledby="footer-links-title">
+                <h2 id="footer-links-title">快捷链接 <span lang="en">Quick Links</span></h2>
+                <ul>
+                    <li><a href="https://www.unimelb.edu.au/">墨尔本大学官网 <span lang="en">University Homepage</span></a></li>
+                    <li><a href="https://students.unimelb.edu.au/">学生信息中心 <span lang="en">Student Information</span></a></li>
+                    <li><a href="https://auth.unimelb.edu.au/login/pages/login.jsp">学生门户 <span lang="en">MyUnimelb</span></a></li>
+                    <li><a href="https://library.unimelb.edu.au/">大学图书馆 <span lang="en">University Library</span></a></li>
+                </ul>
+            </section>
 
-			<div class="col-md-2 col-sm-6">
-				<h4 class="mg-md text-sm-left text-center tc-white">
-					Follow Up
-				</h4>
-				<div class="row">
-					<div class="col-4 col-sm-4">
-						<div class="text-center">
-							<a href="https://www.facebook.com/CSSAunimelb/"><span class="fa fa-facebook-official icon-md"></span></a>
-						</div>
-					</div>
-					<div class="col-4 col-sm-4">
-						<div class="text-center">
-							<a rel="qrcode-pops" data-container="body" data-toggle="popover" data-placement="top" data-img="{% static 'PublicSite/img/qrcode_wx.jpg'%}"><span class="fa fa-weixin icon-md"></span></a>
-						</div>
-					</div>
-					<div class="col-4 col-sm-4">
-						<div class="text-center">
-							<a href="https://www.weibo.com/cssaum"><span class="fa fa-weibo icon-md"></span></a>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="row">
-			<div class="col mg-md d-bloc mx-auto text-center">
-				<a href="https://github.com/ShepherdMOZ/myCSSA">
-					<h6 class="text-center tc-white">系统版本 System Version：<strong>{% now "Y.m.d" %}</strong></h6>
-				</a>
-			</div>
-		</div>
-	</div>
-</div>
-<!-- bloc-20 END -->
+            <section class="cssa-footer__column cssa-footer__contact" aria-labelledby="footer-contact-title">
+                <h2 id="footer-contact-title">联系邮箱 <span lang="en">Contact Mailbox</span></h2>
+                <ul class="cssa-footer__mailboxes">
+                    <li><strong>主席团 <span lang="en">President</span></strong><a href="mailto:president@cssaunimelb.com">president@cssaunimelb.com</a></li>
+                    <li><strong>公共关系 <span lang="en">Public Relations</span></strong><a href="mailto:pr@cssaunimelb.com">pr@cssaunimelb.com</a></li>
+                    <li><strong>活动事务 <span lang="en">Events</span></strong><a href="mailto:activity@cssaunimelb.com">activity@cssaunimelb.com</a></li>
+                    <li><strong>宣传事务 <span lang="en">Publicity</span></strong><a href="mailto:publicity@cssaunimelb.com">publicity@cssaunimelb.com</a></li>
+                    <li><strong>信息技术 <span lang="en">IT &amp; Development</span></strong><a href="mailto:information@cssaunimelb.com">information@cssaunimelb.com</a></li>
+                    <li><strong>人力资源 <span lang="en">Human Resources</span></strong><a href="mailto:hr@cssaunimelb.com">hr@cssaunimelb.com</a></li>
+                    <li><strong>学术事务 <span lang="en">Scholars</span></strong><a href="mailto:scholars@cssaunimelb.com">scholars@cssaunimelb.com</a></li>
+                </ul>
+            </section>
 
-<!-- bloc-30 -->
-<div class="bloc d-bloc" id="bloc-22" style="background-color:rgb(38, 38, 38)">
-	<div class="container">
-		<div class="row">
-			<div class="col">
-				<!-- <h6 class="mg-md text-lg-center">
-					本项目由 卢玏 设计管理 This Project is Designed &amp; Managed by Josh. Le. Lu
-				</h6>
-				<p class="mg-md text-lg-center h6-margin-top">
-					站点交互设计：蒋梦雨 UI/UX Design: Caitlin. Mengyu. Jiang
-				</p> -->
-				<h6 class="mg-md text-lg-center">
-					版权所有 墨尔本大学中国学生会 Copyrights @ Chinese Student and Scholars Association, University of Melbourne 2012 - {% now "Y" %}
-				</h6>
-				<p class="mg-md text-lg-center h6-margin-top">
-					由 信息技术部系统开发组 设计管理 Designed and Managed by Department of Information Technology, System Development Group
-				</p>
-			</div>
-		</div>
-	</div>
-</div>
-<!-- bloc-30 END -->
+            <section class="cssa-footer__column cssa-footer__follow" aria-labelledby="footer-follow-title">
+                <h2 id="footer-follow-title">关注我们 <span lang="en">Follow Us</span></h2>
+                <div class="cssa-footer__social" aria-label="CSSA 社交媒体">
+                    <a href="https://www.facebook.com/CSSAunimelb/" aria-label="Facebook"><span class="fa fa-facebook-official" aria-hidden="true"></span></a>
+                    <a rel="qrcode-pops" data-container="body" data-toggle="popover" data-placement="top" data-img="{% static 'PublicSite/img/qrcode_wx.jpg' %}" aria-label="微信公众号"><span class="fa fa-weixin" aria-hidden="true"></span></a>
+                    <a href="https://www.weibo.com/cssaum" aria-label="微博"><span class="fa fa-weibo" aria-hidden="true"></span></a>
+                </div>
+                <p>获取活动、校园资讯与社区动态。</p>
+                <span class="cssa-footer__follow-en" lang="en">Events, campus updates and community stories.</span>
+            </section>
+        </div>
+
+        <p class="cssa-footer__version">系统版本 <span lang="en">System Version</span><strong>{% now "Y.m.d" %}</strong></p>
+    </div>
+
+    <div class="cssa-footer__legal">
+        <div class="container cssa-footer__bottom">
+            <p>© 2012–{% now "Y" %} 墨尔本大学中国学生学者联谊会 · <span lang="en">Chinese Students and Scholars Association, University of Melbourne</span></p>
+            <p>Designed and managed by CSSA Department of Information Technology</p>
+        </div>
+    </div>
+</footer>
+
 <script>
 $('a[rel=qrcode-pops]').popover({
   html: true,
-  trigger: 'hover',
-  placement: 'bottom',
-  content: function(){return '<img src="'+$(this).data('img') + '" />';}
+  trigger: 'hover focus',
+  placement: 'top',
+  content: function(){return '<img class="cssa-footer__wechat-code" alt="CSSA 微信公众号二维码" src="'+$(this).data('img') + '" />';}
 });
 </script>
-</footer>
