@@ -9,21 +9,16 @@
         }
     </style>
     
-    <div class="bloc dept-header l-bloc">
-        <div class="py-3">
-            <hr>
-            <h1 style="font-family: 'PingFang SC';
-                       color: #393d3e;
-                       font-weight: normal"
-                class="mg-md text-center">外联部</h1>
-            <h3 style="font-family: 'PingFang SC';
-                       color: #393d3e;
-                       font-weight: normal"
-                class="mg-md text-center">Department of Public Relations</h3>
-            <hr>
+    <header class="cssa-page-hero cssa-department-hero">
+        <div class="container">
+            <p class="cssa-page-hero__eyebrow" lang="en">MEET THE TEAM</p>
+            <h1>外联部 <span class="cssa-heading-en" lang="en">Department of Public Relations</span></h1>
+            <p>连接校园与城市伙伴，为学生社群拓展合作与更多可能。</p>
         </div>
+    </header>
+    <div class="bloc dept-header l-bloc">
         <div class="row" style="min-height:20rem;">
-            <div class="col-lg-4 card" style="border:none;">
+            <div class="col-lg-4 card cssa-dept-lead" style="border:none;">
                 <div class="card-body text-center">
                     <div class="my-3 d-block mx-auto avatar-lg rounded-circle">
                         {% if view_bag.director.member.avatar %}
@@ -37,7 +32,7 @@
                     <h3>{{ view_bag.director.member.get_full_EN_name }}</h3>
                 </div>
             </div>
-            <div class="col-lg-8 card" style="border:none;">
+            <div class="col-lg-8 card cssa-dept-intro" style="border:none;">
                 <div class="my-auto mx-auto">
                     <h3 class="text-center card-title">部门简介 About us</h3>
                     <div class="card-text px-5" style="line-height:2">

@@ -1,0 +1,885 @@
+/* CSSA Motion Layer
+ * Loaded after brand-refresh.css.
+ *
+ * Motion thesis
+ * -------------
+ * Focal moment  印章落定 — the association's mark is a seal, so the page's one
+ *               authored moment is the seal pressing down onto the hero card,
+ *               blooming ink, and the red rule spreading out from under it.
+ *               Nothing else on the page is allowed to compete with it.
+ * Continuity    Event grids and the milestone timeline are genuine lists, so
+ *               they enter as lists, staggered and capped. No other section
+ *               gets an entrance — a page where every section fades up has no
+ *               focal moment, only noise.
+ * Feedback      Hover, focus and press states on cards, buttons and links.
+ * Budget        Ambient loops are cheap (transform/opacity only) and every one
+ *               of them stops when it scrolls offscreen or the tab is hidden.
+ *
+ * z-index scale (documented so nobody has to guess):
+ *   1020  Bootstrap .sticky-top navbar
+ *   1025  scroll progress bar — above the navbar, below every overlay
+ *   1040  Bootstrap modal backdrop
+ *   1050  Bootstrap modal
+ *
+ * Easing: cubic-bezier(0.16, 1, 0.3, 1) — exponential ease-out, for arrivals
+ * that decelerate with confidence. No bounce, no elastic.
+ *
+ * Hidden states are gated behind html.cssa-motion, a class motion.js only adds
+ * when JS runs and the visitor has not asked for reduced motion. Without it the
+ * page renders exactly as it did before this file existed. */
+
+:root {
+    --cssa-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    --cssa-dur-feedback: 140ms;
+    --cssa-dur-state: 240ms;
+    --cssa-dur-enter: 460ms;
+    --cssa-dur-focal: 720ms;
+}
+
+/* ==========================================================================
+   0. 印章过场 Page transition — 印章落定, at page scale
+   A cross-document view transition. This is a multi-page Django site and it
+   stays one: no router, no SPA. The chrome (navbar, footer, progress bar) is
+   named so it is carried across the navigation untouched, and only the page
+   body is restamped - the new page starts a hair oversized and settles, the
+   way a seal presses down. Browsers without view transitions just navigate.
+   ========================================================================== */
+
+@view-transition {
+    navigation: auto;
+}
+
+.cssa-navbar {
+    view-transition-name: cssa-navbar;
+}
+
+.cssa-footer {
+    view-transition-name: cssa-footer;
+}
+
+.cssa-progress {
+    view-transition-name: cssa-progress;
+}
+
+#main-content {
+    view-transition-name: cssa-main;
+}
+
+/* The chrome holds absolutely still; it is the same furniture on both pages. */
+::view-transition-group(cssa-navbar),
+::view-transition-group(cssa-footer),
+::view-transition-group(cssa-progress) {
+    animation: none;
+}
+
+::view-transition-old(cssa-main) {
+    animation: cssa-page-lift 220ms var(--cssa-ease-out) both;
+}
+
+::view-transition-new(cssa-main) {
+    animation: cssa-page-press 460ms var(--cssa-ease-out) both;
+}
+
+@keyframes cssa-page-lift {
+    to { opacity: 0; transform: scale(0.994); }
+}
+
+@keyframes cssa-page-press {
+    from { opacity: 0; transform: scale(1.012); clip-path: inset(0 0 10% 0); }
+    to   { opacity: 1; transform: none; clip-path: inset(0 0 0 0); }
+}
+
+/* ==========================================================================
+   1. 焦点动效 The focal moment — 印章落定
+   ========================================================================== */
+
+@media (prefers-reduced-motion: no-preference) {
+    /* 雾起 — the focal moment is the landscape settling into the paper: the
+       far mountains rise a little and the mist clears. Slower than the copy,
+       because it is the ground rather than the subject. */
+    .cssa-hero__scene {
+        animation: cssa-mist-lift 1600ms var(--cssa-ease-out) 120ms both;
+    }
+
+    /* The hero copy enters as one block, not as six staggered lines. */
+    .cssa-hero__content {
+        animation: cssa-hero-rise 560ms var(--cssa-ease-out) both;
+    }
+
+}
+
+
+
+
+
+@keyframes cssa-mist-lift {
+    from { opacity: 0; transform: translate3d(0, 26px, 0) scale(1.04); }
+    to   { opacity: 0.72; transform: none; }
+}
+
+@keyframes cssa-hero-rise {
+    from { opacity: 0; transform: translate3d(0, 22px, 0); }
+    to   { opacity: 1; transform: none; }
+}
+
+/* ==========================================================================
+   2. 列表揭示 List reveal
+   Only for things that genuinely are lists or sequences: the two event grids
+   and the milestone timeline. Everything else stays put.
+   ========================================================================== */
+
+html.cssa-motion [data-reveal] {
+    opacity: 0;
+    transform: translate3d(0, 22px, 0);
+    transition:
+        opacity var(--cssa-dur-enter) var(--cssa-ease-out) var(--cssa-reveal-delay, 0ms),
+        transform var(--cssa-dur-enter) var(--cssa-ease-out) var(--cssa-reveal-delay, 0ms);
+}
+
+/* Trigger-only: fires .is-revealed without moving itself, so a container can
+   drive its own decorative pseudo-elements. */
+html.cssa-motion [data-reveal="trigger"] {
+    opacity: 1;
+    transform: none;
+}
+
+html.cssa-motion [data-reveal].is-revealed {
+    opacity: 1;
+    transform: none;
+}
+
+/* Where the browser has scroll-driven animations, the reveal is tied to how
+   far the element has actually entered the viewport rather than fired once on
+   a threshold - scrubbed reads more expensive than triggered, and it needs no
+   JavaScript at all. motion.js stands down when this path is available. */
+@supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+        [data-reveal]:not([data-reveal="trigger"]) {
+            animation: cssa-reveal linear both;
+            animation-timeline: view();
+            animation-range:
+                entry calc(6% + var(--cssa-i, 0) * 5%)
+                entry calc(58% + var(--cssa-i, 0) * 5%);
+        }
+
+        /* The stagger becomes spatial rather than temporal: a later card in the
+           row simply finishes later in the scroll. */
+        [data-reveal]:nth-child(2) { --cssa-i: 1; }
+        [data-reveal]:nth-child(3) { --cssa-i: 2; }
+        [data-reveal]:nth-child(4) { --cssa-i: 3; }
+
+        .cssa-milestones::after {
+            position: absolute;
+            top: -1px;
+            right: 0;
+            left: 0;
+            height: 2px;
+            content: "";
+            background: var(--cssa-red);
+            transform-origin: left center;
+            animation: cssa-line-draw linear both;
+            animation-timeline: view();
+            animation-range: entry 12% entry 72%;
+        }
+
+        .cssa-milestones article::before {
+            animation: cssa-dot-pop linear both;
+            animation-timeline: view();
+            animation-range:
+                entry calc(18% + var(--cssa-i, 0) * 6%)
+                entry calc(62% + var(--cssa-i, 0) * 6%);
+        }
+    }
+}
+
+@keyframes cssa-reveal {
+    from { opacity: 0; transform: translate3d(0, 22px, 0); }
+    to   { opacity: 1; transform: none; }
+}
+
+@keyframes cssa-line-draw {
+    from { transform: scaleX(0); }
+    to   { transform: scaleX(1); }
+}
+
+@keyframes cssa-dot-pop {
+    from { transform: scale(0); }
+    to   { transform: scale(1); }
+}
+
+/* ==========================================================================
+   3. 滚动进度条 Scroll progress
+   Driven by a CSS scroll timeline. No scroll listener, no scrollY maths, no
+   per-frame JS. Browsers without scroll timelines simply do not get the bar.
+   ========================================================================== */
+
+.cssa-progress {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: 1025;
+    height: 3px;
+    pointer-events: none;
+}
+
+.cssa-progress__bar {
+    display: block;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, var(--cssa-red), #e8465c);
+    transform: scaleX(0);
+    transform-origin: 0 50%;
+}
+
+@supports (animation-timeline: scroll()) {
+    @media (prefers-reduced-motion: no-preference) {
+        .cssa-progress__bar {
+            animation-name: cssa-progress;
+            animation-duration: auto;
+            animation-timing-function: linear;
+            animation-fill-mode: both;
+            animation-timeline: scroll(root block);
+        }
+    }
+}
+
+@supports not (animation-timeline: scroll()) {
+    .cssa-progress { display: none; }
+}
+
+@keyframes cssa-progress {
+    from { transform: scaleX(0); }
+    to   { transform: scaleX(1); }
+}
+
+/* Sits at the document origin purely so an observer can tell the navbar when
+   the page has left the top. Costs no layout. */
+.cssa-scroll-sentinel {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1px;
+    height: 28px;
+    pointer-events: none;
+}
+
+/* ==========================================================================
+   4. 导航栏 Navbar
+   ========================================================================== */
+
+.cssa-navbar {
+    transition:
+        min-height var(--cssa-dur-state) var(--cssa-ease-out),
+        padding var(--cssa-dur-state) var(--cssa-ease-out),
+        box-shadow var(--cssa-dur-state) var(--cssa-ease-out);
+}
+
+.cssa-navbar.is-scrolled {
+    min-height: 72px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    box-shadow: 0 12px 34px rgba(8, 45, 91, 0.14);
+}
+
+/* Scale rather than resize the mark, so shrinking it costs no reflow. */
+.cssa-navbar__brand img {
+    transform-origin: left center;
+    transition: transform var(--cssa-dur-state) var(--cssa-ease-out);
+}
+
+.cssa-navbar.is-scrolled .cssa-navbar__brand img {
+    transform: scale(0.84);
+}
+
+.cssa-navbar__links > .nav-item > .nav-link::before {
+    transition:
+        transform var(--cssa-dur-state) var(--cssa-ease-out),
+        opacity var(--cssa-dur-feedback) linear;
+}
+
+/* ==========================================================================
+   5. 常驻动效 Ambient loops
+   Every loop below carries data-loop, so motion.js can stop it when it leaves
+   the viewport or the tab goes to the background.
+   ========================================================================== */
+
+/* The red spine down the left edge catches a slow travelling highlight — the
+   ink still wet, after the stamp. */
+.cssa-hero::before {
+    background: linear-gradient(
+        180deg,
+        var(--cssa-red) 0%,
+        var(--cssa-red) 42%,
+        #ea5568 50%,
+        var(--cssa-red) 58%,
+        var(--cssa-red) 100%
+    );
+    background-size: 100% 320%;
+    animation: cssa-spine-sheen 8s linear infinite;
+}
+
+@keyframes cssa-spine-sheen {
+    from { background-position: 0 -110%; }
+    to   { background-position: 0 210%; }
+}
+
+/* Pausing rules. Pseudo-elements and descendants are named explicitly because
+   animation-play-state does not inherit through them on its own. */
+/* Name the loops rather than sweeping the whole subtree with `*`. A container
+   marked data-loop also holds one-shot entrance animations, and pausing those
+   left the hero copy stuck at opacity 0 whenever the page was opened in a
+   background tab. */
+[data-loop].is-paused,
+[data-loop].is-paused::before,
+[data-loop].is-paused::after,
+[data-loop].is-paused > span,
+[data-loop].is-paused article::before,
+html.is-tab-hidden [data-loop],
+html.is-tab-hidden [data-loop]::before,
+html.is-tab-hidden [data-loop]::after,
+html.is-tab-hidden [data-loop] > span,
+html.is-tab-hidden [data-loop] article::before {
+    animation-play-state: paused;
+}
+
+/* Hand the compositor layer back once a loop is parked. */
+[data-loop].is-paused span,
+html.is-tab-hidden [data-loop] span {
+    will-change: auto;
+}
+
+/* ==========================================================================
+   6. 往期活动跑马灯 Past-event ticker
+   ========================================================================== */
+
+.cssa-ticker {
+    position: relative;
+    overflow: hidden;
+    padding: 20px 0;
+    background: var(--cssa-blue-deep);
+}
+
+.cssa-ticker::before,
+.cssa-ticker::after {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    z-index: 2;
+    width: clamp(48px, 12vw, 160px);
+    content: "";
+    pointer-events: none;
+}
+
+.cssa-ticker::before {
+    left: 0;
+    background: linear-gradient(90deg, var(--cssa-blue-deep), rgba(8, 45, 91, 0));
+}
+
+.cssa-ticker::after {
+    right: 0;
+    background: linear-gradient(270deg, var(--cssa-blue-deep), rgba(8, 45, 91, 0));
+}
+
+.cssa-ticker__track {
+    display: flex;
+    width: max-content;
+}
+
+.cssa-ticker__track.is-running {
+    animation: cssa-ticker-scroll var(--cssa-ticker-duration, 40s) linear infinite;
+}
+
+.cssa-ticker:hover .cssa-ticker__track.is-running {
+    animation-play-state: paused;
+}
+
+@keyframes cssa-ticker-scroll {
+    from { transform: translate3d(0, 0, 0); }
+    to   { transform: translate3d(-50%, 0, 0); }
+}
+
+.cssa-ticker__group {
+    display: flex;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.cssa-ticker__group li {
+    display: flex;
+    gap: 26px;
+    align-items: center;
+    padding: 0 26px;
+    color: rgba(255, 255, 255, 0.88);
+    font-family: var(--cssa-display);
+    font-size: 20px;
+    line-height: 1.4;
+    white-space: nowrap;
+}
+
+.cssa-ticker__group li::after {
+    width: 7px;
+    height: 7px;
+    content: "";
+    background: var(--cssa-red);
+    border-radius: var(--cssa-radius-disc);
+}
+
+/* ==========================================================================
+   7. 活动卡片交互 Event card feedback
+   ========================================================================== */
+
+.cssa-event-card {
+    transition: transform var(--cssa-dur-state) var(--cssa-ease-out);
+}
+
+.cssa-event-card:hover,
+.cssa-event-card:focus-within {
+    transform: translate3d(0, -8px, 0);
+}
+
+#upcoming-events .portfolio-caption.cssa-event-card__body,
+#past-events .portfolio-caption.cssa-event-card__body {
+    transition:
+        box-shadow var(--cssa-dur-state) var(--cssa-ease-out),
+        border-top-color var(--cssa-dur-state) var(--cssa-ease-out);
+}
+
+#upcoming-events .cssa-event-card:hover .cssa-event-card__body,
+#upcoming-events .cssa-event-card:focus-within .cssa-event-card__body,
+#past-events .cssa-event-card:hover .cssa-event-card__body,
+#past-events .cssa-event-card:focus-within .cssa-event-card__body {
+    border-top-color: var(--cssa-red);
+    box-shadow: 0 28px 56px rgba(8, 45, 91, 0.17);
+}
+
+/* ==========================================================================
+   8. 按钮与链接 Buttons and links
+   ========================================================================== */
+
+.cssa-btn {
+    position: relative;
+    z-index: 0;
+    overflow: hidden;
+    transition:
+        color var(--cssa-dur-feedback) linear,
+        border-color var(--cssa-dur-state) var(--cssa-ease-out),
+        transform 90ms linear;
+}
+
+.cssa-btn::before {
+    position: absolute;
+    z-index: -1;
+    inset: 0;
+    content: "";
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform var(--cssa-dur-state) var(--cssa-ease-out);
+}
+
+.cssa-btn:hover::before,
+.cssa-btn:focus::before {
+    transform: scaleX(1);
+}
+
+.cssa-btn:active {
+    transform: translate3d(0, 1px, 0);
+}
+
+/* Hand the colour change to the sweep instead of snapping the background,
+   keeping the hover text and border colours from brand-refresh. */
+.cssa-btn--primary::before {
+    background: var(--cssa-red-dark);
+}
+
+.cssa-btn--primary:hover,
+.cssa-btn--primary:focus {
+    background: var(--cssa-red);
+}
+
+.cssa-btn--secondary::before {
+    background: var(--cssa-blue);
+}
+
+.cssa-btn--secondary:hover,
+.cssa-btn--secondary:focus {
+    background: transparent;
+}
+
+.cssa-text-link [aria-hidden="true"] {
+    display: inline-block;
+    transition: transform var(--cssa-dur-state) var(--cssa-ease-out);
+}
+
+.cssa-text-link:hover [aria-hidden="true"],
+.cssa-text-link:focus [aria-hidden="true"] {
+    transform: translate3d(6px, 0, 0);
+}
+
+/* ==========================================================================
+   9. 公众号引导卡 WeChat follow card
+   ========================================================================== */
+
+.cssa-wechat-chip {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex: 0 0 auto;
+    gap: 18px;
+    align-items: center;
+    padding: 16px 20px;
+    background: var(--cssa-white);
+    border: 1px solid var(--cssa-line);
+    box-shadow: 0 16px 38px rgba(8, 45, 91, 0.09);
+}
+
+.cssa-wechat-chip__qr {
+    position: relative;
+    flex: 0 0 auto;
+    width: 76px;
+    height: 76px;
+}
+
+.cssa-wechat-chip__qr img {
+    position: relative;
+    z-index: 3;
+    width: 100%;
+    height: 100%;
+    background: var(--cssa-white);
+    object-fit: contain;
+    transform-origin: bottom right;
+    transition:
+        transform var(--cssa-dur-enter) var(--cssa-ease-out),
+        box-shadow var(--cssa-dur-enter) var(--cssa-ease-out);
+}
+
+.cssa-wechat-chip:hover .cssa-wechat-chip__qr img,
+.cssa-wechat-chip:focus-within .cssa-wechat-chip__qr img {
+    transform: scale(2.4);
+    box-shadow: 0 22px 48px rgba(8, 45, 91, 0.28);
+}
+
+.cssa-wechat-chip__qr::after {
+    position: absolute;
+    z-index: 1;
+    inset: 0;
+    content: "";
+    border: 2px solid var(--cssa-red);
+    animation: cssa-qr-pulse 3.2s ease-out infinite;
+}
+
+@keyframes cssa-qr-pulse {
+    0%        { opacity: 0.55; transform: scale(1); }
+    70%, 100% { opacity: 0; transform: scale(1.35); }
+}
+
+.cssa-wechat-chip__copy {
+    max-width: 220px;
+}
+
+.cssa-wechat-chip__copy strong {
+    display: block;
+    color: var(--cssa-blue-deep);
+    font-family: var(--cssa-display);
+    font-size: 18px;
+    line-height: 1.35;
+}
+
+.cssa-wechat-chip__copy span {
+    display: block;
+    margin-top: 4px;
+    color: var(--cssa-muted);
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.cssa-wechat-chip__copy [lang="en"] {
+    margin-top: 6px;
+    font-family: var(--cssa-english-sans);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+/* ==========================================================================
+   10. 里程碑时间轴 Milestones — a sequence, so it enters as one
+   ========================================================================== */
+
+.cssa-milestones {
+    position: relative;
+}
+
+html.cssa-motion .cssa-milestones::after {
+    position: absolute;
+    top: -1px;
+    right: 0;
+    left: 0;
+    height: 2px;
+    content: "";
+    background: var(--cssa-red);
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform 900ms var(--cssa-ease-out) 80ms;
+}
+
+html.cssa-motion .cssa-milestones.is-revealed::after {
+    transform: scaleX(1);
+}
+
+.cssa-milestones article {
+    transition: transform var(--cssa-dur-state) var(--cssa-ease-out);
+}
+
+.cssa-milestones article:hover {
+    transform: translate3d(0, -5px, 0);
+}
+
+.cssa-milestones article::before {
+    transition:
+        transform 420ms var(--cssa-ease-out) var(--cssa-reveal-delay, 0ms),
+        box-shadow var(--cssa-dur-state) var(--cssa-ease-out);
+}
+
+html.cssa-motion .cssa-milestones article[data-reveal]::before {
+    transform: scale(0);
+}
+
+html.cssa-motion .cssa-milestones article[data-reveal].is-revealed::before {
+    transform: scale(1);
+}
+
+.cssa-milestones article:hover::before {
+    box-shadow:
+        0 0 0 5px var(--cssa-blue-deep),
+        0 0 0 12px rgba(195, 12, 35, 0.3);
+}
+
+/* The most recent milestone keeps a slow heartbeat. */
+.cssa-milestones article:last-child::before {
+    animation: cssa-dot-pulse 3.2s ease-out 1.4s infinite;
+}
+
+@keyframes cssa-dot-pulse {
+    0% {
+        box-shadow:
+            0 0 0 5px var(--cssa-blue-deep),
+            0 0 0 5px rgba(195, 12, 35, 0.55);
+    }
+    70%, 100% {
+        box-shadow:
+            0 0 0 5px var(--cssa-blue-deep),
+            0 0 0 18px rgba(195, 12, 35, 0);
+    }
+}
+
+/* ==========================================================================
+   11. 页脚 Footer
+   ========================================================================== */
+
+.cssa-footer__social a {
+    transition:
+        transform var(--cssa-dur-state) var(--cssa-ease-out),
+        background-color var(--cssa-dur-feedback) linear,
+        color var(--cssa-dur-feedback) linear;
+}
+
+.cssa-footer__social a:hover,
+.cssa-footer__social a:focus {
+    transform: translate3d(0, -4px, 0);
+}
+
+.cssa-footer__partner-logos a {
+    transition: transform var(--cssa-dur-state) var(--cssa-ease-out);
+}
+
+.cssa-footer__partner-logos a:hover {
+    transform: translate3d(0, -3px, 0);
+}
+
+/* ==========================================================================
+   12. 浏览器默认样式 Browser surfaces
+   Selection, caret, scrollbar, underlines and numerals ship with defaults that
+   belong to no design system. Theme them from the palette.
+   ========================================================================== */
+
+::selection {
+    color: var(--cssa-white);
+    background: var(--cssa-red);
+    text-shadow: none;
+}
+
+::-moz-selection {
+    color: var(--cssa-white);
+    background: var(--cssa-red);
+    text-shadow: none;
+}
+
+body {
+    caret-color: var(--cssa-red);
+}
+
+html {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(12, 63, 124, 0.34) transparent;
+}
+
+::-webkit-scrollbar {
+    width: 13px;
+    height: 13px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(12, 63, 124, 0.32);
+    background-clip: content-box;
+    border: 3px solid transparent;
+    border-radius: var(--cssa-radius);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(12, 63, 124, 0.52);
+    background-clip: content-box;
+}
+
+/* Descenders should not be cut by the underline. */
+#main-content p a,
+.cssa-footer a,
+.cssa-empty-state a {
+    text-underline-offset: 0.18em;
+    text-decoration-thickness: 1px;
+}
+
+/* Years should not shift width while they wrap. */
+.cssa-milestones span {
+    font-variant-numeric: tabular-nums;
+}
+
+@keyframes cssa-develop {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+@keyframes cssa-mist-develop {
+    from { opacity: 0; filter: contrast(0.4) saturate(0.2); }
+    to   { opacity: 0.72; filter: none; }
+}
+
+/* ==========================================================================
+   13. 响应式 Responsive
+   ========================================================================== */
+
+@media (max-width: 991.98px) {
+    .cssa-section__header .cssa-wechat-chip {
+        width: 100%;
+    }
+
+    .cssa-ticker__group li {
+        font-size: 17px;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .cssa-wechat-chip {
+        gap: 14px;
+        padding: 14px;
+    }
+
+    .cssa-wechat-chip__qr {
+        width: 62px;
+        height: 62px;
+    }
+}
+
+/* ==========================================================================
+   14. 减弱动效 Reduced motion
+   Fewer and gentler, not dead. brand-refresh.css clamps every transition on
+   the page to 0.01ms, which also erases the feedback that tells someone their
+   hover or focus landed. Stop the loops and the travel; keep the feedback.
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+    /* The focal moment gets a designed alternative, not a deletion. The seal
+       does not drop onto the card - it develops, the way a stamp soaks up
+       through paper: ink density and contrast rise, nothing moves. Reduced
+       motion should mean fewer and gentler animations, not a dead page. */
+    .cssa-hero__content {
+        animation: cssa-develop 520ms linear both !important;
+    }
+
+    /* No movement whatever: the mist clears by density alone. */
+    .cssa-hero__scene {
+        animation: cssa-mist-develop 1100ms linear 200ms both !important;
+    }
+
+    /* Same idea at page scale: the transition becomes a straight dissolve
+       rather than a press. */
+    ::view-transition-old(cssa-main) {
+        animation: cssa-develop 200ms linear reverse both !important;
+    }
+
+    ::view-transition-new(cssa-main) {
+        animation: cssa-develop 240ms linear both !important;
+    }
+
+    .cssa-hero::before,
+    .cssa-ticker__track,
+    .cssa-wechat-chip__qr::after,
+    .cssa-milestones article:last-child::before {
+        animation: none !important;
+    }
+
+    /* A scroll-linked bar is still movement tied to nothing the visitor asked
+       for; drop it rather than freezing it half-drawn. */
+    .cssa-progress {
+        display: none;
+    }
+
+    /* No travel. */
+    .cssa-event-card:hover,
+    .cssa-event-card:focus-within,
+    .cssa-milestones article:hover,
+    .cssa-footer__social a:hover,
+    .cssa-footer__social a:focus,
+    .cssa-footer__partner-logos a:hover,
+    .cssa-btn:active {
+        transform: none;
+    }
+
+    /* Swap the sweeping fill for a plain state change that still reads. */
+    .cssa-btn::before {
+        display: none;
+    }
+
+    .cssa-btn--primary:hover,
+    .cssa-btn--primary:focus {
+        background: var(--cssa-red-dark);
+    }
+
+    .cssa-btn--secondary:hover,
+    .cssa-btn--secondary:focus {
+        background: var(--cssa-blue);
+    }
+
+    .cssa-wechat-chip:hover .cssa-wechat-chip__qr img,
+    .cssa-wechat-chip:focus-within .cssa-wechat-chip__qr img {
+        transform: scale(1.9);
+    }
+
+    /* Colour and shadow still need to move, or nothing confirms the action. */
+    .cssa-btn,
+    .cssa-text-link,
+    .cssa-navbar,
+    .cssa-navbar .nav-link,
+    .cssa-footer__social a,
+    .cssa-wechat-chip__qr img,
+    #upcoming-events .portfolio-caption.cssa-event-card__body,
+    #past-events .portfolio-caption.cssa-event-card__body,
+    .cssa-milestones article::before {
+        transition-duration: 120ms !important;
+    }
+}

@@ -1,42 +1,134 @@
 {% extends "components/base_page.html" %}
 {% block 'pg_body' %}
-  <!-- Page Content -->
-  <div class="page-container">
-    <div class="container bloc-fill-screen">
-      <!-- Page Heading -->
-      <h1 class="my-4 text-left">
-        合作折扣商家
-        <br>
-        <small class="lead">感谢以下商家的大力支持:)</small>
-      </h1>
-      <div class="row justify-content-center">
-        {% for info in infos %}
-          {% if info.merchant_type == "折扣商家" %}
-            <div class="col-lg-4 col-sm-6 portfolio-item mt-2">
-              <div class="card" style="border: none; width:280px;">
-                <img alt="{{ info.merchant_name }}"
-                     class="card-img-top img-fluid"
-                     src="{{ info.merchant_image.url }}"
-                     style="height:180px;
-                            width:100%">
-                </a>
-                <div class="card-body">
-                  <p class="card-text">
-                    <strong>{{ info.merchant_name }}</strong></a>
-                  </p>
-                  <p class="card-text">
-                    优惠: {{ info.merchant_description }}
-                    <br>
-                    地址: {{ info.merchant_address }}
-                  </p>
-                </div>
-              </div>
-            </div>
-          {% endif %}
-        {% endfor %}
-      </div>
-      <!-- /.row -->
+  <header class="cssa-page-hero">
+    <div class="container">
+      <p class="cssa-page-hero__eyebrow" lang="en">CSSA INSIDER BENEFITS</p>
+      <h1>合作折扣商家 <span class="cssa-heading-en" lang="en">Partner Discounts</span></h1>
+      <p>凭 CSSA Insider 身份，探索校园周边的餐饮、生活、娱乐与购物优惠。</p>
     </div>
-  </div>
-  <!-- /.container -->
+  </header>
+
+  <main class="cssa-section cssa-merchant-page" aria-labelledby="merchant-page-title">
+    <div class="container">
+      <div class="cssa-section__header cssa-merchant-intro">
+        <div>
+          <p class="cssa-kicker">INSIDER OFFERS</p>
+          <h2 id="merchant-page-title">Insider 专属优惠 <span class="cssa-heading-en" lang="en">Explore Insider Offers</span></h2>
+          <p>查找适合你的商家与优惠，出示有效 CSSA Insider 身份即可使用。</p>
+        </div>
+      </div>
+
+      <form class="cssa-merchant-filters" method="get" role="search" aria-label="搜索和筛选折扣商家">
+        <div class="cssa-merchant-filters__controls">
+          <div class="cssa-merchant-field cssa-merchant-search">
+            <label for="merchant-search">关键词 <span lang="en">Search</span></label>
+            <div class="cssa-merchant-control">
+              <span class="fa fa-search" aria-hidden="true"></span>
+              <input id="merchant-search"
+                     name="q"
+                     type="search"
+                     value="{{ query }}"
+                     placeholder="商家、优惠或地址"
+                     autocomplete="off">
+            </div>
+          </div>
+
+          <div class="cssa-merchant-field cssa-merchant-category">
+            <label for="merchant-category">商家类别 <span lang="en">Category</span></label>
+            <div class="cssa-merchant-control">
+              <span class="fa fa-th-large" aria-hidden="true"></span>
+              <select id="merchant-category" name="category">
+                <option value="">全部类别</option>
+                {% for value, label in merchant_categories %}
+                  <option value="{{ value }}" {% if selected_category == value %}selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+              </select>
+              <span class="fa fa-chevron-down cssa-merchant-select-arrow" aria-hidden="true"></span>
+            </div>
+          </div>
+
+          <button class="cssa-btn cssa-btn--primary cssa-merchant-filter-button" type="submit">
+            <span>查找商家</span>
+            <span class="fa fa-arrow-right" aria-hidden="true"></span>
+          </button>
+          {% if query or selected_category %}
+            <a class="cssa-merchant-reset" href="{% url 'PublicSite:merchants' %}">
+              <span class="fa fa-times" aria-hidden="true"></span> 清除筛选
+            </a>
+          {% endif %}
+        </div>
+      </form>
+
+      <div class="cssa-merchant-results" aria-live="polite">
+        <p>
+          {% if query or selected_category %}筛选结果{% else %}合作商家{% endif %}
+          <strong>{{ page_obj.paginator.count }}</strong> 家
+        </p>
+      </div>
+
+      {% if page_obj.object_list %}
+        <div class="cssa-merchant-grid">
+          {% for info in page_obj %}
+            <article class="cssa-merchant-card">
+              <div class="cssa-merchant-card__media">
+                {% if info.merchant_image %}
+                  <img src="{{ info.merchant_image.url }}"
+                       alt="{{ info.merchant_name }} Logo"
+                       loading="lazy">
+                {% else %}
+                  <div class="cssa-merchant-card__placeholder" aria-hidden="true">{{ info.merchant_name|first }}</div>
+                {% endif %}
+              </div>
+              <div class="cssa-merchant-card__body">
+                {% if info.merchant_Category and info.merchant_Category != "无" %}
+                  <p class="cssa-merchant-card__category">{{ info.merchant_Category }}</p>
+                {% endif %}
+                <h2>{{ info.merchant_name }}</h2>
+                <div class="cssa-merchant-card__offer">
+                  <span>Insider 优惠 <small lang="en">INSIDER OFFER</small></span>
+                  <p>{{ info.merchant_description|default:"优惠详情请向商家咨询。" }}</p>
+                </div>
+                {% if info.merchant_address and info.merchant_address != "None" %}
+                  <p class="cssa-merchant-card__address">
+                    <span class="fa fa-map-marker" aria-hidden="true"></span>
+                    <span>{{ info.merchant_address }}</span>
+                  </p>
+                {% endif %}
+              </div>
+            </article>
+          {% endfor %}
+        </div>
+
+        {% if page_obj.paginator.num_pages > 1 %}
+          <nav class="cssa-merchant-pagination" aria-label="折扣商家分页">
+            {% if page_obj.has_previous %}
+              <a href="?{% if preserved_query %}{{ preserved_query }}&amp;{% endif %}page={{ page_obj.previous_page_number }}"
+                 rel="prev"><span aria-hidden="true">←</span> 上一页</a>
+            {% else %}
+              <span class="is-disabled"><span aria-hidden="true">←</span> 上一页</span>
+            {% endif %}
+            <span class="cssa-merchant-pagination__status">第 {{ page_obj.number }} / {{ page_obj.paginator.num_pages }} 页</span>
+            {% if page_obj.has_next %}
+              <a href="?{% if preserved_query %}{{ preserved_query }}&amp;{% endif %}page={{ page_obj.next_page_number }}"
+                 rel="next">下一页 <span aria-hidden="true">→</span></a>
+            {% else %}
+              <span class="is-disabled">下一页 <span aria-hidden="true">→</span></span>
+            {% endif %}
+          </nav>
+        {% endif %}
+      {% else %}
+        <div class="cssa-merchant-empty">
+          <span class="fa fa-shopping-bag" aria-hidden="true"></span>
+          {% if query or selected_category %}
+            <h2>没有找到符合条件的商家</h2>
+            <p>请尝试其他关键词或类别。</p>
+            <a class="cssa-btn cssa-btn--secondary" href="{% url 'PublicSite:merchants' %}">查看全部商家</a>
+          {% else %}
+            <h2>合作商家正在更新中</h2>
+            <p>新的 Insider 优惠即将上线，敬请期待。</p>
+          {% endif %}
+        </div>
+      {% endif %}
+    </div>
+  </main>
 {% endblock 'pg_body' %}

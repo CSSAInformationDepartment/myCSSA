@@ -14,21 +14,16 @@
         }
     </style>
     
-    <div class="bloc dept-header l-bloc" id="bloc-4">
-        <div class="py-3">
-            <hr>
-            <h1 style="font-family: 'PingFang SC';
-                       color: #393d3e;
-                       font-weight: normal"
-                class="mg-md text-center">信息技术部</h1>
-            <h3 style="font-family: 'PingFang SC';
-                       color: #393d3e;
-                       font-weight: normal"
-                class="mg-md text-center">Department of Information Technology</h3>
-            <hr>
+    <header class="cssa-page-hero cssa-department-hero">
+        <div class="container">
+            <p class="cssa-page-hero__eyebrow" lang="en">MEET THE TEAM</p>
+            <h1>信息技术部 <span class="cssa-heading-en" lang="en">Department of Information Technology</span></h1>
+            <p>以技术与设计连接服务，为 CSSA 构建可靠、清晰的数字体验。</p>
         </div>
+    </header>
+    <div class="bloc dept-header l-bloc" id="bloc-4">
         <div class="row my-3" style="min-height:20rem;">
-            <div class="col-lg-4 card" style="border:none;">
+            <div class="col-lg-4 card cssa-dept-lead" style="border:none;">
                 <div class="card-body text-center">
                     <div class="my-3 d-block mx-auto avatar-lg rounded-circle">
                         {% if view_bag.director.member.avatar %}
@@ -42,14 +37,14 @@
                     <h3>{{ view_bag.director.member.get_full_EN_name }}</h3>
                 </div>
             </div>
-            <div class="col-lg-8 card" style="border:none;">
+            <div class="col-lg-8 card cssa-dept-intro" style="border:none;">
                 <div class="my-auto mx-auto">
                     <h3 class="text-center card-title">部门简介 About us</h3>
                     <p class="card-text px-5" style="line-height:2">
                         信息技术部是墨尔本大学中国学生会的信息技术开发支持部门。部门职责任务涵盖多个领域，与其他部门协作完成。信息部主要以站点设计，软件开发，信息整合为主，为了整个社团提供高质量的数字化解决方案支持。
                     </br>
                 </br>
-                除了满足社团内部对于创新解决方案的需求。平时，信息部也会组织线上或线下的交流讨论等活动，为有兴趣参与设计网站与开发网站的Insider提供一个一起来开发我们的网站的实践机会。除此之外，信息部还担任了社团的记录者的职位，是社团发展的见证者，是社团文化的传承者，与社团一起成长，记录社团的美丽，撰写社团的历史。
+                除了满足社团内部对于创新解决方案的需求。平时，信息部也会组织线上或线下的交流讨论等活动，为有兴趣参与设计网站与开发网站的 Insider 提供一个一起来开发我们的网站的实践机会。除此之外，信息部还担任了社团的记录者的职位，是社团发展的见证者，是社团文化的传承者，与社团一起成长，记录社团的美丽，撰写社团的历史。
             </p>
         </div>
         <hr>
@@ -144,6 +139,6 @@
 <hr>
 <div class="bloc py-2">
     <p>页面作者 Page developed by</p>
-    <p>&copy; 2019 Tiantong Li, Ningjing Wang</p>
+    <p>&copy; 2026 Keshang Cheng, Tianyi Mo, Yuxiang Xie</p>
 </div>
 {% endblock 'pg_body' %}

@@ -1,66 +1,81 @@
 {% extends "components/base_page.html" %}
 {% block 'pg_body' %}
-  <!-- Page Content -->
-  <div class="page-container">
-    <div class="container bloc-fill-screen">
-      <!-- Page Heading -->
-      <h1 class="my-4 text-left">
-        特别鸣谢
-        <br>
-        <small class="lead">特别感谢以下赞助商家</small>
-      </h1>
-      {% for category, infos in categories.items %}
-        {% if infos %}
-          <div class="row justify-content-center m-3 text-muted">
-            <h2>{{ category }}</h2>
-          </div>
-          <hr>
-          <div class="row justify-content-center" style="margin:50px;">
-            {% for info in infos %}
-              <div class="col-lg-7 col-sm-7 portfolio-item align-self-center">
-                <div class="align-items-center text-center">
-                  {% if info.merchant_link != "None" %}
-                    <a href="{{ info.merchant_link }}">
-                    {% else %}
-                      <a href="#">
-                      {% endif %}
-                      <img alt="{{ info.merchant_name }}"
-                           class="card-img-top img-fluid"
-                           src="{{ info.merchant_image.url }}"
-                           style="max-width:60%">
-                    </a>
-                    {% if info.merchant_qrcode %}
-                      <img alt="{{ info.merchant_name }}"
-                           class="card-img-top img-fluid"
-                           src="{{ info.merchant_qrcode.url }}"
-                           style="width:130px;
-                                  height:130px;
-                                  margin-left:40px">
-                    {% else %}
-                      <div class="card-img-top img-fluid"
-                           style="width:130px;
-                                  height:130px;
-                                  margin-left:40px"></div>
-                    {% endif %}
-                  </div>
-                </div>
-                <div class="col-lg-5 col-sm-5 portfolio-item mt-2 align-self-center">
-                  <div class="text-center align-items-center">{{ info.merchant_description }}</div>
-                </div>
-                <div class="col-12 m-4 text-center">
-                  <h1 class="text-center mb-4">
-                    {% if info.merchant_link != "None" %}
-                      <a href="{{ info.merchant_link }}" class="h1">
-                      {% else %}
-                        <a href="#" class="h1">
-                        {% endif %}
-                        <strong>{{ info.merchant_name }}</strong></a>
-                    </h1>
-                  </div>
-                {% endfor %}
-              </div>
-            {% endif %}
-          {% endfor %}
+  <header class="cssa-page-hero cssa-sponsor-hero">
+    <div class="container">
+      <p class="cssa-sponsor-hero__eyebrow" lang="en">WITH GRATITUDE</p>
+      <h1>特别鸣谢 <span class="cssa-heading-en" lang="en">Our Sponsors</span></h1>
+      <p>感谢每一位合作伙伴对墨大学生社群、校园活动与学生服务的持续支持。</p>
+    </div>
+  </header>
+
+  <section class="cssa-section cssa-sponsors" aria-labelledby="sponsor-list-title">
+    <div class="container">
+      <div class="cssa-section__header cssa-sponsors__intro">
+        <div>
+          <h2 id="sponsor-list-title">携手同行 <span class="cssa-heading-en" lang="en">Partners in Our Community</span></h2>
+          <p>正是这些伙伴的支持，让更多校园连接与学生体验成为可能。</p>
         </div>
+        {% if sponsor_count %}
+          <p class="cssa-sponsors__count"><strong>{{ sponsor_count }}</strong> 家合作伙伴</p>
+        {% endif %}
       </div>
-    {% endblock 'pg_body' %}
+
+      {% if sponsor_tiers %}
+        {% for tier in sponsor_tiers %}
+          <section class="cssa-sponsor-tier cssa-sponsor-tier--{{ tier.slug }}" aria-labelledby="sponsor-tier-{{ tier.slug }}">
+            <header class="cssa-sponsor-tier__header">
+              <span class="cssa-sponsor-tier__mark" aria-hidden="true"></span>
+              <div>
+                <h2 id="sponsor-tier-{{ tier.slug }}">{{ tier.label }}</h2>
+                <p lang="en">{{ tier.label_en }}</p>
+              </div>
+            </header>
+
+            <div class="cssa-sponsor-grid">
+              {% for info in tier.merchants %}
+                <article class="cssa-sponsor-card">
+                  <div class="cssa-sponsor-card__media">
+                    {% if info.merchant_link and info.merchant_link != "None" %}
+                      <a href="{{ info.merchant_link }}" target="_blank" rel="noopener noreferrer" aria-label="访问 {{ info.merchant_name }} 网站">
+                    {% endif %}
+                    {% if info.merchant_image %}
+                      <img src="{{ info.merchant_image.url }}" alt="{{ info.merchant_name }} Logo" loading="lazy">
+                    {% else %}
+                      <div class="cssa-sponsor-card__placeholder" aria-hidden="true">{{ info.merchant_name|first }}</div>
+                    {% endif %}
+                    {% if info.merchant_link and info.merchant_link != "None" %}</a>{% endif %}
+                  </div>
+
+                  <div class="cssa-sponsor-card__body">
+                    <p class="cssa-sponsor-card__label" lang="en">CSSA PARTNER</p>
+                    <h3>{{ info.merchant_name }}</h3>
+                    <p class="cssa-sponsor-card__description">{{ info.merchant_description|default:"感谢对墨大学生社群的支持。" }}</p>
+
+                    <div class="cssa-sponsor-card__footer">
+                      {% if info.merchant_link and info.merchant_link != "None" %}
+                        <a class="cssa-text-link" href="{{ info.merchant_link }}" target="_blank" rel="noopener noreferrer">访问合作伙伴 <span aria-hidden="true">↗</span></a>
+                      {% endif %}
+                      {% if info.merchant_qrcode %}
+                        <figure class="cssa-sponsor-card__qr">
+                          <img src="{{ info.merchant_qrcode.url }}" alt="{{ info.merchant_name }} 二维码" loading="lazy">
+                          <figcaption>扫码了解更多</figcaption>
+                        </figure>
+                      {% endif %}
+                    </div>
+                  </div>
+                </article>
+              {% endfor %}
+            </div>
+          </section>
+        {% endfor %}
+      {% else %}
+        <div class="cssa-sponsor-empty">
+          <span class="fa fa-handshake-o" aria-hidden="true"></span>
+          <h2>赞助商资料正在更新中</h2>
+          <p>感谢合作伙伴对 CSSA 的支持，最新名单即将公布。</p>
+          <a class="cssa-btn cssa-btn--secondary" href="mailto:pr@cssaunimelb.com">洽谈合作</a>
+        </div>
+      {% endif %}
+    </div>
+  </section>
+{% endblock 'pg_body' %}

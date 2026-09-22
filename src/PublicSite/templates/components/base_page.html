@@ -11,8 +11,11 @@
     {% load static %}
     <link rel="shortcut icon" type="image/png" href="{% static 'favicon.png' %}"/>
     <title>墨尔本大学中国学生会 Chinese Students and Scholars Association University of Melbourne </title>
-    
-    
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400..600&amp;family=Montserrat:wght@500;600;700&amp;family=Noto+Sans+SC:wght@400;500;600;700&amp;family=Noto+Serif+SC:wght@600;700;800&amp;display=swap" rel="stylesheet">
+
     <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootswatch/4.3.1/lumen/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="{% static 'PublicSite/style.css' %}">
@@ -35,21 +38,28 @@
 
   {% block 'extra_header' %}
   {% endblock 'extra_header' %}
+  <link rel="stylesheet" type="text/css" href="{% static 'PublicSite/css/brand-refresh.css' %}?v=20260922ad">
+  <link rel="stylesheet" type="text/css" href="{% static 'PublicSite/css/motion.css' %}?v=20260909b">
 <!-- Analytics -->
 
 <!-- Analytics END -->
 </head>
 
-<body>
+<body id="top">
+<a class="cssa-skip-link" href="#main-content">跳转到主要内容</a>
+<span class="cssa-scroll-sentinel" aria-hidden="true"></span>
+<div class="cssa-progress" aria-hidden="true"><span class="cssa-progress__bar"></span></div>
 <!-- Main container -->
 <div class="page-container">
   {% include 'components/vertical_navbar.html' %}
+  <main id="main-content">
   {% block 'pg_body' %}
   {% endblock  %}
+  </main>
   {% include 'components/footbar.html'%}
 
   <!-- ScrollToTop Button -->
-  <a class="bloc-button btn btn-d scrollToTop" onclick="scrollToTarget('1',this)"><span class="fa fa-chevron-up"></span></a>
+  <a class="bloc-button btn btn-d scrollToTop" href="#top" aria-label="返回页面顶部"><span class="fa fa-chevron-up" aria-hidden="true"></span></a>
   <!-- ScrollToTop Button END-->
 
   <!-- Preloader -->
@@ -78,6 +88,7 @@
 
   </script>
   <script src="{% static 'PublicSite/js/scrollFX.js'%}" defer></script>
+  <script src="{% static 'PublicSite/js/motion.js'%}?v=20260909b" defer></script>
   {% block 'extra_js' %}
   {% endblock 'extra_js' %}
 </body>

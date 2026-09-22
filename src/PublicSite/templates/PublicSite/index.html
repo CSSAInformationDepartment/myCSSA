@@ -4,165 +4,117 @@
     <link rel="stylesheet"
           type="text/css"
           href="{% static 'PublicSite/css/add-in.css' %}">
-    <style>
-        .bg-light {
-            background-color: #f8f9fa !important;
-        }
-    </style>
 {% endblock 'extra_header' %}
 {% block 'pg_body' %}
     {% include "components/index/_hero.html" %}
-    <!-- bloc-2 -->
-    <!-- <div class="row">
-		<div class="jumbotron jumbotron-fluid col-md-12" style="width:100%">
-			<div class="container-fluid">
-				<h1 class="display-3 text-center"><a href="">摄影大赛报名</a></h1><br>
-				<p class="lead text-center display-4">-我与墨尔本-</p>
-			</div>
-		</div>
-</div> -->
-    <section class="bg-light" id="portfolio">
+
+    <section class="cssa-section cssa-section--white" id="upcoming-events" aria-labelledby="upcoming-events-title">
         <div class="container">
-            <div class="row">
-                <div class="col-lg-12 text-center">
-                    <h2 class="section-heading text-uppercase">近期活动</h2>
-                    <h3 class="section-subheading text-muted">近期cssa活动</h3>
+            <div class="cssa-section__header">
+                <div>
+                    <h2 id="upcoming-events-title">近期活动 <span class="cssa-heading-en" lang="en">Upcoming Events</span></h2>
+                    <p>发现校园里的新鲜体验，与志同道合的同学见面。<span class="cssa-copy-en" lang="en">Discover new experiences and meet your people on campus.</span></p>
                 </div>
+                <a class="cssa-text-link" href="{% url 'PublicSite:events' %}">查看全部活动 <span lang="en">All Events</span> <span aria-hidden="true">→</span></a>
             </div>
-            <div class="row justify-content-center">
+            <div class="row cssa-event-grid" data-reveal-group data-reveal-step="90">
                 {% for event in eventsFuture|slice:":4" %}
-                    <div class="col-md-3 portfolio-item ">
-                        <a class="portfolio-link"
+                    <article class="col-lg-3 col-md-6 portfolio-item cssa-event-card" data-reveal>
+                        <a class="portfolio-link cssa-event-card__media"
                            data-toggle="modal"
                            href="#model{{ event.eventID }}">
-                            <div class="portfolio-hover">
-                                <div class="portfolio-hover-content">
-                                    <i class="fa fa-plus fa-3x"></i>
-                                </div>
-                            </div>
-                            <div class="card-img">
-                                <img class="img-fluid"
-                                     src="{{ event.mainVisual.url }}"
-                                     style="min-height:200px;
-                                            max-height:200px;
-                                            width:100%">
-                            </div>
+                            <img src="{{ event.mainVisual.url }}" alt="{{ event.eventName }}活动图片">
+                            <span class="cssa-event-card__view">查看活动</span>
                         </a>
-                        <div class="portfolio-caption" style="max-height:200px; height:100%;">
+                        <div class="portfolio-caption cssa-event-card__body">
+                            <p class="cssa-event-card__label">即将开始</p>
                             <h4>{{ event.eventName }}</h4>
-                            <p class="text-muted mt-3" style="max-height:80px; overflow:auto;">{{ event.eventInfo }}</p>
+                            <p>{{ event.eventInfo|truncatechars:86 }}</p>
+                        </div>
+                    </article>
+                {% empty %}
+                    <div class="col-12">
+                        <div class="cssa-empty-state">
+                            <span class="fa fa-calendar-o" aria-hidden="true"></span>
+                            <h3>新的活动正在筹备中</h3>
+                            <p>关注 CSSA 官方渠道，第一时间获得活动信息。</p>
                         </div>
                     </div>
-                {% empty %}
-                    <h4 class="mg-md text-center">目前没有活动预览，敬请期待</h4>
                 {% endfor %}
             </div>
         </div>
     </section>
-    <section class="bg-light" id="portfolio" style="margin-top:-100px">
+
+    {% if eventsPast %}
+        <div class="cssa-ticker" aria-hidden="true">
+            <div class="cssa-ticker__track" data-ticker-track data-loop>
+                <ul class="cssa-ticker__group">
+                    {% for event in eventsPast|slice:":12" %}<li>{{ event.eventName }}</li>{% endfor %}
+                </ul>
+            </div>
+        </div>
+    {% endif %}
+
+    <section class="cssa-section cssa-section--tint" id="past-events" aria-labelledby="past-events-title">
         <div class="container">
-            <div class="row">
-                <div class="col-lg-12 text-center">
-                    <h2 class="section-heading text-uppercase">活动回顾</h2>
-                    <h3 class="section-subheading text-muted">cssa过去活动回顾</h3>
+            <div class="cssa-section__header">
+                <div>
+                    <h2 id="past-events-title">活动回顾 <span class="cssa-heading-en" lang="en">Highlights</span></h2>
+                    <p>重温我们共同创造的校园记忆。<span class="cssa-copy-en" lang="en">Revisit the moments and memories we created together.</span></p>
+                </div>
+                <div class="cssa-wechat-chip">
+                    <div class="cssa-wechat-chip__qr" data-loop>
+                        <img src="{% static 'PublicSite/img/qrcode_wx.jpg' %}" alt="CSSA 微信公众号二维码，聚焦或悬停可放大" tabindex="0">
+                    </div>
+                    <div class="cssa-wechat-chip__copy">
+                        <strong>微信公众号 cssaum</strong>
+                        <span>扫码查看往期活动推送与校园资讯</span>
+                        <span lang="en">More highlights on WeChat</span>
+                    </div>
                 </div>
             </div>
-            <div class="row justify-content-center">
+            <div class="row cssa-event-grid" data-reveal-group data-reveal-step="90">
                 {% for event in eventsPast|slice:":4" %}
-                    <div class="col-md-3 portfolio-item ">
-                        <a class="portfolio-link"
+                    <article class="col-lg-3 col-md-6 portfolio-item cssa-event-card" data-reveal>
+                        <a class="portfolio-link cssa-event-card__media"
                            data-toggle="modal"
                            href="#model2{{ event.eventID }}">
-                            <div class="portfolio-hover">
-                                <div class="portfolio-hover-content">
-                                    <i class="fa fa-plus fa-3x"></i>
-                                </div>
-                            </div>
-                            <img class="img-fluid"
-                                 src="{{ event.mainVisual.url }}"
-                                 style="min-height:200px;
-                                        max-height:200px;
-                                        width:100%">
+                            <img src="{{ event.mainVisual.url }}" alt="{{ event.eventName }}活动图片">
+                            <span class="cssa-event-card__view">查看回顾</span>
                         </a>
-                        <div class="portfolio-caption" style="max-height:200px; height:100%;">
+                        <div class="portfolio-caption cssa-event-card__body">
+                            <p class="cssa-event-card__label cssa-event-card__label--past">精彩回顾</p>
                             <h4>{{ event.eventName }}</h4>
-                            <p class="text-muted m-3" style="max-height:80px; overflow:auto;">{{ event.eventInfo }}</p>
+                            <p>{{ event.eventInfo|truncatechars:86 }}</p>
+                        </div>
+                    </article>
+                {% empty %}
+                    <div class="col-12">
+                        <div class="cssa-empty-state">
+                            <span class="fa fa-camera-retro" aria-hidden="true"></span>
+                            <h3>活动回顾即将更新</h3>
+                            <p>更多照片与故事正在整理中。</p>
                         </div>
                     </div>
-                {% empty %}
-                    <h4 class="mg-md text-center">目前没有活动回顾，敬请期待</h4>
                 {% endfor %}
             </div>
         </div>
     </section>
-    <section id="about">
+
+    <section class="cssa-section cssa-about" id="about" aria-labelledby="about-title">
         <div class="container">
-            <div class="row">
-                <div class="col-lg-12 text-center">
-                    <h2 class="section-heading text-uppercase pb-5">关于我们</h2>
+            <div class="cssa-about__intro">
+                <div>
+                    <h2 id="about-title">扎根校园，服务学生 <span class="cssa-heading-en" lang="en">Our Story</span></h2>
                 </div>
+                <p>从学生社群到数字化服务，CSSA 始终致力于让每一位墨大学生更快融入、更好连接，并在校园中找到属于自己的位置。<span class="cssa-copy-en" lang="en">From student communities to digital services, we help every student connect, settle in and find their place at Melbourne.</span></p>
             </div>
-            <div class="row">
-                <div class="col-lg-12">
-                    <ul class="timeline">
-                        <li>
-                            <div class="timeline-image">
-                                <img class="rounded-circle img-fluid"
-                                     src="{% static 'myCSSAhub/img/1.jpg' %}"
-                                     alt="">
-                            </div>
-                            <div class="timeline-panel">
-                                <div class="timeline-heading pt-5">
-                                    <h4>2003</h4>
-                                    <h4 class="subheading">墨尔本大学中国学联成立</h4>
-                                </div>
-                                <div class="timeline-body"></div>
-                            </div>
-                        </li>
-                        <li class="timeline-inverted">
-                            <div class="timeline-image">
-                                <img class="rounded-circle img-fluid"
-                                     src="{% static 'myCSSAhub/img/4.jpg' %}"
-                                     alt="">
-                            </div>
-                            <div class="timeline-panel">
-                                <div class="timeline-heading pt-5">
-                                    <h4>2011</h4>
-                                    <h4 class="subheading">CSSA网站成立</h4>
-                                </div>
-                                <div class="timeline-body"></div>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="timeline-image">
-                                <img class="rounded-circle img-fluid"
-                                     src="{% static 'myCSSAhub/img/2.jpg' %}"
-                                     alt="">
-                            </div>
-                            <div class="timeline-panel">
-                                <div class="timeline-heading pt-5">
-                                    <h4>2019</h4>
-                                    <h4 class="subheading">CSSA 2.0 全新改版上线</h4>
-                                </div>
-                                <div class="timeline-body"></div>
-                            </div>
-                        </li>
-                        <li class="timeline-inverted">
-                            <div class="timeline-image">
-                                <img class="rounded-circle img-fluid"
-                                     src="{% static 'myCSSAhub/img/3.jpg' %}"
-                                     alt="">
-                            </div>
-                            <div class="timeline-panel">
-                                <div class="timeline-heading pt-5">
-                                    <h4>2020</h4>
-                                    <h4 class="subheading">CSSA微信小程序上线</h4>
-                                </div>
-                                <div class="timeline-body"></div>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
+            <div class="cssa-milestones" data-reveal="trigger" data-reveal-group data-reveal-step="110" data-loop>
+                <article data-reveal><span>2003</span><h3>学联成立</h3><p>墨尔本大学中国学生学者联谊会正式成立。</p></article>
+                <article data-reveal><span>2011</span><h3>官方网站上线</h3><p>建立面向墨大学生的线上信息与服务平台。</p></article>
+                <article data-reveal><span>2019</span><h3>CSSA 2.0</h3><p>完成品牌与数字服务的全面升级。</p></article>
+                <article data-reveal><span>2020</span><h3>微信小程序上线</h3><p>把校园资讯、活动和社区服务带到移动端。</p></article>
+                <article data-reveal><span>2026</span><h3>网站翻新</h3><p>重新设计官网体验，优化校园资讯、活动与学生服务入口。</p></article>
             </div>
         </div>
     </section>
@@ -256,28 +208,5 @@
             </div>
         </div>
     {% endfor %}
-    <!-- bloc-2 END -->
-    <div class="modal fade"
-         id="WeChatQRCode"
-         tabindex="-1"
-         role="dialog"
-         aria-labelledby="exampleModalCenterTitle"
-         aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">...</div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
-                </div>
-            </div>
-        </div>
-    </div>
     <script src="{% static 'myCSSAhub/js/index.js'%}" defer></script>
 {% endblock 'pg_body' %}

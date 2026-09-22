@@ -43,11 +43,19 @@ def get_access_token() -> Optional[str]:
             logger.warning('小程序 APPID 或 SECRET 不存在，无法获取 access_token')
             return None
 
-        ret: Dict[str, Any] = requests.get('https://api.weixin.qq.com/cgi-bin/token', params={
-            'grant_type': 'client_credential',
-            'appid': id,
-            'secret': secret,
-        }).json()
+        try:
+            ret: Dict[str, Any] = requests.get(
+                'https://api.weixin.qq.com/cgi-bin/token',
+                params={
+                    'grant_type': 'client_credential',
+                    'appid': id,
+                    'secret': secret,
+                },
+                timeout=(3.05, 10),
+            ).json()
+        except (requests.RequestException, ValueError):
+            logger.exception('获取小程序 access token 失败')
+            return None
 
         if ret.get('errcode'):
             logger.warning('获取 access token 出错，code: %s, msg: %s',
@@ -96,14 +104,22 @@ def is_text_invalid(openid: str, text: str, title: Optional[str] = None):
 
     for x in text_list:
         # api doc: https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/sec-check/security.msgSecCheck.html
-        res = requests.post('https://api.weixin.qq.com/wxa/msg_sec_check', params={'access_token': token},
-                            json={
-            'version': 2,
-            'openid': openid,
-            'scene': 3,  # 场景固定为论坛
-            'content': x,
-            'title': title,
-        }).json()
+        try:
+            res = requests.post(
+                'https://api.weixin.qq.com/wxa/msg_sec_check',
+                params={'access_token': token},
+                json={
+                    'version': 2,
+                    'openid': openid,
+                    'scene': 3,  # 场景固定为论坛
+                    'content': x,
+                    'title': title,
+                },
+                timeout=(3.05, 10),
+            ).json()
+        except (requests.RequestException, ValueError):
+            logger.exception('小程序文本安全审核请求失败')
+            return None
         logger.debug('内容审查 %s ，结果 %s', x, res)
         title = None  # after first iteration, do not send title anymore
 

@@ -1,5 +1,3 @@
-from django.shortcuts import render
-import itertools
 import math
 from typing import Dict, List
 
@@ -8,6 +6,7 @@ from django.contrib.auth.mixins import (
     LoginRequiredMixin,
     PermissionRequiredMixin,
 )
+from django.core.paginator import Paginator
 
 # CacheSettings
 from django.db.models import Q
@@ -115,8 +114,16 @@ class DepartmentInfoView(View):
 
 
 def Recruitments(request):
-    job_list = JobModels.JobList.objects.filter(disabled=False)
-    return render(request, 'PublicSite/recruit.html', {'job_list': job_list})
+    # `disabled` was historically nullable. Treat legacy NULL rows as active,
+    # matching the intent of the model's False default.
+    jobs = JobModels.JobList.objects.filter(
+        Q(disabled=False) | Q(disabled__isnull=True)
+    ).select_related('dept').order_by('dept__deptTitle', '-timeOfCreate')
+    page_obj = Paginator(jobs, 8).get_page(request.GET.get('page'))
+
+    return render(request, 'PublicSite/recruit.html', {
+        'page_obj': page_obj,
+    })
 
 
 class ResumeSubmissionView(LoginRequiredMixin, View):
@@ -170,7 +177,6 @@ class ResumeSubmissionView(LoginRequiredMixin, View):
 
 class EventsListView(View):
     template_name = 'PublicSite/event.html'
-    events = eventModels.Event.objects.all().order_by("-eventActualStTime")
 
     def get(self, request, *args, **kwargs):
         timezone.activate('Australia/Melbourne')
@@ -178,10 +184,19 @@ class EventsListView(View):
         # Filter events for the past year
         past_year = now_time - timezone.timedelta(days=365)
         eventsFuture = eventModels.Event.objects.filter(
-            eventActualStTime__gt=now_time).order_by("eventActualStTime")
+            disabled=False,
+            eventActualStTime__gt=now_time,
+        ).select_related('eventBy', 'eventTypes').order_by("eventActualStTime")
         eventsPast = eventModels.Event.objects.filter(
-            eventActualStTime__lt=now_time, eventActualStTime__gt=past_year).order_by("-eventActualStTime")
-        return render(request, self.template_name, {'eventsFuture': eventsFuture, 'now_time': now_time, 'events': self.events, 'eventsPast': eventsPast})
+            disabled=False,
+            eventActualStTime__lt=now_time,
+            eventActualStTime__gt=past_year,
+        ).select_related('eventBy', 'eventTypes').order_by("-eventActualStTime")
+        return render(request, self.template_name, {
+            'eventsFuture': eventsFuture,
+            'now_time': now_time,
+            'eventsPast': eventsPast,
+        })
 
 
 def EventDetails(request, eventID):
@@ -373,29 +388,89 @@ class reviewBlogPublic(LoginRequiredMixin, PermissionRequiredMixin, View):
 
 ################################# sponsor pages ########################################
 def Merchants(request):
+    query = request.GET.get('q', '').strip()
+    category = request.GET.get('category', '').strip()
 
-    infos = HubModels.DiscountMerchant.objects.all().order_by("merchant_add_date")
+    merchants = HubModels.DiscountMerchant.objects.filter(
+        merchant_type='折扣商家'
+    )
 
-    return render(request, 'PublicSite/merchant.html', {'infos': infos})
+    if query:
+        merchants = merchants.filter(
+            Q(merchant_name__icontains=query)
+            | Q(merchant_description__icontains=query)
+            | Q(merchant_address__icontains=query)
+        )
+
+    category_values = {
+        value for value, _ in HubModels.DiscountMerchant.merchantCategory
+        if value != '无'
+    }
+    if category in category_values:
+        merchants = merchants.filter(merchant_Category=category)
+    else:
+        category = ''
+
+    merchants = merchants.order_by('priority', 'merchant_add_date')
+    page_obj = Paginator(merchants, 12).get_page(request.GET.get('page'))
+
+    preserved_query = request.GET.copy()
+    preserved_query.pop('page', None)
+
+    return render(request, 'PublicSite/merchant.html', {
+        'page_obj': page_obj,
+        'query': query,
+        'selected_category': category,
+        'merchant_categories': [
+            (value, label)
+            for value, label in HubModels.DiscountMerchant.merchantCategory
+            if value != '无'
+        ],
+        'preserved_query': preserved_query.urlencode(),
+    })
 
 
 def SupportMerchants(request):
+    merchants = HubModels.DiscountMerchant.objects.filter(
+        merchant_type='赞助商家'
+    ).order_by('priority', 'merchant_add_date')
 
-    merchants = HubModels.DiscountMerchant.objects.all() \
-        .filter(merchant_type='赞助商家') \
-        .order_by("merchant_level")
+    tier_definitions = [
+        ('钻石商家', '钻石合作伙伴', 'Diamond Partners', 'diamond'),
+        ('金牌商家', '金牌合作伙伴', 'Gold Partners', 'gold'),
+        ('银牌商家', '银牌合作伙伴', 'Silver Partners', 'silver'),
+    ]
+    sponsor_tiers = []
+    recognised_levels = []
 
-    infos: Dict[str, List[HubModels.DiscountMerchant]] = \
-        {k: list(v) for k, v in itertools.groupby(
-            merchants, lambda x: x.merchant_level)}
+    for value, label, label_en, slug in tier_definitions:
+        recognised_levels.append(value)
+        tier_merchants = list(merchants.filter(merchant_level=value))
+        if tier_merchants:
+            sponsor_tiers.append({
+                'label': label,
+                'label_en': label_en,
+                'slug': slug,
+                'merchants': tier_merchants,
+            })
 
-    return render(request, 'PublicSite/supportMerchant.html', {'categories': {
-        # 不是所有的 category 都存在。如果某个类别不存在，infos里不会有这个key
-        # 从python 3.6开始，dict里key的声明顺序决定了 for 里遍历的顺序
-        '钻石商家': infos.get('钻石商家'),
-        '金牌商家': infos.get('金牌商家'),
-        '银牌商家': infos.get('银牌商家'),
-    }})
+    unclassified_merchants = list(
+        merchants.exclude(merchant_level__in=recognised_levels)
+    )
+    if unclassified_merchants:
+        sponsor_tiers.append({
+            'label': '合作伙伴',
+            'label_en': 'Community Partners',
+            'slug': 'community',
+            'merchants': unclassified_merchants,
+        })
+
+    return render(request, 'PublicSite/supportMerchant.html', {
+        'sponsor_tiers': sponsor_tiers,
+        'sponsor_count': sum(
+            len(tier['merchants']) for tier in sponsor_tiers
+        ),
+    })
 
 
 ################################# errors pages ########################################
