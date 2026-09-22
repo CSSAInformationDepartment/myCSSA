@@ -1,185 +1,136 @@
 {% extends "components/base_page.html" %}
-{% block 'extra_header' %}
-    <style media="screen">
-        .card-img {
-            padding-bottom: 70%;
-            position: relative;
-        }
-
-        .card-img>img {
-            position: absolute;
-            max-width: 100%;
-            max-height: 100%;
-        }
-
-        .carousel-inner>.carousel-item {
-            height: 100vh;
-        }
-
-        .carousel-inner>.carousel-item>img {
-            position: absolute;
-            /* top: 50%;
-  left: 50%;
-  -webkit-transform: translate(-50%, -50%);
-  -ms-transform: translate(-50%, -50%);
-  transform: translate(-50%, -50%); */
-            max-height: 800px;
-            width: auto;
-        }
-
-        .bg-white {
-            background: #ffffff !important;
-
-        }
-
-        .bg-light {
-            background-color: #f8f9fa !important;
-        }
-    </style>
-{% endblock 'extra_header' %}
 {% block 'pg_body' %}
-    <!-- bloc-12 -->
-    <div class="bloc l-bloc mt-4" id="bloc-12">
-        <div class="container">
-            <div class="row">
-                <div class="col bloc-0-margin-bottom">
-                    <h1 class="mg-md pg-title">CSSA 活动</h1>
-                </div>
-            </div>
-        </div>
+  <header class="cssa-page-hero cssa-events-hero">
+    <div class="container">
+      <p class="cssa-page-hero__eyebrow" lang="en">CAMPUS LIFE IN MOTION</p>
+      <h1>活动消息 <span class="cssa-heading-en" lang="en">Events &amp; Updates</span></h1>
+      <p>从校园体验到文化交流，与 CSSA 一起发现值得参与的活动与精彩时刻。</p>
     </div>
-    <!-- bloc-12 END -->
-    <!-- bloc-13 -->
-    <div class="bloc l-bloc" id="bloc-13" style="min-height:20vh;">
-        <div class="container">
-            <div class="row">
-                <div class="col">
-                    <div id="event-highlight-caro" class="carousel slide" data-ride="carousel">
-                        <ol class="carousel-indicators">
-                            {% for event in events|slice:":5" %}
-                                {% if forloop.first %}
-                                    <li data-target="#event-highlight-caro"
-                                        data-slide-to="{{ forloop.counter0 }}"
-                                        class="active"></li>
-                                {% else %}
-                                    <li data-target="#event-highlight-caro"
-                                        data-slide-to="{{ forloop.counter0 }}"></li>
-                                {% endif %}
-                            {% endfor %}
-                        </ol>
-                        <div class="carousel-inner" style=" width:100%; height: 420px ;">
-                            {% for event in events|slice:":5" %}
-                                {% if forloop.first %}
-                                    <div class="carousel-item active">
-                                    {% else %}
-                                        <div class="carousel-item ">
-                                        {% endif %}
-                                        <img class="d-inline-block rounded w-100"
-                                             alt="{{ event.eventName }}"
-                                             src="{{ event.mainVisual.url }}" />
-                                        <div class="carousel-caption">
-                                            <h3 class="mg-md event-highlight-title">{{ event.eventName }}</h3>
-                                        </div>
-                                    </div>
-                                {% empty %}
-                                    <h4 class="mg-md text-center">目前没有可预览活动，敬请期待</h4>
-                                {% endfor %}
-                            </div>
-                            <a class="carousel-nav-controls carousel-control-prev"
-                               href="#event-highlight-caro"
-                               role="button"
-                               data-slide="prev"><span class="fa fa-chevron-left"></span><span class="sr-only">Previous</span></a><a class="carousel-nav-controls carousel-control-next"
-   href="#event-highlight-caro"
-   role="button"
-   data-slide="next"><span class="fa fa-chevron-right"></span><span class="sr-only">Next</span></a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+  </header>
+
+  <main class="cssa-events-page">
+    <section class="cssa-section cssa-events-list" aria-labelledby="upcoming-events-title">
+      <div class="container">
+        <div class="cssa-section__header cssa-events-list__header">
+          <div>
+            <p class="cssa-kicker">UPCOMING EVENTS</p>
+            <h2 id="upcoming-events-title">即将开始 <span class="cssa-heading-en" lang="en">What’s Coming Up</span></h2>
+            <p>查看活动时间与报名状态，找到下一场想参与的校园体验。</p>
+          </div>
+          {% if eventsFuture %}
+            <p class="cssa-events-list__count"><strong>{{ eventsFuture|length }}</strong> 场活动</p>
+          {% endif %}
         </div>
-        <!-- bloc-13 END -->
-        <!-- bloc-14 -->
-        <div class="bloc l-bloc bg-light" id="bloc-14" style="min-height:25vh;">
-            <div class="container bloc-md">
-                <div class="row">
-                    <div class="col bloc-bloc-1-margin-bottom">
-                        <h3 class="mg-md text-center">即将开始</h3>
-                        <p class="text-center">Next Events</p>
+
+        {% if eventsFuture %}
+          <div class="cssa-events-grid">
+            {% for event in eventsFuture %}
+              <article class="cssa-events-card">
+                <a class="cssa-events-card__media" href="{% url 'PublicSite:eventsDetails' event.eventID %}" aria-label="查看 {{ event.eventName }} 详情">
+                  {% if event.mainVisual %}
+                    <img src="{{ event.mainVisual.url }}" alt="{{ event.eventName }} 活动主视觉" loading="lazy">
+                  {% else %}
+                    <div class="cssa-events-card__placeholder" aria-hidden="true">
+                      <span class="fa fa-calendar-o"></span>
                     </div>
-                </div>
-                <div class="row voffset justify-content-center">
-                    {% for event in eventsFuture %}
-                        <div class="mt-3 col-lg-3 align-self-center col-md-6 mt-lg-3">
-                            <div class="card h-100">
-                                <div class="card-img">
-                                    <img src="{{ event.mainVisual.url }}"
-                                         data-src="{{ event.mainVisual.url }}"
-                                         class="card-img-top h-100 w-100" />
-                                </div>
-                                <div class="card-body">
-                                    <h5 class="card-title" style="min-height:50px">{{ event.eventName }}</h5>
-                                    <p class="card-text" style="height:50px; overflow:auto;">{{ event.eventInfo }}</p>
-                                    {% if event.isMemberOnly %}
-                                        <a href="{% url 'PublicSite:eventsDetails' event.eventID %}"
-                                           class="btn btn-block btn-mustard mt-3">CSSA会员专享</a>
-                                    {% elif event.eventSignUpTime > now_time %}
-                                        <a href="{% url 'PublicSite:eventsDetails' event.eventID %}"
-                                           class="btn btn-block btn-light-gray mt-3">报名将于 {{ event.eventSignUpTime|date:"SHORT_DATE_FORMAT" }} 开始</a>
-                                    {% elif event.eventActualStTime < now_time %}
-                                        <a href="{% url 'PublicSite:eventsDetails' event.eventID %}"
-                                           class="btn btn-block btn-light-gray mt-3">活动已结束</a>
-                                    {% elif event.get_estimate_remaining_factor > 0.6 %}
-                                        <a href="{% url 'PublicSite:eventsDetails' event.eventID %}"
-                                           class="btn btn-block btn-warning mt-3">余位有限</a>
-                                    {% elif event.get_estimate_remaining_factor >= 1 %}
-                                        <a href="#" class="btn btn-block btn-danger mt-3" disabled="disabled">名额已满</a>
-                                    {% else %}
-                                        <a href="{% url 'PublicSite:eventsDetails' event.eventID %}"
-                                           class="btn btn-block btn-blue-gray mt-3">查看详情
-                                            <br>
-                                        </a>
-                                    {% endif %}
-                                </div>
-                            </div>
-                        </div>
-                    {% empty %}
-                        <h4 class="mg-md text-center">目前没有可报名活动，敬请期待</h4>
-                    {% endfor %}
-                </div>
-            </div>
-        </div>
-        <!-- bloc-14 END -->
-        <!-- bloc-15 -->
-        <div class="bloc l-bloc bg-light" id="bloc-15" style="min-height:25vh;">
-            <div class="container bloc-sm">
-                <div class="row">
-                    <div class="col bloc-bloc-1-margin-bottom">
-                        <h3 class="mg-md text-center">过往活动回顾</h3>
-                        <p class="text-center">Previous Events</p>
+                  {% endif %}
+                  <span class="cssa-events-card__date">
+                    <strong>{{ event.eventActualStTime|date:"d" }}</strong>
+                    <small>{{ event.eventActualStTime|date:"M" }}</small>
+                  </span>
+                </a>
+
+                <div class="cssa-events-card__body">
+                  <div class="cssa-events-card__labels">
+                    {% if event.isMemberOnly %}<span class="is-insider">CSSA INSIDER</span>{% endif %}
+                    {% if event.isFree %}<span>免费活动</span>{% endif %}
+                  </div>
+                  <h3><a href="{% url 'PublicSite:eventsDetails' event.eventID %}">{{ event.eventName }}</a></h3>
+                  <p class="cssa-events-card__description">{{ event.eventInfo|truncatechars:120 }}</p>
+
+                  <dl class="cssa-events-card__meta">
+                    <div>
+                      <dt><span class="fa fa-clock-o" aria-hidden="true"></span><span class="sr-only">活动时间</span></dt>
+                      <dd>{{ event.eventActualStTime|date:"Y年n月j日 H:i" }}</dd>
                     </div>
+                    {% if event.venue or event.address %}
+                      <div>
+                        <dt><span class="fa fa-map-marker" aria-hidden="true"></span><span class="sr-only">活动地点</span></dt>
+                        <dd>{{ event.venue|default:event.address }}</dd>
+                      </div>
+                    {% endif %}
+                  </dl>
+
+                  <div class="cssa-events-card__footer">
+                    {% if event.eventSignUpTime > now_time %}
+                      <span class="cssa-events-card__notice">{{ event.eventSignUpTime|date:"n月j日" }} 开放报名</span>
+                    {% elif event.get_estimate_remaining_factor >= 100 %}
+                      <span class="cssa-events-card__notice is-full">名额已满</span>
+                    {% elif event.get_estimate_remaining_factor >= 60 %}
+                      <span class="cssa-events-card__notice is-limited">余位有限</span>
+                    {% else %}
+                      <span class="cssa-events-card__notice is-open">报名开放</span>
+                    {% endif %}
+                    <a class="cssa-text-link" href="{% url 'PublicSite:eventsDetails' event.eventID %}">查看详情 <span aria-hidden="true">→</span></a>
+                  </div>
                 </div>
-                <div class=" row voffset justify-content-center">
-                    {% for event in eventsPast %}
-                        <div class="col-lg-3 col-md-6 mt-1 mt-md-4 mt-lg-0 mb-3">
-                            <div class="bg-white" style="margin-bottom:30px">
-                                <a href="#" data-lightbox="{{ event.mainVisual.url }}" data-gallery-id="gallery-1" data-caption="{{ event.eventName }}
-                                    <br>
-                                    {{ event.eventInfo }}">
-                                    <img src="{{ event.mainVisual.url }}"
-                                         data-src="{{ event.mainVisual.url }}"
-                                         class="img-fluid mx-auto d-block lazyload w-100 h-100"
-                                         style="min-height:258px;
-                                                max-height:240px" />
-                                </a>
-                                <h4 class="mg-md pt-3 text-center">{{ event.eventName }}</h4>
-                                <p class="text-center pb-3" style="max-height: 200px; overflow: scroll;">{{ event.eventInfo }}</p>
-                            </div>
-                        </div>
-                    {% empty %}
-                        <h4 class="mg-md text-center">目前没有过往活动，敬请期待</h4>
-                    {% endfor %}
-                </div>
-            </div>
+              </article>
+            {% endfor %}
+          </div>
+        {% else %}
+          <div class="cssa-events-empty">
+            <span class="fa fa-calendar-check-o" aria-hidden="true"></span>
+            <h3>新活动正在筹备中</h3>
+            <p>请关注 CSSA 官方平台，第一时间获取活动与报名消息。</p>
+          </div>
+        {% endif %}
+      </div>
+    </section>
+
+    <section class="cssa-section cssa-events-archive" aria-labelledby="past-events-title">
+      <div class="container">
+        <div class="cssa-section__header cssa-events-list__header">
+          <div>
+            <p class="cssa-kicker">PAST HIGHLIGHTS</p>
+            <h2 id="past-events-title">过往活动回顾 <span class="cssa-heading-en" lang="en">Moments We Shared</span></h2>
+            <p>重温我们共同创造的校园记忆，也期待在下一场活动与你相见。</p>
+          </div>
         </div>
-        <!-- bloc-15 END -->
-    {% endblock 'pg_body' %}
+
+        {% if eventsPast %}
+          <div class="cssa-events-archive__grid">
+            {% for event in eventsPast %}
+              <article class="cssa-events-archive-card">
+                {% if event.mainVisual %}
+                  <a class="cssa-events-archive-card__media"
+                     href="{{ event.mainVisual.url }}"
+                     data-lightbox="{{ event.mainVisual.url }}"
+                     data-gallery-id="events-archive"
+                     data-caption="{{ event.eventName }}">
+                    <img src="{{ event.mainVisual.url }}" alt="{{ event.eventName }} 活动回顾" loading="lazy">
+                    <span>查看照片 <span aria-hidden="true">↗</span></span>
+                  </a>
+                {% else %}
+                  <div class="cssa-events-archive-card__media cssa-events-card__placeholder" aria-hidden="true">
+                    <span class="fa fa-camera-retro"></span>
+                  </div>
+                {% endif %}
+                <div class="cssa-events-archive-card__body">
+                  <time datetime="{{ event.eventActualStTime|date:'c' }}">{{ event.eventActualStTime|date:"Y年n月j日" }}</time>
+                  <h3>{{ event.eventName }}</h3>
+                  <p>{{ event.eventInfo|truncatechars:90 }}</p>
+                </div>
+              </article>
+            {% endfor %}
+          </div>
+        {% else %}
+          <div class="cssa-events-empty">
+            <span class="fa fa-camera-retro" aria-hidden="true"></span>
+            <h3>活动回顾即将更新</h3>
+            <p>更多照片与故事正在整理中。</p>
+          </div>
+        {% endif %}
+      </div>
+    </section>
+  </main>
+{% endblock 'pg_body' %}

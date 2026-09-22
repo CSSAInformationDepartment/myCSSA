@@ -4,46 +4,96 @@
 {% block 'pg_body' %}
 <header class="cssa-page-hero">
     <div class="container">
+        <p class="cssa-page-hero__eyebrow" lang="en">GET IN TOUCH</p>
         <h1>联系我们 <span class="cssa-heading-en" lang="en">Contact CSSA</span></h1>
         <p>无论是校园生活、活动合作还是加入团队，我们都愿意听见你的声音。</p>
     </div>
 </header>
 
-<section class="cssa-section cssa-section--white cssa-contact" aria-labelledby="wechat-contact-title">
+<section class="cssa-section cssa-section--white cssa-contact" aria-labelledby="social-contact-title">
     <div class="container">
         <div class="cssa-section__header">
             <div>
-                <h2 id="wechat-contact-title">微信咨询与社群 <span class="cssa-heading-en" lang="en">WeChat Support</span></h2>
-                <p>添加小助手时，请备注“专业 + 姓名”，方便我们更快回应。</p>
+                <h2 id="social-contact-title">关注官方渠道 <span class="cssa-heading-en" lang="en">Follow CSSA</span></h2>
+                <p>获取最新活动、校园资讯与学生服务动态。</p>
             </div>
         </div>
 
-        <div class="cssa-qr-grid">
+        <div class="cssa-qr-grid cssa-qr-grid--official">
             <article class="cssa-qr-card">
-                <div class="cssa-qr-card__image">
-                    <img src="{% static 'myCSSAhub/img/qr_xiaozhushou.jpeg' %}" alt="CSSA 小助手 2 号微信二维码">
+                <div class="cssa-qr-card__image cssa-qr-card__image--poster">
+                    <img src="{% static 'PublicSite/img/contact-douyin.jpg' %}" alt="墨尔本大学中国学生会抖音二维码" loading="lazy">
                 </div>
-                <p class="cssa-qr-card__index">01</p>
-                <h3>CSSA 小助手</h3>
-                <p>新生群、租房与二手群等日常校园咨询。</p>
+                <p class="cssa-qr-card__index">DOUYIN</p>
+                <h3>抖音</h3>
+                <p>抖音号：Unimelbcssa</p>
             </article>
 
             <article class="cssa-qr-card">
-                <div class="cssa-qr-card__image">
-                    <img src="{% static 'myCSSAhub/img/qr_xiaozhushou3.png' %}" alt="CSSA 小助手微信二维码">
+                <div class="cssa-qr-card__image cssa-qr-card__image--poster">
+                    <img src="{% static 'PublicSite/img/contact-xiaohongshu.jpg' %}" alt="UniMelb CSSA 小红书二维码" loading="lazy">
                 </div>
-                <p class="cssa-qr-card__index">02</p>
-                <h3>备用小助手</h3>
-                <p>主账号繁忙时，可通过备用账号联系我们。</p>
+                <p class="cssa-qr-card__index">XIAOHONGSHU</p>
+                <h3>小红书</h3>
+                <p>小红书号：cssaum</p>
             </article>
 
             <article class="cssa-qr-card cssa-qr-card--featured">
                 <div class="cssa-qr-card__image">
-                    <img src="{% static 'PublicSite/img/qrcode_wx.jpg' %}" alt="墨尔本大学中国学生会微信公众号二维码">
+                    <img src="{% static 'PublicSite/img/qrcode_wx.jpg' %}" alt="墨尔本大学中国学生会微信公众号二维码" loading="lazy">
                 </div>
-                <p class="cssa-qr-card__index">OFFICIAL</p>
+                <p class="cssa-qr-card__index">WECHAT</p>
                 <h3>微信公众号</h3>
-                <p>关注“墨尔本大学中国学生会”获取活动与校园资讯。</p>
+                <p>微信号：cssaum</p>
+            </article>
+        </div>
+    </div>
+</section>
+
+<section class="cssa-section cssa-contact cssa-contact--helpers" aria-labelledby="wechat-contact-title">
+    <div class="container">
+        <div class="cssa-section__header">
+            <div>
+                <h2 id="wechat-contact-title">微信咨询与社群 <span class="cssa-heading-en" lang="en">WeChat Support</span></h2>
+                <p>请按顺序尝试添加小助手，并备注“专业 + 姓名”，方便我们更快回应。</p>
+            </div>
+        </div>
+
+        <div class="cssa-qr-grid cssa-qr-grid--helpers">
+            <article class="cssa-qr-card">
+                <div class="cssa-qr-card__image cssa-qr-card__image--poster">
+                    <img src="{% static 'PublicSite/img/contact-helper-3.jpg' %}" alt="CSSA 小助手 3 号微信二维码" loading="lazy">
+                </div>
+                <p class="cssa-qr-card__index">03</p>
+                <h3>CSSA 小助手 3号</h3>
+                <p>校园生活、社群与日常咨询。</p>
+            </article>
+
+            <article class="cssa-qr-card">
+                <div class="cssa-qr-card__image cssa-qr-card__image--poster">
+                    <img src="{% static 'PublicSite/img/contact-helper-4.jpg' %}" alt="CSSA 小助手 4 号微信二维码" loading="lazy">
+                </div>
+                <p class="cssa-qr-card__index">04</p>
+                <h3>CSSA 小助手 4号</h3>
+                <p>校园生活、社群与日常咨询。</p>
+            </article>
+
+            <article class="cssa-qr-card">
+                <div class="cssa-qr-card__image cssa-qr-card__image--poster">
+                    <img src="{% static 'PublicSite/img/contact-helper-5.jpg' %}" alt="CSSA 小助手 5 号微信二维码" loading="lazy">
+                </div>
+                <p class="cssa-qr-card__index">05</p>
+                <h3>CSSA 小助手 5号</h3>
+                <p>校园生活、社群与日常咨询。</p>
+            </article>
+
+            <article class="cssa-qr-card">
+                <div class="cssa-qr-card__image cssa-qr-card__image--poster">
+                    <img src="{% static 'PublicSite/img/contact-helper-6.jpg' %}" alt="CSSA 小助手 6 号微信二维码" loading="lazy">
+                </div>
+                <p class="cssa-qr-card__index">06</p>
+                <h3>CSSA 小助手 6号</h3>
+                <p>校园生活、社群与日常咨询。</p>
             </article>
         </div>
     </div>

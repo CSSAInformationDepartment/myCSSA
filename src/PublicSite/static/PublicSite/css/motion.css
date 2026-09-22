@@ -94,27 +94,27 @@
    ========================================================================== */
 
 @media (prefers-reduced-motion: no-preference) {
-    /* The focal moment is now the mark itself soaking into the page, rather
-       than a stamp pressed onto an invented card. It lands a touch oversized
-       and off-axis, then settles - transform and opacity only, so the whole
-       thing stays on the compositor. */
-    .cssa-hero__ink {
-        animation: cssa-ink-soak 1200ms var(--cssa-ease-out) 160ms both;
+    /* 雾起 — the focal moment is the landscape settling into the paper: the
+       far mountains rise a little and the mist clears. Slower than the copy,
+       because it is the ground rather than the subject. */
+    .cssa-hero__scene {
+        animation: cssa-mist-lift 1600ms var(--cssa-ease-out) 120ms both;
     }
 
     /* The hero copy enters as one block, not as six staggered lines. */
     .cssa-hero__content {
         animation: cssa-hero-rise 560ms var(--cssa-ease-out) both;
     }
+
 }
 
 
 
 
 
-@keyframes cssa-ink-soak {
-    from { opacity: 0; transform: scale(1.06) rotate(-2.5deg); }
-    to   { opacity: var(--cssa-ink-opacity); transform: none; }
+@keyframes cssa-mist-lift {
+    from { opacity: 0; transform: translate3d(0, 26px, 0) scale(1.04); }
+    to   { opacity: 0.72; transform: none; }
 }
 
 @keyframes cssa-hero-rise {
@@ -304,63 +304,6 @@ html.cssa-motion [data-reveal].is-revealed {
    the viewport or the tab goes to the background.
    ========================================================================== */
 
-.cssa-hero__aurora {
-    position: absolute;
-    z-index: 0;
-    inset: 0;
-    overflow: hidden;
-    pointer-events: none;
-}
-
-.cssa-hero__aurora span {
-    position: absolute;
-    display: block;
-    border-radius: var(--cssa-radius-disc);
-    will-change: transform;
-}
-
-.cssa-hero__aurora span:nth-child(1) {
-    top: -18%;
-    left: -6%;
-    width: 46vw;
-    height: 46vw;
-    background: radial-gradient(circle, rgba(195, 12, 35, 0.05), rgba(195, 12, 35, 0) 68%);
-    animation: cssa-drift-a 26s ease-in-out infinite;
-}
-
-.cssa-hero__aurora span:nth-child(2) {
-    right: -10%;
-    bottom: -24%;
-    width: 52vw;
-    height: 52vw;
-    background: radial-gradient(circle, rgba(12, 63, 124, 0.18), rgba(12, 63, 124, 0) 66%);
-    animation: cssa-drift-b 32s ease-in-out infinite;
-}
-
-.cssa-hero__aurora span:nth-child(3) {
-    top: 24%;
-    left: 42%;
-    width: 30vw;
-    height: 30vw;
-    background: radial-gradient(circle, rgba(214, 226, 240, 0.16), rgba(214, 226, 240, 0) 70%);
-    animation: cssa-drift-c 22s ease-in-out infinite;
-}
-
-@keyframes cssa-drift-a {
-    0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
-    50%      { transform: translate3d(7vw, 5vh, 0) scale(1.12); }
-}
-
-@keyframes cssa-drift-b {
-    0%, 100% { transform: translate3d(0, 0, 0) scale(1.05); }
-    50%      { transform: translate3d(-6vw, -6vh, 0) scale(0.92); }
-}
-
-@keyframes cssa-drift-c {
-    0%, 100% { transform: translate3d(0, 0, 0) scale(0.95); }
-    50%      { transform: translate3d(-4vw, 4vh, 0) scale(1.15); }
-}
-
 /* The red spine down the left edge catches a slow travelling highlight — the
    ink still wet, after the stamp. */
 .cssa-hero::before {
@@ -383,18 +326,20 @@ html.cssa-motion [data-reveal].is-revealed {
 
 /* Pausing rules. Pseudo-elements and descendants are named explicitly because
    animation-play-state does not inherit through them on its own. */
+/* Name the loops rather than sweeping the whole subtree with `*`. A container
+   marked data-loop also holds one-shot entrance animations, and pausing those
+   left the hero copy stuck at opacity 0 whenever the page was opened in a
+   background tab. */
 [data-loop].is-paused,
 [data-loop].is-paused::before,
 [data-loop].is-paused::after,
-[data-loop].is-paused *,
-[data-loop].is-paused *::before,
-[data-loop].is-paused *::after,
+[data-loop].is-paused > span,
+[data-loop].is-paused article::before,
 html.is-tab-hidden [data-loop],
 html.is-tab-hidden [data-loop]::before,
 html.is-tab-hidden [data-loop]::after,
-html.is-tab-hidden [data-loop] *,
-html.is-tab-hidden [data-loop] *::before,
-html.is-tab-hidden [data-loop] *::after {
+html.is-tab-hidden [data-loop] > span,
+html.is-tab-hidden [data-loop] article::before {
     animation-play-state: paused;
 }
 
@@ -819,9 +764,9 @@ html {
     to   { opacity: 1; }
 }
 
-@keyframes cssa-ink-develop {
-    from { opacity: 0; filter: contrast(0.3) saturate(0.15); }
-    to   { opacity: var(--cssa-ink-opacity); filter: none; }
+@keyframes cssa-mist-develop {
+    from { opacity: 0; filter: contrast(0.4) saturate(0.2); }
+    to   { opacity: 0.72; filter: none; }
 }
 
 /* ==========================================================================
@@ -866,10 +811,9 @@ html {
         animation: cssa-develop 520ms linear both !important;
     }
 
-    /* No movement whatever: the mark rises out of the paper by ink density
-       alone, which is the one thing a stamp does that travel cannot fake. */
-    .cssa-hero__ink {
-        animation: cssa-ink-develop 1100ms linear 200ms both !important;
+    /* No movement whatever: the mist clears by density alone. */
+    .cssa-hero__scene {
+        animation: cssa-mist-develop 1100ms linear 200ms both !important;
     }
 
     /* Same idea at page scale: the transition becomes a straight dissolve
@@ -883,7 +827,6 @@ html {
     }
 
     .cssa-hero::before,
-    .cssa-hero__aurora span,
     .cssa-ticker__track,
     .cssa-wechat-chip__qr::after,
     .cssa-milestones article:last-child::before {

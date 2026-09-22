@@ -1,56 +1,83 @@
 {% extends "components/base_page.html" %}
 {% block 'pg_body' %}
-    {% load static %}
-    <div class="container bloc-fill-screen">
-        <!-- bloc-20 -->
-        <div class="bloc l-bloc" id="bloc-20">
-            <div class="container bloc-md">
-                <div class="row">
-                    <div class="col">
-                        <h1 class="mg-md">
-                            加入我们
-                            <br>
-                        </h1>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- bloc-20 END -->
-        <!-- bloc-21 -->
-        <div class="bloc l-bloc" id="bloc-21">
-            <div class="container bloc-md" style="min-height:100%">
-                <div class="row">
-                    <div class="col-12">
-                        <div class="row">
-                            <div class="col-12">
-                                <ul class="list-unstyled">
-                                    {% for job in job_list %}
-                                        <li class="bloc-4298-margin-bottom">
-                                            <div class="row bgc-light-gray">
-                                                <div class="col-lg-12 align-self-center text-left">
-                                                    <h5 class="mg-md">{{ job.dept.deptTitle }}</h5>
-                                                </div>
-                                                <div class="col align-self-center" style="margin-top:10px">
-                                                    <p>{{ job.description }}</p>
-                                                    <a href="{% url 'PublicSite:resumes' job.jobId %}"
-                                                       class="btn  btn-primary float-lg-right btn-margin-left"
-                                                       style="margin-top:10px">申请加入</a>
-                                                </div>
-                                            </div>
-                                        </li>
-                                    {% empty %}
-                                        <h1 class="mg-md text-center">目前没有岗位发布，请关注下学期招新</h1>
-                                    {% endfor %}
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col offset-lg-0 bloc-margin-top">
-                        <span class="empty-column"></span>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- bloc-21 END -->
+  <header class="cssa-page-hero cssa-recruit-hero">
+    <div class="container">
+      <p class="cssa-page-hero__eyebrow" lang="en">GROW WITH OUR COMMUNITY</p>
+      <h1>加入我们 <span class="cssa-heading-en" lang="en">Join CSSA</span></h1>
+      <p>把你的热情与专长带进 CSSA，一起为墨大学生社群创造更多可能。</p>
     </div>
+  </header>
+
+  <main class="cssa-section cssa-recruitment" aria-labelledby="recruitment-title">
+    <div class="container">
+      <div class="cssa-section__header cssa-recruitment__intro">
+        <div>
+          <p class="cssa-kicker">CURRENT OPPORTUNITIES</p>
+          <h2 id="recruitment-title">开放岗位 <span class="cssa-heading-en" lang="en">Open Positions</span></h2>
+          <p>查看各部门岗位介绍，找到适合你的团队。所有岗位持续接受申请。</p>
+        </div>
+        <p class="cssa-recruitment__count"><strong>{{ page_obj.paginator.count }}</strong> 个岗位</p>
+      </div>
+
+      {% if page_obj.object_list %}
+        <div class="cssa-recruitment-grid">
+          {% for job in page_obj %}
+            <article class="cssa-job-card">
+              <header class="cssa-job-card__header">
+                <div>
+                  <p class="cssa-job-card__department">
+                    {{ job.dept.deptTitle }}
+                    {% if job.dept.deptTitleEN %}<span lang="en">{{ job.dept.deptTitleEN }}</span>{% endif %}
+                  </p>
+                  <h3>{{ job.jobName }}</h3>
+                </div>
+                <span class="cssa-job-card__status">持续招募</span>
+              </header>
+
+              <p class="cssa-job-card__description">{{ job.description }}</p>
+
+              <footer class="cssa-job-card__footer">
+                <p class="cssa-job-card__deadline">
+                  <span class="fa fa-clock-o" aria-hidden="true"></span>
+                  <span>
+                    <small>申请时间</small>
+                    长期开放
+                  </span>
+                </p>
+                <a class="cssa-btn cssa-btn--primary" href="{% url 'PublicSite:resumes' job.jobId %}">
+                  申请岗位 <span aria-hidden="true">→</span>
+                </a>
+              </footer>
+            </article>
+          {% endfor %}
+        </div>
+
+        {% if page_obj.paginator.num_pages > 1 %}
+          <nav class="cssa-merchant-pagination" aria-label="岗位分页">
+            {% if page_obj.has_previous %}
+              <a href="?page={{ page_obj.previous_page_number }}" rel="prev">
+                <span aria-hidden="true">←</span> 上一页
+              </a>
+            {% else %}
+              <span class="is-disabled"><span aria-hidden="true">←</span> 上一页</span>
+            {% endif %}
+            <span class="cssa-merchant-pagination__status">第 {{ page_obj.number }} / {{ page_obj.paginator.num_pages }} 页</span>
+            {% if page_obj.has_next %}
+              <a href="?page={{ page_obj.next_page_number }}" rel="next">
+                下一页 <span aria-hidden="true">→</span>
+              </a>
+            {% else %}
+              <span class="is-disabled">下一页 <span aria-hidden="true">→</span></span>
+            {% endif %}
+          </nav>
+        {% endif %}
+      {% else %}
+        <div class="cssa-recruitment-empty">
+          <span class="fa fa-briefcase" aria-hidden="true"></span>
+          <h2>新一轮招募正在筹备中</h2>
+          <p>目前没有开放岗位，请关注 CSSA 官方平台获取最新招募信息。</p>
+        </div>
+      {% endif %}
+    </div>
+  </main>
 {% endblock 'pg_body' %}

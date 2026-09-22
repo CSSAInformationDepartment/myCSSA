@@ -8,6 +8,9 @@
     --cssa-ink: #142338;
     --cssa-muted: #5e6c7c;
     --cssa-canvas: #f7f5f0;
+    --cssa-paper-texture:
+        repeating-linear-gradient(92deg, rgba(8, 45, 91, 0.018) 0, rgba(8, 45, 91, 0.018) 1px, transparent 1px, transparent 9px),
+        repeating-linear-gradient(2deg, rgba(8, 45, 91, 0.01) 0, rgba(8, 45, 91, 0.01) 1px, transparent 1px, transparent 13px);
     --cssa-white: #ffffff;
     --cssa-line: rgba(12, 63, 124, 0.14);
     --cssa-display: "Noto Serif SC", Georgia, serif;
@@ -57,6 +60,7 @@ html {
 body {
     color: var(--cssa-ink);
     background: var(--cssa-canvas);
+    background-image: var(--cssa-paper-texture);
     font-family: var(--cssa-body);
     font-size: 18px;
     line-height: 1.72;
@@ -103,7 +107,18 @@ body select:focus-visible {
 
 #main-content > .bloc,
 #main-content > section:not(.cssa-hero):not(.cssa-about):not(.cssa-section--tint):not(.cssa-section--white) {
-    background-color: var(--cssa-canvas);
+    background-color: transparent;
+    background-image: none;
+}
+
+/* The events view is composed of several legacy sibling blocs. Repainting the
+   multi-layer paper texture inside each bloc makes the gradient restart at
+   every boundary. Let the page canvas show through so the paper reads as one
+   continuous sheet from the title through the archive. */
+#main-content > .cssa-events-section,
+#main-content .cssa-events-section {
+    background-color: transparent !important;
+    background-image: none !important;
 }
 
 #main-content .display-3 {
@@ -324,7 +339,7 @@ body select:focus-visible {
 .cssa-hero {
     position: relative;
     display: flex;
-    min-height: 680px;
+    min-height: 760px;
     overflow: hidden;
     padding: clamp(72px, 9vw, 128px) 0;
     /* The warm end used to be #f9f7f2 (R249 G247 B242) - a cream whose red
@@ -351,26 +366,31 @@ body select:focus-visible {
     z-index: 1;
 }
 
-/* The association's mark at architectural scale, bleeding off the top-right
-   the way a chop is pressed into the corner of a scroll.
-   ink-mark.png is the 墨 cut out of the lockup and resampled to 864x1194 with
-   the alpha edge tightened - cropping the 144px-wide original out of the logo
-   at this size left the brush edges mushy, which read as a smudge rather than
-   a stroke. Quantised to 64 colours: two inks plus antialiasing, 54 KB. */
-.cssa-hero__ink {
-    --cssa-ink-opacity: 0.16;
+/* 远山 — the hero's ground is a 山水 landscape, composed the way such a
+   painting is: mountains along the bottom, 留白 above for the text to live in.
+   It is masked into the paper rather than pasted on it - transparent at the
+   top, fully present only past 60%, then softening again at the very bottom so
+   the water dissolves into the section below instead of ending on a hard edge.
+
+   Source: third-party artwork supplied by the client, who has accepted
+   responsibility for its licensing. Replace with a licensed or commissioned
+   asset before this goes to production. 736x460 is also small for a full-bleed
+   hero; a 2000px+ original would hold up better on wide screens. */
+.cssa-hero__scene {
     position: absolute;
-    top: -12%;
-    right: -6%;
+    right: 0;
+    bottom: 0;
+    left: 0;
     z-index: 0;
-    width: min(46vw, 620px);
-    aspect-ratio: 864 / 1194;
-    background-image: url("../img/ink-mark.png");
-    background-position: center;
+    height: 60%;
+    background-image: url("../img/hero-landscape-no-boat.jpg");
+    background-position: center 82%;
     background-repeat: no-repeat;
-    background-size: contain;
-    opacity: var(--cssa-ink-opacity);
+    background-size: cover;
+    opacity: 0.72;
     pointer-events: none;
+    -webkit-mask-image: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.22) 30%, #000 60%, #000 88%, rgba(0, 0, 0, 0.55) 100%);
+    mask-image: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.22) 30%, #000 60%, #000 88%, rgba(0, 0, 0, 0.55) 100%);
 }
 
 /* The display type here is Chinese first, and a CJK glyph fills its whole em
@@ -695,6 +715,321 @@ body select:focus-visible {
     margin: 0;
 }
 
+/* Events listing */
+.cssa-events-page {
+    min-height: 60vh;
+}
+
+.cssa-events-list {
+    padding-top: clamp(68px, 8vw, 108px);
+    padding-bottom: clamp(84px, 9vw, 128px);
+}
+
+.cssa-events-list__header {
+    align-items: end;
+    margin-bottom: clamp(38px, 5vw, 60px);
+}
+
+.cssa-events-list__count {
+    margin: 0 !important;
+    color: var(--cssa-muted);
+    font-size: 15px !important;
+    white-space: nowrap;
+}
+
+.cssa-events-list__count strong {
+    margin-right: 5px;
+    color: var(--cssa-blue-deep);
+    font-family: var(--cssa-english-display);
+    font-size: 28px;
+}
+
+.cssa-events-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 28px;
+}
+
+.cssa-events-card {
+    display: flex;
+    min-width: 0;
+    overflow: hidden;
+    flex-direction: column;
+    background: rgba(255, 255, 255, 0.8);
+    border: 1px solid var(--cssa-line);
+    border-top: 4px solid var(--cssa-blue);
+    box-shadow: 0 16px 38px rgba(8, 45, 91, 0.07);
+}
+
+.cssa-events-card__media {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    aspect-ratio: 16 / 10;
+    background: #dfe7ef;
+}
+
+.cssa-events-card__media::after,
+.cssa-events-archive-card__media::after {
+    position: absolute;
+    inset: 0;
+    content: "";
+    background: linear-gradient(180deg, transparent 55%, rgba(8, 45, 91, 0.48));
+    pointer-events: none;
+}
+
+.cssa-events-card__media img,
+.cssa-events-archive-card__media img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 220ms ease;
+}
+
+.cssa-events-card__media:hover img,
+.cssa-events-card__media:focus img,
+.cssa-events-archive-card__media:hover img,
+.cssa-events-archive-card__media:focus img {
+    transform: scale(1.035);
+}
+
+.cssa-events-card__placeholder {
+    display: grid;
+    width: 100%;
+    height: 100%;
+    color: rgba(12, 63, 124, 0.45);
+    font-size: 44px;
+    background: var(--cssa-blue-soft);
+    place-items: center;
+}
+
+.cssa-events-card__date {
+    position: absolute;
+    top: 18px;
+    left: 18px;
+    z-index: 1;
+    display: grid;
+    width: 58px;
+    min-height: 64px;
+    color: var(--cssa-blue-deep);
+    text-align: center;
+    background: rgba(255, 255, 255, 0.94);
+    place-content: center;
+}
+
+.cssa-events-card__date strong {
+    font-family: var(--cssa-english-display);
+    font-size: 25px;
+    line-height: 1;
+}
+
+.cssa-events-card__date small {
+    margin-top: 5px;
+    color: var(--cssa-red-dark);
+    font-family: var(--cssa-english-sans);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+}
+
+.cssa-events-card__body {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    padding: 26px;
+}
+
+.cssa-events-card__labels {
+    display: flex;
+    min-height: 25px;
+    gap: 7px;
+    flex-wrap: wrap;
+    margin-bottom: 13px;
+}
+
+.cssa-events-card__labels span {
+    padding: 4px 8px;
+    color: var(--cssa-blue-deep);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.07em;
+    background: var(--cssa-blue-soft);
+}
+
+.cssa-events-card__labels .is-insider {
+    color: var(--cssa-red-dark);
+    background: rgba(195, 12, 35, 0.08);
+}
+
+.cssa-events-card h3 {
+    margin: 0;
+    color: var(--cssa-blue-deep);
+    font-size: 24px;
+    line-height: 1.35;
+}
+
+.cssa-events-card h3 a {
+    color: inherit;
+}
+
+.cssa-events-card__description {
+    margin: 14px 0 22px;
+    color: var(--cssa-muted);
+    font-size: 15px;
+    line-height: 1.72;
+}
+
+.cssa-events-card__meta {
+    display: grid;
+    gap: 9px;
+    margin: auto 0 24px;
+}
+
+.cssa-events-card__meta > div {
+    display: grid;
+    grid-template-columns: 20px 1fr;
+    gap: 8px;
+    align-items: start;
+}
+
+.cssa-events-card__meta dt,
+.cssa-events-card__meta dd {
+    margin: 0;
+}
+
+.cssa-events-card__meta dt {
+    color: var(--cssa-red);
+}
+
+.cssa-events-card__meta dd {
+    color: var(--cssa-ink);
+    font-size: 13px;
+    line-height: 1.55;
+}
+
+.cssa-events-card__footer {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 18px;
+    border-top: 1px solid var(--cssa-line);
+}
+
+.cssa-events-card__footer .cssa-text-link {
+    padding-top: 4px;
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+.cssa-events-card__notice {
+    color: var(--cssa-muted);
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.cssa-events-card__notice.is-open {
+    color: #276344;
+}
+
+.cssa-events-card__notice.is-limited {
+    color: #8b5d08;
+}
+
+.cssa-events-card__notice.is-full {
+    color: var(--cssa-red-dark);
+}
+
+.cssa-events-archive {
+    padding-top: clamp(72px, 8vw, 110px);
+    padding-bottom: clamp(94px, 11vw, 150px);
+    background: rgba(12, 63, 124, 0.035);
+    border-top: 1px solid var(--cssa-line);
+}
+
+.cssa-events-archive__grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 24px;
+}
+
+.cssa-events-archive-card {
+    min-width: 0;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.72);
+    border: 1px solid var(--cssa-line);
+}
+
+.cssa-events-archive-card__media {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    aspect-ratio: 4 / 3;
+    background: #dfe7ef;
+}
+
+.cssa-events-archive-card__media > span {
+    position: absolute;
+    right: 16px;
+    bottom: 13px;
+    z-index: 1;
+    color: var(--cssa-white);
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.cssa-events-archive-card__body {
+    padding: 22px;
+}
+
+.cssa-events-archive-card time {
+    display: block;
+    margin-bottom: 10px;
+    color: var(--cssa-red-dark);
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.cssa-events-archive-card h3 {
+    margin: 0;
+    color: var(--cssa-blue-deep);
+    font-size: 20px;
+    line-height: 1.4;
+}
+
+.cssa-events-archive-card p {
+    margin: 11px 0 0;
+    color: var(--cssa-muted);
+    font-size: 14px;
+    line-height: 1.65;
+}
+
+.cssa-events-empty {
+    padding: clamp(62px, 8vw, 94px) 24px;
+    color: var(--cssa-muted);
+    text-align: center;
+    background: rgba(255, 255, 255, 0.45);
+    border: 1px dashed rgba(12, 63, 124, 0.24);
+}
+
+.cssa-events-empty > .fa {
+    margin-bottom: 19px;
+    color: var(--cssa-red);
+    font-size: 40px;
+}
+
+.cssa-events-empty h3 {
+    margin-bottom: 10px;
+    color: var(--cssa-blue-deep);
+    font-size: 28px;
+}
+
+.cssa-events-empty p {
+    margin: 0;
+}
+
 .cssa-about {
     position: relative;
     color: rgba(255, 255, 255, 0.82);
@@ -735,7 +1070,7 @@ body select:focus-visible {
 
 .cssa-milestones {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(5, minmax(0, 1fr));
     border-top: 1px solid rgba(255, 255, 255, 0.24);
 }
 
@@ -1041,10 +1376,1156 @@ body select:focus-visible {
     color: var(--cssa-white);
 }
 
+/* Partner discounts */
+.cssa-merchant-page {
+    min-height: 68vh;
+    padding-top: clamp(68px, 8vw, 108px);
+    padding-bottom: clamp(88px, 10vw, 140px);
+}
+
+.cssa-merchant-intro {
+    margin-bottom: clamp(34px, 5vw, 54px);
+}
+
+.cssa-merchant-intro > div > p:last-child {
+    max-width: 700px;
+    margin: 18px 0 0;
+    color: var(--cssa-muted);
+}
+
+.cssa-merchant-filters {
+    position: relative;
+    overflow: hidden;
+    padding: clamp(20px, 2.4vw, 28px);
+    background: rgba(241, 246, 252, 0.68);
+    box-shadow: 0 14px 34px rgba(8, 45, 91, 0.055);
+}
+
+.cssa-merchant-filters__controls {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: minmax(280px, 1.6fr) minmax(210px, 0.8fr) auto auto;
+    gap: 14px;
+    align-items: end;
+}
+
+.cssa-merchant-field label {
+    display: flex;
+    gap: 8px;
+    align-items: baseline;
+    margin: 0 0 9px;
+    color: var(--cssa-blue-deep);
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.cssa-merchant-field label span {
+    color: var(--cssa-muted);
+    font-family: var(--cssa-english-sans);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+}
+
+.cssa-merchant-control {
+    position: relative;
+}
+
+.cssa-merchant-control > .fa:first-child {
+    position: absolute;
+    top: 50%;
+    left: 17px;
+    z-index: 1;
+    color: rgba(12, 63, 124, 0.66);
+    transform: translateY(-50%);
+    pointer-events: none;
+}
+
+.cssa-merchant-search input,
+.cssa-merchant-category select {
+    width: 100%;
+    height: 58px;
+    padding: 0 46px;
+    color: var(--cssa-ink);
+    font-size: 16px;
+    background: rgba(255, 255, 255, 0.92);
+    border: 1px solid rgba(12, 63, 124, 0.2);
+    border-radius: 2px;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    transition: border-color 160ms ease, box-shadow 160ms ease, background 160ms ease;
+}
+
+.cssa-merchant-category select {
+    padding-right: 42px;
+    appearance: none;
+    cursor: pointer;
+}
+
+.cssa-merchant-search input::placeholder {
+    color: rgba(68, 84, 102, 0.62);
+}
+
+.cssa-merchant-select-arrow {
+    position: absolute;
+    top: 50%;
+    right: 17px;
+    color: var(--cssa-blue);
+    font-size: 11px;
+    transform: translateY(-50%);
+    pointer-events: none;
+}
+
+.cssa-merchant-search input:focus,
+.cssa-merchant-category select:focus {
+    outline: none;
+    background: var(--cssa-white);
+    border-color: var(--cssa-blue);
+    box-shadow: 0 0 0 4px rgba(12, 63, 124, 0.1);
+}
+
+.cssa-merchant-filter-button {
+    display: inline-flex;
+    gap: 18px;
+    min-width: 158px;
+    min-height: 58px;
+    align-items: center;
+    justify-content: space-between;
+    white-space: nowrap;
+}
+
+.cssa-merchant-reset {
+    display: inline-flex;
+    gap: 7px;
+    align-items: center;
+    min-height: 58px;
+    padding: 8px 14px;
+    color: var(--cssa-blue);
+    font-size: 13px;
+    font-weight: 700;
+    white-space: nowrap;
+    background: rgba(255, 255, 255, 0.7);
+    border: 1px solid rgba(12, 63, 124, 0.14);
+}
+
+.cssa-merchant-reset:hover,
+.cssa-merchant-reset:focus {
+    color: var(--cssa-red-dark);
+    text-decoration: none;
+    background: var(--cssa-white);
+    border-color: rgba(195, 12, 35, 0.25);
+}
+
+.cssa-merchant-results {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 34px 0 22px;
+}
+
+.cssa-merchant-results p {
+    margin: 0;
+    color: var(--cssa-muted);
+    font-size: 15px;
+}
+
+.cssa-merchant-results strong {
+    color: var(--cssa-blue-deep);
+    font-family: var(--cssa-english-display);
+    font-size: 22px;
+}
+
+.cssa-merchant-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 28px;
+}
+
+.cssa-merchant-card {
+    display: flex;
+    min-width: 0;
+    height: 100%;
+    overflow: hidden;
+    flex-direction: column;
+    background: rgba(255, 255, 255, 0.78);
+    border: 1px solid var(--cssa-line);
+    border-top: 4px solid var(--cssa-blue);
+    box-shadow: 0 16px 38px rgba(8, 45, 91, 0.07);
+}
+
+.cssa-merchant-card__media {
+    display: grid;
+    height: 220px;
+    padding: 26px;
+    place-items: center;
+    background: rgba(255, 255, 255, 0.82);
+    border-bottom: 1px solid var(--cssa-line);
+}
+
+.cssa-merchant-card__media img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.cssa-merchant-card__placeholder {
+    display: grid;
+    width: 112px;
+    height: 112px;
+    color: rgba(12, 63, 124, 0.62);
+    font-family: var(--cssa-display);
+    font-size: 52px;
+    background: var(--cssa-blue-soft);
+    border: 1px solid rgba(12, 63, 124, 0.16);
+    place-items: center;
+}
+
+.cssa-merchant-card__body {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    padding: 26px;
+}
+
+.cssa-merchant-card__category {
+    align-self: flex-start;
+    margin: 0 0 14px;
+    padding: 5px 9px;
+    color: var(--cssa-blue-deep);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    background: var(--cssa-blue-soft);
+}
+
+.cssa-merchant-card h2 {
+    margin: 0 0 20px;
+    color: var(--cssa-blue-deep);
+    font-size: 24px;
+    line-height: 1.35;
+}
+
+.cssa-merchant-card__offer {
+    margin-bottom: 22px;
+    padding: 14px 16px;
+    background: rgba(195, 12, 35, 0.035);
+    border-left: 3px solid var(--cssa-red);
+}
+
+.cssa-merchant-card__offer > span {
+    display: block;
+    margin-bottom: 7px;
+    color: var(--cssa-red-dark);
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.cssa-merchant-card__offer small {
+    margin-left: 5px;
+    font-family: var(--cssa-english-sans);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+}
+
+.cssa-merchant-card__offer p {
+    margin: 0;
+    color: var(--cssa-ink);
+    font-size: 16px;
+    line-height: 1.7;
+}
+
+.cssa-merchant-card__address {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    margin: auto 0 0;
+    color: var(--cssa-muted);
+    font-size: 14px;
+    line-height: 1.65;
+}
+
+.cssa-merchant-card__address .fa {
+    margin-top: 4px;
+    color: var(--cssa-blue);
+}
+
+.cssa-merchant-pagination {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 22px;
+    align-items: center;
+    margin-top: 52px;
+    padding-top: 24px;
+    border-top: 1px solid var(--cssa-line);
+}
+
+.cssa-merchant-pagination > :last-child {
+    text-align: right;
+}
+
+.cssa-merchant-pagination a,
+.cssa-merchant-pagination .is-disabled {
+    font-weight: 600;
+}
+
+.cssa-merchant-pagination .is-disabled {
+    color: rgba(94, 108, 124, 0.46);
+}
+
+.cssa-merchant-pagination__status {
+    color: var(--cssa-muted);
+    font-size: 14px;
+}
+
+.cssa-merchant-empty {
+    padding: clamp(58px, 8vw, 92px) 24px;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.42);
+    border: 1px dashed rgba(12, 63, 124, 0.24);
+}
+
+.cssa-merchant-empty > .fa {
+    margin-bottom: 20px;
+    color: var(--cssa-red);
+    font-size: 40px;
+}
+
+.cssa-merchant-empty h2 {
+    margin-bottom: 10px;
+    color: var(--cssa-blue-deep);
+    font-size: 28px;
+}
+
+.cssa-merchant-empty p {
+    margin-bottom: 24px;
+    color: var(--cssa-muted);
+}
+
+/* Recruitment */
+.cssa-page-hero__eyebrow {
+    margin: 0 0 16px !important;
+    color: #f0a5ae !important;
+    font-family: var(--cssa-english-sans);
+    font-size: 13px !important;
+    font-weight: 700;
+    letter-spacing: 0.17em;
+}
+
+.cssa-recruitment {
+    min-height: 58vh;
+    padding-top: clamp(68px, 8vw, 108px);
+    padding-bottom: clamp(88px, 10vw, 140px);
+}
+
+.cssa-recruitment__intro {
+    align-items: end;
+    margin-bottom: clamp(36px, 5vw, 58px);
+}
+
+.cssa-recruitment__intro > div > p:last-child {
+    max-width: 700px;
+    margin: 18px 0 0;
+    color: var(--cssa-muted);
+}
+
+.cssa-recruitment__count {
+    margin: 0;
+    color: var(--cssa-muted);
+    font-size: 15px;
+    white-space: nowrap;
+}
+
+.cssa-recruitment__count strong {
+    margin-right: 5px;
+    color: var(--cssa-blue-deep);
+    font-family: var(--cssa-english-display);
+    font-size: 28px;
+}
+
+.cssa-recruitment-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 28px;
+}
+
+.cssa-job-card {
+    display: flex;
+    min-width: 0;
+    min-height: 390px;
+    padding: clamp(26px, 3vw, 38px);
+    flex-direction: column;
+    background: rgba(255, 255, 255, 0.78);
+    border: 1px solid var(--cssa-line);
+    border-top: 4px solid var(--cssa-blue);
+    box-shadow: 0 16px 38px rgba(8, 45, 91, 0.07);
+}
+
+.cssa-job-card--closed {
+    border-top-color: #8a96a4;
+}
+
+.cssa-job-card__header {
+    display: flex;
+    gap: 22px;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding-bottom: 23px;
+    border-bottom: 1px solid var(--cssa-line);
+}
+
+.cssa-job-card__department {
+    margin: 0 0 12px;
+    color: var(--cssa-red-dark);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+}
+
+.cssa-job-card__department span {
+    display: block;
+    margin-top: 3px;
+    color: var(--cssa-muted);
+    font-family: var(--cssa-english-sans);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.cssa-job-card h3 {
+    margin: 0;
+    color: var(--cssa-blue-deep);
+    font-size: clamp(23px, 2.5vw, 31px);
+    line-height: 1.3;
+}
+
+.cssa-job-card__status {
+    flex: 0 0 auto;
+    padding: 6px 10px;
+    color: var(--cssa-blue-deep);
+    font-size: 12px;
+    font-weight: 700;
+    background: var(--cssa-blue-soft);
+}
+
+.cssa-job-card--closed .cssa-job-card__status {
+    color: #65717e;
+    background: rgba(101, 113, 126, 0.1);
+}
+
+.cssa-job-card__description {
+    margin: 25px 0 32px;
+    color: var(--cssa-ink);
+    font-size: 16px;
+    line-height: 1.82;
+    white-space: pre-line;
+}
+
+.cssa-job-card__footer {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: auto;
+}
+
+.cssa-job-card__deadline {
+    display: flex;
+    gap: 11px;
+    align-items: center;
+    margin: 0;
+    color: var(--cssa-blue-deep);
+    font-size: 14px;
+    line-height: 1.35;
+}
+
+.cssa-job-card__deadline .fa {
+    color: var(--cssa-red);
+    font-size: 18px;
+}
+
+.cssa-job-card__deadline small {
+    display: block;
+    margin-bottom: 3px;
+    color: var(--cssa-muted);
+    font-size: 11px;
+}
+
+.cssa-job-card__footer .cssa-btn,
+.cssa-job-card__closed-button {
+    flex: 0 0 auto;
+    padding: 13px 18px;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.cssa-job-card__closed-button {
+    color: #7b8793;
+    background: rgba(123, 135, 147, 0.1);
+}
+
+.cssa-recruitment-empty {
+    padding: clamp(62px, 8vw, 96px) 24px;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.42);
+    border: 1px dashed rgba(12, 63, 124, 0.24);
+}
+
+.cssa-recruitment-empty > .fa {
+    margin-bottom: 20px;
+    color: var(--cssa-red);
+    font-size: 40px;
+}
+
+.cssa-recruitment-empty h2 {
+    margin-bottom: 10px;
+    color: var(--cssa-blue-deep);
+    font-size: 28px;
+}
+
+.cssa-recruitment-empty p {
+    margin-bottom: 24px;
+    color: var(--cssa-muted);
+}
+
+/* Sponsor partners */
+.cssa-sponsor-hero__eyebrow {
+    margin: 0 0 16px !important;
+    color: #f0a5ae !important;
+    font-family: var(--cssa-english-sans);
+    font-size: 13px !important;
+    font-weight: 700;
+    letter-spacing: 0.17em;
+}
+
+.cssa-sponsor-hero .cssa-heading-en {
+    color: rgba(255, 255, 255, 0.72);
+}
+
+.cssa-sponsors__intro {
+    padding-bottom: 32px;
+    border-bottom: 1px solid var(--cssa-line);
+}
+
+.cssa-sponsors__intro > div > p {
+    max-width: 680px;
+    margin: 16px 0 0;
+    color: var(--cssa-muted);
+}
+
+.cssa-sponsors__count {
+    margin: 0;
+    color: var(--cssa-muted);
+    font-size: 15px;
+    white-space: nowrap;
+}
+
+.cssa-sponsors__count strong {
+    margin-right: 4px;
+    color: var(--cssa-blue-deep);
+    font-family: var(--cssa-english-display);
+    font-size: 30px;
+}
+
+.cssa-sponsor-tier {
+    margin-top: clamp(54px, 7vw, 88px);
+}
+
+.cssa-sponsor-tier__header {
+    display: flex;
+    gap: 18px;
+    align-items: stretch;
+    margin-bottom: 28px;
+}
+
+.cssa-sponsor-tier__mark {
+    width: 4px;
+    min-height: 58px;
+    background: var(--cssa-blue);
+}
+
+.cssa-sponsor-tier--diamond .cssa-sponsor-tier__mark {
+    background: var(--cssa-red);
+}
+
+.cssa-sponsor-tier--gold .cssa-sponsor-tier__mark {
+    background: #b1842f;
+}
+
+.cssa-sponsor-tier--silver .cssa-sponsor-tier__mark {
+    background: #7c8998;
+}
+
+.cssa-sponsor-tier__header h2 {
+    margin: 0;
+    color: var(--cssa-blue-deep);
+    font-size: clamp(27px, 3vw, 38px);
+}
+
+.cssa-sponsor-tier__header p {
+    margin: 4px 0 0;
+    color: var(--cssa-muted);
+    font-family: var(--cssa-english-sans);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+}
+
+.cssa-sponsor-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 28px;
+}
+
+.cssa-sponsor-tier--diamond .cssa-sponsor-grid {
+    grid-template-columns: 1fr;
+}
+
+.cssa-sponsor-tier--gold .cssa-sponsor-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.cssa-sponsor-card {
+    display: flex;
+    min-width: 0;
+    height: 100%;
+    overflow: hidden;
+    flex-direction: column;
+    background: rgba(255, 255, 255, 0.8);
+    border: 1px solid var(--cssa-line);
+    border-top: 4px solid var(--cssa-blue);
+    box-shadow: 0 16px 38px rgba(8, 45, 91, 0.07);
+}
+
+.cssa-sponsor-tier--diamond .cssa-sponsor-card {
+    display: grid;
+    grid-template-columns: minmax(300px, 38%) 1fr;
+    border-top-color: var(--cssa-red);
+}
+
+.cssa-sponsor-tier--gold .cssa-sponsor-card {
+    border-top-color: #b1842f;
+}
+
+.cssa-sponsor-tier--silver .cssa-sponsor-card {
+    border-top-color: #7c8998;
+}
+
+.cssa-sponsor-card__media {
+    display: grid;
+    min-height: 230px;
+    padding: 34px;
+    place-items: center;
+    background: rgba(255, 255, 255, 0.9);
+    border-bottom: 1px solid var(--cssa-line);
+}
+
+.cssa-sponsor-tier--diamond .cssa-sponsor-card__media {
+    min-height: 340px;
+    border-right: 1px solid var(--cssa-line);
+    border-bottom: 0;
+}
+
+.cssa-sponsor-card__media a {
+    display: grid;
+    width: 100%;
+    height: 100%;
+    place-items: center;
+}
+
+.cssa-sponsor-card__media img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    max-height: 250px;
+    object-fit: contain;
+}
+
+.cssa-sponsor-card__placeholder {
+    display: grid;
+    width: 124px;
+    height: 124px;
+    color: rgba(12, 63, 124, 0.62);
+    font-family: var(--cssa-display);
+    font-size: 56px;
+    background: var(--cssa-blue-soft);
+    border: 1px solid var(--cssa-line);
+    place-items: center;
+}
+
+.cssa-sponsor-card__body {
+    display: flex;
+    min-width: 0;
+    padding: 30px;
+    flex-direction: column;
+}
+
+.cssa-sponsor-tier--diamond .cssa-sponsor-card__body {
+    padding: clamp(34px, 5vw, 58px);
+}
+
+.cssa-sponsor-card__label {
+    margin: 0 0 10px;
+    color: var(--cssa-red);
+    font-family: var(--cssa-english-sans);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+}
+
+.cssa-sponsor-card h3 {
+    margin: 0 0 18px;
+    color: var(--cssa-blue-deep);
+    font-size: clamp(25px, 2.5vw, 34px);
+}
+
+.cssa-sponsor-card__description {
+    margin: 0;
+    color: var(--cssa-ink);
+    font-size: 16px;
+    line-height: 1.8;
+}
+
+.cssa-sponsor-card__footer {
+    display: flex;
+    gap: 24px;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-top: auto;
+    padding-top: 28px;
+}
+
+.cssa-sponsor-card__qr {
+    flex: 0 0 112px;
+    margin: 0;
+    text-align: center;
+}
+
+.cssa-sponsor-card__qr img {
+    display: block;
+    width: 112px;
+    height: 112px;
+    object-fit: contain;
+    background: var(--cssa-white);
+}
+
+.cssa-sponsor-card__qr figcaption {
+    margin-top: 6px;
+    color: var(--cssa-muted);
+    font-size: 11px;
+}
+
+.cssa-sponsor-empty {
+    padding: clamp(64px, 9vw, 104px) 24px;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.42);
+    border: 1px dashed rgba(12, 63, 124, 0.24);
+}
+
+.cssa-sponsor-empty > .fa {
+    margin-bottom: 22px;
+    color: var(--cssa-red);
+    font-size: 42px;
+}
+
+.cssa-sponsor-empty h2 {
+    margin-bottom: 10px;
+    color: var(--cssa-blue-deep);
+    font-size: 30px;
+}
+
+.cssa-sponsor-empty p {
+    margin-bottom: 26px;
+    color: var(--cssa-muted);
+}
+
+@media (max-width: 991.98px) {
+    .cssa-merchant-filters__controls {
+        grid-template-columns: minmax(0, 1fr) minmax(190px, 0.72fr);
+    }
+
+    .cssa-merchant-filter-button {
+        grid-column: 1;
+        justify-content: center;
+    }
+
+    .cssa-merchant-reset {
+        justify-content: center;
+    }
+
+    .cssa-merchant-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .cssa-sponsor-grid,
+    .cssa-sponsor-tier--gold .cssa-sponsor-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .cssa-recruitment-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .cssa-events-grid,
+    .cssa-events-archive__grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 640px) {
+    .cssa-merchant-page {
+        padding-top: 58px;
+    }
+
+    .cssa-merchant-filters__controls {
+        grid-template-columns: 1fr;
+    }
+
+    .cssa-merchant-filter-button {
+        grid-column: auto;
+        width: 100%;
+    }
+
+    .cssa-merchant-reset {
+        width: 100%;
+        min-height: 48px;
+        padding: 7px 10px;
+        justify-content: center;
+    }
+
+    .cssa-merchant-grid {
+        grid-template-columns: 1fr;
+        gap: 22px;
+    }
+
+    .cssa-merchant-card__media {
+        height: 200px;
+    }
+
+    .cssa-merchant-pagination {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .cssa-merchant-pagination__status {
+        grid-row: 1;
+        grid-column: 1 / -1;
+        text-align: center;
+    }
+
+    .cssa-sponsors__intro {
+        align-items: flex-start;
+    }
+
+    .cssa-sponsor-grid,
+    .cssa-sponsor-tier--gold .cssa-sponsor-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .cssa-sponsor-tier--diamond .cssa-sponsor-card {
+        display: flex;
+    }
+
+    .cssa-sponsor-tier--diamond .cssa-sponsor-card__media {
+        min-height: 240px;
+        border-right: 0;
+        border-bottom: 1px solid var(--cssa-line);
+    }
+
+    .cssa-sponsor-card__footer {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .cssa-recruitment__intro {
+        display: block;
+    }
+
+    .cssa-recruitment__count {
+        margin-top: 22px;
+    }
+
+    .cssa-job-card {
+        min-height: 0;
+        padding: 24px 20px;
+    }
+
+    .cssa-job-card__header,
+    .cssa-job-card__footer {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .cssa-job-card__footer .cssa-btn,
+    .cssa-job-card__closed-button {
+        width: 100%;
+        text-align: center;
+    }
+
+    .cssa-events-list__header {
+        display: block;
+    }
+
+    .cssa-events-list__count {
+        margin-top: 22px !important;
+    }
+
+    .cssa-events-grid,
+    .cssa-events-archive__grid {
+        grid-template-columns: 1fr;
+    }
+
+    .cssa-events-card__body {
+        padding: 23px 20px;
+    }
+}
+
+/* Department pages
+   The legacy templates used a white Bootstrap card for the introduction and a
+   dark jumbotron for the council address. Both interrupted the warm paper
+   canvas and left the long-form copy cramped. Keep these editorial sections
+   on one sheet, using rules and spacing—not blocks of colour—for hierarchy. */
+.dept-header {
+    display: block;
+    width: min(1180px, calc(100% - 40px));
+    margin: 0 auto;
+    padding: clamp(48px, 6vw, 84px) 0 clamp(56px, 7vw, 96px);
+    color: var(--cssa-ink);
+    background-color: transparent !important;
+    background-image: none !important;
+}
+
+.dept-header.cssa-dept-header-only {
+    padding-bottom: 0;
+}
+
+.dept-header > .py-3 {
+    padding: 0 0 clamp(36px, 5vw, 58px) !important;
+}
+
+.dept-header > .py-3 hr {
+    width: 72px;
+    margin: 18px auto;
+    border-top: 2px solid var(--cssa-red);
+}
+
+.dept-header > .py-3 h1 {
+    margin-bottom: 10px;
+    color: var(--cssa-blue-deep) !important;
+    font-family: var(--cssa-display) !important;
+    font-size: clamp(34px, 4.4vw, 54px);
+    font-weight: 700 !important;
+}
+
+.dept-header > .py-3 h3 {
+    margin: 0;
+    color: var(--cssa-muted) !important;
+    font-family: var(--cssa-english-sans) !important;
+    font-size: clamp(15px, 1.6vw, 19px);
+    font-weight: 500 !important;
+    letter-spacing: 0.035em;
+}
+
+.dept-header > .row {
+    min-height: 0 !important;
+    margin: 0;
+    align-items: stretch;
+    background: transparent;
+}
+
+#main-content .dept-header .card {
+    background: transparent;
+    border: 0 !important;
+    box-shadow: none;
+}
+
+.dept-header .cssa-dept-lead {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 42px 34px;
+    border-right: 1px solid var(--cssa-line) !important;
+}
+
+.dept-header .cssa-dept-lead .card-body {
+    flex: 0 1 auto;
+}
+
+.dept-header .cssa-dept-lead .avatar-lg {
+    border: 1px solid rgba(12, 63, 124, 0.18);
+    box-shadow: 0 18px 42px rgba(8, 45, 91, 0.1);
+}
+
+.dept-header .cssa-dept-lead .card-title {
+    margin-top: 24px;
+    margin-bottom: 8px;
+    color: var(--cssa-accent-ink);
+    font-family: var(--cssa-body);
+    font-size: 17px;
+    font-weight: 600;
+    letter-spacing: 0.025em;
+}
+
+.dept-header .cssa-dept-intro {
+    padding: 42px clamp(36px, 5vw, 68px);
+}
+
+.dept-header .cssa-dept-intro > .my-auto,
+.dept-header .cssa-dept-intro > .mx-auto {
+    width: 100%;
+}
+
+.dept-header .cssa-dept-intro .card-title {
+    position: relative;
+    margin-bottom: 30px;
+    padding-bottom: 18px;
+    color: var(--cssa-blue-deep);
+    font-size: clamp(25px, 2.5vw, 32px);
+    text-align: center !important;
+}
+
+.dept-header .cssa-dept-intro .card-title::after {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 48px;
+    height: 2px;
+    content: "";
+    background: var(--cssa-red);
+    transform: translateX(-50%);
+}
+
+.dept-header .cssa-dept-intro .card-text {
+    max-width: 72ch;
+    padding-right: 0 !important;
+    padding-left: 0 !important;
+    color: var(--cssa-ink);
+    font-size: 17px;
+    line-height: 1.95 !important;
+}
+
+.dept-header .cssa-dept-intro .card-text br {
+    display: block;
+    margin-top: 12px;
+    content: "";
+}
+
+.dept-header .cssa-dept-intro hr {
+    margin: 36px 0 28px;
+    border-top-color: var(--cssa-line);
+}
+
+.dept-header .cssa-dept-intro .row {
+    margin-right: 0;
+    margin-left: 0;
+}
+
+.cssa-dept-address.jumbotron {
+    max-width: 1180px;
+    margin: clamp(48px, 6vw, 76px) auto;
+    padding: clamp(44px, 6vw, 76px) clamp(24px, 4vw, 58px);
+    color: var(--cssa-ink);
+    background: transparent;
+    border-top: 1px solid var(--cssa-line);
+    border-bottom: 1px solid var(--cssa-line);
+}
+
+.cssa-dept-address.jumbotron h2 {
+    position: relative;
+    margin-bottom: 38px;
+    padding-bottom: 18px;
+    color: var(--cssa-blue-deep);
+    font-size: clamp(30px, 3.4vw, 42px);
+}
+
+.cssa-dept-address.jumbotron h2::after {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 48px;
+    height: 2px;
+    content: "";
+    background: var(--cssa-red);
+    transform: translateX(-50%);
+}
+
+.cssa-dept-address.jumbotron p {
+    max-width: 88ch;
+    margin: 0 auto 18px;
+    padding-top: 0 !important;
+    color: var(--cssa-ink);
+    font-size: 17px !important;
+    line-height: 1.95;
+}
+
+.cssa-dept-address.jumbotron p.cssa-dept-signature {
+    max-width: 88ch;
+    margin: 0 auto;
+    color: var(--cssa-ink);
+    font-family: var(--cssa-body);
+    font-size: 17px !important;
+    font-weight: 400;
+    line-height: 1.95;
+    text-align: right;
+}
+
+.cssa-dept-address.jumbotron p.cssa-dept-signature--name {
+    margin-top: 28px;
+}
+
+#main-content .cssa-council-team,
+#main-content .cssa-council-team .card,
+#main-content .cssa-council-team .card-body {
+    background: transparent;
+}
+
+#main-content .cssa-council-team .card {
+    border: 0 !important;
+    box-shadow: none;
+}
+
+@media (max-width: 991.98px) {
+    .dept-header {
+        width: min(100% - 30px, 720px);
+        padding-top: 38px;
+    }
+
+    .dept-header .cssa-dept-lead {
+        padding: 30px 20px 38px;
+        border-right: 0 !important;
+        border-bottom: 1px solid var(--cssa-line) !important;
+    }
+
+    .dept-header .cssa-dept-intro {
+        padding: 38px 12px 18px;
+    }
+
+    .dept-header .cssa-dept-intro .card-title {
+        margin-bottom: 24px;
+        text-align: center !important;
+    }
+
+    .dept-header .cssa-dept-intro .card-title::after {
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    .dept-header .cssa-dept-intro .card-text {
+        font-size: 16px;
+        line-height: 1.88 !important;
+    }
+
+    .cssa-dept-address.jumbotron {
+        width: calc(100% - 30px);
+        margin: 36px auto 52px;
+    }
+}
+
 .cssa-page-hero {
     position: relative;
     overflow: hidden;
-    padding: clamp(84px, 10vw, 142px) 0;
+    padding: clamp(60px, 6.5vw, 88px) 0;
     color: rgba(255, 255, 255, 0.8);
     background:
         radial-gradient(circle at 85% 20%, rgba(195, 12, 35, 0.15), transparent 25%),
@@ -1070,7 +2551,7 @@ body select:focus-visible {
 
 .cssa-page-hero p:last-child {
     max-width: 720px;
-    margin: 24px 0 0;
+    margin: 18px 0 0;
     color: rgba(255, 255, 255, 0.8);
     font-size: clamp(19px, 2vw, 23px);
 }
@@ -1083,7 +2564,10 @@ body select:focus-visible {
 
 .cssa-qr-card {
     position: relative;
+    display: flex;
+    min-width: 0;
     padding: 28px;
+    flex-direction: column;
     background: var(--cssa-canvas);
     border-top: 4px solid var(--cssa-blue);
 }
@@ -1109,6 +2593,21 @@ body select:focus-visible {
     object-fit: contain;
 }
 
+.cssa-qr-card__image--poster {
+    height: 430px;
+    min-height: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+.cssa-qr-card__image--poster img {
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    max-height: none;
+    object-fit: contain;
+}
+
 .cssa-qr-card__index {
     margin: 0 0 8px;
     color: var(--cssa-red);
@@ -1127,6 +2626,27 @@ body select:focus-visible {
     margin: 12px 0 0;
     color: var(--cssa-muted);
     font-size: 16px;
+}
+
+.cssa-contact--helpers {
+    border-top: 1px solid var(--cssa-line);
+}
+
+.cssa-qr-grid--helpers {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 20px;
+}
+
+.cssa-qr-grid--helpers .cssa-qr-card {
+    padding: 20px;
+}
+
+.cssa-qr-grid--helpers .cssa-qr-card__image--poster {
+    height: 360px;
+}
+
+.cssa-qr-grid--helpers .cssa-qr-card h3 {
+    font-size: 21px;
 }
 
 .cssa-email-grid {
@@ -1237,7 +2757,6 @@ body select:focus-visible {
         grid-template-columns: 1fr;
     }
 
-
     .cssa-about__intro {
         grid-template-columns: 1fr;
     }
@@ -1252,6 +2771,10 @@ body select:focus-visible {
     }
 
     .cssa-qr-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .cssa-qr-grid--helpers {
         grid-template-columns: 1fr 1fr;
     }
 
@@ -1287,12 +2810,16 @@ body select:focus-visible {
         font-size: clamp(17px, 5vw, 22px);
     }
 
-    .cssa-hero__ink {
-        --cssa-ink-opacity: 0.10;
-        top: auto;
-        right: -18%;
-        bottom: -4%;
-        width: min(72vw, 420px);
+    .cssa-hero__scene {
+        /* a narrow screen crops the painting hard; pull back to the horizon
+           and lighten it so the copy stays first */
+        height: 46%;
+        background-position: center 88%;
+        opacity: 0.6;
+    }
+
+    .cssa-page-hero {
+        padding: 48px 0 54px;
     }
 
 
@@ -1341,6 +2868,16 @@ body select:focus-visible {
     .cssa-qr-grid,
     .cssa-email-grid {
         grid-template-columns: 1fr;
+    }
+
+    .cssa-qr-grid--helpers {
+        grid-template-columns: 1fr;
+    }
+
+    .cssa-qr-card__image--poster,
+    .cssa-qr-grid--helpers .cssa-qr-card__image--poster {
+        height: auto;
+        aspect-ratio: 3 / 4;
     }
 
     .cssa-qr-card--featured {
