@@ -29,7 +29,7 @@
                                 <p class="h3">
                                     <i class="fa fa-id-card fa-lg mr-3" /></i>自助签到
                                 </p>
-                                <p class="small text-center text-muted">可用手机号、学生卡号或会员卡号签到</p>
+                                <p class="small text-center text-muted">可用手机号、学生卡号或Insider卡号签到</p>
                             </button>
                         </div>
                         <div class="list-group-item flex-list-clickable">
@@ -72,7 +72,7 @@
                         <form id="manual-checkin-form">
                             {% csrf_token %}
                             <div class="form-group">
-                                <label for="identity-check" class="col-form-label">请输入您的手机号(国内请先输入+86)、学生卡号或会员卡号:</label>
+                                <label for="identity-check" class="col-form-label">请输入您的手机号(国内请先输入+86)、学生卡号或Insider卡号:</label>
                                 <input type="tel"
                                        class="form-control"
                                        id="identity-check"

@@ -1,9 +1,9 @@
 {% extends "myCSSAhub/component/_layout.html" %}
 {% block pageTitle %}{{ PageHeader }}{% endblock pageTitle %}
 {% block BreadcrumbPath %}
-    <li class="breadcrumb-item">会员管理</li>
+    <li class="breadcrumb-item">Insider管理</li>
     <li class="breadcrumb-item">
-        <a href="{% url 'myCSSAhub:OrganisationMgr:member_list' %}">新会员激活</a>
+        <a href="{% url 'myCSSAhub:OrganisationMgr:member_list' %}">新Insider激活</a>
     </li>
     <li class="breadcrumb-item">{{ usr_id }}</li>
     <li class="breadcrumb-item active">
@@ -17,7 +17,7 @@
         {% csrf_token %}
         <div class="card">
             <div class="card-header">
-                <strong>会员信息</strong>
+                <strong>Insider信息</strong>
             </div>
             <div class="card-body">
                 <div class="row">
@@ -61,7 +61,7 @@
                 </div>
                 {% if user_profile.membershipId and not form.non_field_errors %}
                     <div class="alert alert-danger" role="alert">
-                        此用户已拥有卡号为<strong>{{ user_profile.membershipId }}</strong>的会员卡
+                        此用户已拥有卡号为<strong>{{ user_profile.membershipId }}</strong>的Insider卡
                     </div>
                 </div>
                 <div class="card-footer w-10">
@@ -75,7 +75,7 @@
         {% else %}
             <div class="row mt-3">
                 <div class="col col-7">
-                    <p>若以上信息确认无误，请在下方输入新会员的会员卡号</p>
+                    <p>若以上信息确认无误，请在下方输入新Insider的Insider卡号</p>
                     {% for field in form.visible_fields %}
                         <div class="form-group">
                             {{ field.label_tag }}

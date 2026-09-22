@@ -1,4 +1,5 @@
 import json
+import smtplib
 
 from BlogAPI import models as BlogModels
 from django.contrib import messages
@@ -477,19 +478,25 @@ class PasswordResetView(View):
                     'token': default_token_generator.make_token(user),
                     'protocol': request.scheme,
                     }
-                    email = render_to_string(email_template_name, c)
+                    email = render_to_string(email_template_name, c, request=request)
                     try:
-                        raw_send_mail(subject, 
-                                      email, 
-                                      'automail@cssaunimelb.com', 
-                                      [user.email], 
+                        raw_send_mail(subject,
+                                      email,
+                                      'automail@cssaunimelb.com',
+                                      [user.email],
                                       fail_silently=False
                                     )
                     except BadHeaderError:
                         return HttpResponse('Invalid header found.')
-                    
+                    except (smtplib.SMTPException, ConnectionError, OSError):
+                        messages.error(request,
+                            'Failed to send reset email. Please try again later or contact support.')
+                        return render(request=request,
+                                      template_name="myCSSAhub/password_reset.html",
+                                      context={"password_reset_form": PasswordResetForm()})
+
                     # If success, pop up a success message
-                    messages.success(request, 
+                    messages.success(request,
                         'A message with reset password instructions ' \
                         'has been sent to your email inbox.')
                     print("Success")

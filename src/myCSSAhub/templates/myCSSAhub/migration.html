@@ -31,16 +31,16 @@
             {% csrf_token %}
             <fieldset>
               <h5 class="fs-title">账号迁移</h5>
-              <p>您需要至少提供您持有的会员卡号和学生证号</p>
+              <p>您需要至少提供您持有的Insider卡号和学生证号</p>
               <small class="text-muted"><mark>请与最初注册信息填写一致</mark></small>
               <div class="form-label-group required">
-                <label class="control-label  col-md-6 requiredField">Membership ID</label>
+                <label class="control-label  col-md-6 requiredField">Insider ID</label>
                 <div class="controls col-md-12">
                   <input required
                          class="input-md textinput textInput form-control"
                          id="id_membership"
                          name="membershipId"
-                         placeholder="请填写你的会员卡号"
+                         placeholder="请填写你的Insider卡号"
                          type="text"
                          data-parsley-group="block1"
                          data-parsley-length="[4,4]" />
@@ -139,12 +139,12 @@
               </br>
               抱歉!
             </br>
-            我们无法验证您的会员身份
+            我们无法验证您的Insider身份
           </h4>
           <p class="text-center">
             请在完成账号注册后
           </br>
-          携带<strong>学生证和会员卡</strong>前往摊位免费激活账号
+          携带<strong>学生证和Insider卡</strong>前往摊位免费激活账号
         </p>
         <a href="{% url 'myCSSAhub:hub_regform' %}"
            class="btn btn-primary"
